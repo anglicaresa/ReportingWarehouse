@@ -1,0 +1,909 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="management_physical.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="batch_dim">
+          <Key>
+            <PropertyRef Name="batch_key" />
+          </Key>
+          <Property Name="batch_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="batch_type" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="date_dim">
+          <Key>
+            <PropertyRef Name="date_key" />
+          </Key>
+          <Property Name="date_key" Type="int" Nullable="false" />
+          <Property Name="full_date" Type="datetime" />
+          <Property Name="year" Type="char" MaxLength="4" />
+          <Property Name="quarter" Type="char" MaxLength="1" />
+          <Property Name="quarter_name" Type="varchar" MaxLength="9" />
+          <Property Name="month" Type="varchar" MaxLength="2" />
+          <Property Name="month_name" Type="varchar" MaxLength="9" />
+          <Property Name="day_of_month" Type="varchar" MaxLength="2" />
+          <Property Name="day_of_week" Type="varchar" MaxLength="1" />
+          <Property Name="day_name" Type="varchar" MaxLength="9" />
+          <Property Name="is_public_holiday" Type="varchar" MaxLength="3" />
+          <Property Name="public_holiday_name" Type="varchar" MaxLength="50" />
+          <Property Name="financial_year" Type="varchar" MaxLength="11" />
+          <Property Name="fbt_range" Type="varchar" MaxLength="11" />
+          <Property Name="pay_period_end" Type="varchar" MaxLength="3" />
+          <Property Name="month_no" Type="int" />
+          <Property Name="financial_month_no" Type="int" />
+          <Property Name="max_temperature" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="min_temperature" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="rainfall" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="max_wind_speed" Type="decimal" Precision="5" Scale="2" />
+        </EntityType>
+        <EntityType Name="error_event_detail_fact">
+          <Key>
+            <PropertyRef Name="error_event_key" />
+          </Key>
+          <Property Name="error_event_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="date_dim_date_key" Type="int" Nullable="false" />
+          <Property Name="batch_dim_batch_key" Type="int" Nullable="false" />
+          <Property Name="table_dim_table_key" Type="int" Nullable="false" />
+          <Property Name="table_pk" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="error_condition" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="field_name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="package_key" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="error_event_fact">
+          <Key>
+            <PropertyRef Name="error_event_key" />
+          </Key>
+          <Property Name="error_event_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="batch_key" Type="int" Nullable="false" />
+          <Property Name="date_key" Type="int" Nullable="false" />
+          <Property Name="error_date_time" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="error_severity" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="package_key" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="etl_process_fact">
+          <Key>
+            <PropertyRef Name="etl_process_key" />
+          </Key>
+          <Property Name="etl_process_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="date_key" Type="int" Nullable="false" />
+          <Property Name="batch_key" Type="int" Nullable="false" />
+          <Property Name="table_key" Type="int" Nullable="false" />
+          <Property Name="status_key" Type="int" Nullable="false" />
+          <Property Name="cdc_date_time" Type="datetime" Nullable="false" />
+          <Property Name="package_key" Type="int" Nullable="false" />
+          <Property Name="operation" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="job_control">
+          <Key>
+            <PropertyRef Name="job_key" />
+          </Key>
+          <Property Name="job_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="source_table_key" Type="int" Nullable="false" />
+          <Property Name="job_enabled_flag" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="destination_table_key" Type="int" Nullable="false" />
+          <Property Name="package_key" Type="int" Nullable="false" />
+          <Property Name="priority" Type="int" />
+          <Property Name="frequency" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="package_dim">
+          <Key>
+            <PropertyRef Name="package_key" />
+          </Key>
+          <Property Name="package_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="package_name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="sub_system" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="status_dim">
+          <Key>
+            <PropertyRef Name="status_key" />
+          </Key>
+          <Property Name="status_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="status_name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="table_dim">
+          <Key>
+            <PropertyRef Name="table_key" />
+          </Key>
+          <Property Name="table_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="table_name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="system" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="schema" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="database" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="server" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_batch_dimerror_event_detail_fact">
+          <End Role="batch_dim" Type="Self.batch_dim" Multiplicity="1" />
+          <End Role="error_event_detail_fact" Type="Self.error_event_detail_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="batch_dim">
+              <PropertyRef Name="batch_key" />
+            </Principal>
+            <Dependent Role="error_event_detail_fact">
+              <PropertyRef Name="batch_dim_batch_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdc_load_factbatch_dim">
+          <End Role="batch_dim" Type="Self.batch_dim" Multiplicity="1" />
+          <End Role="etl_process_fact" Type="Self.etl_process_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="batch_dim">
+              <PropertyRef Name="batch_key" />
+            </Principal>
+            <Dependent Role="etl_process_fact">
+              <PropertyRef Name="batch_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdc_load_factdate_dim">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="etl_process_fact" Type="Self.etl_process_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="etl_process_fact">
+              <PropertyRef Name="date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdc_load_factstatus_dim">
+          <End Role="status_dim" Type="Self.status_dim" Multiplicity="1" />
+          <End Role="etl_process_fact" Type="Self.etl_process_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="status_dim">
+              <PropertyRef Name="status_key" />
+            </Principal>
+            <Dependent Role="etl_process_fact">
+              <PropertyRef Name="status_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdc_load_facttable_dim">
+          <End Role="table_dim" Type="Self.table_dim" Multiplicity="1" />
+          <End Role="etl_process_fact" Type="Self.etl_process_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="table_dim">
+              <PropertyRef Name="table_key" />
+            </Principal>
+            <Dependent Role="etl_process_fact">
+              <PropertyRef Name="table_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdc_load_package_dim">
+          <End Role="package_dim" Type="Self.package_dim" Multiplicity="1" />
+          <End Role="etl_process_fact" Type="Self.etl_process_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="package_dim">
+              <PropertyRef Name="package_key" />
+            </Principal>
+            <Dependent Role="etl_process_fact">
+              <PropertyRef Name="package_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_date_dimerror_event_detail_fact">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="error_event_detail_fact" Type="Self.error_event_detail_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="error_event_detail_fact">
+              <PropertyRef Name="date_dim_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_date_dimerror_event_fact">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="error_event_fact" Type="Self.error_event_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="error_event_fact">
+              <PropertyRef Name="date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_error_event_factbatch_dim">
+          <End Role="batch_dim" Type="Self.batch_dim" Multiplicity="1" />
+          <End Role="error_event_fact" Type="Self.error_event_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="batch_dim">
+              <PropertyRef Name="batch_key" />
+            </Principal>
+            <Dependent Role="error_event_fact">
+              <PropertyRef Name="batch_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_package_dimerror_event_detail_fact">
+          <End Role="package_dim" Type="Self.package_dim" Multiplicity="1" />
+          <End Role="error_event_detail_fact" Type="Self.error_event_detail_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="package_dim">
+              <PropertyRef Name="package_key" />
+            </Principal>
+            <Dependent Role="error_event_detail_fact">
+              <PropertyRef Name="package_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_package_dimerror_event_fact">
+          <End Role="package_dim" Type="Self.package_dim" Multiplicity="1" />
+          <End Role="error_event_fact" Type="Self.error_event_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="package_dim">
+              <PropertyRef Name="package_key" />
+            </Principal>
+            <Dependent Role="error_event_fact">
+              <PropertyRef Name="package_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_package_dimjob_control">
+          <End Role="package_dim" Type="Self.package_dim" Multiplicity="1" />
+          <End Role="job_control" Type="Self.job_control" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="package_dim">
+              <PropertyRef Name="package_key" />
+            </Principal>
+            <Dependent Role="job_control">
+              <PropertyRef Name="package_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_table_dimerror_event_detail_fact">
+          <End Role="table_dim" Type="Self.table_dim" Multiplicity="1" />
+          <End Role="error_event_detail_fact" Type="Self.error_event_detail_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="table_dim">
+              <PropertyRef Name="table_key" />
+            </Principal>
+            <Dependent Role="error_event_detail_fact">
+              <PropertyRef Name="table_dim_table_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_table_dimjob_control">
+          <End Role="table_dim" Type="Self.table_dim" Multiplicity="1" />
+          <End Role="job_control" Type="Self.job_control" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="table_dim">
+              <PropertyRef Name="table_key" />
+            </Principal>
+            <Dependent Role="job_control">
+              <PropertyRef Name="destination_table_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_table_dimjob_schedule">
+          <End Role="table_dim" Type="Self.table_dim" Multiplicity="1" />
+          <End Role="job_control" Type="Self.job_control" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="table_dim">
+              <PropertyRef Name="table_key" />
+            </Principal>
+            <Dependent Role="job_control">
+              <PropertyRef Name="source_table_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="management_physicalStoreContainer">
+          <EntitySet Name="batch_dim" EntityType="Self.batch_dim" Schema="management" store:Type="Tables" />
+          <EntitySet Name="date_dim" EntityType="Self.date_dim" Schema="management" store:Type="Tables" />
+          <EntitySet Name="error_event_detail_fact" EntityType="Self.error_event_detail_fact" Schema="management" store:Type="Tables" />
+          <EntitySet Name="error_event_fact" EntityType="Self.error_event_fact" Schema="management" store:Type="Tables" />
+          <EntitySet Name="etl_process_fact" EntityType="Self.etl_process_fact" Schema="management" store:Type="Tables" />
+          <EntitySet Name="job_control" EntityType="Self.job_control" Schema="management" store:Type="Tables" />
+          <EntitySet Name="package_dim" EntityType="Self.package_dim" Schema="management" store:Type="Tables" />
+          <EntitySet Name="status_dim" EntityType="Self.status_dim" Schema="management" store:Type="Tables" />
+          <EntitySet Name="table_dim" EntityType="Self.table_dim" Schema="management" store:Type="Tables" />
+          <AssociationSet Name="fk_batch_dimerror_event_detail_fact" Association="Self.fk_batch_dimerror_event_detail_fact">
+            <End Role="batch_dim" EntitySet="batch_dim" />
+            <End Role="error_event_detail_fact" EntitySet="error_event_detail_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cdc_load_factbatch_dim" Association="Self.fk_cdc_load_factbatch_dim">
+            <End Role="batch_dim" EntitySet="batch_dim" />
+            <End Role="etl_process_fact" EntitySet="etl_process_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cdc_load_factdate_dim" Association="Self.fk_cdc_load_factdate_dim">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="etl_process_fact" EntitySet="etl_process_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cdc_load_factstatus_dim" Association="Self.fk_cdc_load_factstatus_dim">
+            <End Role="status_dim" EntitySet="status_dim" />
+            <End Role="etl_process_fact" EntitySet="etl_process_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cdc_load_facttable_dim" Association="Self.fk_cdc_load_facttable_dim">
+            <End Role="table_dim" EntitySet="table_dim" />
+            <End Role="etl_process_fact" EntitySet="etl_process_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cdc_load_package_dim" Association="Self.fk_cdc_load_package_dim">
+            <End Role="package_dim" EntitySet="package_dim" />
+            <End Role="etl_process_fact" EntitySet="etl_process_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_date_dimerror_event_detail_fact" Association="Self.fk_date_dimerror_event_detail_fact">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="error_event_detail_fact" EntitySet="error_event_detail_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_date_dimerror_event_fact" Association="Self.fk_date_dimerror_event_fact">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="error_event_fact" EntitySet="error_event_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_error_event_factbatch_dim" Association="Self.fk_error_event_factbatch_dim">
+            <End Role="batch_dim" EntitySet="batch_dim" />
+            <End Role="error_event_fact" EntitySet="error_event_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_package_dimerror_event_detail_fact" Association="Self.fk_package_dimerror_event_detail_fact">
+            <End Role="package_dim" EntitySet="package_dim" />
+            <End Role="error_event_detail_fact" EntitySet="error_event_detail_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_package_dimerror_event_fact" Association="Self.fk_package_dimerror_event_fact">
+            <End Role="package_dim" EntitySet="package_dim" />
+            <End Role="error_event_fact" EntitySet="error_event_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_package_dimjob_control" Association="Self.fk_package_dimjob_control">
+            <End Role="package_dim" EntitySet="package_dim" />
+            <End Role="job_control" EntitySet="job_control" />
+          </AssociationSet>
+          <AssociationSet Name="fk_table_dimerror_event_detail_fact" Association="Self.fk_table_dimerror_event_detail_fact">
+            <End Role="table_dim" EntitySet="table_dim" />
+            <End Role="error_event_detail_fact" EntitySet="error_event_detail_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_table_dimjob_control" Association="Self.fk_table_dimjob_control">
+            <End Role="table_dim" EntitySet="table_dim" />
+            <End Role="job_control" EntitySet="job_control" />
+          </AssociationSet>
+          <AssociationSet Name="fk_table_dimjob_schedule" Association="Self.fk_table_dimjob_schedule">
+            <End Role="table_dim" EntitySet="table_dim" />
+            <End Role="job_control" EntitySet="job_control" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="management_physical" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="management_physicalContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="batch_dim" EntityType="management_physical.batch_dim" />
+          <EntitySet Name="date_dim" EntityType="management_physical.date_dim" />
+          <EntitySet Name="error_event_detail_fact" EntityType="management_physical.error_event_detail_fact" />
+          <EntitySet Name="error_event_fact" EntityType="management_physical.error_event_fact" />
+          <EntitySet Name="etl_process_fact" EntityType="management_physical.etl_process_fact" />
+          <EntitySet Name="job_control" EntityType="management_physical.job_control" />
+          <EntitySet Name="package_dim" EntityType="management_physical.package_dim" />
+          <EntitySet Name="status_dim" EntityType="management_physical.status_dim" />
+          <EntitySet Name="table_dim" EntityType="management_physical.table_dim" />
+          <AssociationSet Name="fk_batch_dimerror_event_detail_fact" Association="management_physical.fk_batch_dimerror_event_detail_fact">
+            <End Role="batch_dim" EntitySet="batch_dim" />
+            <End Role="error_event_detail_fact" EntitySet="error_event_detail_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cdc_load_factbatch_dim" Association="management_physical.fk_cdc_load_factbatch_dim">
+            <End Role="batch_dim" EntitySet="batch_dim" />
+            <End Role="etl_process_fact" EntitySet="etl_process_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_error_event_factbatch_dim" Association="management_physical.fk_error_event_factbatch_dim">
+            <End Role="batch_dim" EntitySet="batch_dim" />
+            <End Role="error_event_fact" EntitySet="error_event_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cdc_load_factdate_dim" Association="management_physical.fk_cdc_load_factdate_dim">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="etl_process_fact" EntitySet="etl_process_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_date_dimerror_event_detail_fact" Association="management_physical.fk_date_dimerror_event_detail_fact">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="error_event_detail_fact" EntitySet="error_event_detail_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_date_dimerror_event_fact" Association="management_physical.fk_date_dimerror_event_fact">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="error_event_fact" EntitySet="error_event_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_package_dimerror_event_detail_fact" Association="management_physical.fk_package_dimerror_event_detail_fact">
+            <End Role="package_dim" EntitySet="package_dim" />
+            <End Role="error_event_detail_fact" EntitySet="error_event_detail_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_table_dimerror_event_detail_fact" Association="management_physical.fk_table_dimerror_event_detail_fact">
+            <End Role="table_dim" EntitySet="table_dim" />
+            <End Role="error_event_detail_fact" EntitySet="error_event_detail_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_package_dimerror_event_fact" Association="management_physical.fk_package_dimerror_event_fact">
+            <End Role="package_dim" EntitySet="package_dim" />
+            <End Role="error_event_fact" EntitySet="error_event_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cdc_load_factstatus_dim" Association="management_physical.fk_cdc_load_factstatus_dim">
+            <End Role="status_dim" EntitySet="status_dim" />
+            <End Role="etl_process_fact" EntitySet="etl_process_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cdc_load_facttable_dim" Association="management_physical.fk_cdc_load_facttable_dim">
+            <End Role="table_dim" EntitySet="table_dim" />
+            <End Role="etl_process_fact" EntitySet="etl_process_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cdc_load_package_dim" Association="management_physical.fk_cdc_load_package_dim">
+            <End Role="package_dim" EntitySet="package_dim" />
+            <End Role="etl_process_fact" EntitySet="etl_process_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_package_dimjob_control" Association="management_physical.fk_package_dimjob_control">
+            <End Role="package_dim" EntitySet="package_dim" />
+            <End Role="job_control" EntitySet="job_control" />
+          </AssociationSet>
+          <AssociationSet Name="fk_table_dimjob_control" Association="management_physical.fk_table_dimjob_control">
+            <End Role="table_dim" EntitySet="table_dim" />
+            <End Role="job_control" EntitySet="job_control" />
+          </AssociationSet>
+          <AssociationSet Name="fk_table_dimjob_schedule" Association="management_physical.fk_table_dimjob_schedule">
+            <End Role="table_dim" EntitySet="table_dim" />
+            <End Role="job_control" EntitySet="job_control" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="batch_dim">
+          <Key>
+            <PropertyRef Name="batch_key" />
+          </Key>
+          <Property Name="batch_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="batch_type" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="error_event_detail_fact" Relationship="management_physical.fk_batch_dimerror_event_detail_fact" FromRole="batch_dim" ToRole="error_event_detail_fact" />
+          <NavigationProperty Name="etl_process_fact" Relationship="management_physical.fk_cdc_load_factbatch_dim" FromRole="batch_dim" ToRole="etl_process_fact" />
+          <NavigationProperty Name="error_event_fact" Relationship="management_physical.fk_error_event_factbatch_dim" FromRole="batch_dim" ToRole="error_event_fact" />
+        </EntityType>
+        <EntityType Name="date_dim">
+          <Key>
+            <PropertyRef Name="date_key" />
+          </Key>
+          <Property Name="date_key" Type="Int32" Nullable="false" />
+          <Property Name="full_date" Type="DateTime" Precision="3" />
+          <Property Name="year" Type="String" MaxLength="4" FixedLength="true" Unicode="false" />
+          <Property Name="quarter" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="quarter_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="month" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="month_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="day_of_month" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="day_of_week" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="day_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="is_public_holiday" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="public_holiday_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="financial_year" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="fbt_range" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="pay_period_end" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="month_no" Type="Int32" />
+          <Property Name="financial_month_no" Type="Int32" />
+          <Property Name="max_temperature" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="min_temperature" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="rainfall" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="max_wind_speed" Type="Decimal" Precision="5" Scale="2" />
+          <NavigationProperty Name="etl_process_fact" Relationship="management_physical.fk_cdc_load_factdate_dim" FromRole="date_dim" ToRole="etl_process_fact" />
+          <NavigationProperty Name="error_event_detail_fact" Relationship="management_physical.fk_date_dimerror_event_detail_fact" FromRole="date_dim" ToRole="error_event_detail_fact" />
+          <NavigationProperty Name="error_event_fact" Relationship="management_physical.fk_date_dimerror_event_fact" FromRole="date_dim" ToRole="error_event_fact" />
+        </EntityType>
+        <EntityType Name="error_event_detail_fact">
+          <Key>
+            <PropertyRef Name="error_event_key" />
+          </Key>
+          <Property Name="error_event_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="date_dim_date_key" Type="Int32" Nullable="false" />
+          <Property Name="batch_dim_batch_key" Type="Int32" Nullable="false" />
+          <Property Name="table_dim_table_key" Type="Int32" Nullable="false" />
+          <Property Name="table_pk" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="error_condition" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="field_name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="package_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="batch_dim" Relationship="management_physical.fk_batch_dimerror_event_detail_fact" FromRole="error_event_detail_fact" ToRole="batch_dim" />
+          <NavigationProperty Name="date_dim" Relationship="management_physical.fk_date_dimerror_event_detail_fact" FromRole="error_event_detail_fact" ToRole="date_dim" />
+          <NavigationProperty Name="package_dim" Relationship="management_physical.fk_package_dimerror_event_detail_fact" FromRole="error_event_detail_fact" ToRole="package_dim" />
+          <NavigationProperty Name="table_dim" Relationship="management_physical.fk_table_dimerror_event_detail_fact" FromRole="error_event_detail_fact" ToRole="table_dim" />
+        </EntityType>
+        <EntityType Name="error_event_fact">
+          <Key>
+            <PropertyRef Name="error_event_key" />
+          </Key>
+          <Property Name="error_event_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="batch_key" Type="Int32" Nullable="false" />
+          <Property Name="date_key" Type="Int32" Nullable="false" />
+          <Property Name="error_date_time" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="error_severity" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="package_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="batch_dim" Relationship="management_physical.fk_error_event_factbatch_dim" FromRole="error_event_fact" ToRole="batch_dim" />
+          <NavigationProperty Name="date_dim" Relationship="management_physical.fk_date_dimerror_event_fact" FromRole="error_event_fact" ToRole="date_dim" />
+          <NavigationProperty Name="package_dim" Relationship="management_physical.fk_package_dimerror_event_fact" FromRole="error_event_fact" ToRole="package_dim" />
+        </EntityType>
+        <EntityType Name="etl_process_fact">
+          <Key>
+            <PropertyRef Name="etl_process_key" />
+          </Key>
+          <Property Name="etl_process_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="date_key" Type="Int32" Nullable="false" />
+          <Property Name="batch_key" Type="Int32" Nullable="false" />
+          <Property Name="table_key" Type="Int32" Nullable="false" />
+          <Property Name="status_key" Type="Int32" Nullable="false" />
+          <Property Name="cdc_date_time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="package_key" Type="Int32" Nullable="false" />
+          <Property Name="operation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="batch_dim" Relationship="management_physical.fk_cdc_load_factbatch_dim" FromRole="etl_process_fact" ToRole="batch_dim" />
+          <NavigationProperty Name="date_dim" Relationship="management_physical.fk_cdc_load_factdate_dim" FromRole="etl_process_fact" ToRole="date_dim" />
+          <NavigationProperty Name="status_dim" Relationship="management_physical.fk_cdc_load_factstatus_dim" FromRole="etl_process_fact" ToRole="status_dim" />
+          <NavigationProperty Name="table_dim" Relationship="management_physical.fk_cdc_load_facttable_dim" FromRole="etl_process_fact" ToRole="table_dim" />
+          <NavigationProperty Name="package_dim" Relationship="management_physical.fk_cdc_load_package_dim" FromRole="etl_process_fact" ToRole="package_dim" />
+        </EntityType>
+        <EntityType Name="job_control">
+          <Key>
+            <PropertyRef Name="job_key" />
+          </Key>
+          <Property Name="job_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="source_table_key" Type="Int32" Nullable="false" />
+          <Property Name="job_enabled_flag" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="destination_table_key" Type="Int32" Nullable="false" />
+          <Property Name="package_key" Type="Int32" Nullable="false" />
+          <Property Name="priority" Type="Int32" />
+          <Property Name="frequency" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="package_dim" Relationship="management_physical.fk_package_dimjob_control" FromRole="job_control" ToRole="package_dim" />
+          <NavigationProperty Name="table_dim" Relationship="management_physical.fk_table_dimjob_control" FromRole="job_control" ToRole="table_dim" />
+          <NavigationProperty Name="table_dim1" Relationship="management_physical.fk_table_dimjob_schedule" FromRole="job_control" ToRole="table_dim" />
+        </EntityType>
+        <EntityType Name="package_dim">
+          <Key>
+            <PropertyRef Name="package_key" />
+          </Key>
+          <Property Name="package_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="package_name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="sub_system" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="error_event_detail_fact" Relationship="management_physical.fk_package_dimerror_event_detail_fact" FromRole="package_dim" ToRole="error_event_detail_fact" />
+          <NavigationProperty Name="error_event_fact" Relationship="management_physical.fk_package_dimerror_event_fact" FromRole="package_dim" ToRole="error_event_fact" />
+          <NavigationProperty Name="etl_process_fact" Relationship="management_physical.fk_cdc_load_package_dim" FromRole="package_dim" ToRole="etl_process_fact" />
+          <NavigationProperty Name="job_control" Relationship="management_physical.fk_package_dimjob_control" FromRole="package_dim" ToRole="job_control" />
+        </EntityType>
+        <EntityType Name="status_dim">
+          <Key>
+            <PropertyRef Name="status_key" />
+          </Key>
+          <Property Name="status_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="status_name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="etl_process_fact" Relationship="management_physical.fk_cdc_load_factstatus_dim" FromRole="status_dim" ToRole="etl_process_fact" />
+        </EntityType>
+        <EntityType Name="table_dim">
+          <Key>
+            <PropertyRef Name="table_key" />
+          </Key>
+          <Property Name="table_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="table_name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="system" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="schema" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="database" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="server" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="error_event_detail_fact" Relationship="management_physical.fk_table_dimerror_event_detail_fact" FromRole="table_dim" ToRole="error_event_detail_fact" />
+          <NavigationProperty Name="etl_process_fact" Relationship="management_physical.fk_cdc_load_facttable_dim" FromRole="table_dim" ToRole="etl_process_fact" />
+          <NavigationProperty Name="job_control" Relationship="management_physical.fk_table_dimjob_control" FromRole="table_dim" ToRole="job_control" />
+          <NavigationProperty Name="job_control1" Relationship="management_physical.fk_table_dimjob_schedule" FromRole="table_dim" ToRole="job_control" />
+        </EntityType>
+        <Association Name="fk_batch_dimerror_event_detail_fact">
+          <End Type="management_physical.batch_dim" Role="batch_dim" Multiplicity="1" />
+          <End Type="management_physical.error_event_detail_fact" Role="error_event_detail_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="batch_dim">
+              <PropertyRef Name="batch_key" />
+            </Principal>
+            <Dependent Role="error_event_detail_fact">
+              <PropertyRef Name="batch_dim_batch_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdc_load_factbatch_dim">
+          <End Type="management_physical.batch_dim" Role="batch_dim" Multiplicity="1" />
+          <End Type="management_physical.etl_process_fact" Role="etl_process_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="batch_dim">
+              <PropertyRef Name="batch_key" />
+            </Principal>
+            <Dependent Role="etl_process_fact">
+              <PropertyRef Name="batch_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_error_event_factbatch_dim">
+          <End Type="management_physical.batch_dim" Role="batch_dim" Multiplicity="1" />
+          <End Type="management_physical.error_event_fact" Role="error_event_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="batch_dim">
+              <PropertyRef Name="batch_key" />
+            </Principal>
+            <Dependent Role="error_event_fact">
+              <PropertyRef Name="batch_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdc_load_factdate_dim">
+          <End Type="management_physical.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="management_physical.etl_process_fact" Role="etl_process_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="etl_process_fact">
+              <PropertyRef Name="date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_date_dimerror_event_detail_fact">
+          <End Type="management_physical.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="management_physical.error_event_detail_fact" Role="error_event_detail_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="error_event_detail_fact">
+              <PropertyRef Name="date_dim_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_date_dimerror_event_fact">
+          <End Type="management_physical.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="management_physical.error_event_fact" Role="error_event_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="error_event_fact">
+              <PropertyRef Name="date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_package_dimerror_event_detail_fact">
+          <End Type="management_physical.package_dim" Role="package_dim" Multiplicity="1" />
+          <End Type="management_physical.error_event_detail_fact" Role="error_event_detail_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="package_dim">
+              <PropertyRef Name="package_key" />
+            </Principal>
+            <Dependent Role="error_event_detail_fact">
+              <PropertyRef Name="package_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_table_dimerror_event_detail_fact">
+          <End Type="management_physical.table_dim" Role="table_dim" Multiplicity="1" />
+          <End Type="management_physical.error_event_detail_fact" Role="error_event_detail_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="table_dim">
+              <PropertyRef Name="table_key" />
+            </Principal>
+            <Dependent Role="error_event_detail_fact">
+              <PropertyRef Name="table_dim_table_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_package_dimerror_event_fact">
+          <End Type="management_physical.package_dim" Role="package_dim" Multiplicity="1" />
+          <End Type="management_physical.error_event_fact" Role="error_event_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="package_dim">
+              <PropertyRef Name="package_key" />
+            </Principal>
+            <Dependent Role="error_event_fact">
+              <PropertyRef Name="package_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdc_load_factstatus_dim">
+          <End Type="management_physical.status_dim" Role="status_dim" Multiplicity="1" />
+          <End Type="management_physical.etl_process_fact" Role="etl_process_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="status_dim">
+              <PropertyRef Name="status_key" />
+            </Principal>
+            <Dependent Role="etl_process_fact">
+              <PropertyRef Name="status_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdc_load_facttable_dim">
+          <End Type="management_physical.table_dim" Role="table_dim" Multiplicity="1" />
+          <End Type="management_physical.etl_process_fact" Role="etl_process_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="table_dim">
+              <PropertyRef Name="table_key" />
+            </Principal>
+            <Dependent Role="etl_process_fact">
+              <PropertyRef Name="table_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cdc_load_package_dim">
+          <End Type="management_physical.package_dim" Role="package_dim" Multiplicity="1" />
+          <End Type="management_physical.etl_process_fact" Role="etl_process_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="package_dim">
+              <PropertyRef Name="package_key" />
+            </Principal>
+            <Dependent Role="etl_process_fact">
+              <PropertyRef Name="package_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_package_dimjob_control">
+          <End Type="management_physical.package_dim" Role="package_dim" Multiplicity="1" />
+          <End Type="management_physical.job_control" Role="job_control" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="package_dim">
+              <PropertyRef Name="package_key" />
+            </Principal>
+            <Dependent Role="job_control">
+              <PropertyRef Name="package_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_table_dimjob_control">
+          <End Type="management_physical.table_dim" Role="table_dim" Multiplicity="1" />
+          <End Type="management_physical.job_control" Role="job_control" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="table_dim">
+              <PropertyRef Name="table_key" />
+            </Principal>
+            <Dependent Role="job_control">
+              <PropertyRef Name="destination_table_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_table_dimjob_schedule">
+          <End Type="management_physical.table_dim" Role="table_dim" Multiplicity="1" />
+          <End Type="management_physical.job_control" Role="job_control" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="table_dim">
+              <PropertyRef Name="table_key" />
+            </Principal>
+            <Dependent Role="job_control">
+              <PropertyRef Name="source_table_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="management_physical" />
+        <Alias Key="Target" Value="management_physical.Store" />
+        <EntityContainerMapping CdmEntityContainer="management_physicalContainer" StorageEntityContainer="management_physicalStoreContainer">
+          <EntitySetMapping Name="batch_dim">
+            <EntityTypeMapping TypeName="management_physical.batch_dim">
+              <MappingFragment StoreEntitySet="batch_dim">
+                <ScalarProperty Name="batch_type" ColumnName="batch_type" />
+                <ScalarProperty Name="batch_key" ColumnName="batch_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="date_dim">
+            <EntityTypeMapping TypeName="management_physical.date_dim">
+              <MappingFragment StoreEntitySet="date_dim">
+                <ScalarProperty Name="max_wind_speed" ColumnName="max_wind_speed" />
+                <ScalarProperty Name="rainfall" ColumnName="rainfall" />
+                <ScalarProperty Name="min_temperature" ColumnName="min_temperature" />
+                <ScalarProperty Name="max_temperature" ColumnName="max_temperature" />
+                <ScalarProperty Name="financial_month_no" ColumnName="financial_month_no" />
+                <ScalarProperty Name="month_no" ColumnName="month_no" />
+                <ScalarProperty Name="pay_period_end" ColumnName="pay_period_end" />
+                <ScalarProperty Name="fbt_range" ColumnName="fbt_range" />
+                <ScalarProperty Name="financial_year" ColumnName="financial_year" />
+                <ScalarProperty Name="public_holiday_name" ColumnName="public_holiday_name" />
+                <ScalarProperty Name="is_public_holiday" ColumnName="is_public_holiday" />
+                <ScalarProperty Name="day_name" ColumnName="day_name" />
+                <ScalarProperty Name="day_of_week" ColumnName="day_of_week" />
+                <ScalarProperty Name="day_of_month" ColumnName="day_of_month" />
+                <ScalarProperty Name="month_name" ColumnName="month_name" />
+                <ScalarProperty Name="month" ColumnName="month" />
+                <ScalarProperty Name="quarter_name" ColumnName="quarter_name" />
+                <ScalarProperty Name="quarter" ColumnName="quarter" />
+                <ScalarProperty Name="year" ColumnName="year" />
+                <ScalarProperty Name="full_date" ColumnName="full_date" />
+                <ScalarProperty Name="date_key" ColumnName="date_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="error_event_detail_fact">
+            <EntityTypeMapping TypeName="management_physical.error_event_detail_fact">
+              <MappingFragment StoreEntitySet="error_event_detail_fact">
+                <ScalarProperty Name="package_key" ColumnName="package_key" />
+                <ScalarProperty Name="field_name" ColumnName="field_name" />
+                <ScalarProperty Name="error_condition" ColumnName="error_condition" />
+                <ScalarProperty Name="table_pk" ColumnName="table_pk" />
+                <ScalarProperty Name="table_dim_table_key" ColumnName="table_dim_table_key" />
+                <ScalarProperty Name="batch_dim_batch_key" ColumnName="batch_dim_batch_key" />
+                <ScalarProperty Name="date_dim_date_key" ColumnName="date_dim_date_key" />
+                <ScalarProperty Name="error_event_key" ColumnName="error_event_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="error_event_fact">
+            <EntityTypeMapping TypeName="management_physical.error_event_fact">
+              <MappingFragment StoreEntitySet="error_event_fact">
+                <ScalarProperty Name="package_key" ColumnName="package_key" />
+                <ScalarProperty Name="error_severity" ColumnName="error_severity" />
+                <ScalarProperty Name="error_date_time" ColumnName="error_date_time" />
+                <ScalarProperty Name="date_key" ColumnName="date_key" />
+                <ScalarProperty Name="batch_key" ColumnName="batch_key" />
+                <ScalarProperty Name="error_event_key" ColumnName="error_event_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="etl_process_fact">
+            <EntityTypeMapping TypeName="management_physical.etl_process_fact">
+              <MappingFragment StoreEntitySet="etl_process_fact">
+                <ScalarProperty Name="operation" ColumnName="operation" />
+                <ScalarProperty Name="package_key" ColumnName="package_key" />
+                <ScalarProperty Name="cdc_date_time" ColumnName="cdc_date_time" />
+                <ScalarProperty Name="status_key" ColumnName="status_key" />
+                <ScalarProperty Name="table_key" ColumnName="table_key" />
+                <ScalarProperty Name="batch_key" ColumnName="batch_key" />
+                <ScalarProperty Name="date_key" ColumnName="date_key" />
+                <ScalarProperty Name="etl_process_key" ColumnName="etl_process_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="job_control">
+            <EntityTypeMapping TypeName="management_physical.job_control">
+              <MappingFragment StoreEntitySet="job_control">
+                <ScalarProperty Name="frequency" ColumnName="frequency" />
+                <ScalarProperty Name="priority" ColumnName="priority" />
+                <ScalarProperty Name="package_key" ColumnName="package_key" />
+                <ScalarProperty Name="destination_table_key" ColumnName="destination_table_key" />
+                <ScalarProperty Name="job_enabled_flag" ColumnName="job_enabled_flag" />
+                <ScalarProperty Name="source_table_key" ColumnName="source_table_key" />
+                <ScalarProperty Name="job_key" ColumnName="job_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="package_dim">
+            <EntityTypeMapping TypeName="management_physical.package_dim">
+              <MappingFragment StoreEntitySet="package_dim">
+                <ScalarProperty Name="sub_system" ColumnName="sub_system" />
+                <ScalarProperty Name="package_name" ColumnName="package_name" />
+                <ScalarProperty Name="package_key" ColumnName="package_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="status_dim">
+            <EntityTypeMapping TypeName="management_physical.status_dim">
+              <MappingFragment StoreEntitySet="status_dim">
+                <ScalarProperty Name="status_name" ColumnName="status_name" />
+                <ScalarProperty Name="status_key" ColumnName="status_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="table_dim">
+            <EntityTypeMapping TypeName="management_physical.table_dim">
+              <MappingFragment StoreEntitySet="table_dim">
+                <ScalarProperty Name="server" ColumnName="server" />
+                <ScalarProperty Name="database" ColumnName="database" />
+                <ScalarProperty Name="schema" ColumnName="schema" />
+                <ScalarProperty Name="system" ColumnName="system" />
+                <ScalarProperty Name="table_name" ColumnName="table_name" />
+                <ScalarProperty Name="table_key" ColumnName="table_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

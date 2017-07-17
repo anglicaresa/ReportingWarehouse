@@ -1,0 +1,46 @@
+﻿CREATE TABLE [extract_riskman].[IncNotif_IFR](
+	[IncNotif_ID] [int] NOT NULL,
+	[FireNotif] [bit] NULL,
+	[FireComm] [varchar](200) NULL,
+	[AmbNotif] [bit] NULL,
+	[AmbComm] [varchar](200) NULL,
+	[PoliceNotif] [bit] NULL,
+	[PoliceComm] [varchar](200) NULL,
+	[NOKComm] [varchar](200) NULL,
+	[CarerNotif] [bit] NULL,
+	[ChildAbuseNotif] [bit] NULL,
+	[CorrOffNotif] [bit] NULL,
+	[DECDCareNotif] [bit] NULL,
+	[DCSINotif] [bit] NULL,
+	[FaCHSIANotif] [bit] NULL,
+	[EmergContNotif] [bit] NULL,
+	[OPANotif] [bit] NULL,
+	[OtherNotif] [bit] NULL,
+	[GuardNotif] [bit] NULL,
+	[AGNotif] [bit] NULL,
+	[UCWNotif] [bit] NULL,
+	[CarerComm] [varchar](200) NULL,
+	[ChildAbuseComm] [varchar](200) NULL,
+	[CorrOffComm] [varchar](200) NULL,
+	[FaCHSIAComm] [varchar](200) NULL,
+	[DECDComm] [varchar](200) NULL,
+	[DCSIComm] [varchar](200) NULL,
+	[EmergContComm] [varchar](200) NULL,
+	[OPAComm] [varchar](200) NULL,
+	[OtherComm] [varchar](200) NULL,
+	[GuardComm] [varchar](200) NULL,
+	[AGComm] [varchar](200) NULL,
+	[UCWComm] [varchar](200) NULL,
+	[DECDCareComm] [varchar](200) NULL,
+	[DECDNotif] [bit] NULL,
+	[HouseReg] [bit] NULL,
+	[HouseRegComm] [varchar](200) NULL,
+	[Funder] [bit] NULL,
+	[FunderComm] [varchar](200) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[IncNotif_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO

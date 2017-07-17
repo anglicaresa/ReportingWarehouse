@@ -1,0 +1,24 @@
+  select d1.given_name, d1.FAMILY_NAME, d2.full_date 'Recruitment Date', d2.Day_name, d3.PORTFOLIO_NAME, d4.SERVICE_STREAM_NAME, d5.PROGRAM_NAME, d6.POSITION_NAME
+  from dwhf.dim_employee d1
+  ,dwhf.DIM_DATE d2
+  ,dwhf.DIM_PORTFOLIO d3
+  ,dwhf.DIM_SERVICE_STREAM d4
+  ,dwhf.DIM_PROGRAM d5
+  ,dwhf.DIM_POSITION d6
+  ,dwhf.FACT_EMPLOYEE_RECRUITMENT f1
+  where f1.EMPLOYEE_KEY = d1.Employee_Key
+  and f1.COMMENCEMENT_DATE_KEY = d2.date_key
+  and f1.PORTFOLIO_KEY = d3.PORTFOLIO_KEY
+  and f1.SERVICE_STREAM_KEY = d4.SERVICE_STREAM_KEY
+  and f1.PROGRAM_KEY = d5.PROGRAM_KEY
+  and f1.POSITION_KEY = d6.POSITION_KEY
+
+
+select count(d2.full_date) date_count, d2.full_date 'Recruitment Date'
+  from 
+  dwhf.DIM_DATE d2
+  ,dwhf.FACT_EMPLOYEE_RECRUITMENT f1
+  where  f1.COMMENCEMENT_DATE_KEY = d2.date_key
+  group by d2.full_date
+  order by date_count desc
+  

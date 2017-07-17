@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DWHFModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="DWHFModel1StoreContainer" />
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DWHFModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="dwhfriskman" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="incident_fact" EntityType="DWHFModel1.incident_fact" />
+          <EntitySet Name="portfolio_dim" EntityType="DWHFModel1.portfolio_dim" />
+          <EntitySet Name="service_strean_dim" EntityType="DWHFModel1.service_strean_dim" />
+          <AssociationSet Name="incident_factportfolio_dim" Association="DWHFModel1.incident_factportfolio_dim">
+            <End Role="incident_fact" EntitySet="incident_fact" />
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+          </AssociationSet>
+          <EntitySet Name="program_dim" EntityType="DWHFModel1.program_dim" />
+          <EntitySet Name="date_dim" EntityType="DWHFModel1.date_dim" />
+          <AssociationSet Name="service_strean_dimincident_fact" Association="DWHFModel1.service_strean_dimincident_fact">
+            <End Role="incident_fact" EntitySet="incident_fact" />
+            <End Role="service_strean_dim" EntitySet="service_strean_dim" />
+          </AssociationSet>
+          <AssociationSet Name="incident_factprogram_dim" Association="DWHFModel1.incident_factprogram_dim">
+            <End Role="incident_fact" EntitySet="incident_fact" />
+            <End Role="program_dim" EntitySet="program_dim" />
+          </AssociationSet>
+          <AssociationSet Name="date_dimincident_fact" Association="DWHFModel1.date_dimincident_fact">
+            <End Role="incident_fact" EntitySet="incident_fact" />
+            <End Role="date_dim" EntitySet="date_dim" />
+          </AssociationSet>
+          <EntitySet Name="location_dim" EntityType="DWHFModel1.location_dim" />
+          <AssociationSet Name="incident_factlocation_dim" Association="DWHFModel1.incident_factlocation_dim">
+            <End Role="incident_fact" EntitySet="incident_fact" />
+            <End Role="location_dim" EntitySet="location_dim" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="incident_fact">
+          <Key>
+            <PropertyRef Name="incident_key" />
+          </Key>
+          <Property Name="incident_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="portfolio_dim" Relationship="DWHFModel1.incident_factportfolio_dim" FromRole="incident_fact" ToRole="portfolio_dim" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="service_strean_dim" Relationship="DWHFModel1.service_strean_dimincident_fact" FromRole="incident_fact" ToRole="service_strean_dim" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="program_dim" Relationship="DWHFModel1.incident_factprogram_dim" FromRole="incident_fact" ToRole="program_dim" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="date_dim" Relationship="DWHFModel1.date_dimincident_fact" FromRole="incident_fact" ToRole="date_dim" />
+          <Property Name="incident_date_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="location_dim" Relationship="DWHFModel1.incident_factlocation_dim" FromRole="incident_fact" ToRole="location_dim" />
+          <Property Name="location_key" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="portfolio_dim">
+          <Key>
+            <PropertyRef Name="portfolio_key" />
+          </Key>
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="service_strean_dim">
+          <Key>
+            <PropertyRef Name="service_stream_key" />
+          </Key>
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <Association Name="incident_factportfolio_dim">
+          <End Type="DWHFModel1.incident_fact" Role="incident_fact" Multiplicity="*" />
+          <End Type="DWHFModel1.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="incident_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="program_dim">
+          <Key>
+            <PropertyRef Name="program_key" />
+          </Key>
+          <Property Name="program_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="date_dim">
+          <Key>
+            <PropertyRef Name="date_key" />
+          </Key>
+          <Property Name="date_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <Association Name="service_strean_dimincident_fact">
+          <End Type="DWHFModel1.incident_fact" Role="incident_fact" Multiplicity="*" />
+          <End Type="DWHFModel1.service_strean_dim" Role="service_strean_dim" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="service_strean_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="incident_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="incident_factprogram_dim">
+          <End Type="DWHFModel1.incident_fact" Role="incident_fact" Multiplicity="*" />
+          <End Type="DWHFModel1.program_dim" Role="program_dim" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="incident_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="date_dimincident_fact">
+          <End Type="DWHFModel1.incident_fact" Role="incident_fact" Multiplicity="*" />
+          <End Type="DWHFModel1.date_dim" Role="date_dim" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="incident_fact">
+              <PropertyRef Name="incident_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="location_dim">
+          <Key>
+            <PropertyRef Name="location_key" />
+          </Key>
+          <Property Name="location_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <Association Name="incident_factlocation_dim">
+          <End Type="DWHFModel1.incident_fact" Role="incident_fact" Multiplicity="*" />
+          <End Type="DWHFModel1.location_dim" Role="location_dim" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="location_dim">
+              <PropertyRef Name="location_key" />
+            </Principal>
+            <Dependent Role="incident_fact">
+              <PropertyRef Name="location_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DWHFModel1StoreContainer" CdmEntityContainer="dwhfriskman" />
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,34 @@
+﻿-- creating table 'hrsys_hierarch_ctl'
+CREATE TABLE [extract].[hrsys_hierarch_ctl](
+	[COMPANY_CODE] [int] NOT NULL,
+	[HIERARCHY_TYPE] [varchar](10) NOT NULL,
+	[HIERARCHY_CODE] [varchar](10) NOT NULL,
+	[HIERARCHY_DESCR] [varchar](50) NULL,
+	[PARENT_NODE] [varchar](10) NULL,
+	[CRUSER] [varchar](14) NULL,
+	[CRDATEI] [datetime] NULL,
+	[CRTIMEI] [int] NULL,
+	[CRTERM] [varchar](10) NULL,
+	[CRWINDOW] [varchar](8) NULL,
+	[LAST_MOD_USER] [varchar](14) NULL,
+	[LAST_MOD_DATEI] [datetime] NULL,
+	[LAST_MOD_TIMEI] [int] NULL,
+	[LAST_MOD_TERM] [varchar](10) NULL,
+	[LAST_MOD_WINDOW] [varchar](8) NULL,
+	[VERS] [int] NULL,
+	[COMMENTS] [varchar](255) NULL,
+	[STATUS] [varchar](10) NULL,
+	[POS_PROFILE_CODE] [varchar](10) NULL,
+	[POS_PROFILE_OVR_IND] [varchar](1) NULL,
+	[LAST_PUBLISH_DATE] [datetime] NULL,
+	[VACANT_DATE] [datetime] NULL,
+	[ESTABLISHMENT_DATE] [datetime] NULL,
+ CONSTRAINT [HRFHIC_IDX1] PRIMARY KEY CLUSTERED 
+(
+	[COMPANY_CODE] ASC,
+	[HIERARCHY_TYPE] ASC,
+	[HIERARCHY_CODE] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO

@@ -1,0 +1,47 @@
+﻿CREATE TABLE [extract].[HRHMN_EMPLISS_DTL](
+	[ID_NUMBER] [int] NOT NULL,
+	[ISSUE_TYPE] [varchar](10) NOT NULL,
+	[ISSUE_DATE] [datetime] NOT NULL,
+	[RETURN_DATE] [datetime] NULL,
+	[RETURNED_DATE] [datetime] NULL,
+	[RETURNABLE_IND] [varchar](1) NULL,
+	[ISSUE_REASON] [varchar](100) NULL,
+	[ISSUE_DESCR] [varchar](100) NULL,
+	[ISSUE_QTY] [decimal](16, 4) NULL,
+	[ISSUE_VALUE] [decimal](16, 4) NULL,
+	[ISSUE_ID_NMBR] [varchar](100) NULL,
+	[PAY_COMPONENT_REF] [decimal](16, 4) NULL,
+	[TECHONE_FIELD_1] [varchar](10) NULL,
+	[TECHONE_FIELD_2] [varchar](8) NULL,
+	[TECHONE_FIELD_3] [varchar](32) NULL,
+	[TECHONE_FIELD_4] [varchar](8) NULL,
+	[TECHONE_FIELD_5] [varchar](16) NULL,
+	[TECHONE_FIELD_6] [varchar](8) NULL,
+	[TECHONE_FIELD_7] [varchar](8) NULL,
+	[TECHONE_FIELD_8] [int] NULL,
+	[TECHONE_FIELD_9] [varchar](10) NULL,
+	[CLOSED_USER] [varchar](14) NULL,
+	[CLOSED_DATE] [datetime] NULL,
+	[CLOSED_TIME] [int] NULL,
+	[CLOSED_TERM] [varchar](10) NULL,
+	[CLOSED_WINDOW] [varchar](8) NULL,
+	[CRUSER] [varchar](14) NULL,
+	[CRDATE] [datetime] NULL,
+	[CRTIME] [int] NULL,
+	[CRTERM] [varchar](10) NULL,
+	[CRWINDOW] [varchar](8) NULL,
+	[LAST_MOD_USER] [varchar](14) NULL,
+	[LAST_MOD_DATE] [datetime] NULL,
+	[LAST_MOD_TIME] [int] NULL,
+	[LAST_MOD_TERM] [varchar](10) NULL,
+	[LAST_MOD_WINDOW] [varchar](8) NULL,
+	[VERS] [int] NULL,
+ CONSTRAINT [HRFEMD_IDX1] PRIMARY KEY CLUSTERED 
+(
+	[ID_NUMBER] ASC,
+	[ISSUE_TYPE] ASC,
+	[ISSUE_DATE] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO

@@ -1,0 +1,47 @@
+﻿CREATE TABLE [extract_riskman].[BEN_IFR](
+	[BEN_ID] [int] NOT NULL,
+	[CoName] [varchar](100) NULL,
+	[TreatReq] [bit] NULL,
+	[CLScase] [bit] NULL,
+	[Chambersenquiry] [bit] NULL,
+	[Inquest] [bit] NULL,
+	[EHOcontactby] [varchar](200) NULL,
+	[EHOdate] [datetime] NULL,
+	[Vicdhs] [bit] NULL,
+	[Vicdhscontact] [varchar](200) NULL,
+	[Vicdhsdate] [datetime] NULL,
+	[DoHACIS] [bit] NULL,
+	[DoHACIScontact] [varchar](200) NULL,
+	[DoHACISdate] [datetime] NULL,
+	[BENPolice] [bit] NULL,
+	[policecontact] [varchar](200) NULL,
+	[BENPolicedate] [datetime] NULL,
+	[NOKNotifDate] [datetime] NULL,
+	[Transferred] [bit] NULL,
+	[StaffBodyPart] [varchar](1000) NULL,
+	[SerDelivery] [bit] NULL,
+	[ManualRx] [bit] NULL,
+	[Area] [varchar](100) NULL,
+	[WorksafeDate] [datetime] NULL,
+	[BenetasOutcome] [varchar](1000) NULL,
+	[ClientBodyPart] [varchar](1000) NULL,
+	[DeathDate] [datetime] NULL,
+	[CorInititateDate] [datetime] NULL,
+	[CorFindingDate] [datetime] NULL,
+	[CorCloseDate] [datetime] NULL,
+	[CorCaseID] [varchar](20) NULL,
+	[CorType] [varchar](50) NULL,
+	[TransferOutcome] [varchar](50) NULL,
+	[IncidentOutcome] [varchar](500) NULL,
+	[SpecificTransDesc] [varchar](100) NULL,
+	[SuggPrevRec] [varchar](1000) NULL,
+	[VisPhone] [varchar](20) NULL,
+	[IncSourceBaseID] [varchar](100) NULL,
+	[IncSouceSubmodule] [varchar](100) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[BEN_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO

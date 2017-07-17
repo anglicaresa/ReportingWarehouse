@@ -1,0 +1,46 @@
+﻿CREATE TABLE [extract_riskman].[ANGCARE_IFR](
+	[ANGCARE_ID] [int] NOT NULL,
+	[ANGPolNo] [varchar](50) NULL,
+	[PersonRespNotif] [varchar](20) NULL,
+	[AHNotif] [bit] NULL,
+	[AHContactedBy] [varchar](100) NULL,
+	[AHContactedDate] [datetime] NULL,
+	[PHNotif] [bit] NULL,
+	[PHContactedBy] [varchar](100) NULL,
+	[PHContactedDate] [datetime] NULL,
+	[ACATNotif] [bit] NULL,
+	[ACATContactedBy] [varchar](100) NULL,
+	[ACATContactedDate] [datetime] NULL,
+	[EntBehalfOfPos] [varchar](100) NULL,
+	[ACShiftSupervisor] [varchar](100) NULL,
+	[ACWhoReportName] [varchar](100) NULL,
+	[ACWhoReportPosition] [varchar](100) NULL,
+	[ACReportBehalfPosition] [varchar](100) NULL,
+	[OthersInvolvedRECID] [varchar](50) NULL,
+	[OthersInvolvedPrevRECID] [varchar](50) NULL,
+	[InjuryType] [varchar](100) NULL,
+	[ClientMedicalRequired] [bit] NULL,
+	[MedAttType] [varchar](100) NULL,
+	[CorActWhyNot] [varchar](200) NULL,
+	[InvInit] [bit] NULL,
+	[InvDate] [datetime] NULL,
+	[InvestComp] [bit] NULL,
+	[InvestCompDate] [datetime] NULL,
+	[CustomerSite] [varchar](200) NULL,
+	[IndigenousState] [bit] NULL,
+	[IncSeen] [bit] NULL,
+	[FirstInformedDate] [datetime] NULL,
+	[FirstInformedTime] [datetime] NULL,
+	[MedAttName] [varchar](100) NULL,
+	[IncStatus] [varchar](100) NULL,
+	[InjuryActivity] [varchar](100) NULL,
+	[CustService] [varchar](100) NULL,
+	[InjuryOth] [varchar](100) NULL,
+	[Wing] [varchar](100) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ANGCARE_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO

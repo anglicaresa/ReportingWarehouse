@@ -1,0 +1,56 @@
+﻿-- creating table 'hreen_emplent_accr'
+create table [extract].[hreen_emplent_accr] (
+    [ID_NUMBER] [int] NOT NULL,
+	[PAY_COMPONENT_REF] [decimal](10, 4) NOT NULL,
+	[ACCRUAL_HOURS] [decimal](14, 4) NULL,
+	[ACCRUAL_PRORATA] [decimal](14, 4) NULL,
+	[ACCRUAL_TAKEN] [decimal](14, 4) NULL,
+	[DURATION_OF_SERVCE] [int] NULL,
+	[NUMBER_OF_ACCRUALS] [int] NULL,
+	[LAST_ACCRUAL_DATE] [datetime] NULL,
+	[LAST_PRORATA_DATE] [datetime] NULL,
+	[LAST_TAKEN_DATE] [datetime] NULL,
+	[DUR_OF_SERV_DATE] [datetime] NULL,
+	[ROW_STATUS] [int] NOT NULL,
+	[CLOSED_USER] [varchar](14) NULL,
+	[CLOSED_DATE] [datetime] NULL,
+	[CLOSED_TIME] [int] NULL,
+	[CLOSED_TERM] [varchar](10) NULL,
+	[CLOSED_WINDOW] [varchar](8) NULL,
+	[CRUSER] [varchar](14) NULL,
+	[CRDATEI] [datetime] NULL,
+	[CRTIMEI] [int] NULL,
+	[CRTERM] [varchar](10) NULL,
+	[CRWINDOW] [varchar](8) NULL,
+	[LAST_MOD_USER] [varchar](14) NULL,
+	[LAST_MOD_DATEI] [datetime] NULL,
+	[LAST_MOD_TIMEI] [int] NULL,
+	[LAST_MOD_TERM] [varchar](10) NULL,
+	[LAST_MOD_WINDOW] [varchar](8) NULL,
+	[VERS] [int] NULL,
+	[ACCR_PRORATA_ELGBL] [decimal](14, 4) NULL,
+	[ACCR_PRORATA_AMT] [decimal](14, 4) NULL,
+	[INIT_DUR_OF_SERV] [decimal](14, 4) NULL,
+	[INIT_WAGES_ALL] [decimal](14, 4) NULL,
+	[INIT_WAGES_CRUSH] [decimal](14, 4) NULL,
+	[LSL_TAKEN_PRIOR_78] [decimal](14, 4) NULL,
+	[LSL_TAKEN_BW_78_93] [decimal](14, 4) NULL,
+	[LSL_TK_BW_93_LIVE] [decimal](14, 4) NULL,
+	[PNG_LSL_TAKEN_PRE_93] [decimal](18, 6) NULL,
+	[PNG_LSL_TAKEN_93_TOLIVE] [decimal](18, 6) NULL,
+	[EFFECTIVE_DATE] [datetime] NOT NULL,
+	[ACCRUAL_START_DATE] [datetime] NULL,
+	[LAST_PROC_DATE] [datetime] NULL,
+	[LEAVE_MATRIX_NAME] [varchar](10) NULL,
+	[SOURCE_CODE] [varchar](10) NULL,
+ CONSTRAINT [HRFEEA_IDX1] PRIMARY KEY CLUSTERED 
+(
+	[ID_NUMBER] ASC,
+	[PAY_COMPONENT_REF] ASC,
+	[ROW_STATUS] ASC,
+	[EFFECTIVE_DATE] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+

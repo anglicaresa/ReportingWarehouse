@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>DWHF</DataSourceReference>
+      <DataSetParameters>
+        <DataSetParameter Name="@program_name">
+          <DefaultValue>@program_name</DefaultValue>
+          <ReadOnly>false</ReadOnly>
+          <Nullable>false</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:UserDefined>true</rd:UserDefined>
+          <rd:DbType>String</rd:DbType>
+        </DataSetParameter>
+      </DataSetParameters>
+      <CommandText>SELECT        d1.family_name, d1.given_name, d6.full_date, d2.position_name, d3.portfolio_name, d4.service_stream_name, d5.program_name
+FROM            hris.employee_dim AS d1 INNER JOIN
+                         hris.employee_recruitment_fact AS f1 ON d1.employee_key = f1.employee_key INNER JOIN
+                         hris.position_dim AS d2 ON f1.position_key = d2.position_key INNER JOIN
+                         hris.portfolio_dim AS d3 ON f1.portfolio_key = d3.portfolio_key INNER JOIN
+                         hris.service_stream_dim AS d4 ON f1.service_stream_key = d4.service_stream_key INNER JOIN
+                         hris.program_dim AS d5 ON f1.program_key = d5.program_key INNER JOIN
+                         hris.date_dim AS d6 ON f1.recruitment_date_key = d6.date_key
+order by d3.portfolio_name, d1.given_name</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="family_name">
+        <DataField>family_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="given_name">
+        <DataField>given_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="short_date">
+        <DataField>short_date</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="position_name">
+        <DataField>position_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="portfolio_name">
+        <DataField>portfolio_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="service_stream_name">
+        <DataField>service_stream_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="program_name">
+        <DataField>program_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

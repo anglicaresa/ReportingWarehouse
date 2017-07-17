@@ -1,0 +1,13 @@
+﻿CREATE TABLE [extract_riskman].[FRM_RECORD](
+	[RecordID] [int] NOT NULL,
+	[KeyData] [varchar](200) NOT NULL,
+	[KeySequence] [int] NOT NULL,
+	[FormName] [varchar](50) NOT NULL,
+	[Deleted] [bit] NOT NULL
+ CONSTRAINT [PK_FRM_RECORD] PRIMARY KEY CLUSTERED 
+(
+	[RecordID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO

@@ -1,0 +1,735 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="conform_comcare_physical.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="customer_dim">
+          <Key>
+            <PropertyRef Name="customer_key" />
+          </Key>
+          <Property Name="customer_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="client_id" Type="int" />
+          <Property Name="title" Type="varchar" MaxLength="6" />
+          <Property Name="given_name" Type="varchar" MaxLength="50" />
+          <Property Name="preferred_name" Type="varchar" MaxLength="50" />
+          <Property Name="family_name" Type="varchar" MaxLength="50" />
+          <Property Name="date_of_birth" Type="date" />
+          <Property Name="gender" Type="varchar" MaxLength="1" />
+          <Property Name="residential_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="residential_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="residential_city" Type="varchar" MaxLength="50" />
+          <Property Name="residential_state" Type="varchar" MaxLength="50" />
+          <Property Name="residential_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="business_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="business_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="business_city" Type="varchar" MaxLength="50" />
+          <Property Name="business_state" Type="varchar" MaxLength="50" />
+          <Property Name="business_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="mailing_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="mailing_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="mailing_city" Type="varchar" MaxLength="50" />
+          <Property Name="mailing_state" Type="varchar" MaxLength="50" />
+          <Property Name="mailing_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="billing_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="billing_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="billing_city" Type="varchar" MaxLength="50" />
+          <Property Name="billing_state" Type="varchar" MaxLength="50" />
+          <Property Name="billing_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="amount_transferred_in" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_in_client" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out_client" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="customer_transactions_fact">
+          <Key>
+            <PropertyRef Name="customer_transaction_key" />
+          </Key>
+          <Property Name="customer_transaction_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="customer_key" Type="int" Nullable="false" />
+          <Property Name="date_key" Type="int" Nullable="false" />
+          <Property Name="transaction_type_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="responsible_party_key" Type="int" Nullable="false" />
+          <Property Name="amount" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="balance" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="comment" Type="varchar" MaxLength="255" />
+          <Property Name="description" Type="varchar" MaxLength="255" />
+          <Property Name="comments" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="date_dim">
+          <Key>
+            <PropertyRef Name="date_key" />
+          </Key>
+          <Property Name="date_key" Type="int" Nullable="false" />
+          <Property Name="full_date" Type="datetime" />
+          <Property Name="display_date" Type="varchar" MaxLength="10" />
+          <Property Name="year" Type="int" />
+          <Property Name="quarter" Type="int" />
+          <Property Name="quarter_name" Type="varchar" MaxLength="9" />
+          <Property Name="month_no" Type="int" />
+          <Property Name="month_name" Type="varchar" MaxLength="9" />
+          <Property Name="day_of_month" Type="int" />
+          <Property Name="day_of_week" Type="int" />
+          <Property Name="day_name" Type="varchar" MaxLength="9" />
+          <Property Name="is_public_holiday" Type="varchar" MaxLength="3" />
+          <Property Name="public_holiday_name" Type="varchar" MaxLength="50" />
+          <Property Name="financial_year" Type="varchar" MaxLength="11" />
+          <Property Name="fbt_range" Type="varchar" MaxLength="11" />
+          <Property Name="pay_period_end" Type="varchar" MaxLength="3" />
+          <Property Name="financial_month_no" Type="int" />
+          <Property Name="max_temperature" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="min_temperature" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="rainfall" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="max_wind_speed" Type="decimal" Precision="5" Scale="2" />
+        </EntityType>
+        <EntityType Name="program_dim">
+          <Key>
+            <PropertyRef Name="program_key" />
+          </Key>
+          <Property Name="program_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="program_name" Type="varchar" MaxLength="50" />
+          <Property Name="program_code" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="program_street" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="program_suburb" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="program_postcode" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+          <Property Name="program_state" Type="varchar" MaxLength="50" />
+          <Property Name="telephone" Type="varchar" MaxLength="20" />
+          <Property Name="fax" Type="varchar" MaxLength="20" />
+          <Property Name="program_id_cc" Type="int" />
+        </EntityType>
+        <EntityType Name="responsible_party_dim">
+          <Key>
+            <PropertyRef Name="responsible_party_key" />
+          </Key>
+          <Property Name="responsible_party_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="client_id" Type="int" />
+          <Property Name="title" Type="varchar" MaxLength="6" />
+          <Property Name="given_name" Type="varchar" MaxLength="50" />
+          <Property Name="preferred_name" Type="varchar" MaxLength="50" />
+          <Property Name="family_name" Type="varchar" MaxLength="50" />
+          <Property Name="date_of_birth" Type="date" />
+          <Property Name="gender" Type="varchar" MaxLength="1" />
+          <Property Name="residential_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="residential_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="residential_city" Type="varchar" MaxLength="50" />
+          <Property Name="residential_state" Type="varchar" MaxLength="50" />
+          <Property Name="residential_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="business_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="business_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="business_city" Type="varchar" MaxLength="50" />
+          <Property Name="business_state" Type="varchar" MaxLength="50" />
+          <Property Name="business_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="mailing_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="mailing_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="mailing_city" Type="varchar" MaxLength="50" />
+          <Property Name="mailing_state" Type="varchar" MaxLength="50" />
+          <Property Name="mailing_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="billing_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="billing_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="billing_city" Type="varchar" MaxLength="50" />
+          <Property Name="billing_state" Type="varchar" MaxLength="50" />
+          <Property Name="billing_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="amount_transferred_in" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_in_client" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out_client" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="effective_from_date" Type="date" />
+          <Property Name="effective_to_date" Type="date" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="transaction_type_dim">
+          <Key>
+            <PropertyRef Name="transaction_type_key" />
+          </Key>
+          <Property Name="transaction_type_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="transaction_type_natural_key" Type="int" />
+          <Property Name="transaction_type_description" Type="varchar" MaxLength="50" />
+          <Property Name="transaction_source" Type="varchar" MaxLength="50" />
+          <Property Name="effective_from_date" Type="date" />
+          <Property Name="effective_to_date" Type="date" />
+          <Property Name="category_code" Type="varchar" MaxLength="6" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <Association Name="fk_customer_transactions_customer_key">
+          <End Role="customer_dim" Type="Self.customer_dim" Multiplicity="1" />
+          <End Role="customer_transactions_fact" Type="Self.customer_transactions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer_dim">
+              <PropertyRef Name="customer_key" />
+            </Principal>
+            <Dependent Role="customer_transactions_fact">
+              <PropertyRef Name="customer_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_customer_transactions_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="customer_transactions_fact" Type="Self.customer_transactions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="customer_transactions_fact">
+              <PropertyRef Name="date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_customer_transactions_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="customer_transactions_fact" Type="Self.customer_transactions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="customer_transactions_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_customer_transactions_responsible_party_key">
+          <End Role="responsible_party_dim" Type="Self.responsible_party_dim" Multiplicity="1" />
+          <End Role="customer_transactions_fact" Type="Self.customer_transactions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="responsible_party_dim">
+              <PropertyRef Name="responsible_party_key" />
+            </Principal>
+            <Dependent Role="customer_transactions_fact">
+              <PropertyRef Name="responsible_party_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_customer_transactions_transaction_type_key">
+          <End Role="transaction_type_dim" Type="Self.transaction_type_dim" Multiplicity="1" />
+          <End Role="customer_transactions_fact" Type="Self.customer_transactions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="transaction_type_dim">
+              <PropertyRef Name="transaction_type_key" />
+            </Principal>
+            <Dependent Role="customer_transactions_fact">
+              <PropertyRef Name="transaction_type_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="conform_comcare_physicalStoreContainer">
+          <EntitySet Name="customer_dim" EntityType="Self.customer_dim" Schema="conform_comcare" store:Type="Tables" />
+          <EntitySet Name="customer_transactions_fact" EntityType="Self.customer_transactions_fact" Schema="conform_comcare" store:Type="Tables" />
+          <EntitySet Name="date_dim" EntityType="Self.date_dim" Schema="conform_comcare" store:Type="Tables" />
+          <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_comcare" store:Type="Tables" />
+          <EntitySet Name="responsible_party_dim" EntityType="Self.responsible_party_dim" Schema="conform_comcare" store:Type="Tables" />
+          <EntitySet Name="transaction_type_dim" EntityType="Self.transaction_type_dim" Schema="conform_comcare" store:Type="Tables" />
+          <AssociationSet Name="fk_customer_transactions_customer_key" Association="Self.fk_customer_transactions_customer_key">
+            <End Role="customer_dim" EntitySet="customer_dim" />
+            <End Role="customer_transactions_fact" EntitySet="customer_transactions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_customer_transactions_date_key" Association="Self.fk_customer_transactions_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="customer_transactions_fact" EntitySet="customer_transactions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_customer_transactions_program_key" Association="Self.fk_customer_transactions_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="customer_transactions_fact" EntitySet="customer_transactions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_customer_transactions_responsible_party_key" Association="Self.fk_customer_transactions_responsible_party_key">
+            <End Role="responsible_party_dim" EntitySet="responsible_party_dim" />
+            <End Role="customer_transactions_fact" EntitySet="customer_transactions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_customer_transactions_transaction_type_key" Association="Self.fk_customer_transactions_transaction_type_key">
+            <End Role="transaction_type_dim" EntitySet="transaction_type_dim" />
+            <End Role="customer_transactions_fact" EntitySet="customer_transactions_fact" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="conform_comcare_physical" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="conform_comcare_physicalContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="customer_dim" EntityType="conform_comcare_physical.customer_dim" />
+          <EntitySet Name="customer_transactions_fact" EntityType="conform_comcare_physical.customer_transactions_fact" />
+          <EntitySet Name="date_dim" EntityType="conform_comcare_physical.date_dim" />
+          <EntitySet Name="program_dim" EntityType="conform_comcare_physical.program_dim" />
+          <EntitySet Name="transaction_type_dim" EntityType="conform_comcare_physical.transaction_type_dim" />
+          <AssociationSet Name="fk_customer_transactions_customer_key" Association="conform_comcare_physical.fk_customer_transactions_customer_key">
+            <End Role="customer_dim" EntitySet="customer_dim" />
+            <End Role="customer_transactions_fact" EntitySet="customer_transactions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_customer_transactions_date_key" Association="conform_comcare_physical.fk_customer_transactions_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="customer_transactions_fact" EntitySet="customer_transactions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_customer_transactions_program_key" Association="conform_comcare_physical.fk_customer_transactions_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="customer_transactions_fact" EntitySet="customer_transactions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_customer_transactions_transaction_type_key" Association="conform_comcare_physical.fk_customer_transactions_transaction_type_key">
+            <End Role="transaction_type_dim" EntitySet="transaction_type_dim" />
+            <End Role="customer_transactions_fact" EntitySet="customer_transactions_fact" />
+          </AssociationSet>
+          <EntitySet Name="responsible_party_dim" EntityType="conform_comcare_physical.responsible_party_dim" />
+          <AssociationSet Name="fk_customer_transactions_responsible_party_key" Association="conform_comcare_physical.fk_customer_transactions_responsible_party_key">
+            <End Role="responsible_party_dim" EntitySet="responsible_party_dim" />
+            <End Role="customer_transactions_fact" EntitySet="customer_transactions_fact" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="customer_dim">
+          <Key>
+            <PropertyRef Name="customer_key" />
+          </Key>
+          <Property Name="customer_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="client_id" Type="Int32" />
+          <Property Name="title" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="given_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="preferred_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="family_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="date_of_birth" Type="DateTime" Precision="0" />
+          <Property Name="gender" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="street_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="street_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="street_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="street_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="street_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="amount_transferred_in" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="customer_transactions_fact" Relationship="conform_comcare_physical.fk_customer_transactions_customer_key" FromRole="customer_dim" ToRole="customer_transactions_fact" />
+          <Property Name="residential_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="residential_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="residential_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="residential_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="residential_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="business_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="business_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="business_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="business_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="business_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="billing_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="billing_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="amount_transferred_in_client" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out_client" Type="Decimal" Precision="28" Scale="5" />
+        </EntityType>
+        <EntityType Name="customer_transactions_fact">
+          <Key>
+            <PropertyRef Name="customer_transaction_key" />
+          </Key>
+          <Property Name="customer_transaction_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_key" Type="Int32" Nullable="false" />
+          <Property Name="date_key" Type="Int32" Nullable="false" />
+          <Property Name="transaction_type_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="amount" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="balance" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="comment" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="customer_dim" Relationship="conform_comcare_physical.fk_customer_transactions_customer_key" FromRole="customer_transactions_fact" ToRole="customer_dim" />
+          <NavigationProperty Name="date_dim" Relationship="conform_comcare_physical.fk_customer_transactions_date_key" FromRole="customer_transactions_fact" ToRole="date_dim" />
+          <NavigationProperty Name="program_dim" Relationship="conform_comcare_physical.fk_customer_transactions_program_key" FromRole="customer_transactions_fact" ToRole="program_dim" />
+          <NavigationProperty Name="transaction_type_dim" Relationship="conform_comcare_physical.fk_customer_transactions_transaction_type_key" FromRole="customer_transactions_fact" ToRole="transaction_type_dim" />
+          <Property Name="description" Type="String" Nullable="false" />
+          <Property Name="comments" Type="String" Nullable="false" />
+          <Property Name="responsible_party_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="responsible_party_dim" Relationship="conform_comcare_physical.fk_customer_transactions_responsible_party_key" FromRole="customer_transactions_fact" ToRole="responsible_party_dim" />
+          <Property Name="source_system" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="date_dim">
+          <Key>
+            <PropertyRef Name="date_key" />
+          </Key>
+          <Property Name="date_key" Type="Int32" Nullable="false" />
+          <Property Name="full_date" Type="DateTime" Precision="3" />
+          <Property Name="display_date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="year" Type="Int32" />
+          <Property Name="quarter" Type="Int32" />
+          <Property Name="quarter_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="month_no" Type="Int32" />
+          <Property Name="month_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="day_of_month" Type="Int32" />
+          <Property Name="day_of_week" Type="Int32" />
+          <Property Name="day_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="is_public_holiday" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="public_holiday_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="financial_year" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="fbt_range" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="pay_period_end" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="financial_month_no" Type="Int32" />
+          <Property Name="max_temperature" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="min_temperature" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="rainfall" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="max_wind_speed" Type="Decimal" Precision="5" Scale="2" />
+          <NavigationProperty Name="customer_transactions_fact" Relationship="conform_comcare_physical.fk_customer_transactions_date_key" FromRole="date_dim" ToRole="customer_transactions_fact" />
+        </EntityType>
+        <EntityType Name="program_dim">
+          <Key>
+            <PropertyRef Name="program_key" />
+          </Key>
+          <Property Name="program_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="program_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="program_code" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="program_street" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="program_suburb" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="program_postcode" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="program_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="telephone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="fax" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="customer_transactions_fact" Relationship="conform_comcare_physical.fk_customer_transactions_program_key" FromRole="program_dim" ToRole="customer_transactions_fact" />
+          <Property Name="program_id_cc" Type="Int32" />
+        </EntityType>
+        <EntityType Name="transaction_type_dim">
+          <Key>
+            <PropertyRef Name="transaction_type_key" />
+          </Key>
+          <Property Name="transaction_type_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="transaction_type_natural_key" Type="Int32" />
+          <Property Name="transaction_type_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="transaction_source" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="effective_from_date" Type="DateTime" Precision="0" />
+          <Property Name="effective_to_date" Type="DateTime" Precision="0" />
+          <Property Name="category_code" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="customer_transactions_fact" Relationship="conform_comcare_physical.fk_customer_transactions_transaction_type_key" FromRole="transaction_type_dim" ToRole="customer_transactions_fact" />
+        </EntityType>
+        <Association Name="fk_customer_transactions_customer_key">
+          <End Type="conform_comcare_physical.customer_dim" Role="customer_dim" Multiplicity="1" />
+          <End Type="conform_comcare_physical.customer_transactions_fact" Role="customer_transactions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer_dim">
+              <PropertyRef Name="customer_key" />
+            </Principal>
+            <Dependent Role="customer_transactions_fact">
+              <PropertyRef Name="customer_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_customer_transactions_date_key">
+          <End Type="conform_comcare_physical.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_comcare_physical.customer_transactions_fact" Role="customer_transactions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="customer_transactions_fact">
+              <PropertyRef Name="date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_customer_transactions_program_key">
+          <End Type="conform_comcare_physical.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="conform_comcare_physical.customer_transactions_fact" Role="customer_transactions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="customer_transactions_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_customer_transactions_transaction_type_key">
+          <End Type="conform_comcare_physical.transaction_type_dim" Role="transaction_type_dim" Multiplicity="1" />
+          <End Type="conform_comcare_physical.customer_transactions_fact" Role="customer_transactions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="transaction_type_dim">
+              <PropertyRef Name="transaction_type_key" />
+            </Principal>
+            <Dependent Role="customer_transactions_fact">
+              <PropertyRef Name="transaction_type_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="responsible_party_dim">
+          <Key>
+            <PropertyRef Name="responsible_party_key" />
+          </Key>
+          <Property Name="responsible_party_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="client_id" Type="Int32" />
+          <Property Name="title" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="given_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="preferred_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="family_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="date_of_birth" Type="DateTime" Precision="0" />
+          <Property Name="gender" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="residential_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="residential_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="residential_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="residential_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="residential_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="business_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="business_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="business_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="business_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="business_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="billing_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="billing_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="amount_transferred_in" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_in_client" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out_client" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="effective_from_date" Type="DateTime" Precision="0" />
+          <Property Name="effective_to_date" Type="DateTime" Precision="0" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="customer_transactions_fact" Relationship="conform_comcare_physical.fk_customer_transactions_responsible_party_key" FromRole="responsible_party_dim" ToRole="customer_transactions_fact" />
+        </EntityType>
+        <Association Name="fk_customer_transactions_responsible_party_key">
+          <End Type="conform_comcare_physical.responsible_party_dim" Role="responsible_party_dim" Multiplicity="1" />
+          <End Type="conform_comcare_physical.customer_transactions_fact" Role="customer_transactions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="responsible_party_dim">
+              <PropertyRef Name="responsible_party_key" />
+            </Principal>
+            <Dependent Role="customer_transactions_fact">
+              <PropertyRef Name="responsible_party_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="conform_comcare_physical" />
+        <Alias Key="Target" Value="conform_comcare_physical.Store" />
+        <EntityContainerMapping CdmEntityContainer="conform_comcare_physicalContainer" StorageEntityContainer="conform_comcare_physicalStoreContainer">
+          <EntitySetMapping Name="customer_dim">
+            <EntityTypeMapping TypeName="conform_comcare_physical.customer_dim">
+              <MappingFragment StoreEntitySet="customer_dim">
+                <ScalarProperty Name="amount_transferred_out_client" ColumnName="amount_transferred_out_client" />
+                <ScalarProperty Name="amount_transferred_in_client" ColumnName="amount_transferred_in_client" />
+                <ScalarProperty Name="billing_post_code" ColumnName="billing_post_code" />
+                <ScalarProperty Name="billing_state" ColumnName="billing_state" />
+                <ScalarProperty Name="billing_city" ColumnName="billing_city" />
+                <ScalarProperty Name="billing_address_line2" ColumnName="billing_address_line2" />
+                <ScalarProperty Name="billing_address_line1" ColumnName="billing_address_line1" />
+                <ScalarProperty Name="mailing_post_code" ColumnName="mailing_post_code" />
+                <ScalarProperty Name="mailing_state" ColumnName="mailing_state" />
+                <ScalarProperty Name="mailing_city" ColumnName="mailing_city" />
+                <ScalarProperty Name="mailing_address_line2" ColumnName="mailing_address_line2" />
+                <ScalarProperty Name="mailing_address_line1" ColumnName="mailing_address_line1" />
+                <ScalarProperty Name="business_post_code" ColumnName="business_post_code" />
+                <ScalarProperty Name="business_state" ColumnName="business_state" />
+                <ScalarProperty Name="business_city" ColumnName="business_city" />
+                <ScalarProperty Name="business_address_line2" ColumnName="business_address_line2" />
+                <ScalarProperty Name="business_address_line1" ColumnName="business_address_line1" />
+                <ScalarProperty Name="residential_post_code" ColumnName="residential_post_code" />
+                <ScalarProperty Name="residential_state" ColumnName="residential_state" />
+                <ScalarProperty Name="residential_city" ColumnName="residential_city" />
+                <ScalarProperty Name="residential_address_line2" ColumnName="residential_address_line2" />
+                <ScalarProperty Name="residential_address_line1" ColumnName="residential_address_line1" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="amount_transferred_out" ColumnName="amount_transferred_out" />
+                <ScalarProperty Name="amount_transferred_in" ColumnName="amount_transferred_in" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="date_of_birth" ColumnName="date_of_birth" />
+                <ScalarProperty Name="family_name" ColumnName="family_name" />
+                <ScalarProperty Name="preferred_name" ColumnName="preferred_name" />
+                <ScalarProperty Name="given_name" ColumnName="given_name" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="customer_key" ColumnName="customer_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customer_transactions_fact">
+            <EntityTypeMapping TypeName="conform_comcare_physical.customer_transactions_fact">
+              <MappingFragment StoreEntitySet="customer_transactions_fact">
+                <ScalarProperty Name="responsible_party_key" ColumnName="responsible_party_key" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="balance" ColumnName="balance" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="transaction_type_key" ColumnName="transaction_type_key" />
+                <ScalarProperty Name="date_key" ColumnName="date_key" />
+                <ScalarProperty Name="customer_key" ColumnName="customer_key" />
+                <ScalarProperty Name="customer_transaction_key" ColumnName="customer_transaction_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="date_dim">
+            <EntityTypeMapping TypeName="conform_comcare_physical.date_dim">
+              <MappingFragment StoreEntitySet="date_dim">
+                <ScalarProperty Name="max_wind_speed" ColumnName="max_wind_speed" />
+                <ScalarProperty Name="rainfall" ColumnName="rainfall" />
+                <ScalarProperty Name="min_temperature" ColumnName="min_temperature" />
+                <ScalarProperty Name="max_temperature" ColumnName="max_temperature" />
+                <ScalarProperty Name="financial_month_no" ColumnName="financial_month_no" />
+                <ScalarProperty Name="pay_period_end" ColumnName="pay_period_end" />
+                <ScalarProperty Name="fbt_range" ColumnName="fbt_range" />
+                <ScalarProperty Name="financial_year" ColumnName="financial_year" />
+                <ScalarProperty Name="public_holiday_name" ColumnName="public_holiday_name" />
+                <ScalarProperty Name="is_public_holiday" ColumnName="is_public_holiday" />
+                <ScalarProperty Name="day_name" ColumnName="day_name" />
+                <ScalarProperty Name="day_of_week" ColumnName="day_of_week" />
+                <ScalarProperty Name="day_of_month" ColumnName="day_of_month" />
+                <ScalarProperty Name="month_name" ColumnName="month_name" />
+                <ScalarProperty Name="month_no" ColumnName="month_no" />
+                <ScalarProperty Name="quarter_name" ColumnName="quarter_name" />
+                <ScalarProperty Name="quarter" ColumnName="quarter" />
+                <ScalarProperty Name="year" ColumnName="year" />
+                <ScalarProperty Name="display_date" ColumnName="display_date" />
+                <ScalarProperty Name="full_date" ColumnName="full_date" />
+                <ScalarProperty Name="date_key" ColumnName="date_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="program_dim">
+            <EntityTypeMapping TypeName="conform_comcare_physical.program_dim">
+              <MappingFragment StoreEntitySet="program_dim">
+                <ScalarProperty Name="program_id_cc" ColumnName="program_id_cc" />
+                <ScalarProperty Name="fax" ColumnName="fax" />
+                <ScalarProperty Name="telephone" ColumnName="telephone" />
+                <ScalarProperty Name="program_state" ColumnName="program_state" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="program_postcode" ColumnName="program_postcode" />
+                <ScalarProperty Name="program_suburb" ColumnName="program_suburb" />
+                <ScalarProperty Name="program_street" ColumnName="program_street" />
+                <ScalarProperty Name="program_code" ColumnName="program_code" />
+                <ScalarProperty Name="program_name" ColumnName="program_name" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transaction_type_dim">
+            <EntityTypeMapping TypeName="conform_comcare_physical.transaction_type_dim">
+              <MappingFragment StoreEntitySet="transaction_type_dim">
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="category_code" ColumnName="category_code" />
+                <ScalarProperty Name="effective_to_date" ColumnName="effective_to_date" />
+                <ScalarProperty Name="effective_from_date" ColumnName="effective_from_date" />
+                <ScalarProperty Name="transaction_source" ColumnName="transaction_source" />
+                <ScalarProperty Name="transaction_type_description" ColumnName="transaction_type_description" />
+                <ScalarProperty Name="transaction_type_natural_key" ColumnName="transaction_type_natural_key" />
+                <ScalarProperty Name="transaction_type_key" ColumnName="transaction_type_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="responsible_party_dim">
+            <EntityTypeMapping TypeName="conform_comcare_physical.responsible_party_dim">
+              <MappingFragment StoreEntitySet="responsible_party_dim">
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="effective_to_date" ColumnName="effective_to_date" />
+                <ScalarProperty Name="effective_from_date" ColumnName="effective_from_date" />
+                <ScalarProperty Name="amount_transferred_out_client" ColumnName="amount_transferred_out_client" />
+                <ScalarProperty Name="amount_transferred_in_client" ColumnName="amount_transferred_in_client" />
+                <ScalarProperty Name="amount_transferred_out" ColumnName="amount_transferred_out" />
+                <ScalarProperty Name="amount_transferred_in" ColumnName="amount_transferred_in" />
+                <ScalarProperty Name="billing_post_code" ColumnName="billing_post_code" />
+                <ScalarProperty Name="billing_state" ColumnName="billing_state" />
+                <ScalarProperty Name="billing_city" ColumnName="billing_city" />
+                <ScalarProperty Name="billing_address_line2" ColumnName="billing_address_line2" />
+                <ScalarProperty Name="billing_address_line1" ColumnName="billing_address_line1" />
+                <ScalarProperty Name="mailing_post_code" ColumnName="mailing_post_code" />
+                <ScalarProperty Name="mailing_state" ColumnName="mailing_state" />
+                <ScalarProperty Name="mailing_city" ColumnName="mailing_city" />
+                <ScalarProperty Name="mailing_address_line2" ColumnName="mailing_address_line2" />
+                <ScalarProperty Name="mailing_address_line1" ColumnName="mailing_address_line1" />
+                <ScalarProperty Name="business_post_code" ColumnName="business_post_code" />
+                <ScalarProperty Name="business_state" ColumnName="business_state" />
+                <ScalarProperty Name="business_city" ColumnName="business_city" />
+                <ScalarProperty Name="business_address_line2" ColumnName="business_address_line2" />
+                <ScalarProperty Name="business_address_line1" ColumnName="business_address_line1" />
+                <ScalarProperty Name="residential_post_code" ColumnName="residential_post_code" />
+                <ScalarProperty Name="residential_state" ColumnName="residential_state" />
+                <ScalarProperty Name="residential_city" ColumnName="residential_city" />
+                <ScalarProperty Name="residential_address_line2" ColumnName="residential_address_line2" />
+                <ScalarProperty Name="residential_address_line1" ColumnName="residential_address_line1" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="date_of_birth" ColumnName="date_of_birth" />
+                <ScalarProperty Name="family_name" ColumnName="family_name" />
+                <ScalarProperty Name="preferred_name" ColumnName="preferred_name" />
+                <ScalarProperty Name="given_name" ColumnName="given_name" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="responsible_party_key" ColumnName="responsible_party_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

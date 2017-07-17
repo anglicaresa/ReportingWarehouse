@@ -1,0 +1,43 @@
+﻿CREATE TABLE [extract].[HRCOM_ADDRESS_REF](
+	[ADDRESS_CODE] [int] NOT NULL,
+	[ADDRESS_LINE_1] [varchar](50) NULL,
+	[ADDRESS_LINE_2] [varchar](50) NULL,
+	[ADDRESS_LINE_3] [varchar](50) NULL,
+	[ADDRESS_CITY] [varchar](50) NULL,
+	[ADDRESS_STATE] [varchar](50) NULL,
+	[COUNTRY_CODE] [varchar](10) NULL,
+	[POST_CODE] [varchar](10) NULL,
+	[TELEPHONE_1] [varchar](20) NULL,
+	[TELEPHONE_2] [varchar](20) NULL,
+	[TELEPHONE_3] [varchar](20) NULL,
+	[FACSIMILE_1] [varchar](20) NULL,
+	[FACSIMILE_2] [varchar](20) NULL,
+	[EMAIL_ADDRESS] [varchar](99) NULL,
+	[ROW_STATUS] [int] NULL,
+	[CLOSED_USER] [varchar](14) NULL,
+	[CLOSED_DATE] [datetime] NULL,
+	[CLOSED_TIME] [int] NULL,
+	[CLOSED_TERM] [varchar](10) NULL,
+	[CLOSED_WINDOW] [varchar](8) NULL,
+	[CRUSER] [varchar](14) NULL,
+	[CRDATEI] [datetime] NULL,
+	[CRTIMEI] [int] NULL,
+	[CRTERM] [varchar](10) NULL,
+	[CRWINDOW] [varchar](8) NULL,
+	[LAST_MOD_USER] [varchar](14) NULL,
+	[LAST_MOD_DATEI] [datetime] NULL,
+	[LAST_MOD_TIMEI] [int] NULL,
+	[LAST_MOD_TERM] [varchar](10) NULL,
+	[LAST_MOD_WINDOW] [varchar](8) NULL,
+	[VERS] [int] NULL,
+	[MOBILE_PHONE] [varchar](20) NULL,
+	[DPID_NBR] [varchar](10) NULL,
+	[MOBILE_PHONE_2] [varchar](20) NULL,
+	[EMAIL_ADDRESS_2] [varchar](99) NULL,
+ CONSTRAINT [HRFCAR_IDX1] PRIMARY KEY CLUSTERED 
+(
+	[ADDRESS_CODE] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
