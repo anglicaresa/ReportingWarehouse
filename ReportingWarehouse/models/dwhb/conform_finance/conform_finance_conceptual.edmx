@@ -1,0 +1,865 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DWHBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="account_dim">
+          <Key>
+            <PropertyRef Name="account_key" />
+          </Key>
+          <Property Name="account_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="account_name" Type="varchar" MaxLength="60" />
+          <Property Name="account_number" Type="varchar" MaxLength="32" />
+          <Property Name="entity" Type="varchar" MaxLength="32" />
+          <Property Name="debtor" Type="varchar" MaxLength="32" />
+          <Property Name="costing" Type="varchar" MaxLength="32" />
+          <Property Name="activity_account" Type="varchar" MaxLength="32" />
+          <Property Name="natural_account" Type="varchar" MaxLength="32" />
+          <Property Name="chart_name" Type="varchar" MaxLength="8" />
+          <Property Name="short_description" Type="varchar" MaxLength="15" />
+          <Property Name="post_name" Type="varchar" MaxLength="120" />
+          <Property Name="pay_name" Type="varchar" MaxLength="120" />
+          <Property Name="address_line_1" Type="varchar" MaxLength="50" />
+          <Property Name="address_line_2" Type="varchar" MaxLength="50" />
+          <Property Name="address_line_3" Type="varchar" MaxLength="50" />
+          <Property Name="city" Type="varchar" MaxLength="50" />
+          <Property Name="state" Type="varchar" MaxLength="50" />
+          <Property Name="postcode" Type="varchar" MaxLength="15" />
+          <Property Name="telephone" Type="varchar" MaxLength="20" />
+          <Property Name="abn" Type="varchar" MaxLength="20" />
+          <Property Name="contact_name" Type="varchar" MaxLength="60" />
+          <Property Name="contact_details" Type="varchar" MaxLength="40" />
+          <Property Name="bank_name" Type="varchar" MaxLength="40" />
+          <Property Name="bsb_code" Type="varchar" MaxLength="20" />
+          <Property Name="bank_account" Type="varchar" MaxLength="50" />
+          <Property Name="credit_limit" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="payment_term_days" Type="int" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="accounting_period_dim">
+          <Key>
+            <PropertyRef Name="accounting_period_key" />
+          </Key>
+          <Property Name="accounting_period_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="period_no" Type="int" />
+          <Property Name="quarter" Type="int" />
+          <Property Name="description" Type="varchar" MaxLength="50" />
+          <Property Name="fiscal_year" Type="int" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="cost_centre_dim">
+          <Key>
+            <PropertyRef Name="cost_centre_key" />
+          </Key>
+          <Property Name="cost_centre_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="date_dim">
+          <Key>
+            <PropertyRef Name="date_key" />
+          </Key>
+          <Property Name="date_key" Type="int" Nullable="false" />
+          <Property Name="full_date" Type="datetime" />
+          <Property Name="display_date" Type="varchar" MaxLength="10" />
+          <Property Name="year" Type="int" />
+          <Property Name="quarter" Type="int" />
+          <Property Name="quarter_name" Type="varchar" MaxLength="9" />
+          <Property Name="month_no" Type="int" />
+          <Property Name="month_name" Type="varchar" MaxLength="9" />
+          <Property Name="day_of_month" Type="int" />
+          <Property Name="day_of_week" Type="int" />
+          <Property Name="day_name" Type="varchar" MaxLength="9" />
+          <Property Name="is_public_holiday" Type="varchar" MaxLength="3" />
+          <Property Name="public_holiday_name" Type="varchar" MaxLength="50" />
+          <Property Name="financial_year" Type="varchar" MaxLength="11" />
+          <Property Name="fbt_range" Type="varchar" MaxLength="11" />
+          <Property Name="pay_period_end" Type="varchar" MaxLength="3" />
+          <Property Name="financial_month_no" Type="int" />
+          <Property Name="max_temperature" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="min_temperature" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="rainfall" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="max_wind_speed" Type="decimal" Precision="5" Scale="2" />
+        </EntityType>
+        <EntityType Name="debtor_fact">
+          <Key>
+            <PropertyRef Name="debtor_key" />
+          </Key>
+          <Property Name="debtor_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="account_key" Type="int" Nullable="false" />
+          <Property Name="cost_centre_key" Type="int" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="accounting_period_key" Type="int" Nullable="false" />
+          <Property Name="date_received_key" Type="int" Nullable="false" />
+          <Property Name="date_processed_key" Type="int" Nullable="false" />
+          <Property Name="ledger_key" Type="int" Nullable="false" />
+          <Property Name="reference" Type="varchar" MaxLength="30" />
+          <Property Name="amount" Type="decimal" Precision="15" Scale="2" />
+        </EntityType>
+        <EntityType Name="ledger_dim">
+          <Key>
+            <PropertyRef Name="ledger_key" />
+          </Key>
+          <Property Name="ledger_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="portfolio_dim">
+          <Key>
+            <PropertyRef Name="portfolio_key" />
+          </Key>
+          <Property Name="portfolio_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="portfolio_name" Type="varchar" MaxLength="50" />
+          <Property Name="portfolio_code" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="change_reason_code" Type="nvarchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="nvarchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="program_dim">
+          <Key>
+            <PropertyRef Name="program_key" />
+          </Key>
+          <Property Name="program_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="program_name" Type="varchar" MaxLength="50" />
+          <Property Name="program_code" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="program_street" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="program_suburb" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="program_postcode" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="service_stream_dim">
+          <Key>
+            <PropertyRef Name="service_stream_key" />
+          </Key>
+          <Property Name="service_stream_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="service_stream_name" Type="varchar" MaxLength="50" />
+          <Property Name="service_stream_code" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="service_stream_region" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="change_reason_code" Type="nvarchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="nvarchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_account_key">
+          <End Role="account_dim" Type="Self.account_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_dim">
+              <PropertyRef Name="account_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="account_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key">
+          <End Role="accounting_period_dim" Type="Self.accounting_period_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="accounting_period_dim">
+              <PropertyRef Name="accounting_period_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="accounting_period_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_cost_centre_key">
+          <End Role="cost_centre_dim" Type="Self.cost_centre_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cost_centre_dim">
+              <PropertyRef Name="cost_centre_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="cost_centre_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_date_processed_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="date_processed_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_date_received_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="date_received_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_ledger_key">
+          <End Role="ledger_dim" Type="Self.ledger_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ledger_dim">
+              <PropertyRef Name="ledger_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="ledger_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DWHBModelStoreContainer">
+          <EntitySet Name="account_dim" EntityType="Self.account_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="accounting_period_dim" EntityType="Self.accounting_period_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="cost_centre_dim" EntityType="Self.cost_centre_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="date_dim" EntityType="Self.date_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="debtor_fact" EntityType="Self.debtor_fact" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="ledger_dim" EntityType="Self.ledger_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_finance" store:Type="Tables" />
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="Self.fk_conform_finance_DEBTOR_FACT_account_key">
+            <End Role="account_dim" EntitySet="account_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key" Association="Self.fk_conform_finance_DEBTOR_FACT_accounting_period_key">
+            <End Role="accounting_period_dim" EntitySet="accounting_period_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_cost_centre_key" Association="Self.fk_conform_finance_DEBTOR_FACT_cost_centre_key">
+            <End Role="cost_centre_dim" EntitySet="cost_centre_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_date_processed_key" Association="Self.fk_conform_finance_DEBTOR_FACT_date_processed_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_date_received_key" Association="Self.fk_conform_finance_DEBTOR_FACT_date_received_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_ledger_key" Association="Self.fk_conform_finance_DEBTOR_FACT_ledger_key">
+            <End Role="ledger_dim" EntitySet="ledger_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_portfolio_key" Association="Self.fk_conform_finance_DEBTOR_FACT_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_program_key" Association="Self.fk_conform_finance_DEBTOR_FACT_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_service_stream_key" Association="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DWHBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="account_dim">
+          <Key>
+            <PropertyRef Name="account_key" />
+          </Key>
+          <Property Name="account_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="account_name" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="account_number" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="entity" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="debtor" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="costing" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="activity_account" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="natural_account" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="chart_name" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="short_description" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="post_name" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="pay_name" Type="String" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Name="address_line_1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="address_line_2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="address_line_3" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="postcode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="telephone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="abn" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="contact_name" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="contact_details" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="bank_name" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="bsb_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="bank_account" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="credit_limit" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="payment_term_days" Type="Int32" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_account_key" FromRole="account_dim" ToRole="debtor_fact" />
+        </EntityType>
+        <EntityType Name="accounting_period_dim">
+          <Key>
+            <PropertyRef Name="accounting_period_key" />
+          </Key>
+          <Property Name="accounting_period_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="period_no" Type="Int32" />
+          <Property Name="quarter" Type="Int32" />
+          <Property Name="description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="fiscal_year" Type="Int32" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_accounting_period_key" FromRole="accounting_period_dim" ToRole="debtor_fact" />
+        </EntityType>
+        <EntityType Name="cost_centre_dim">
+          <Key>
+            <PropertyRef Name="cost_centre_key" />
+          </Key>
+          <Property Name="cost_centre_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_cost_centre_key" FromRole="cost_centre_dim" ToRole="debtor_fact" />
+        </EntityType>
+        <EntityType Name="date_dim">
+          <Key>
+            <PropertyRef Name="date_key" />
+          </Key>
+          <Property Name="date_key" Type="Int32" Nullable="false" />
+          <Property Name="full_date" Type="DateTime" Precision="3" />
+          <Property Name="display_date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="year" Type="Int32" />
+          <Property Name="quarter" Type="Int32" />
+          <Property Name="quarter_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="month_no" Type="Int32" />
+          <Property Name="month_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="day_of_month" Type="Int32" />
+          <Property Name="day_of_week" Type="Int32" />
+          <Property Name="day_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="is_public_holiday" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="public_holiday_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="financial_year" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="fbt_range" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="pay_period_end" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="financial_month_no" Type="Int32" />
+          <Property Name="max_temperature" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="min_temperature" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="rainfall" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="max_wind_speed" Type="Decimal" Precision="5" Scale="2" />
+          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_processed_key" FromRole="date_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="debtor_fact1" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="date_dim" ToRole="debtor_fact" />
+        </EntityType>
+        <EntityType Name="debtor_fact">
+          <Key>
+            <PropertyRef Name="debtor_key" />
+          </Key>
+          <Property Name="debtor_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="account_key" Type="Int32" Nullable="false" />
+          <Property Name="cost_centre_key" Type="Int32" Nullable="false" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="accounting_period_key" Type="Int32" Nullable="false" />
+          <Property Name="date_received_key" Type="Int32" Nullable="false" />
+          <Property Name="date_processed_key" Type="Int32" Nullable="false" />
+          <Property Name="ledger_key" Type="Int32" Nullable="false" />
+          <Property Name="reference" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="amount" Type="Decimal" Precision="15" Scale="2" />
+          <NavigationProperty Name="account_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_account_key" FromRole="debtor_fact" ToRole="account_dim" />
+          <NavigationProperty Name="accounting_period_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_accounting_period_key" FromRole="debtor_fact" ToRole="accounting_period_dim" />
+          <NavigationProperty Name="cost_centre_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_cost_centre_key" FromRole="debtor_fact" ToRole="cost_centre_dim" />
+          <NavigationProperty Name="date_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_processed_key" FromRole="debtor_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim1" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="debtor_fact" ToRole="date_dim" />
+          <NavigationProperty Name="ledger_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_ledger_key" FromRole="debtor_fact" ToRole="ledger_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_portfolio_key" FromRole="debtor_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="program_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_program_key" FromRole="debtor_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key" FromRole="debtor_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <EntityType Name="ledger_dim">
+          <Key>
+            <PropertyRef Name="ledger_key" />
+          </Key>
+          <Property Name="ledger_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_ledger_key" FromRole="ledger_dim" ToRole="debtor_fact" />
+        </EntityType>
+        <EntityType Name="portfolio_dim">
+          <Key>
+            <PropertyRef Name="portfolio_key" />
+          </Key>
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="portfolio_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="portfolio_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_portfolio_key" FromRole="portfolio_dim" ToRole="debtor_fact" />
+        </EntityType>
+        <EntityType Name="program_dim">
+          <Key>
+            <PropertyRef Name="program_key" />
+          </Key>
+          <Property Name="program_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="program_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="program_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="program_street" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="program_suburb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="program_postcode" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_program_key" FromRole="program_dim" ToRole="debtor_fact" />
+        </EntityType>
+        <EntityType Name="service_stream_dim">
+          <Key>
+            <PropertyRef Name="service_stream_key" />
+          </Key>
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="service_stream_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_stream_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="service_stream_region" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key" FromRole="service_stream_dim" ToRole="debtor_fact" />
+        </EntityType>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_account_key">
+          <End Role="account_dim" Type="Self.account_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_dim">
+              <PropertyRef Name="account_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="account_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key">
+          <End Role="accounting_period_dim" Type="Self.accounting_period_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="accounting_period_dim">
+              <PropertyRef Name="accounting_period_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="accounting_period_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_cost_centre_key">
+          <End Role="cost_centre_dim" Type="Self.cost_centre_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cost_centre_dim">
+              <PropertyRef Name="cost_centre_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="cost_centre_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_date_processed_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="date_processed_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_date_received_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="date_received_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_ledger_key">
+          <End Role="ledger_dim" Type="Self.ledger_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ledger_dim">
+              <PropertyRef Name="ledger_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="ledger_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="devsql_1_DWHB" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="account_dim" EntityType="Self.account_dim" />
+          <EntitySet Name="accounting_period_dim" EntityType="Self.accounting_period_dim" />
+          <EntitySet Name="cost_centre_dim" EntityType="Self.cost_centre_dim" />
+          <EntitySet Name="date_dim" EntityType="Self.date_dim" />
+          <EntitySet Name="debtor_fact" EntityType="Self.debtor_fact" />
+          <EntitySet Name="ledger_dim" EntityType="Self.ledger_dim" />
+          <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" />
+          <EntitySet Name="program_dim" EntityType="Self.program_dim" />
+          <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" />
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="Self.fk_conform_finance_DEBTOR_FACT_account_key">
+            <End Role="account_dim" EntitySet="account_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key" Association="Self.fk_conform_finance_DEBTOR_FACT_accounting_period_key">
+            <End Role="accounting_period_dim" EntitySet="accounting_period_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_cost_centre_key" Association="Self.fk_conform_finance_DEBTOR_FACT_cost_centre_key">
+            <End Role="cost_centre_dim" EntitySet="cost_centre_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_date_processed_key" Association="Self.fk_conform_finance_DEBTOR_FACT_date_processed_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_date_received_key" Association="Self.fk_conform_finance_DEBTOR_FACT_date_received_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_ledger_key" Association="Self.fk_conform_finance_DEBTOR_FACT_ledger_key">
+            <End Role="ledger_dim" EntitySet="ledger_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_portfolio_key" Association="Self.fk_conform_finance_DEBTOR_FACT_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_program_key" Association="Self.fk_conform_finance_DEBTOR_FACT_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_service_stream_key" Association="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DWHBModelStoreContainer" CdmEntityContainer="devsql_1_DWHB">
+          <EntitySetMapping Name="account_dim">
+            <EntityTypeMapping TypeName="DWHBModel.account_dim">
+              <MappingFragment StoreEntitySet="account_dim">
+                <ScalarProperty Name="account_key" ColumnName="account_key" />
+                <ScalarProperty Name="account_name" ColumnName="account_name" />
+                <ScalarProperty Name="account_number" ColumnName="account_number" />
+                <ScalarProperty Name="entity" ColumnName="entity" />
+                <ScalarProperty Name="debtor" ColumnName="debtor" />
+                <ScalarProperty Name="costing" ColumnName="costing" />
+                <ScalarProperty Name="activity_account" ColumnName="activity_account" />
+                <ScalarProperty Name="natural_account" ColumnName="natural_account" />
+                <ScalarProperty Name="chart_name" ColumnName="chart_name" />
+                <ScalarProperty Name="short_description" ColumnName="short_description" />
+                <ScalarProperty Name="post_name" ColumnName="post_name" />
+                <ScalarProperty Name="pay_name" ColumnName="pay_name" />
+                <ScalarProperty Name="address_line_1" ColumnName="address_line_1" />
+                <ScalarProperty Name="address_line_2" ColumnName="address_line_2" />
+                <ScalarProperty Name="address_line_3" ColumnName="address_line_3" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="postcode" ColumnName="postcode" />
+                <ScalarProperty Name="telephone" ColumnName="telephone" />
+                <ScalarProperty Name="abn" ColumnName="abn" />
+                <ScalarProperty Name="contact_name" ColumnName="contact_name" />
+                <ScalarProperty Name="contact_details" ColumnName="contact_details" />
+                <ScalarProperty Name="bank_name" ColumnName="bank_name" />
+                <ScalarProperty Name="bsb_code" ColumnName="bsb_code" />
+                <ScalarProperty Name="bank_account" ColumnName="bank_account" />
+                <ScalarProperty Name="credit_limit" ColumnName="credit_limit" />
+                <ScalarProperty Name="payment_term_days" ColumnName="payment_term_days" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="accounting_period_dim">
+            <EntityTypeMapping TypeName="DWHBModel.accounting_period_dim">
+              <MappingFragment StoreEntitySet="accounting_period_dim">
+                <ScalarProperty Name="accounting_period_key" ColumnName="accounting_period_key" />
+                <ScalarProperty Name="period_no" ColumnName="period_no" />
+                <ScalarProperty Name="quarter" ColumnName="quarter" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="fiscal_year" ColumnName="fiscal_year" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cost_centre_dim">
+            <EntityTypeMapping TypeName="DWHBModel.cost_centre_dim">
+              <MappingFragment StoreEntitySet="cost_centre_dim">
+                <ScalarProperty Name="cost_centre_key" ColumnName="cost_centre_key" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="date_dim">
+            <EntityTypeMapping TypeName="DWHBModel.date_dim">
+              <MappingFragment StoreEntitySet="date_dim">
+                <ScalarProperty Name="date_key" ColumnName="date_key" />
+                <ScalarProperty Name="full_date" ColumnName="full_date" />
+                <ScalarProperty Name="display_date" ColumnName="display_date" />
+                <ScalarProperty Name="year" ColumnName="year" />
+                <ScalarProperty Name="quarter" ColumnName="quarter" />
+                <ScalarProperty Name="quarter_name" ColumnName="quarter_name" />
+                <ScalarProperty Name="month_no" ColumnName="month_no" />
+                <ScalarProperty Name="month_name" ColumnName="month_name" />
+                <ScalarProperty Name="day_of_month" ColumnName="day_of_month" />
+                <ScalarProperty Name="day_of_week" ColumnName="day_of_week" />
+                <ScalarProperty Name="day_name" ColumnName="day_name" />
+                <ScalarProperty Name="is_public_holiday" ColumnName="is_public_holiday" />
+                <ScalarProperty Name="public_holiday_name" ColumnName="public_holiday_name" />
+                <ScalarProperty Name="financial_year" ColumnName="financial_year" />
+                <ScalarProperty Name="fbt_range" ColumnName="fbt_range" />
+                <ScalarProperty Name="pay_period_end" ColumnName="pay_period_end" />
+                <ScalarProperty Name="financial_month_no" ColumnName="financial_month_no" />
+                <ScalarProperty Name="max_temperature" ColumnName="max_temperature" />
+                <ScalarProperty Name="min_temperature" ColumnName="min_temperature" />
+                <ScalarProperty Name="rainfall" ColumnName="rainfall" />
+                <ScalarProperty Name="max_wind_speed" ColumnName="max_wind_speed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="debtor_fact">
+            <EntityTypeMapping TypeName="DWHBModel.debtor_fact">
+              <MappingFragment StoreEntitySet="debtor_fact">
+                <ScalarProperty Name="debtor_key" ColumnName="debtor_key" />
+                <ScalarProperty Name="account_key" ColumnName="account_key" />
+                <ScalarProperty Name="cost_centre_key" ColumnName="cost_centre_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="accounting_period_key" ColumnName="accounting_period_key" />
+                <ScalarProperty Name="date_received_key" ColumnName="date_received_key" />
+                <ScalarProperty Name="date_processed_key" ColumnName="date_processed_key" />
+                <ScalarProperty Name="ledger_key" ColumnName="ledger_key" />
+                <ScalarProperty Name="reference" ColumnName="reference" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ledger_dim">
+            <EntityTypeMapping TypeName="DWHBModel.ledger_dim">
+              <MappingFragment StoreEntitySet="ledger_dim">
+                <ScalarProperty Name="ledger_key" ColumnName="ledger_key" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="portfolio_dim">
+            <EntityTypeMapping TypeName="DWHBModel.portfolio_dim">
+              <MappingFragment StoreEntitySet="portfolio_dim">
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="portfolio_name" ColumnName="portfolio_name" />
+                <ScalarProperty Name="portfolio_code" ColumnName="portfolio_code" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="program_dim">
+            <EntityTypeMapping TypeName="DWHBModel.program_dim">
+              <MappingFragment StoreEntitySet="program_dim">
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="program_name" ColumnName="program_name" />
+                <ScalarProperty Name="program_code" ColumnName="program_code" />
+                <ScalarProperty Name="program_street" ColumnName="program_street" />
+                <ScalarProperty Name="program_suburb" ColumnName="program_suburb" />
+                <ScalarProperty Name="program_postcode" ColumnName="program_postcode" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="service_stream_dim">
+            <EntityTypeMapping TypeName="DWHBModel.service_stream_dim">
+              <MappingFragment StoreEntitySet="service_stream_dim">
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="service_stream_name" ColumnName="service_stream_name" />
+                <ScalarProperty Name="service_stream_code" ColumnName="service_stream_code" />
+                <ScalarProperty Name="service_stream_region" ColumnName="service_stream_region" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

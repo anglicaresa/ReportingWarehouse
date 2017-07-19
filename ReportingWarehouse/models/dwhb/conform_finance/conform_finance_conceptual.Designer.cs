@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model '\\anglicare-sa.org.au\files\frank.wang\My Documents\Source2\ReportingWarehouse\models\dwhb\conform_hris\conform_hris_conceptual.edmx'. 
+﻿// T4 code generation is enabled for model '\\anglicare-sa.org.au\files\frank.wang\My Documents\Source2\ReportingWarehouse\models\dwhb\conform_finance\conform_finance_conceptual.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
