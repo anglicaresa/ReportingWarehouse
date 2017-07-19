@@ -125,6 +125,9 @@ namespace ReportingWarehouse.models.dwhb.conform_hris
         public string contact_mobile2 { get; set; }
         public string contact_email1 { get; set; }
         public string contact_email2 { get; set; }
+        public string user_id { get; set; }
+        public string ad_userid { get; set; }
+        public string asa_email { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<employee_accreditation_fact> employee_accreditation_fact { get; set; }

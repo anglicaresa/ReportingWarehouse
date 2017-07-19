@@ -76,7 +76,10 @@ create table [hris].[employee_dim] (
 	[contact_mobile1] varchar(20) null,
 	[contact_mobile2] varchar(20) null,
 	[contact_email1] varchar(100) null,
-	[contact_email2] varchar(100) null
+	[contact_email2] varchar(100) null,
+	[user_id] varchar(14) null,
+	[ad_userid] varchar(100) null,
+	[ASA_Email] varchar(100) null
 );
 go
 
