@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DWHBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DWHBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="account_dim">
           <Key>
             <PropertyRef Name="account_key" />
@@ -50,12 +50,13 @@
           <Property Name="period_no" Type="int" />
           <Property Name="quarter" Type="int" />
           <Property Name="description" Type="varchar" MaxLength="50" />
-          <Property Name="fiscal_year" Type="int" />
+          <Property Name="fiscal_year" Type="varchar" MaxLength="11" />
           <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
           <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
           <Property Name="row_effective_date" Type="datetime" />
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+          <Property Name="full_date" Type="datetime" />
         </EntityType>
         <EntityType Name="cost_centre_dim">
           <Key>
@@ -152,6 +153,33 @@
           <Property Name="row_effective_date" Type="datetime" />
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="program_mapping">
+          <Key>
+            <PropertyRef Name="program_mapping_key" />
+          </Key>
+          <Property Name="program_mapping_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="system" Type="varchar" MaxLength="30" />
+          <Property Name="table1" Type="varchar" MaxLength="100" />
+          <Property Name="name1" Type="varchar" MaxLength="100" />
+          <Property Name="value1" Type="varchar" MaxLength="100" />
+          <Property Name="table2" Type="varchar" MaxLength="100" />
+          <Property Name="name2" Type="varchar" MaxLength="100" />
+          <Property Name="value2" Type="varchar" MaxLength="100" />
+          <Property Name="table3" Type="varchar" MaxLength="100" />
+          <Property Name="name3" Type="varchar" MaxLength="100" />
+          <Property Name="value3" Type="varchar" MaxLength="100" />
+          <Property Name="table4" Type="varchar" MaxLength="100" />
+          <Property Name="name4" Type="varchar" MaxLength="100" />
+          <Property Name="value4" Type="varchar" MaxLength="100" />
+          <Property Name="table5" Type="varchar" MaxLength="100" />
+          <Property Name="name5" Type="varchar" MaxLength="100" />
+          <Property Name="value5" Type="varchar" MaxLength="100" />
+          <Property Name="mapping_type" Type="varchar" MaxLength="20" />
+          <Property Name="program_name" Type="varchar" MaxLength="50" />
+          <Property Name="program_key" Type="int" />
         </EntityType>
         <EntityType Name="service_stream_dim">
           <Key>
@@ -285,6 +313,30 @@
           <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="program_mapping" EntityType="Self.program_mapping" store:Type="Tables" store:Schema="conform_finance">
+            <DefiningQuery>SELECT 
+    [program_mapping].[program_mapping_key] AS [program_mapping_key], 
+    [program_mapping].[system] AS [system], 
+    [program_mapping].[table1] AS [table1], 
+    [program_mapping].[name1] AS [name1], 
+    [program_mapping].[value1] AS [value1], 
+    [program_mapping].[table2] AS [table2], 
+    [program_mapping].[name2] AS [name2], 
+    [program_mapping].[value2] AS [value2], 
+    [program_mapping].[table3] AS [table3], 
+    [program_mapping].[name3] AS [name3], 
+    [program_mapping].[value3] AS [value3], 
+    [program_mapping].[table4] AS [table4], 
+    [program_mapping].[name4] AS [name4], 
+    [program_mapping].[value4] AS [value4], 
+    [program_mapping].[table5] AS [table5], 
+    [program_mapping].[name5] AS [name5], 
+    [program_mapping].[value5] AS [value5], 
+    [program_mapping].[mapping_type] AS [mapping_type], 
+    [program_mapping].[program_name] AS [program_name], 
+    [program_mapping].[program_key] AS [program_key]
+    FROM [conform_finance].[program_mapping] AS [program_mapping]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="Self.fk_conform_finance_DEBTOR_FACT_account_key">
             <End Role="account_dim" EntitySet="account_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
@@ -322,8 +374,7 @@
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DWHBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -364,22 +415,6 @@
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_account_key" FromRole="account_dim" ToRole="debtor_fact" />
-        </EntityType>
-        <EntityType Name="accounting_period_dim">
-          <Key>
-            <PropertyRef Name="accounting_period_key" />
-          </Key>
-          <Property Name="accounting_period_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="period_no" Type="Int32" />
-          <Property Name="quarter" Type="Int32" />
-          <Property Name="description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="fiscal_year" Type="Int32" />
-          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
-          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
-          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_accounting_period_key" FromRole="accounting_period_dim" ToRole="debtor_fact" />
         </EntityType>
         <EntityType Name="cost_centre_dim">
           <Key>
@@ -439,7 +474,6 @@
           <Property Name="reference" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="amount" Type="Decimal" Precision="15" Scale="2" />
           <NavigationProperty Name="account_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_account_key" FromRole="debtor_fact" ToRole="account_dim" />
-          <NavigationProperty Name="accounting_period_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_accounting_period_key" FromRole="debtor_fact" ToRole="accounting_period_dim" />
           <NavigationProperty Name="cost_centre_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_cost_centre_key" FromRole="debtor_fact" ToRole="cost_centre_dim" />
           <NavigationProperty Name="date_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_processed_key" FromRole="debtor_fact" ToRole="date_dim" />
           <NavigationProperty Name="date_dim1" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="debtor_fact" ToRole="date_dim" />
@@ -447,6 +481,7 @@
           <NavigationProperty Name="portfolio_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_portfolio_key" FromRole="debtor_fact" ToRole="portfolio_dim" />
           <NavigationProperty Name="program_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_program_key" FromRole="debtor_fact" ToRole="program_dim" />
           <NavigationProperty Name="service_stream_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key" FromRole="debtor_fact" ToRole="service_stream_dim" />
+          <NavigationProperty Name="accounting_period_dim" Relationship="DWHBModel.fk_conform_finance_DEBTOR_FACT_accounting_period_key" FromRole="debtor_fact" ToRole="accounting_period_dim" />
         </EntityType>
         <EntityType Name="ledger_dim">
           <Key>
@@ -516,18 +551,6 @@
             </Principal>
             <Dependent Role="debtor_fact">
               <PropertyRef Name="account_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key">
-          <End Role="accounting_period_dim" Type="Self.accounting_period_dim" Multiplicity="1" />
-          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="accounting_period_dim">
-              <PropertyRef Name="accounting_period_key" />
-            </Principal>
-            <Dependent Role="debtor_fact">
-              <PropertyRef Name="accounting_period_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -617,7 +640,6 @@
         </Association>
         <EntityContainer Name="devsql_1_DWHB" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="account_dim" EntityType="Self.account_dim" />
-          <EntitySet Name="accounting_period_dim" EntityType="Self.accounting_period_dim" />
           <EntitySet Name="cost_centre_dim" EntityType="Self.cost_centre_dim" />
           <EntitySet Name="date_dim" EntityType="Self.date_dim" />
           <EntitySet Name="debtor_fact" EntityType="Self.debtor_fact" />
@@ -627,10 +649,6 @@
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" />
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="Self.fk_conform_finance_DEBTOR_FACT_account_key">
             <End Role="account_dim" EntitySet="account_dim" />
-            <End Role="debtor_fact" EntitySet="debtor_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key" Association="Self.fk_conform_finance_DEBTOR_FACT_accounting_period_key">
-            <End Role="accounting_period_dim" EntitySet="accounting_period_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_cost_centre_key" Association="Self.fk_conform_finance_DEBTOR_FACT_cost_centre_key">
@@ -661,7 +679,67 @@
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
+          <EntitySet Name="program_mapping" EntityType="DWHBModel.program_mapping" />
+          <EntitySet Name="accounting_period_dim" EntityType="DWHBModel.accounting_period_dim" />
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key" Association="DWHBModel.fk_conform_finance_DEBTOR_FACT_accounting_period_key">
+            <End Role="accounting_period_dim" EntitySet="accounting_period_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="program_mapping">
+          <Key>
+            <PropertyRef Name="program_mapping_key" />
+          </Key>
+          <Property Name="program_mapping_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="system" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="table1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="value1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="table2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="value2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="table3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="value3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="table4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="value4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="table5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="value5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="mapping_type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="program_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="program_key" Type="Int32" />
+        </EntityType>
+        <EntityType Name="accounting_period_dim">
+          <Key>
+            <PropertyRef Name="accounting_period_key" />
+          </Key>
+          <Property Name="accounting_period_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="period_no" Type="Int32" />
+          <Property Name="quarter" Type="Int32" />
+          <Property Name="description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="fiscal_year" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="full_date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="debtor_fact" Relationship="DWHBModel.fk_conform_finance_DEBTOR_FACT_accounting_period_key" FromRole="accounting_period_dim" ToRole="debtor_fact" />
+        </EntityType>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key">
+          <End Type="DWHBModel.accounting_period_dim" Role="accounting_period_dim" Multiplicity="1" />
+          <End Type="DWHBModel.debtor_fact" Role="debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="accounting_period_dim">
+              <PropertyRef Name="accounting_period_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="accounting_period_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -698,22 +776,6 @@
                 <ScalarProperty Name="bank_account" ColumnName="bank_account" />
                 <ScalarProperty Name="credit_limit" ColumnName="credit_limit" />
                 <ScalarProperty Name="payment_term_days" ColumnName="payment_term_days" />
-                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
-                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
-                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
-                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
-                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="accounting_period_dim">
-            <EntityTypeMapping TypeName="DWHBModel.accounting_period_dim">
-              <MappingFragment StoreEntitySet="accounting_period_dim">
-                <ScalarProperty Name="accounting_period_key" ColumnName="accounting_period_key" />
-                <ScalarProperty Name="period_no" ColumnName="period_no" />
-                <ScalarProperty Name="quarter" ColumnName="quarter" />
-                <ScalarProperty Name="description" ColumnName="description" />
-                <ScalarProperty Name="fiscal_year" ColumnName="fiscal_year" />
                 <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
                 <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
                 <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
@@ -836,6 +898,49 @@
                 <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
                 <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
                 <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="program_mapping">
+            <EntityTypeMapping TypeName="DWHBModel.program_mapping">
+              <MappingFragment StoreEntitySet="program_mapping">
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="program_name" ColumnName="program_name" />
+                <ScalarProperty Name="mapping_type" ColumnName="mapping_type" />
+                <ScalarProperty Name="value5" ColumnName="value5" />
+                <ScalarProperty Name="name5" ColumnName="name5" />
+                <ScalarProperty Name="table5" ColumnName="table5" />
+                <ScalarProperty Name="value4" ColumnName="value4" />
+                <ScalarProperty Name="name4" ColumnName="name4" />
+                <ScalarProperty Name="table4" ColumnName="table4" />
+                <ScalarProperty Name="value3" ColumnName="value3" />
+                <ScalarProperty Name="name3" ColumnName="name3" />
+                <ScalarProperty Name="table3" ColumnName="table3" />
+                <ScalarProperty Name="value2" ColumnName="value2" />
+                <ScalarProperty Name="name2" ColumnName="name2" />
+                <ScalarProperty Name="table2" ColumnName="table2" />
+                <ScalarProperty Name="value1" ColumnName="value1" />
+                <ScalarProperty Name="name1" ColumnName="name1" />
+                <ScalarProperty Name="table1" ColumnName="table1" />
+                <ScalarProperty Name="system" ColumnName="system" />
+                <ScalarProperty Name="program_mapping_key" ColumnName="program_mapping_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="accounting_period_dim">
+            <EntityTypeMapping TypeName="DWHBModel.accounting_period_dim">
+              <MappingFragment StoreEntitySet="accounting_period_dim">
+                <ScalarProperty Name="full_date" ColumnName="full_date" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="fiscal_year" ColumnName="fiscal_year" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="quarter" ColumnName="quarter" />
+                <ScalarProperty Name="period_no" ColumnName="period_no" />
+                <ScalarProperty Name="accounting_period_key" ColumnName="accounting_period_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
