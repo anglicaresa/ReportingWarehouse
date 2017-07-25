@@ -172,7 +172,11 @@ CREATE TABLE [finance].[debtor_fact] (
     [date_processed_key] int  NOT NULL,
     [ledger_key] int  NOT NULL,
     [reference] varchar(30)  NULL,
-    [amount] decimal(15,2)  NULL
+    [amount] decimal(15,2)  NULL,
+    [due_datei] datetime,
+    [narr1] VARCHAR (40),
+    [narr2] VARCHAR (40),
+    [narr3] VARCHAR (40)
 );
 GO
 
