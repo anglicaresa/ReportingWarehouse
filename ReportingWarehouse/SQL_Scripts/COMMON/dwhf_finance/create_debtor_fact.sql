@@ -6,7 +6,7 @@ IF OBJECT_ID(N'[finance].[debtor_fact]', 'U') IS NOT NULL
 GO
 
 create table [finance].[debtor_fact] (
-	[debtor_key]	int	identity(1,1) not null,
+	[debtor_key]	int	 not null,
 	[account_key]		int	not null,
 	[cost_centre_key] int not null,
 	[portfolio_key] int not null,
