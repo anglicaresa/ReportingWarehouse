@@ -1,11 +1,11 @@
-﻿USE [DWHB]
+﻿USE [dwhf_finance];
 GO
-IF OBJECT_ID(N'[conform_finance].[COST_CENTRE_DIM]', 'U') IS NOT NULL
-    DROP TABLE [conform_finance].[COST_CENTRE_DIM];
+IF OBJECT_ID(N'[finance].[COST_CENTRE_DIM]', 'U') IS NOT NULL
+    DROP TABLE [finance].[COST_CENTRE_DIM];
 GO
 
-create table [conform_finance].[cost_centre_dim] (
-	[cost_centre_key] int	identity(1,1) not null,
+create table [finance].[cost_centre_dim] (
+	[cost_centre_key] int	not null,
 
 	[LDG_NAME] [varchar] (8) NULL,
 	[ACCNBRI] [varchar] (32) NULL,
@@ -32,7 +32,7 @@ create table [conform_finance].[cost_centre_dim] (
 
 
 -- PK
-alter table [conform_finance].[cost_centre_dim]
+alter table [finance].[cost_centre_dim]
 add constraint [pk_cost_centre_dim]
     primary key clustered ([cost_centre_key] asc);
 go
