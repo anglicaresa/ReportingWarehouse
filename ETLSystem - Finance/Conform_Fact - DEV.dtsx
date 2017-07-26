@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="630"
-  DTS:VersionGUID="{0DB83A4E-B0A6-4DC2-A099-D963AFDA7E42}">
+  DTS:VersionBuild="631"
+  DTS:VersionGUID="{4B67C55C-DF0F-4419-AB95-3F6A82A67B10}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/25/2017 1:42:11 PM</DTS:VariableValue>
+        DTS:DataType="7">7/26/2017 1:16:37 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/25/2017 1:42:11 PM</DTS:VariableValue>
+        DTS:DataType="7">7/26/2017 1:16:37 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/25/2017 1:42:11 PM</DTS:VariableValue>
+        DTS:DataType="7">7/26/2017 1:16:37 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -240,7 +240,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
-                  SQLTask:SqlStatementSource="  insert into conform_finance.debtor_fact&#xA;  select &#xA;  d1.account_key,&#xA;  (select cost_centre_key from conform_finance.cost_centre_dim where name ='No Costing' and current_row_indicator='Y' ),&#xA;  (select portfolio_key from conform_finance.portfolio_dim where portfolio_name like 'No Portfolio%' and &#x9;   current_row_indicator='Y' ),&#xA;  (select service_stream_key from conform_finance.service_stream_dim where service_stream_name like 'No Service%' and &#x9;   current_row_indicator='Y' ),&#xA;  (select program_key from conform_finance.program_dim where program_name like 'No Prog%' and &#x9;   current_row_indicator='Y' ),&#xA;  ISNULL(d5.accounting_period_key,(select accounting_period_key from conform_finance.accounting_period_dim  where fiscal_year like 'No Period%' and current_row_indicator='Y' )&#x9;) ,&#xA;  d2.date_key,&#xA;  d3.date_key,&#xA;  d4.ledger_key,&#xA;  t1.DOC_REF1,&#xA;  t1.AMT1  ,&#xA;  t1.DUE_DATEI,&#xA;  t1.NARR1,&#xA;  t1.NARR2,&#xA;  t1.NARR3&#xA;  from extract.glf_ldg_acc_trans   as t1&#xA;  inner join conform_finance.account_dim as d1 on t1.ACCNBRI=d1.account_number and d1.chart_name='ARCHART' and d1.current_row_indicator='Y'&#xA;  inner join conform_finance.date_dim as d2 on t1.DOC_DATEI1=d2.full_date&#xA;  inner join conform_finance.date_dim as d3 on t1.PDATEI=d3.full_date&#xA;  inner join conform_finance.ledger_dim as d4 on t1.ldg_name =d4.name and d4.current_row_indicator='Y'&#xA;  left join conform_finance.accounting_period_dim as d5 on t1.PERIOD=d5.period_no and convert(date,t1.DOC_DATEI1)=convert(date,d5.full_date)&#xA;  where t1.ldg_name ='R1'&#xA;&#xA;-----------------------------------------------------update org_structure-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;--Step1: based on program_key.&#xA;--update program_key&#xA;&#xA;  update t1&#xA;  set &#x9;t1.program_key=t3.program_key&#xA;  from conform_finance.debtor_fact as t1&#xA;  inner join   conform_finance.account_dim as d1 on t1.account_key=d1.account_key and d1.chart_name='ARCHART' and d1.current_row_indicator='Y'&#xA;  inner join    extract.GLF_CHART_ACCT as t2 on d1.account_number=t2.ACCNBRI and t2.CHART_NAME='ARCHART'&#xA;  inner join conform_finance.program_mapping as t3 on t2.SELN_TYPE2_CODE = t3.value1 and t3.program_key is not null&#xA;&#xA;&#xA;--update service_stream and porfolio_key&#xA;&#xA;    update f1&#xA;  set &#x9;f1.service_stream_key=d2.service_stream_key&#x9;,&#xA;        f1.portfolio_key=d3.portfolio_key&#xA;  from conform_finance.debtor_fact as f1&#xA;  inner join conform_finance.program_dim as d1 on f1.program_key=d1.program_key and d1.current_row_indicator='Y' and f1.program_key&lt;&gt; (select program_key from conform_finance.program_dim where program_name like 'No Prog%' and &#x9;   current_row_indicator='Y')&#xA;  inner join &#xA;    ( --get all org based on names&#xA;&#x9;&#x9;select distinct t1.program_code,t1.service_stream_code,t2.portfolio_code , d1.program_name  ,d2.service_stream_name ,d3.portfolio_name ,d1.program_key,d2.service_stream_key,d3.portfolio_key&#xA;&#x9;&#x9;from conform.program_temp  as t1&#xA;&#x9;&#x9;inner join conform.service_stream_temp as t2   on t1.service_stream_code=t2.service_stream_code&#xA;&#x9;&#x9;inner join conform.program_dim as d1 on t1.program_code=d1.program_code and d1.current_row_indicator='Y'&#xA;&#x9;&#x9;inner join conform.service_stream_dim as d2 on t1.service_stream_code=d2.service_stream_code and d1.current_row_indicator='Y'&#xA;&#x9;&#x9;inner join conform.portfolio_dim as d3 on t2.portfolio_code=d3.portfolio_code and d1.current_row_indicator='Y'&#xA;    )&#x9;as f2&#xA;&#x9;on d1.program_name=f2.program_name&#xA;&#x9;inner join conform_finance.service_stream_dim as d2 on f2.service_stream_name=d2.service_stream_name   and d2.current_row_indicator='Y'&#xA;&#x9;inner join conform_finance.portfolio_dim as d3 on f2.portfolio_name=d3.portfolio_name and d3.current_row_indicator='Y'&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="   --temp table &#xA;   declare @debtorglmap TABLE&#xA;   (&#xA;   ldg_name varchar(20),&#xA;   accnbri varchar(20),&#xA;   doc_ref1 varchar(20),&#xA;   amt1 decimal(14,2),&#xA;   cost_ldg_name varchar(20),&#xA;   cost_accnbri varchar(20),&#xA;   cost_amt1 decimal(14,2),&#xA;   cost_centre_key int&#x9;   &#xA;   ) ;&#xA;&#xA;   insert into &#x9;@debtorglmap&#xA;     select &#xA;    r1.*,&#xA;&#x9;cost.ldg_name as cost_ldg_name,&#xA;&#x9;cost.ACCNBRI as cost_accnbri&#x9;,&#xA;&#x9;cost.AMT1 as cost_amt1 &#x9;,&#xA;&#x9;isnull(d1.cost_centre_key,&#x9;  (select cost_centre_key from conform_finance.cost_centre_dim where  ldg_name='No Cost' and current_row_indicator='Y' ) )&#xA;&#x9; &#xA;  from &#xA;  (&#xA;    select ldg_name,ACCNBRI,doc_ref1,amt1 &#xA;   from  extract.glf_ldg_acc_trans&#xA;   where ldg_name='R1'  and  len(doc_ref1)&gt;0&#xA;   ) as r1&#xA;   inner join&#xA;   (&#xA;   select ldg_name,ACCNBRI,doc_ref1,amt1 &#xA;   from  extract.glf_ldg_acc_trans&#xA;   where ldg_name like '%ACT' and len(ACCNBRI)=15 and  len(doc_ref1)&gt;0&#xA;   ) as cost&#xA;   on r1.DOC_REF1=cost.DOC_REF1&#x9;     and abs(r1.AMT1)=abs(cost.AMT1)&#xA;   left join conform_finance.cost_centre_dim as d1 on cost.ldg_name=d1.ldg_name and cost.ACCNBRI= d1.accnbri&#x9;and d1.current_row_indicator='Y'&#xA;&#xA;&#xA;    select ldg_name,ACCNBRI,doc_ref1,amt1 &#xA;   from  extract.glf_ldg_acc_trans&#xA;   where ldg_name='R1'  and  len(doc_ref1)&gt;0&#xA;&#xA;&#xA;  insert into conform_finance.debtor_fact&#xA;  select &#xA;  d1.account_key,&#xA;   isnull(f1.cost_centre_key, (select cost_centre_key from conform_finance.cost_centre_dim where  ldg_name='No Cost' and current_row_indicator='Y' ) ),&#xA;  (select portfolio_key from conform_finance.portfolio_dim where portfolio_name like 'No Portfolio%' and &#x9;   current_row_indicator='Y' ),&#xA;  (select service_stream_key from conform_finance.service_stream_dim where service_stream_name like 'No Service%' and &#x9;   current_row_indicator='Y' ),&#xA;  (select program_key from conform_finance.program_dim where program_name like 'No Prog%' and &#x9;   current_row_indicator='Y' ),&#xA;  ISNULL(d5.accounting_period_key,(select accounting_period_key from conform_finance.accounting_period_dim  where fiscal_year like 'No Period%' and current_row_indicator='Y' )&#x9;) ,&#xA;  d2.date_key,&#xA;  d3.date_key,&#xA;  d4.ledger_key,&#xA;  t1.DOC_REF1,&#xA;  t1.AMT1  ,&#xA;  t1.DUE_DATEI,&#xA;  t1.NARR1,&#xA;  t1.NARR2,&#xA;  t1.NARR3&#xA;  from extract.glf_ldg_acc_trans   as t1&#xA;  inner join conform_finance.account_dim as d1 on t1.ACCNBRI=d1.account_number and d1.chart_name='ARCHART' and d1.current_row_indicator='Y'&#xA;  inner join conform_finance.date_dim as d2 on t1.DOC_DATEI1=d2.full_date&#xA;  inner join conform_finance.date_dim as d3 on t1.PDATEI=d3.full_date&#xA;  inner join conform_finance.ledger_dim as d4 on t1.ldg_name =d4.name and d4.current_row_indicator='Y'&#xA;  left join conform_finance.accounting_period_dim as d5 on t1.PERIOD=d5.period_no and convert(date,t1.DOC_DATEI1)=convert(date,d5.full_date)&#xA;  left join&#x9; @debtorglmap as f1 on t1.ACCNBRI=f1.ACCNBRI and t1.DOC_REF1=f1.DOC_REF1  &#xA;  where t1.ldg_name ='R1'&#xA;&#xA;-----------------------------------------------------update org_structure-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;--Step1: based on program_key.&#xA;--update program_key&#xA;&#xA;  update t1&#xA;  set &#x9;t1.program_key=t3.program_key&#xA;  from conform_finance.debtor_fact as t1&#xA;  inner join   conform_finance.account_dim as d1 on t1.account_key=d1.account_key and d1.chart_name='ARCHART' and d1.current_row_indicator='Y'&#xA;  inner join    extract.GLF_CHART_ACCT as t2 on d1.account_number=t2.ACCNBRI and t2.CHART_NAME='ARCHART'&#xA;  inner join conform_finance.program_mapping as t3 on t2.SELN_TYPE2_CODE = t3.value1 and t3.program_key is not null&#xA;&#xA;&#xA;--update service_stream and porfolio_key&#xA;&#xA;    update f1&#xA;  set &#x9;f1.service_stream_key=d2.service_stream_key&#x9;,&#xA;        f1.portfolio_key=d3.portfolio_key&#xA;  from conform_finance.debtor_fact as f1&#xA;  inner join conform_finance.program_dim as d1 on f1.program_key=d1.program_key and d1.current_row_indicator='Y' and f1.program_key&lt;&gt; (select program_key from conform_finance.program_dim where program_name like 'No Prog%' and &#x9;   current_row_indicator='Y')&#xA;  inner join &#xA;    ( --get all org based on names&#xA;&#x9;&#x9;select distinct t1.program_code,t1.service_stream_code,t2.portfolio_code , d1.program_name  ,d2.service_stream_name ,d3.portfolio_name ,d1.program_key,d2.service_stream_key,d3.portfolio_key&#xA;&#x9;&#x9;from conform.program_temp  as t1&#xA;&#x9;&#x9;inner join conform.service_stream_temp as t2   on t1.service_stream_code=t2.service_stream_code&#xA;&#x9;&#x9;inner join conform.program_dim as d1 on t1.program_code=d1.program_code and d1.current_row_indicator='Y'&#xA;&#x9;&#x9;inner join conform.service_stream_dim as d2 on t1.service_stream_code=d2.service_stream_code and d1.current_row_indicator='Y'&#xA;&#x9;&#x9;inner join conform.portfolio_dim as d3 on t2.portfolio_code=d3.portfolio_code and d1.current_row_indicator='Y'&#xA;    )&#x9;as f2&#xA;&#x9;on d1.program_name=f2.program_name&#xA;&#x9;inner join conform_finance.service_stream_dim as d2 on f2.service_stream_name=d2.service_stream_name   and d2.current_row_indicator='Y'&#xA;&#x9;inner join conform_finance.portfolio_dim as d3 on f2.portfolio_name=d3.portfolio_name and d3.current_row_indicator='Y'&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
             <DTS:Executable
@@ -370,7 +370,7 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\EST - Write Job Finish info"
@@ -392,7 +392,7 @@
           TopLeft="145.65,70">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,31"
               Start="0,0"
               End="0,23.5">
@@ -414,7 +414,7 @@
           TopLeft="145.65,143">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,48"
               Start="0,0"
               End="0,40.5">
@@ -436,7 +436,7 @@
           TopLeft="146.15,233">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,40"
               Start="0,0"
               End="0,32.5">
