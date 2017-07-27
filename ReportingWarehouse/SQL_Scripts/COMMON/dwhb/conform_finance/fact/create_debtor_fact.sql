@@ -21,7 +21,9 @@ create table [conform_finance].[debtor_fact] (
     [due_datei] datetime,
     [narr1] VARCHAR (40),
     [narr2] VARCHAR (40),
-    [narr3] VARCHAR (40)
+    [narr3] VARCHAR (40),
+	[doc_type] VARCHAR(10),
+	[overdue_days] int
 );
 
 
