@@ -23,7 +23,9 @@ create table [conform_finance].[debtor_fact] (
     [narr2] VARCHAR (40),
     [narr3] VARCHAR (40),
 	[doc_type] VARCHAR(10),
-	[overdue_days] int
+	[overdue_days] int,
+	[alloc_amt1] decimal(15,2),
+	[outstanding_amt] decimal(15,2)
 );
 
 
