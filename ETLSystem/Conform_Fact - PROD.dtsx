@@ -7,13 +7,13 @@
   DTS:CreatorName="ANGLICARE-SA\jshen"
   DTS:DTSID="{15F80AD7-C723-4F2A-8039-0987E0C8775E}"
   DTS:ExecutableType="SSIS.Package.3"
-  DTS:LastModifiedProductVersion="13.0.2164.0"
+  DTS:LastModifiedProductVersion="13.0.2165.0"
   DTS:LocaleID="3081"
   DTS:ObjectName="Conform_Fact - PROD"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="601"
-  DTS:VersionGUID="{31F219F4-4843-4796-8DCA-75B51D81B983}">
+  DTS:VersionBuild="603"
+  DTS:VersionGUID="{3BBB88F4-8C96-4537-AB42-C7B022EDAE5F}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/25/2017 3:07:20 PM</DTS:VariableValue>
+        DTS:DataType="7">8/1/2017 10:43:24 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/25/2017 3:07:20 PM</DTS:VariableValue>
+        DTS:DataType="7">8/1/2017 10:43:24 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/25/2017 3:07:20 PM</DTS:VariableValue>
+        DTS:DataType="7">8/1/2017 10:43:24 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -690,7 +690,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{2A78DA3F-7CEE-4C44-A9F0-85606FA444B9}"
-                  SQLTask:SqlStatementSource="--Used for store the data of current month:&#xA;DECLARE @leave_taken_data TABLE&#xA;  (&#xA;   [employee_class]      varchar(50) null,     &#xA;   [hours]                 decimal(10,4) null,&#xA;   [count]         INT NULL&#xA;  );&#xA;  &#xA;  DECLARE @leave_taken_data_t TABLE&#xA;  (&#xA;   [employee_class]      varchar(50) null,     &#xA;   [hours]                 decimal(10,4) null,&#xA;   [count]         INT NULL&#xA;  );&#xA;  &#xA;&#x9;declare @t_year int = &#x9;year(getdate());&#xA;&#x9;declare @t_month int = &#x9;month(getdate());&#xA;-- month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select month_key from conform.month_dim d where d.year = @t_year&#xA;&#x9;and d.month_number = @t_month&#xA;);&#xA;&#xA;--select @month_key_t&#xA;&#xA;insert into @leave_taken_data_t&#xA;select f.employee_class, sum(f.leave_taken) as hours, count(distinct f.employee_key) as count from conform.employee_leave_taken_fact f&#xA;where f.leave_type_key in&#xA;(--component 50 and 65 leave type key&#xA; select leave_type_key from conform.leave_type_dim d &#xA; where d.current_row_indicator = 'y' &#xA; and d.leave_code in ('501.000000','501.100000','501.200000','501.300000','501.400000','501.500000','501.600000')&#xA;)&#xA;and f.leave_date_key in &#xA;( --last month's date_key&#xA; select date_key from conform.date_dim d &#xA; where d.year = @t_year&#xA; and d.month_no = @t_month&#xA;)&#xA;group by f.employee_class;&#xA;&#xA;-- 'Client Lin' as 'Part Time' employee&#xA;update @leave_taken_data_t set employee_class = 'Part Time' where employee_class = 'Client Lin';&#xA;&#xA;insert into @leave_taken_data &#xA;select ft.employee_class,sum(hours) as hours, sum(count) as count&#xA;from @leave_taken_data_t ft&#xA;group by ft.employee_class;&#xA;&#xA;--select * from @leave_taken_data;&#xA;&#xA;--select   * from conform.date_dim d where d.year = 2017&#xA;--select top 100 * from conform.month_dim;&#xA;&#xA;--the first day of new financial year&#xA;--insert all year data&#xA;&#xA;if (day(getdate()) = 1)&#xA;begin&#xA; if (month(getdate()) = 7 )&#xA; begin&#xA; delete conform.personalleave_usage_report_fact  where month_date_key&gt;=(@month_key_t);&#xA;&#xA; insert into conform.personalleave_usage_report_fact (month_date_key,last_year_month_days)&#xA; ( &#xA;  select month_date_key+12 as month_date_key,month_days from conform.personalleave_usage_report_fact f &#xA;  where f.month_date_key&gt;=(@month_key_t -12)&#xA;  and f.month_date_key&lt;@month_key_t&#xA; )&#xA; end&#xA;end&#xA;&#xA;&#xA;--select avg(year_avg_days) from conform.personalleave_usage_report_fact f3 where f3.month_date_key &gt;=(@month_key_t-11) and f3.month_date_key&lt;=@month_key_t&#xA;&#xA;--update all employee data of the current month on the first day of the month&#xA;--if (day(getdate()) = 1) &#xA;begin&#xA; update f2&#xA; -- 'Client Lin' as 'Part Time' employee&#xA; set f2.part_time_emp_all = (select count(distinct employee_key) from conform.employee_dim d3 where d3.employee_class  in ('Part Time','Client Lin') and d3.current_row_indicator='y'),&#xA;  f2.full_time_emp_all = (select count(distinct employee_key) from conform.employee_dim d4 where d4.employee_class = 'Full Time' and d4.current_row_indicator='y')  &#xA; from conform.personalleave_usage_report_fact f2 &#xA; where f2.month_date_key = @month_key_t;&#xA;end&#xA;&#xA;--update the data of the current month&#xA;update f2&#xA;set f2.part_time_emp_take = (select count from @leave_taken_data d2 where d2.employee_class = 'Part Time'),&#xA; f2.[full_time_emp_take ] = (select count from @leave_taken_data d2 where d2.employee_class = 'Full Time'),&#xA; f2.part_time_hours = (select hours from @leave_taken_data d2 where d2.employee_class = 'Part Time'),&#xA; f2.full_time_hours = (select hours from @leave_taken_data d2 where d2.employee_class = 'Full Time'),&#xA; -- year average data needs to be updated manually&#xA; f2.year_avg_days = (select sum(month_days) from conform.personalleave_usage_report_fact f3 where f3.month_date_key &gt;(@month_key_t-12) and f3.month_date_key&lt;=@month_key_t)&#xA;from conform.personalleave_usage_report_fact f2 &#xA;where f2.month_date_key = @month_key_t;&#xA;&#xA;--update month_days of the current month&#xA;update f2&#xA;set f2.month_days = ((f2.part_time_hours + f2.full_time_hours)/(f2.part_time_emp_all+f2.full_time_emp_all)/7.6)&#xA;from conform.personalleave_usage_report_fact f2 &#xA;where f2.month_date_key = @month_key_t;&#xA;&#xA; --update year average data &#xA; update f2&#xA;set &#xA; f2.year_avg_days = (select sum(month_days) from conform.personalleave_usage_report_fact f3 where f3.month_date_key &gt;(@month_key_t-12) and f3.month_date_key&lt;=@month_key_t)&#xA;from conform.personalleave_usage_report_fact f2 &#xA;where f2.month_date_key = @month_key_t;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="--Used for store the data of current month:&#xA;DECLARE @leave_taken_data TABLE&#xA;  (&#xA;   [employee_class]      varchar(50) null,     &#xA;   [hours]                 decimal(10,4) null,&#xA;   [count]         INT NULL&#xA;  );&#xA;  &#xA;  DECLARE @leave_taken_data_t TABLE&#xA;  (&#xA;   [employee_class]      varchar(50) null,     &#xA;   [hours]                 decimal(10,4) null,&#xA;   [count]         INT NULL&#xA;  );&#xA;  &#xA;&#x9;--declare @t_year int = &#x9;year(getdate());&#xA;&#x9;--declare @t_month int = &#x9;month(getdate());&#xA;-- day key&#xA;declare @t_date_key int = &#xA;  (select date_key from conform.date_dim &#xA;    where year = year(getdate()) &#xA;    and month_no = month(getdate()) &#xA;    and day_of_month = day(getdate())&#xA;  ) &#xA;--the first day of the month, needs to update last month's data due to one day delay from T1 to DWH&#xA;if (day(getdate()) = 1)&#xA;begin&#xA;  set @t_date_key = @t_date_key -1&#xA;end&#xA;-- month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select d2.month_key &#xA;  from conform.date_dim d1 inner join conform.month_dim d2&#xA;  on d1.year = d2.year and d1.month_no = d2.month_number&#xA;  and d1.date_key = @t_date_key&#xA;);&#xA;&#xA;--select @month_key_t&#xA;-- insert data into temp table @leave_taken_data_t from employee_leave_taken_fact&#xA;insert into @leave_taken_data_t&#xA;select f.employee_class, sum(f.leave_taken) as hours, count(distinct f.employee_key) as count from conform.employee_leave_taken_fact f&#xA;where f.leave_type_key in&#xA;(--component 50 and 65 leave type key&#xA; select leave_type_key from conform.leave_type_dim d &#xA; where d.current_row_indicator = 'y' &#xA; and d.leave_code in ('501.000000','501.100000','501.200000','501.300000','501.400000','501.500000','501.600000')&#xA;)&#xA;and f.leave_date_key in &#xA;( --this month's date_key&#xA;  select d1.date_key&#xA;  from conform.date_dim d1 inner join conform.month_dim d2&#xA;  on d1.year = d2.year and d1.month_no = d2.month_number&#xA;  and d2.month_key = @month_key_t&#xA;)&#xA;group by f.employee_class;&#xA;&#xA;-- 'Client Lin' as 'Part Time' employee&#xA;update @leave_taken_data_t set employee_class = 'Part Time' where employee_class = 'Client Lin';&#xA;&#xA;insert into @leave_taken_data &#xA;select ft.employee_class,sum(hours) as hours, sum(count) as count&#xA;from @leave_taken_data_t ft&#xA;group by ft.employee_class;&#xA;&#xA;--select * from @leave_taken_data;&#xA;&#xA;&#xA;if (day(getdate()) = 1)&#xA;begin&#xA; if (month(getdate()) = 7 )&#xA;--the first day of new financial year&#xA;--insert all year data&#xA; begin&#xA; delete conform.personalleave_usage_report_fact  where month_date_key&gt;=(@month_key_t);&#xA;&#xA; insert into conform.personalleave_usage_report_fact (month_date_key,last_year_month_days)&#xA; ( &#xA;  select month_date_key+12 as month_date_key,month_days from conform.personalleave_usage_report_fact f &#xA;  where f.month_date_key&gt;=(@month_key_t -12)&#xA;  and f.month_date_key&lt;@month_key_t&#xA; )&#xA; end&#xA;end&#xA;&#xA;&#xA;--select avg(year_avg_days) from conform.personalleave_usage_report_fact f3 where f3.month_date_key &gt;=(@month_key_t-11) and f3.month_date_key&lt;=@month_key_t&#xA;&#xA;--update all employee data of the current month on the first day of the month&#xA;--if (day(getdate()) = 1) &#xA;begin&#xA; update f2&#xA; -- 'Client Lin' as 'Part Time' employee&#xA; set f2.part_time_emp_all = (select count(distinct employee_key) from conform.employee_dim d3 where d3.employee_class  in ('Part Time','Client Lin') and d3.current_row_indicator='y'),&#xA;  f2.full_time_emp_all = (select count(distinct employee_key) from conform.employee_dim d4 where d4.employee_class = 'Full Time' and d4.current_row_indicator='y')  &#xA; from conform.personalleave_usage_report_fact f2 &#xA; where f2.month_date_key = @month_key_t;&#xA;end&#xA;&#xA;--update the data of the current month&#xA;update f2&#xA;set f2.part_time_emp_take = (select count from @leave_taken_data d2 where d2.employee_class = 'Part Time'),&#xA; f2.[full_time_emp_take ] = (select count from @leave_taken_data d2 where d2.employee_class = 'Full Time'),&#xA; f2.part_time_hours = (select hours from @leave_taken_data d2 where d2.employee_class = 'Part Time'),&#xA; f2.full_time_hours = (select hours from @leave_taken_data d2 where d2.employee_class = 'Full Time'),&#xA; -- year average data needs to be updated manually&#xA; f2.year_avg_days = (select sum(month_days) from conform.personalleave_usage_report_fact f3 where f3.month_date_key &gt;(@month_key_t-12) and f3.month_date_key&lt;=@month_key_t)&#xA;from conform.personalleave_usage_report_fact f2 &#xA;where f2.month_date_key = @month_key_t;&#xA;&#xA;--update month_days of the current month&#xA;update f2&#xA;set f2.month_days = ((f2.part_time_hours + f2.full_time_hours)/(f2.part_time_emp_all+f2.full_time_emp_all)/7.6)&#xA;from conform.personalleave_usage_report_fact f2 &#xA;where f2.month_date_key = @month_key_t;&#xA;&#xA; --update year average data &#xA; update f2&#xA;set &#xA; f2.year_avg_days = (select sum(month_days) from conform.personalleave_usage_report_fact f3 where f3.month_date_key &gt;(@month_key_t-12) and f3.month_date_key&lt;=@month_key_t)&#xA;from conform.personalleave_usage_report_fact f2 &#xA;where f2.month_date_key = @month_key_t;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -18080,7 +18080,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - Delete">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="343,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - Delete\OLE DB Source - Get data from employee_position_fact"
@@ -18098,7 +18098,7 @@ where employee_key=? </property>
           TopLeft="508.25,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="0,50.5">
@@ -18112,9 +18112,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -18122,7 +18120,7 @@ where employee_key=? </property>
           TopLeft="508,285">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,90"
               Start="0,0"
               End="0,82.5">
