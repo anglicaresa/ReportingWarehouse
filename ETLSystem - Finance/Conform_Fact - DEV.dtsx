@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="637"
-  DTS:VersionGUID="{A6ED01ED-CD48-44D4-BE79-0B91DEF89496}">
+  DTS:VersionBuild="638"
+  DTS:VersionGUID="{2F7ABDB3-3FC2-4BB0-B10F-9F8B4CEF499F}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/28/2017 11:25:46 AM</DTS:VariableValue>
+        DTS:DataType="7">8/1/2017 2:11:45 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/28/2017 11:25:46 AM</DTS:VariableValue>
+        DTS:DataType="7">8/1/2017 2:11:45 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/28/2017 11:25:46 AM</DTS:VariableValue>
+        DTS:DataType="7">8/1/2017 2:11:45 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -333,7 +333,170 @@
             </DTS:EventHandler>
           </DTS:EventHandlers>
         </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{ec48c605-7a18-4196-bc76-9121bfd136b9}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SD1 - KPI_FACT">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{cdd1d7e4-1e5b-4baa-bb2a-f9e022e1d0d7}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_finance.debtor_fact'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{0a182037-dd04-45d3-b37e-6695d4d75b91}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_finance.debtor_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Get new records and update columns"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{4de82e98-e6b9-44ea-99ea-fc55c38d8173}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Get new records and update columns"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource="-----------------------------------------------------------process to calculate ---------------------------------------------------------------------------&#xA;--define variable&#xA;--kpi_report_date&#xA;declare @v_date datetime ='2017-05-01 00:00:00.000';&#xA;--financial_month_no&#xA;declare @v_fymont_no int = (select financial_month_no from conform_finance.date_dim where full_date =@v_date) &#xA;--entity no&#xA;declare @endity varchar(20) ='10';&#xA;&#xA;--delete existing data for same period&#xA;delete from  [conform_finance].kpi_fact&#xA;where date_key = (select date_key from conform_finance.date_dim where full_date =@v_date);&#xA;&#xA;--start to populate KPI data for this period&#xA;--------------------------------------KPI1.Balancesheet Debt to Equity ------------------------------------------------------------------------------------&#xA;&#xA; insert into   [conform_finance].kpi_fact&#xA; select &#xA; 'Balancesheet Debt to Equity',&#xA;(select date_key from conform_finance.date_dim where full_date =@v_date),&#xA;'Debt',&#x9;&#x9;&#xA;(select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='NCL'&#xA;and Account_Sub_Group='NCLFACIL'),&#xA;'Equity',&#xA;(&#xA;--reserversL&#xA;select&#xA;(&#xA;select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='EQU'&#xA;)&#xA;-&#xA;(select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and Account_Sub_Group ='EQRE'&#xA;)&#xA;+  &#xA;&#xA;--Retained Surplus &#xA;(&#xA;select &#xA;&#xA;(select sum( convert(decimal(20,2),amount))/1000 *(-1)  from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and Account_Sub_Group ='EQRE'&#xA;and account_group ='EQU'&#xA;)&#xA;+&#xA;(&#xA;select sum( convert(decimal(20,2),isnull(amount,0)))/1000*(-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and right(account_type,1) in (4,6)&#xA;&#xA;)&#xA;&#xA;)&#xA;),&#xA;null,&#xA;null,&#xA;null,&#xA;null,&#xA;'Result',&#xA;0.00,&#xA;null,&#xA;null,&#xA;'Recommended Maximum',&#xA;0.30,&#xA;null,&#xA;null;&#xA;&#xA;--update result&#xA;update &#x9;[conform_finance].kpi_fact&#xA;set kpi_result_1_value =kpi_indicator_1_value / kpi_indicator_2_value&#xA;where kpi_name ='Balancesheet Debt to Equity'&#xA;and date_key =(select date_key from conform_finance.date_dim where full_date =@v_date) ;&#xA;&#xA;&#xA; -------------------------------insert into dwhf_finance kpi_fact table-------------------------------------------------------------------------&#xA; truncate table  dwhf_finance.finance.kpi_fact;&#xA; insert into  dwhf_finance.finance.kpi_fact&#xA; select * &#xA; from [conform_finance].kpi_fact;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Truncate table"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{7d09bfa1-0b7d-4f74-b014-4b95c9eaceb3}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Truncate table"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource="truncate table  conform_finance.debtor_fact" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{5b841b50-2c25-4bc2-81f6-55210c8d323b}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Truncate table" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{b79325f8-ebd4-4f8e-8654-bdd26f570288}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Truncate table"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Get new records and update columns" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{c808a9c4-244e-4036-bae9-4f148338bbe9}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Get new records and update columns"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{462f70db-8feb-44f8-bbcb-88457a48c56d}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{7aab03fb-e87d-4fe0-ae7e-d3f4f2a5687c}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{8597932f-99e0-453d-916e-0b829360b04f}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
       </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{07D11B70-D506-47B9-BB1A-302393AE2DCF}"
+          DTS:From="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT" />
+      </DTS:PrecedenceConstraints>
     </DTS:Executable>
   </DTS:Executables>
   <DTS:EventHandlers>
@@ -370,7 +533,7 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\EST - Write Job Finish info"
@@ -459,12 +622,123 @@
           PanelSize="345,370"
           Size="345,413"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT"
-          TopLeft="5.50000000000006,5.5" />
+          TopLeft="5.5,5.49999999999989" />
+        <NodeLayout
+          Size="222,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Finish info"
+          TopLeft="35.15,273" />
+        <NodeLayout
+          Size="222,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Start info"
+          TopLeft="35.15,28" />
+        <NodeLayout
+          Size="222,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Get new records and update columns"
+          TopLeft="35.15,191" />
+        <NodeLayout
+          Size="212,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Truncate table"
+          TopLeft="39.15,101" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint]"
+          TopLeft="145.65,70">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,31"
+              Start="0,0"
+              End="0,23.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 1]"
+          TopLeft="145.65,143">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,48"
+              Start="0,0"
+              End="0,40.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,40.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 2]"
+          TopLeft="146.15,233">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40"
+              Start="0,0"
+              End="0,32.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="356,474"
-          Size="356,516"
+          PanelSize="345,370"
+          Size="345,413"
+          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT"
+          TopLeft="411.5,5.49999999999989" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint]"
+          TopLeft="350.5,212">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="61,0"
+              Start="0,0"
+              End="53.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="53.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="762,473"
+          Size="762,516"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="31.833333333333,1.99999999999818" />
       </GraphLayout>
@@ -478,6 +752,18 @@
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
