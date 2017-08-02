@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="638"
-  DTS:VersionGUID="{2F7ABDB3-3FC2-4BB0-B10F-9F8B4CEF499F}">
+  DTS:VersionBuild="639"
+  DTS:VersionGUID="{D2168C2F-52A0-427F-9DB1-7D8EC3F5560A}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">8/1/2017 2:11:45 PM</DTS:VariableValue>
+        DTS:DataType="7">8/2/2017 3:36:14 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">8/1/2017 2:11:45 PM</DTS:VariableValue>
+        DTS:DataType="7">8/2/2017 3:36:14 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">8/1/2017 2:11:45 PM</DTS:VariableValue>
+        DTS:DataType="7">8/2/2017 3:36:14 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -392,7 +392,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
-                  SQLTask:SqlStatementSource="-----------------------------------------------------------process to calculate ---------------------------------------------------------------------------&#xA;--define variable&#xA;--kpi_report_date&#xA;declare @v_date datetime ='2017-05-01 00:00:00.000';&#xA;--financial_month_no&#xA;declare @v_fymont_no int = (select financial_month_no from conform_finance.date_dim where full_date =@v_date) &#xA;--entity no&#xA;declare @endity varchar(20) ='10';&#xA;&#xA;--delete existing data for same period&#xA;delete from  [conform_finance].kpi_fact&#xA;where date_key = (select date_key from conform_finance.date_dim where full_date =@v_date);&#xA;&#xA;--start to populate KPI data for this period&#xA;--------------------------------------KPI1.Balancesheet Debt to Equity ------------------------------------------------------------------------------------&#xA;&#xA; insert into   [conform_finance].kpi_fact&#xA; select &#xA; 'Balancesheet Debt to Equity',&#xA;(select date_key from conform_finance.date_dim where full_date =@v_date),&#xA;'Debt',&#x9;&#x9;&#xA;(select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='NCL'&#xA;and Account_Sub_Group='NCLFACIL'),&#xA;'Equity',&#xA;(&#xA;--reserversL&#xA;select&#xA;(&#xA;select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='EQU'&#xA;)&#xA;-&#xA;(select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and Account_Sub_Group ='EQRE'&#xA;)&#xA;+  &#xA;&#xA;--Retained Surplus &#xA;(&#xA;select &#xA;&#xA;(select sum( convert(decimal(20,2),amount))/1000 *(-1)  from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and Account_Sub_Group ='EQRE'&#xA;and account_group ='EQU'&#xA;)&#xA;+&#xA;(&#xA;select sum( convert(decimal(20,2),isnull(amount,0)))/1000*(-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and right(account_type,1) in (4,6)&#xA;&#xA;)&#xA;&#xA;)&#xA;),&#xA;null,&#xA;null,&#xA;null,&#xA;null,&#xA;'Result',&#xA;0.00,&#xA;null,&#xA;null,&#xA;'Recommended Maximum',&#xA;0.30,&#xA;null,&#xA;null;&#xA;&#xA;--update result&#xA;update &#x9;[conform_finance].kpi_fact&#xA;set kpi_result_1_value =kpi_indicator_1_value / kpi_indicator_2_value&#xA;where kpi_name ='Balancesheet Debt to Equity'&#xA;and date_key =(select date_key from conform_finance.date_dim where full_date =@v_date) ;&#xA;&#xA;&#xA; -------------------------------insert into dwhf_finance kpi_fact table-------------------------------------------------------------------------&#xA; truncate table  dwhf_finance.finance.kpi_fact;&#xA; insert into  dwhf_finance.finance.kpi_fact&#xA; select * &#xA; from [conform_finance].kpi_fact;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="-----------------------------------------------------------process to calculate ---------------------------------------------------------------------------&#xA;--define variable&#xA;--kpi_report_date&#xA;declare @v_date datetime ='2017-05-01 00:00:00.000';&#xA;--financial_month_no&#xA;declare @v_fymont_no int = (select financial_month_no from conform_finance.date_dim where full_date =@v_date) &#xA;--entity no&#xA;declare @endity varchar(20) ='10';&#xA;&#xA;--delete existing data for same period&#xA;delete from  [conform_finance].kpi_fact&#xA;where date_key = (select date_key from conform_finance.date_dim where full_date =@v_date);&#xA;&#xA;--start to populate KPI data for this period&#xA;--------------------------------------KPI1.Balancesheet Debt to Equity ------------------------------------------------------------------------------------&#xA;&#xA; insert into   [conform_finance].kpi_fact&#xA; select &#xA; 'Balancesheet Debt to Equity',&#xA;(select date_key from conform_finance.date_dim where full_date =@v_date),&#xA;'Debt',&#x9;&#x9;&#xA;(select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='NCL'&#xA;and Account_Sub_Group='NCLFACIL'),&#xA;'Equity',&#xA;(&#xA;--reserversL&#xA;select&#xA;(&#xA;select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='EQU'&#xA;)&#xA;-&#xA;(select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and Account_Sub_Group ='EQRE'&#xA;)&#xA;+  &#xA;&#xA;--Retained Surplus &#xA;(&#xA;select &#xA;&#xA;(select sum( convert(decimal(20,2),amount))/1000 *(-1)  from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and Account_Sub_Group ='EQRE'&#xA;and account_group ='EQU'&#xA;)&#xA;+&#xA;(&#xA;select sum( convert(decimal(20,2),isnull(amount,0)))/1000*(-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and right(account_type,1) in (4,6)&#xA;&#xA;)&#xA;&#xA;)&#xA;),&#xA;null,&#xA;null,&#xA;null,&#xA;null,&#xA;'Result',&#xA;0.00,&#xA;null,&#xA;null,&#xA;'Recommended Maximum',&#xA;0.30,&#xA;null,&#xA;null;&#xA;&#xA;--update result&#xA;update &#x9;[conform_finance].kpi_fact&#xA;set kpi_result_1_value =kpi_indicator_1_value / kpi_indicator_2_value&#xA;where kpi_name ='Balancesheet Debt to Equity'&#xA;and date_key =(select date_key from conform_finance.date_dim where full_date =@v_date) ;&#xA;&#xA;--------------------------------------KPI2.Balance sheet: Current Ratio adjusted for Resident Bonds--------------------------------------------&#xA;insert into   [conform_finance].kpi_fact&#xA; select &#xA; 'Balance sheet: Current Ratio adjusted for Resident Bonds',&#xA;(select date_key from conform_finance.date_dim where full_date =@v_date),&#xA;'Current Assets',&#x9;&#x9;&#xA;(select sum( convert(decimal(20,2),amount))/1000 from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='CA'),&#xA;'Current Liabilities',&#xA;(select sum( convert(decimal(20,2),amount))/1000*(-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)&#xA;and period &lt;=@v_fymont_no&#xA;and account_group in ('CL')),&#xA;'Resident Bonds',&#xA;29846,&#xA;null,&#xA;null,&#xA;'Result',&#xA;0.00,&#xA;null,&#xA;null,&#xA;'Recommended Minimum',&#xA;1.5,&#xA;null,&#xA;null;&#xA;&#xA;--update result&#xA;update &#x9;[conform_finance].kpi_fact&#xA;set kpi_result_1_value =kpi_indicator_1_value / kpi_indicator_2_value&#xA;where kpi_name ='Balance sheet: Current Ratio adjusted for Resident Bonds'&#xA;and date_key =(select date_key from conform_finance.date_dim where full_date =@v_date) ;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA; -------------------------------insert into dwhf_finance kpi_fact table-------------------------------------------------------------------------&#xA; truncate table  dwhf_finance.finance.kpi_fact;&#xA; insert into  dwhf_finance.finance.kpi_fact&#xA; select * &#xA; from [conform_finance].kpi_fact;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
             <DTS:Executable

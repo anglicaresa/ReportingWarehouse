@@ -12,8 +12,8 @@
   DTS:ObjectName="Import_KPI_HisData"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="6"
-  DTS:VersionGUID="{3FCA5BAA-1938-4E14-A7DD-C9548CAE1271}">
+  DTS:VersionBuild="7"
+  DTS:VersionGUID="{1163006B-09D1-4C95-993D-BF2EE0D44DC3}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -34,7 +34,7 @@
       DTS:ObjectName="Excel Connection Manager">
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Jerry Shen\DataWarehouse\Finance\May_2017_Finance_KPI_Report.xlsx;Extended Properties=&quot;Excel 12.0 XML;HDR=YES&quot;;" />
+          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Jerry Shen\DataWarehouse\Finance\May_2017_Finance_KPI_Report.xlsx;Extended Properties=&quot;EXCEL 12.0 XML;HDR=YES&quot;;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -821,10 +821,27 @@
       DTS:refId="Package\Execute SQL Task"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Execute SQL Task"
-      DTS:DTSID="{D07723C0-AC8E-4B15-83E8-A664E0B4465D}"
+      DTS:DTSID="{10FA5076-4CBB-4078-B01F-F0B13A803190}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
       DTS:ObjectName="Execute SQL Task"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7277E042-80AD-420C-9616-28338D52B3AB}"
+          SQLTask:SqlStatementSource="truncate table conform_finance.kpi_fact;&#xA;insert into conform_finance.kpi_fact&#xA;select &#xA;&#xA;f1.kpi_name&#x9;,&#xA;d1.date_key&#x9;,&#xA;f1.kpi_indicator_1_name&#x9;,&#xA;f1.kpi_indicator_1_value&#x9;&#x9;,&#xA;f1.kpi_indicator_2_name&#x9;&#x9;,&#xA;f1.kpi_indicator_2_value&#x9;&#x9;,&#xA;f1.kpi_indicator_3_name&#x9;&#x9;,&#xA;f1.kpi_indicator_3_value&#x9;&#x9;,&#xA;f1.kpi_indicator_4_name&#x9;&#x9;,&#xA;f1.kpi_indicator_4_value&#x9;&#x9;,&#xA;f1.kpi_result_1_name&#x9;&#x9;,&#xA;f1.kpi_result_1_value&#x9;&#x9;,&#xA;f1.kpi_result_2_name&#x9;&#x9;,&#xA;f1.kpi_result_2_value&#x9;,&#xA;f1.kpi_recom_1_name&#x9;&#x9;,&#xA;f1.kpi_recom_1_value&#x9;&#x9;,&#xA;f1.kpi_recom_2_name&#x9;&#x9;,&#xA;f1.kpi_recom_2_value&#x9;&#xA;&#xA;from conform_finance.kpi_hisdata   as f1&#xA;inner join conform_finance.date_dim as d1&#xA;on f1.date_key=d1.full_date" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\truncate table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{D07723C0-AC8E-4B15-83E8-A664E0B4465D}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="truncate table"
       DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
       DTS:ThreadHint="0">
       <DTS:Variables />
@@ -840,10 +857,18 @@
       DTS:refId="Package.PrecedenceConstraints[Constraint]"
       DTS:CreationName=""
       DTS:DTSID="{B15652E6-7BB4-4092-9AD1-3D1716149F27}"
-      DTS:From="Package\Execute SQL Task"
+      DTS:From="Package\truncate table"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint"
       DTS:To="Package\Data Flow Task" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{07C1F969-31C2-4A3D-8D55-627C7A5606A7}"
+      DTS:From="Package\Data Flow Task"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Execute SQL Task" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -856,29 +881,79 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="153,42"
           Id="Package\Data Flow Task"
           TopLeft="512,155" />
         <NodeLayout
-          Size="165,42"
-          Id="Package\Execute SQL Task"
-          TopLeft="507,50" />
+          Size="146,42"
+          Id="Package\truncate table"
+          TopLeft="507,54" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="589,92">
+          TopLeft="580,96">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,63"
+              EndConnector="8.5,59"
               Start="0,0"
-              End="0,55.5">
+              End="8.5,51.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,55.5" />
+                    End="0,25.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,25.5"
+                    Point2="0,29.5"
+                    Point3="4,29.5" />
+                  <mssgle:LineSegment
+                    End="4.5,29.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="4.5,29.5"
+                    Point2="8.5,29.5"
+                    Point3="8.5,33.5" />
+                  <mssgle:LineSegment
+                    End="8.5,51.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="165,42"
+          Id="Package\Execute SQL Task"
+          TopLeft="532,311" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="588.5,197">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="26,114"
+              Start="0,0"
+              End="26,106.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,53" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,53"
+                    Point2="0,57"
+                    Point3="4,57" />
+                  <mssgle:LineSegment
+                    End="22,57" />
+                  <mssgle:CubicBezierSegment
+                    Point1="22,57"
+                    Point2="26,57"
+                    Point3="26,61" />
+                  <mssgle:LineSegment
+                    End="26,106.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -894,15 +969,15 @@
     design-time-name="Package\Data Flow Task">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="141,42"
-          Id="Package\Data Flow Task\Excel Source"
-          TopLeft="462,62" />
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="173,42"
           Id="Package\Data Flow Task\OLE DB Destination"
           TopLeft="452,178" />
+        <NodeLayout
+          Size="141,42"
+          Id="Package\Data Flow Task\Excel Source"
+          TopLeft="462,62" />
         <EdgeLayout
           Id="Package\Data Flow Task.Paths[Excel Source Output]"
           TopLeft="535.5,104">
@@ -922,7 +997,9 @@
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
