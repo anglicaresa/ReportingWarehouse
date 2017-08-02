@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - PROD"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="603"
-  DTS:VersionGUID="{3BBB88F4-8C96-4537-AB42-C7B022EDAE5F}">
+  DTS:VersionBuild="604"
+  DTS:VersionGUID="{838B05B7-10C8-44AC-8D2B-97B48BE62DD1}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">8/1/2017 10:43:24 AM</DTS:VariableValue>
+        DTS:DataType="7">8/2/2017 4:13:17 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">8/1/2017 10:43:24 AM</DTS:VariableValue>
+        DTS:DataType="7">8/2/2017 4:13:17 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">8/1/2017 10:43:24 AM</DTS:VariableValue>
+        DTS:DataType="7">8/2/2017 4:13:17 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -564,7 +564,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{B5E46C99-99F6-4442-BC4D-22FCC2FD0263}"
-                  SQLTask:SqlStatementSource="&#xA;--Current year , month, and day&#xA;declare @t_year int = &#x9;year(getdate());&#xA;declare @t_month int = &#x9;month(getdate());&#xA;declare @t_day int = &#x9;day(getdate());&#xA;-- month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select month_key from conform.month_dim d where d.year = @t_year&#xA;&#x9;and d.month_number = @t_month&#xA;);&#xA;&#xA;--the first day of new financial year&#xA;--insert all year data&#xA;&#xA;if (@t_day = 1)&#xA;begin&#xA; if (@t_month = 7 )&#xA; begin&#xA;&#xA; DELETE conform.labour_turnover_report_fact where month_date_key&gt;=@month_key_t&#xA;&#xA; insert into conform.labour_turnover_report_fact (month_date_key,last_year_monthly)&#xA; ( &#xA;  select month_date_key+12 as month_date_key,monthly from conform.labour_turnover_report_fact f &#xA;  where f.month_date_key&gt;=(@month_key_t -12)&#xA;  and f.month_date_key&lt;@month_key_t&#xA; )&#xA; end&#xA;end&#xA;&#xA;&#xA;--update current year's data&#xA;update ltrf &#xA;set ltrf.total = (&#xA;    select sum(ltf.total) as total from conform.labour_turnover_fact ltf&#xA;    where ltf.service_stream_key = 1 and ltf.month_date_key = @month_key_t&#xA;),&#xA;    ltrf.lost = (&#xA;    select sum(ltf.total_lost) as lost from conform.labour_turnover_fact ltf&#xA;    where ltf.service_stream_key = 1 and ltf.month_date_key = @month_key_t        &#xA;    )&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;--update monthly data&#xA;update ltrf&#xA;set ltrf.monthly = convert(decimal(10,2),ltrf.lost) / convert(decimal(10,2),ltrf.total)&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;&#xA; --update year average data &#xA;update ltrf&#xA;set &#xA; ltrf.yearly = (select sum(monthly) from conform.labour_turnover_report_fact f3 where f3.month_date_key &gt;(@month_key_t-12) and f3.month_date_key&lt;=@month_key_t)&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t;&#xA;&#xA;--restore 2017-June'data manually&#xA;&#xA;update ltrf&#xA;set &#xA; ltrf.total = 1359,ltrf.lost = 14,ltrf.monthly = 0.0103,ltrf.yearly = 0.0852&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = 2251;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="&#xA;--Current year , month, and day&#xA;declare @t_year int = &#x9;year(getdate());&#xA;declare @t_month int = &#x9;month(getdate());&#xA;declare @t_day int = &#x9;day(getdate());&#xA;-- month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select month_key from conform.month_dim d where d.year = @t_year&#xA;&#x9;and d.month_number = @t_month&#xA;);&#xA;&#xA;--the first day of new financial year&#xA;--insert all year data&#xA;&#xA;if (@t_day = 1)&#xA;begin&#xA; if (@t_month = 7 )&#xA; begin&#xA;&#xA; DELETE conform.labour_turnover_report_fact where month_date_key&gt;=@month_key_t&#xA;&#xA; insert into conform.labour_turnover_report_fact (month_date_key,last_year_monthly)&#xA; ( &#xA;  select month_date_key+12 as month_date_key,monthly from conform.labour_turnover_report_fact f &#xA;  where f.month_date_key&gt;=(@month_key_t -12)&#xA;  and f.month_date_key&lt;@month_key_t&#xA; )&#xA; end&#xA;end&#xA;&#xA;&#xA;--update current year's data&#xA;update ltrf &#xA;set ltrf.total = (&#xA;    select sum(ltf.total) as total from conform.labour_turnover_fact ltf&#xA;    where ltf.service_stream_key = 1 and ltf.month_date_key = @month_key_t&#xA;),&#xA;    ltrf.lost = (&#xA;    select sum(ltf.total_lost) as lost from conform.labour_turnover_fact ltf&#xA;    where ltf.service_stream_key = 1 and ltf.month_date_key = @month_key_t        &#xA;    )&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;--update monthly data&#xA;update ltrf&#xA;set ltrf.monthly = convert(decimal(10,2),ltrf.lost) / convert(decimal(10,2),ltrf.total)&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;&#xA; --update year average data &#xA;update ltrf&#xA;set &#xA; ltrf.yearly = (select sum(monthly) from conform.labour_turnover_report_fact f3 where f3.month_date_key &gt;(@month_key_t-12) and f3.month_date_key&lt;=@month_key_t)&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -14879,14 +14879,14 @@ where employee_key=? </property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,75.7575757575778"
+              EndConnector="0,75.757575757578"
               Start="0,0"
-              End="0,68.2575757575778">
+              End="0,68.257575757578">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,68.2575757575778" />
+                    End="0,68.257575757578" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -14901,14 +14901,14 @@ where employee_key=? </property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,54.3333333333303"
+              EndConnector="0,54.33333333333"
               Start="0,0"
-              End="0,46.8333333333303">
+              End="0,46.83333333333">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,46.8333333333303" />
+                    End="0,46.83333333333" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -14920,8 +14920,8 @@ where employee_key=? </property>
         <ContainerLayout
           HeaderHeight="77"
           IsExpanded="True"
-          PanelSize="345,291"
-          Size="345,368"
+          PanelSize="345,326"
+          Size="345,403"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact"
           TopLeft="22,10353.5" />
         <NodeLayout
