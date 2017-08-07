@@ -63,7 +63,21 @@
             <PropertyRef Name="cost_centre_key" />
           </Key>
           <Property Name="cost_centre_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="LDG_NAME" Type="varchar" MaxLength="8" />
+          <Property Name="ACCNBRI" Type="varchar" MaxLength="32" />
+          <Property Name="EDACCNBR" Type="varchar" MaxLength="32" />
+          <Property Name="SDESCR" Type="varchar" MaxLength="15" />
+          <Property Name="DESCR" Type="varchar" MaxLength="192" />
+          <Property Name="ACC_COMP1" Type="varchar" MaxLength="32" />
+          <Property Name="ACC_COMP1_SCESCR" Type="varchar" MaxLength="15" />
+          <Property Name="ACC_COMP2" Type="varchar" MaxLength="32" />
+          <Property Name="ACC_COMP2_SCESCR" Type="varchar" MaxLength="15" />
+          <Property Name="ACC_COMP3" Type="varchar" MaxLength="32" />
+          <Property Name="ACC_COMP3_SCESCR" Type="varchar" MaxLength="15" />
+          <Property Name="ACC_COMP4" Type="varchar" MaxLength="32" />
+          <Property Name="ACC_COMP4_SCESCR" Type="varchar" MaxLength="15" />
+          <Property Name="ACC_COMP11" Type="varchar" MaxLength="32" />
+          <Property Name="ACC_COMP11_SCESCR" Type="varchar" MaxLength="15" />
           <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
           <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
           <Property Name="row_effective_date" Type="datetime" />
@@ -112,6 +126,14 @@
           <Property Name="ledger_key" Type="int" Nullable="false" />
           <Property Name="reference" Type="varchar" MaxLength="30" />
           <Property Name="amount" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="due_datei" Type="datetime" />
+          <Property Name="narr1" Type="varchar" MaxLength="40" />
+          <Property Name="narr2" Type="varchar" MaxLength="40" />
+          <Property Name="narr3" Type="varchar" MaxLength="40" />
+          <Property Name="doc_type" Type="varchar" MaxLength="10" />
+          <Property Name="overdue_days" Type="int" />
+          <Property Name="alloc_amt1" Type="decimal" Precision="15" Scale="2" />
+          <Property Name="outstanding_amt" Type="decimal" Precision="15" Scale="2" />
         </EntityType>
         <EntityType Name="ledger_dim">
           <Key>
@@ -414,20 +436,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="row_effective_date" Type="DateTime" Precision="3" />
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_account_key" FromRole="account_dim" ToRole="debtor_fact" />
-        </EntityType>
-        <EntityType Name="cost_centre_dim">
-          <Key>
-            <PropertyRef Name="cost_centre_key" />
-          </Key>
-          <Property Name="cost_centre_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
-          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
-          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_cost_centre_key" FromRole="cost_centre_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_account_key" FromRole="account_dim" ToRole="debtor_fact" />
         </EntityType>
         <EntityType Name="date_dim">
           <Key>
@@ -454,43 +463,9 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="min_temperature" Type="Decimal" Precision="5" Scale="2" />
           <Property Name="rainfall" Type="Decimal" Precision="5" Scale="2" />
           <Property Name="max_wind_speed" Type="Decimal" Precision="5" Scale="2" />
-          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_processed_key" FromRole="date_dim" ToRole="debtor_fact" />
-          <NavigationProperty Name="debtor_fact1" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="date_dim" ToRole="debtor_fact" />
-        </EntityType>
-        <EntityType Name="debtor_fact">
-          <Key>
-            <PropertyRef Name="debtor_key" />
-          </Key>
-          <Property Name="debtor_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="account_key" Type="Int32" Nullable="false" />
-          <Property Name="cost_centre_key" Type="Int32" Nullable="false" />
-          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
-          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
-          <Property Name="program_key" Type="Int32" Nullable="false" />
-          <Property Name="accounting_period_key" Type="Int32" Nullable="false" />
-          <Property Name="date_received_key" Type="Int32" Nullable="false" />
-          <Property Name="date_processed_key" Type="Int32" Nullable="false" />
-          <Property Name="ledger_key" Type="Int32" Nullable="false" />
-          <Property Name="reference" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="amount" Type="Decimal" Precision="15" Scale="2" />
-          <NavigationProperty Name="account_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_account_key" FromRole="debtor_fact" ToRole="account_dim" />
-          <NavigationProperty Name="cost_centre_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_cost_centre_key" FromRole="debtor_fact" ToRole="cost_centre_dim" />
-          <NavigationProperty Name="date_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_processed_key" FromRole="debtor_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim1" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="debtor_fact" ToRole="date_dim" />
-          <NavigationProperty Name="ledger_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_ledger_key" FromRole="debtor_fact" ToRole="ledger_dim" />
-          <NavigationProperty Name="portfolio_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_portfolio_key" FromRole="debtor_fact" ToRole="portfolio_dim" />
-          <NavigationProperty Name="program_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_program_key" FromRole="debtor_fact" ToRole="program_dim" />
-          <NavigationProperty Name="service_stream_dim" Relationship="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key" FromRole="debtor_fact" ToRole="service_stream_dim" />
-          <NavigationProperty Name="accounting_period_dim" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_accounting_period_key" FromRole="debtor_fact" ToRole="accounting_period_dim" />
-          <Property Name="due_datei" Type="DateTime" Nullable="false" />
-          <Property Name="narr1" Type="String" Nullable="false" />
-          <Property Name="narr2" Type="String" Nullable="false" />
-          <Property Name="narr3" Type="String" Nullable="false" />
-          <Property Name="doc_type" Type="String" Nullable="false" />
-          <Property Name="overdue_days" Type="Int32" Nullable="false" />
-          <Property Name="alloc_amt1" Type="Decimal" Nullable="false" />
-          <Property Name="outstanding_amt" Type="Decimal" Nullable="false" />
-        </EntityType>
+          <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_date_processed_key" FromRole="date_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="debtor_fact1" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="date_dim" ToRole="debtor_fact" />
+          </EntityType>
         <EntityType Name="ledger_dim">
           <Key>
             <PropertyRef Name="ledger_key" />
@@ -502,7 +477,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="row_effective_date" Type="DateTime" Precision="3" />
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_ledger_key" FromRole="ledger_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_ledger_key" FromRole="ledger_dim" ToRole="debtor_fact" />
         </EntityType>
         <EntityType Name="portfolio_dim">
           <Key>
@@ -516,7 +491,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="row_effective_date" Type="DateTime" Precision="3" />
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_portfolio_key" FromRole="portfolio_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_portfolio_key" FromRole="portfolio_dim" ToRole="debtor_fact" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -533,7 +508,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="row_effective_date" Type="DateTime" Precision="3" />
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_program_key" FromRole="program_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_program_key" FromRole="program_dim" ToRole="debtor_fact" />
         </EntityType>
         <EntityType Name="service_stream_dim">
           <Key>
@@ -548,149 +523,53 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="row_effective_date" Type="DateTime" Precision="3" />
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key" FromRole="service_stream_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_service_stream_key" FromRole="service_stream_dim" ToRole="debtor_fact" />
         </EntityType>
-        <Association Name="fk_conform_finance_DEBTOR_FACT_account_key">
-          <End Role="account_dim" Type="Self.account_dim" Multiplicity="1" />
-          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="account_dim">
-              <PropertyRef Name="account_key" />
-            </Principal>
-            <Dependent Role="debtor_fact">
-              <PropertyRef Name="account_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_conform_finance_DEBTOR_FACT_cost_centre_key">
-          <End Role="cost_centre_dim" Type="Self.cost_centre_dim" Multiplicity="1" />
-          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="cost_centre_dim">
-              <PropertyRef Name="cost_centre_key" />
-            </Principal>
-            <Dependent Role="debtor_fact">
-              <PropertyRef Name="cost_centre_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_conform_finance_DEBTOR_FACT_date_processed_key">
-          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
-          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="debtor_fact">
-              <PropertyRef Name="date_processed_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_conform_finance_DEBTOR_FACT_date_received_key">
-          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
-          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="debtor_fact">
-              <PropertyRef Name="date_received_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_conform_finance_DEBTOR_FACT_ledger_key">
-          <End Role="ledger_dim" Type="Self.ledger_dim" Multiplicity="1" />
-          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ledger_dim">
-              <PropertyRef Name="ledger_key" />
-            </Principal>
-            <Dependent Role="debtor_fact">
-              <PropertyRef Name="ledger_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_conform_finance_DEBTOR_FACT_portfolio_key">
-          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
-          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="portfolio_dim">
-              <PropertyRef Name="portfolio_key" />
-            </Principal>
-            <Dependent Role="debtor_fact">
-              <PropertyRef Name="portfolio_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_conform_finance_DEBTOR_FACT_program_key">
-          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
-          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="program_dim">
-              <PropertyRef Name="program_key" />
-            </Principal>
-            <Dependent Role="debtor_fact">
-              <PropertyRef Name="program_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_conform_finance_DEBTOR_FACT_service_stream_key">
-          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
-          <End Role="debtor_fact" Type="Self.debtor_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="service_stream_dim">
-              <PropertyRef Name="service_stream_key" />
-            </Principal>
-            <Dependent Role="debtor_fact">
-              <PropertyRef Name="service_stream_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="DWHBEntities3" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="account_dim" EntityType="Self.account_dim" />
-          <EntitySet Name="cost_centre_dim" EntityType="Self.cost_centre_dim" />
           <EntitySet Name="date_dim" EntityType="Self.date_dim" />
-          <EntitySet Name="debtor_fact" EntityType="Self.debtor_fact" />
           <EntitySet Name="ledger_dim" EntityType="Self.ledger_dim" />
           <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" />
           <EntitySet Name="program_dim" EntityType="Self.program_dim" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" />
-          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="Self.fk_conform_finance_DEBTOR_FACT_account_key">
+          <EntitySet Name="program_mapping" EntityType="DWHBModel1.program_mapping" />
+          <EntitySet Name="accounting_period_dim" EntityType="DWHBModel1.accounting_period_dim" />
+          <EntitySet Name="cost_centre_dim" EntityType="DWHBModel1.cost_centre_dim" />
+          <EntitySet Name="debtor_fact" EntityType="DWHBModel1.debtor_fact" />
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_account_key">
             <End Role="account_dim" EntitySet="account_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_cost_centre_key" Association="Self.fk_conform_finance_DEBTOR_FACT_cost_centre_key">
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_accounting_period_key">
+            <End Role="accounting_period_dim" EntitySet="accounting_period_dim" />
+            <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_cost_centre_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_cost_centre_key">
             <End Role="cost_centre_dim" EntitySet="cost_centre_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_date_processed_key" Association="Self.fk_conform_finance_DEBTOR_FACT_date_processed_key">
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_date_processed_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_date_processed_key">
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_date_received_key" Association="Self.fk_conform_finance_DEBTOR_FACT_date_received_key">
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_date_received_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_date_received_key">
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_ledger_key" Association="Self.fk_conform_finance_DEBTOR_FACT_ledger_key">
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_ledger_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_ledger_key">
             <End Role="ledger_dim" EntitySet="ledger_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_portfolio_key" Association="Self.fk_conform_finance_DEBTOR_FACT_portfolio_key">
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_portfolio_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_portfolio_key">
             <End Role="portfolio_dim" EntitySet="portfolio_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_program_key" Association="Self.fk_conform_finance_DEBTOR_FACT_program_key">
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_program_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_program_key">
             <End Role="program_dim" EntitySet="program_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_service_stream_key" Association="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key">
+          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_service_stream_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_service_stream_key">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
-            <End Role="debtor_fact" EntitySet="debtor_fact" />
-          </AssociationSet>
-          <EntitySet Name="program_mapping" EntityType="DWHBModel1.program_mapping" />
-          <EntitySet Name="accounting_period_dim" EntityType="DWHBModel1.accounting_period_dim" />
-          <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_accounting_period_key">
-            <End Role="accounting_period_dim" EntitySet="accounting_period_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
         </EntityContainer>
@@ -736,6 +615,79 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="full_date" Type="DateTime" Precision="3" />
           <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_accounting_period_key" FromRole="accounting_period_dim" ToRole="debtor_fact" />
         </EntityType>
+        <EntityType Name="cost_centre_dim">
+          <Key>
+            <PropertyRef Name="cost_centre_key" />
+          </Key>
+          <Property Name="cost_centre_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LDG_NAME" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="ACCNBRI" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="EDACCNBR" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="SDESCR" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DESCR" Type="String" MaxLength="192" FixedLength="false" Unicode="false" />
+          <Property Name="ACC_COMP1" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="ACC_COMP1_SCESCR" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="ACC_COMP2" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="ACC_COMP2_SCESCR" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="ACC_COMP3" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="ACC_COMP3_SCESCR" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="ACC_COMP4" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="ACC_COMP4_SCESCR" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="ACC_COMP11" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="ACC_COMP11_SCESCR" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_cost_centre_key" FromRole="cost_centre_dim" ToRole="debtor_fact" />
+        </EntityType>
+        <EntityType Name="debtor_fact">
+          <Key>
+            <PropertyRef Name="debtor_key" />
+          </Key>
+          <Property Name="debtor_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="account_key" Type="Int32" Nullable="false" />
+          <Property Name="cost_centre_key" Type="Int32" Nullable="false" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="accounting_period_key" Type="Int32" Nullable="false" />
+          <Property Name="date_received_key" Type="Int32" Nullable="false" />
+          <Property Name="date_processed_key" Type="Int32" Nullable="false" />
+          <Property Name="ledger_key" Type="Int32" Nullable="false" />
+          <Property Name="reference" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="amount" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="due_datei" Type="DateTime" Precision="3" />
+          <Property Name="narr1" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="narr2" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="narr3" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="doc_type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="overdue_days" Type="Int32" />
+          <Property Name="alloc_amt1" Type="Decimal" Precision="15" Scale="2" />
+          <Property Name="outstanding_amt" Type="Decimal" Precision="15" Scale="2" />
+          <NavigationProperty Name="account_dim" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_account_key" FromRole="debtor_fact" ToRole="account_dim" />
+          <NavigationProperty Name="accounting_period_dim" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_accounting_period_key" FromRole="debtor_fact" ToRole="accounting_period_dim" />
+          <NavigationProperty Name="cost_centre_dim" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_cost_centre_key" FromRole="debtor_fact" ToRole="cost_centre_dim" />
+          <NavigationProperty Name="date_dim" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_date_processed_key" FromRole="debtor_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim1" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="debtor_fact" ToRole="date_dim" />
+          <NavigationProperty Name="ledger_dim" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_ledger_key" FromRole="debtor_fact" ToRole="ledger_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_portfolio_key" FromRole="debtor_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="program_dim" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_program_key" FromRole="debtor_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_service_stream_key" FromRole="debtor_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_account_key">
+          <End Type="DWHBModel1.account_dim" Role="account_dim" Multiplicity="1" />
+          <End Type="DWHBModel1.debtor_fact" Role="debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_dim">
+              <PropertyRef Name="account_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="account_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_conform_finance_DEBTOR_FACT_accounting_period_key">
           <End Type="DWHBModel1.accounting_period_dim" Role="accounting_period_dim" Multiplicity="1" />
           <End Type="DWHBModel1.debtor_fact" Role="debtor_fact" Multiplicity="*" />
@@ -745,6 +697,90 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
             </Principal>
             <Dependent Role="debtor_fact">
               <PropertyRef Name="accounting_period_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_cost_centre_key">
+          <End Type="DWHBModel1.cost_centre_dim" Role="cost_centre_dim" Multiplicity="1" />
+          <End Type="DWHBModel1.debtor_fact" Role="debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cost_centre_dim">
+              <PropertyRef Name="cost_centre_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="cost_centre_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_date_processed_key">
+          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="DWHBModel1.debtor_fact" Role="debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="date_processed_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_date_received_key">
+          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="DWHBModel1.debtor_fact" Role="debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="date_received_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_ledger_key">
+          <End Type="DWHBModel1.ledger_dim" Role="ledger_dim" Multiplicity="1" />
+          <End Type="DWHBModel1.debtor_fact" Role="debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ledger_dim">
+              <PropertyRef Name="ledger_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="ledger_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_portfolio_key">
+          <End Type="DWHBModel1.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="DWHBModel1.debtor_fact" Role="debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_program_key">
+          <End Type="DWHBModel1.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="DWHBModel1.debtor_fact" Role="debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_DEBTOR_FACT_service_stream_key">
+          <End Type="DWHBModel1.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="DWHBModel1.debtor_fact" Role="debtor_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="debtor_fact">
+              <PropertyRef Name="service_stream_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -792,19 +828,6 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="cost_centre_dim">
-            <EntityTypeMapping TypeName="DWHBModel1.cost_centre_dim">
-              <MappingFragment StoreEntitySet="cost_centre_dim">
-                <ScalarProperty Name="cost_centre_key" ColumnName="cost_centre_key" />
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
-                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
-                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
-                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
-                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="date_dim">
             <EntityTypeMapping TypeName="DWHBModel1.date_dim">
               <MappingFragment StoreEntitySet="date_dim">
@@ -829,24 +852,6 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
                 <ScalarProperty Name="min_temperature" ColumnName="min_temperature" />
                 <ScalarProperty Name="rainfall" ColumnName="rainfall" />
                 <ScalarProperty Name="max_wind_speed" ColumnName="max_wind_speed" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="debtor_fact">
-            <EntityTypeMapping TypeName="DWHBModel1.debtor_fact">
-              <MappingFragment StoreEntitySet="debtor_fact">
-                <ScalarProperty Name="debtor_key" ColumnName="debtor_key" />
-                <ScalarProperty Name="account_key" ColumnName="account_key" />
-                <ScalarProperty Name="cost_centre_key" ColumnName="cost_centre_key" />
-                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
-                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
-                <ScalarProperty Name="program_key" ColumnName="program_key" />
-                <ScalarProperty Name="accounting_period_key" ColumnName="accounting_period_key" />
-                <ScalarProperty Name="date_received_key" ColumnName="date_received_key" />
-                <ScalarProperty Name="date_processed_key" ColumnName="date_processed_key" />
-                <ScalarProperty Name="ledger_key" ColumnName="ledger_key" />
-                <ScalarProperty Name="reference" ColumnName="reference" />
-                <ScalarProperty Name="amount" ColumnName="amount" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -949,6 +954,59 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
                 <ScalarProperty Name="quarter" ColumnName="quarter" />
                 <ScalarProperty Name="period_no" ColumnName="period_no" />
                 <ScalarProperty Name="accounting_period_key" ColumnName="accounting_period_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cost_centre_dim">
+            <EntityTypeMapping TypeName="DWHBModel1.cost_centre_dim">
+              <MappingFragment StoreEntitySet="cost_centre_dim">
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="ACC_COMP11_SCESCR" ColumnName="ACC_COMP11_SCESCR" />
+                <ScalarProperty Name="ACC_COMP11" ColumnName="ACC_COMP11" />
+                <ScalarProperty Name="ACC_COMP4_SCESCR" ColumnName="ACC_COMP4_SCESCR" />
+                <ScalarProperty Name="ACC_COMP4" ColumnName="ACC_COMP4" />
+                <ScalarProperty Name="ACC_COMP3_SCESCR" ColumnName="ACC_COMP3_SCESCR" />
+                <ScalarProperty Name="ACC_COMP3" ColumnName="ACC_COMP3" />
+                <ScalarProperty Name="ACC_COMP2_SCESCR" ColumnName="ACC_COMP2_SCESCR" />
+                <ScalarProperty Name="ACC_COMP2" ColumnName="ACC_COMP2" />
+                <ScalarProperty Name="ACC_COMP1_SCESCR" ColumnName="ACC_COMP1_SCESCR" />
+                <ScalarProperty Name="ACC_COMP1" ColumnName="ACC_COMP1" />
+                <ScalarProperty Name="DESCR" ColumnName="DESCR" />
+                <ScalarProperty Name="SDESCR" ColumnName="SDESCR" />
+                <ScalarProperty Name="EDACCNBR" ColumnName="EDACCNBR" />
+                <ScalarProperty Name="ACCNBRI" ColumnName="ACCNBRI" />
+                <ScalarProperty Name="LDG_NAME" ColumnName="LDG_NAME" />
+                <ScalarProperty Name="cost_centre_key" ColumnName="cost_centre_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="debtor_fact">
+            <EntityTypeMapping TypeName="DWHBModel1.debtor_fact">
+              <MappingFragment StoreEntitySet="debtor_fact">
+                <ScalarProperty Name="outstanding_amt" ColumnName="outstanding_amt" />
+                <ScalarProperty Name="alloc_amt1" ColumnName="alloc_amt1" />
+                <ScalarProperty Name="overdue_days" ColumnName="overdue_days" />
+                <ScalarProperty Name="doc_type" ColumnName="doc_type" />
+                <ScalarProperty Name="narr3" ColumnName="narr3" />
+                <ScalarProperty Name="narr2" ColumnName="narr2" />
+                <ScalarProperty Name="narr1" ColumnName="narr1" />
+                <ScalarProperty Name="due_datei" ColumnName="due_datei" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="reference" ColumnName="reference" />
+                <ScalarProperty Name="ledger_key" ColumnName="ledger_key" />
+                <ScalarProperty Name="date_processed_key" ColumnName="date_processed_key" />
+                <ScalarProperty Name="date_received_key" ColumnName="date_received_key" />
+                <ScalarProperty Name="accounting_period_key" ColumnName="accounting_period_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="cost_centre_key" ColumnName="cost_centre_key" />
+                <ScalarProperty Name="account_key" ColumnName="account_key" />
+                <ScalarProperty Name="debtor_key" ColumnName="debtor_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
