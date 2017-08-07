@@ -135,6 +135,33 @@
           <Property Name="alloc_amt1" Type="decimal" Precision="15" Scale="2" />
           <Property Name="outstanding_amt" Type="decimal" Precision="15" Scale="2" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_finance.kpi_fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="kpi_fact">
+          <Key>
+            <PropertyRef Name="kpi_key" />
+            <PropertyRef Name="date_key" />
+          </Key>
+          <Property Name="kpi_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kpi_name" Type="varchar" MaxLength="255" />
+          <Property Name="date_key" Type="int" Nullable="false" />
+          <Property Name="kpi_indicator_1_name" Type="varchar" MaxLength="50" />
+          <Property Name="kpi_indicator_1_value" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="kpi_indicator_2_name" Type="varchar" MaxLength="50" />
+          <Property Name="kpi_indicator_2_value" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="kpi_indicator_3_name" Type="varchar" MaxLength="50" />
+          <Property Name="kpi_indicator_3_value" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="kpi_indicator_4_name" Type="varchar" MaxLength="50" />
+          <Property Name="kpi_indicator_4_value" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="kpi_result_1_name" Type="varchar" MaxLength="50" />
+          <Property Name="kpi_result_1_value" Type="decimal" Precision="20" Scale="6" />
+          <Property Name="kpi_result_2_name" Type="varchar" MaxLength="50" />
+          <Property Name="kpi_result_2_value" Type="decimal" Precision="20" Scale="6" />
+          <Property Name="kpi_recom_1_name" Type="varchar" MaxLength="50" />
+          <Property Name="kpi_recom_1_value" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="kpi_recom_2_name" Type="varchar" MaxLength="50" />
+          <Property Name="kpi_recom_2_value" Type="decimal" Precision="20" Scale="2" />
+        </EntityType>
         <EntityType Name="ledger_dim">
           <Key>
             <PropertyRef Name="ledger_key" />
@@ -325,6 +352,18 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_conform_finance_kpi_fact_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="kpi_fact" Type="Self.kpi_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="kpi_fact">
+              <PropertyRef Name="date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="DWHBModel1StoreContainer">
           <EntitySet Name="account_dim" EntityType="Self.account_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="accounting_period_dim" EntityType="Self.accounting_period_dim" Schema="conform_finance" store:Type="Tables" />
@@ -335,6 +374,29 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="kpi_fact" EntityType="Self.kpi_fact" store:Type="Tables" store:Schema="conform_finance">
+            <DefiningQuery>SELECT 
+    [kpi_fact].[kpi_key] AS [kpi_key], 
+    [kpi_fact].[kpi_name] AS [kpi_name], 
+    [kpi_fact].[date_key] AS [date_key], 
+    [kpi_fact].[kpi_indicator_1_name] AS [kpi_indicator_1_name], 
+    [kpi_fact].[kpi_indicator_1_value] AS [kpi_indicator_1_value], 
+    [kpi_fact].[kpi_indicator_2_name] AS [kpi_indicator_2_name], 
+    [kpi_fact].[kpi_indicator_2_value] AS [kpi_indicator_2_value], 
+    [kpi_fact].[kpi_indicator_3_name] AS [kpi_indicator_3_name], 
+    [kpi_fact].[kpi_indicator_3_value] AS [kpi_indicator_3_value], 
+    [kpi_fact].[kpi_indicator_4_name] AS [kpi_indicator_4_name], 
+    [kpi_fact].[kpi_indicator_4_value] AS [kpi_indicator_4_value], 
+    [kpi_fact].[kpi_result_1_name] AS [kpi_result_1_name], 
+    [kpi_fact].[kpi_result_1_value] AS [kpi_result_1_value], 
+    [kpi_fact].[kpi_result_2_name] AS [kpi_result_2_name], 
+    [kpi_fact].[kpi_result_2_value] AS [kpi_result_2_value], 
+    [kpi_fact].[kpi_recom_1_name] AS [kpi_recom_1_name], 
+    [kpi_fact].[kpi_recom_1_value] AS [kpi_recom_1_value], 
+    [kpi_fact].[kpi_recom_2_name] AS [kpi_recom_2_name], 
+    [kpi_fact].[kpi_recom_2_value] AS [kpi_recom_2_value]
+    FROM [conform_finance].[kpi_fact] AS [kpi_fact]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="program_mapping" EntityType="Self.program_mapping" store:Type="Tables" store:Schema="conform_finance">
             <DefiningQuery>SELECT 
     [program_mapping].[program_mapping_key] AS [program_mapping_key], 
@@ -394,6 +456,10 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_service_stream_key" Association="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_kpi_fact_date_key" Association="Self.fk_conform_finance_kpi_fact_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="kpi_fact" EntitySet="kpi_fact" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -465,6 +531,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="max_wind_speed" Type="Decimal" Precision="5" Scale="2" />
           <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_date_processed_key" FromRole="date_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="debtor_fact1" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="date_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="kpi_fact" Relationship="DWHBModel1.fk_conform_finance_kpi_fact_date_key" FromRole="date_dim" ToRole="kpi_fact" />
           </EntityType>
         <EntityType Name="ledger_dim">
           <Key>
@@ -571,6 +638,11 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_service_stream_key" Association="DWHBModel1.fk_conform_finance_DEBTOR_FACT_service_stream_key">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <EntitySet Name="kpi_fact" EntityType="DWHBModel1.kpi_fact" />
+          <AssociationSet Name="fk_conform_finance_kpi_fact_date_key" Association="DWHBModel1.fk_conform_finance_kpi_fact_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="kpi_fact" EntitySet="kpi_fact" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="program_mapping">
@@ -781,6 +853,44 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
             </Principal>
             <Dependent Role="debtor_fact">
               <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="kpi_fact">
+          <Key>
+            <PropertyRef Name="kpi_key" />
+            <PropertyRef Name="date_key" />
+          </Key>
+          <Property Name="kpi_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kpi_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="date_key" Type="Int32" Nullable="false" />
+          <Property Name="kpi_indicator_1_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="kpi_indicator_1_value" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="kpi_indicator_2_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="kpi_indicator_2_value" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="kpi_indicator_3_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="kpi_indicator_3_value" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="kpi_indicator_4_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="kpi_indicator_4_value" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="kpi_result_1_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="kpi_result_1_value" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="kpi_result_2_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="kpi_result_2_value" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="kpi_recom_1_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="kpi_recom_1_value" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="kpi_recom_2_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="kpi_recom_2_value" Type="Decimal" Precision="20" Scale="2" />
+          <NavigationProperty Name="date_dim" Relationship="DWHBModel1.fk_conform_finance_kpi_fact_date_key" FromRole="kpi_fact" ToRole="date_dim" />
+        </EntityType>
+        <Association Name="fk_conform_finance_kpi_fact_date_key">
+          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="DWHBModel1.kpi_fact" Role="kpi_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="kpi_fact">
+              <PropertyRef Name="date_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1007,6 +1117,31 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
                 <ScalarProperty Name="cost_centre_key" ColumnName="cost_centre_key" />
                 <ScalarProperty Name="account_key" ColumnName="account_key" />
                 <ScalarProperty Name="debtor_key" ColumnName="debtor_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="kpi_fact">
+            <EntityTypeMapping TypeName="DWHBModel1.kpi_fact">
+              <MappingFragment StoreEntitySet="kpi_fact">
+                <ScalarProperty Name="kpi_recom_2_value" ColumnName="kpi_recom_2_value" />
+                <ScalarProperty Name="kpi_recom_2_name" ColumnName="kpi_recom_2_name" />
+                <ScalarProperty Name="kpi_recom_1_value" ColumnName="kpi_recom_1_value" />
+                <ScalarProperty Name="kpi_recom_1_name" ColumnName="kpi_recom_1_name" />
+                <ScalarProperty Name="kpi_result_2_value" ColumnName="kpi_result_2_value" />
+                <ScalarProperty Name="kpi_result_2_name" ColumnName="kpi_result_2_name" />
+                <ScalarProperty Name="kpi_result_1_value" ColumnName="kpi_result_1_value" />
+                <ScalarProperty Name="kpi_result_1_name" ColumnName="kpi_result_1_name" />
+                <ScalarProperty Name="kpi_indicator_4_value" ColumnName="kpi_indicator_4_value" />
+                <ScalarProperty Name="kpi_indicator_4_name" ColumnName="kpi_indicator_4_name" />
+                <ScalarProperty Name="kpi_indicator_3_value" ColumnName="kpi_indicator_3_value" />
+                <ScalarProperty Name="kpi_indicator_3_name" ColumnName="kpi_indicator_3_name" />
+                <ScalarProperty Name="kpi_indicator_2_value" ColumnName="kpi_indicator_2_value" />
+                <ScalarProperty Name="kpi_indicator_2_name" ColumnName="kpi_indicator_2_name" />
+                <ScalarProperty Name="kpi_indicator_1_value" ColumnName="kpi_indicator_1_value" />
+                <ScalarProperty Name="kpi_indicator_1_name" ColumnName="kpi_indicator_1_name" />
+                <ScalarProperty Name="date_key" ColumnName="date_key" />
+                <ScalarProperty Name="kpi_name" ColumnName="kpi_name" />
+                <ScalarProperty Name="kpi_key" ColumnName="kpi_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
