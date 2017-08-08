@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 08/08/2017 10:48:24
+-- Date Created: 08/08/2017 14:56:51
 -- Generated from EDMX file: \\anglicare-sa.org.au\files\frank.wang\My Documents\Source\ReportingWarehouse\ReportingWarehouse\models\dwhb\extract_riskman\extract_riskman_conceptual.edmx
 -- --------------------------------------------------
 
@@ -10,6 +10,7 @@ SET QUOTED_IDENTIFIER OFF;
 GO
 USE [DWHB];
 GO
+
 
 -- --------------------------------------------------
 -- Dropping existing FOREIGN KEY constraints
@@ -50,8 +51,8 @@ GO
 IF OBJECT_ID(N'[extract_riskman].[UserProfile]', 'U') IS NOT NULL
     DROP TABLE [extract_riskman].[UserProfile];
 GO
-IF OBJECT_ID(N'[extract_riskmanStoreContainer].[vwsf_preventativecorrectiveaction]', 'U') IS NOT NULL
-    DROP TABLE [extract_riskmanStoreContainer].[vwsf_preventativecorrectiveaction];
+IF OBJECT_ID(N'[extract_riskman].[vwsf_preventativecorrectiveaction]', 'U') IS NOT NULL
+    DROP TABLE [extract_riskman].[vwsf_preventativecorrectiveaction];
 GO
 
 -- --------------------------------------------------
@@ -211,8 +212,8 @@ CREATE TABLE [extract_riskman].[FRM_RECORD] (
 );
 GO
 
--- Creating table 'IncidentClassificationsIFRs'
-CREATE TABLE [extract_riskman].[IncidentClassificationsIFRs] (
+-- Creating table 'IncidentClassificationsIFR'
+CREATE TABLE [extract_riskman].[IncidentClassificationsIFR] (
     [ID] int  NULL,
     [Supergroup] nvarchar(150)  NULL,
     [IncidentClass] nvarchar(500)  NULL,
@@ -224,8 +225,8 @@ CREATE TABLE [extract_riskman].[IncidentClassificationsIFRs] (
 );
 GO
 
--- Creating table 'IncidentsForReviews'
-CREATE TABLE [extract_riskman].[IncidentsForReviews] (
+-- Creating table 'IncidentsForReview'
+CREATE TABLE [extract_riskman].[IncidentsForReview] (
     [ID] int  NOT NULL,
     [NHSHospNum] varchar(50)  NOT NULL,
     [Claim] float  NULL,
@@ -409,8 +410,8 @@ CREATE TABLE [extract_riskman].[IncNotif_IFR] (
 );
 GO
 
--- Creating table 'UserProfiles'
-CREATE TABLE [extract_riskman].[UserProfiles] (
+-- Creating table 'UserProfile'
+CREATE TABLE [extract_riskman].[UserProfile] (
     [UserName] varchar(50)  NOT NULL,
     [UserDisplayName] nvarchar(100)  NULL,
     [isTemplate] bit  NULL,
@@ -696,15 +697,15 @@ ADD CONSTRAINT [PK_FRM_RECORD]
     PRIMARY KEY CLUSTERED ([RecordID] ASC);
 GO
 
--- Creating primary key on [autonum] in table 'IncidentClassificationsIFRs'
-ALTER TABLE [extract_riskman].[IncidentClassificationsIFRs]
-ADD CONSTRAINT [PK_IncidentClassificationsIFRs]
+-- Creating primary key on [autonum] in table 'IncidentClassificationsIFR'
+ALTER TABLE [extract_riskman].[IncidentClassificationsIFR]
+ADD CONSTRAINT [PK_IncidentClassificationsIFR]
     PRIMARY KEY CLUSTERED ([autonum] ASC);
 GO
 
--- Creating primary key on [ID], [NHSHospNum] in table 'IncidentsForReviews'
-ALTER TABLE [extract_riskman].[IncidentsForReviews]
-ADD CONSTRAINT [PK_IncidentsForReviews]
+-- Creating primary key on [ID], [NHSHospNum] in table 'IncidentsForReview'
+ALTER TABLE [extract_riskman].[IncidentsForReview]
+ADD CONSTRAINT [PK_IncidentsForReview]
     PRIMARY KEY CLUSTERED ([ID], [NHSHospNum] ASC);
 GO
 
@@ -714,9 +715,9 @@ ADD CONSTRAINT [PK_IncNotif_IFR]
     PRIMARY KEY CLUSTERED ([IncNotif_ID] ASC);
 GO
 
--- Creating primary key on [UserName] in table 'UserProfiles'
-ALTER TABLE [extract_riskman].[UserProfiles]
-ADD CONSTRAINT [PK_UserProfiles]
+-- Creating primary key on [UserName] in table 'UserProfile'
+ALTER TABLE [extract_riskman].[UserProfile]
+ADD CONSTRAINT [PK_UserProfile]
     PRIMARY KEY CLUSTERED ([UserName] ASC);
 GO
 
