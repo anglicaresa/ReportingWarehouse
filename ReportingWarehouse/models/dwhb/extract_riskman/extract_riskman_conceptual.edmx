@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="extract_riskman.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="extract_riskman.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ANGCARE_IFR">
           <Key>
             <PropertyRef Name="ANGCARE_ID" />
@@ -48,6 +48,50 @@
           <Property Name="InjuryOth" Type="varchar" MaxLength="100" />
           <Property Name="Wing" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="BEN_IFR">
+          <Key>
+            <PropertyRef Name="BEN_ID" />
+          </Key>
+          <Property Name="BEN_ID" Type="int" Nullable="false" />
+          <Property Name="CoName" Type="varchar" MaxLength="100" />
+          <Property Name="TreatReq" Type="bit" />
+          <Property Name="CLScase" Type="bit" />
+          <Property Name="Chambersenquiry" Type="bit" />
+          <Property Name="Inquest" Type="bit" />
+          <Property Name="EHOcontactby" Type="varchar" MaxLength="200" />
+          <Property Name="EHOdate" Type="datetime" />
+          <Property Name="Vicdhs" Type="bit" />
+          <Property Name="Vicdhscontact" Type="varchar" MaxLength="200" />
+          <Property Name="Vicdhsdate" Type="datetime" />
+          <Property Name="DoHACIS" Type="bit" />
+          <Property Name="DoHACIScontact" Type="varchar" MaxLength="200" />
+          <Property Name="DoHACISdate" Type="datetime" />
+          <Property Name="BENPolice" Type="bit" />
+          <Property Name="policecontact" Type="varchar" MaxLength="200" />
+          <Property Name="BENPolicedate" Type="datetime" />
+          <Property Name="NOKNotifDate" Type="datetime" />
+          <Property Name="Transferred" Type="bit" />
+          <Property Name="StaffBodyPart" Type="varchar" MaxLength="1000" />
+          <Property Name="SerDelivery" Type="bit" />
+          <Property Name="ManualRx" Type="bit" />
+          <Property Name="Area" Type="varchar" MaxLength="100" />
+          <Property Name="WorksafeDate" Type="datetime" />
+          <Property Name="BenetasOutcome" Type="varchar" MaxLength="1000" />
+          <Property Name="ClientBodyPart" Type="varchar" MaxLength="1000" />
+          <Property Name="DeathDate" Type="datetime" />
+          <Property Name="CorInititateDate" Type="datetime" />
+          <Property Name="CorFindingDate" Type="datetime" />
+          <Property Name="CorCloseDate" Type="datetime" />
+          <Property Name="CorCaseID" Type="varchar" MaxLength="20" />
+          <Property Name="CorType" Type="varchar" MaxLength="50" />
+          <Property Name="TransferOutcome" Type="varchar" MaxLength="50" />
+          <Property Name="IncidentOutcome" Type="varchar" MaxLength="500" />
+          <Property Name="SpecificTransDesc" Type="varchar" MaxLength="100" />
+          <Property Name="SuggPrevRec" Type="varchar" MaxLength="1000" />
+          <Property Name="VisPhone" Type="varchar" MaxLength="20" />
+          <Property Name="IncSourceBaseID" Type="varchar" MaxLength="100" />
+          <Property Name="IncSouceSubmodule" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="CH_IFR">
           <Key>
             <PropertyRef Name="CH_ID" />
@@ -86,7 +130,7 @@
           <Key>
             <PropertyRef Name="BatchID" />
           </Key>
-          <Property Name="BatchID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BatchID" Type="int" Nullable="false" />
           <Property Name="RecordID" Type="int" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="SavedBy" Type="varchar" MaxLength="50" Nullable="false" />
@@ -95,7 +139,7 @@
           <Key>
             <PropertyRef Name="DataID" />
           </Key>
-          <Property Name="DataID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DataID" Type="int" Nullable="false" />
           <Property Name="BatchID" Type="int" Nullable="false" />
           <Property Name="FieldName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ValueString" Type="nvarchar(max)" />
@@ -108,7 +152,7 @@
           <Key>
             <PropertyRef Name="RecordID" />
           </Key>
-          <Property Name="RecordID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RecordID" Type="int" Nullable="false" />
           <Property Name="KeyData" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="KeySequence" Type="int" Nullable="false" />
           <Property Name="FormName" Type="varchar" MaxLength="50" Nullable="false" />
@@ -125,7 +169,7 @@
           <Property Name="SortSeq" Type="smallint" />
           <Property Name="ClassID" Type="int" />
           <Property Name="DefinitionID" Type="int" />
-          <Property Name="autonum" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="autonum" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="IncidentsForReview">
           <Key>
@@ -270,28 +314,499 @@
           <Property Name="DisplayID" Type="int" />
           <Property Name="Detail" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="IncNotif_IFR">
+          <Key>
+            <PropertyRef Name="IncNotif_ID" />
+          </Key>
+          <Property Name="IncNotif_ID" Type="int" Nullable="false" />
+          <Property Name="FireNotif" Type="bit" />
+          <Property Name="FireComm" Type="varchar" MaxLength="200" />
+          <Property Name="AmbNotif" Type="bit" />
+          <Property Name="AmbComm" Type="varchar" MaxLength="200" />
+          <Property Name="PoliceNotif" Type="bit" />
+          <Property Name="PoliceComm" Type="varchar" MaxLength="200" />
+          <Property Name="NOKComm" Type="varchar" MaxLength="200" />
+          <Property Name="CarerNotif" Type="bit" />
+          <Property Name="ChildAbuseNotif" Type="bit" />
+          <Property Name="CorrOffNotif" Type="bit" />
+          <Property Name="DECDCareNotif" Type="bit" />
+          <Property Name="DCSINotif" Type="bit" />
+          <Property Name="FaCHSIANotif" Type="bit" />
+          <Property Name="EmergContNotif" Type="bit" />
+          <Property Name="OPANotif" Type="bit" />
+          <Property Name="OtherNotif" Type="bit" />
+          <Property Name="GuardNotif" Type="bit" />
+          <Property Name="AGNotif" Type="bit" />
+          <Property Name="UCWNotif" Type="bit" />
+          <Property Name="CarerComm" Type="varchar" MaxLength="200" />
+          <Property Name="ChildAbuseComm" Type="varchar" MaxLength="200" />
+          <Property Name="CorrOffComm" Type="varchar" MaxLength="200" />
+          <Property Name="FaCHSIAComm" Type="varchar" MaxLength="200" />
+          <Property Name="DECDComm" Type="varchar" MaxLength="200" />
+          <Property Name="DCSIComm" Type="varchar" MaxLength="200" />
+          <Property Name="EmergContComm" Type="varchar" MaxLength="200" />
+          <Property Name="OPAComm" Type="varchar" MaxLength="200" />
+          <Property Name="OtherComm" Type="varchar" MaxLength="200" />
+          <Property Name="GuardComm" Type="varchar" MaxLength="200" />
+          <Property Name="AGComm" Type="varchar" MaxLength="200" />
+          <Property Name="UCWComm" Type="varchar" MaxLength="200" />
+          <Property Name="DECDCareComm" Type="varchar" MaxLength="200" />
+          <Property Name="DECDNotif" Type="bit" />
+          <Property Name="HouseReg" Type="bit" />
+          <Property Name="HouseRegComm" Type="varchar" MaxLength="200" />
+          <Property Name="Funder" Type="bit" />
+          <Property Name="FunderComm" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserName" />
+          </Key>
+          <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserDisplayName" Type="nvarchar" MaxLength="100" />
+          <Property Name="isTemplate" Type="bit" />
+          <Property Name="UserType" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="200" />
+          <Property Name="PasswordEncrypted" Type="bit" />
+          <Property Name="PreviousPassword" Type="nvarchar" MaxLength="50" />
+          <Property Name="PasswordLastChanged" Type="datetime" />
+          <Property Name="PasswordDoesntExpire" Type="bit" />
+          <Property Name="PasswordBadAttempts" Type="int" />
+          <Property Name="PasswordBadIP" Type="varchar" MaxLength="50" />
+          <Property Name="UserPosition" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="200" />
+          <Property Name="Email2" Type="nvarchar" MaxLength="200" />
+          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="MobileNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="PagerNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="LDAP_Username" Type="nvarchar" MaxLength="64" />
+          <Property Name="LDAP_DN" Type="varchar" MaxLength="500" />
+          <Property Name="LDAP_Site" Type="nvarchar" MaxLength="200" />
+          <Property Name="LDAP_Status" Type="int" />
+          <Property Name="LastLoginDate" Type="datetime" />
+          <Property Name="DateEntered" Type="datetime" />
+          <Property Name="DateDeleted" Type="datetime" />
+          <Property Name="ExpiryDate" Type="datetime" />
+          <Property Name="DefaultPage" Type="varchar" MaxLength="500" />
+          <Property Name="UsersSettings" Type="nvarchar(max)" />
+          <Property Name="PrimarySite" Type="nvarchar" MaxLength="200" />
+          <Property Name="PrimaryLocation" Type="nvarchar" MaxLength="200" />
+          <Property Name="USR_Site" Type="nvarchar(max)" />
+          <Property Name="USR_Location" Type="nvarchar(max)" />
+          <Property Name="RP_Site" Type="nvarchar(max)" />
+          <Property Name="RP_Location" Type="nvarchar(max)" />
+          <Property Name="RP_ClinicalArea" Type="nvarchar(max)" />
+          <Property Name="RP_Program" Type="nvarchar(max)" />
+          <Property Name="RP_Specialty" Type="nvarchar(max)" />
+          <Property Name="Permissions" Type="int" />
+          <Property Name="Permissions2" Type="int" />
+          <Property Name="Permissions3" Type="int" />
+          <Property Name="Permissions4" Type="int" />
+          <Property Name="Permissions5" Type="int" />
+          <Property Name="FB_UserType" Type="nvarchar" MaxLength="50" />
+          <Property Name="FB_JournalRestrictions" Type="nvarchar(max)" />
+          <Property Name="FB_Permissions_Feedback" Type="int" />
+          <Property Name="FB_Permissions_FeedbackTwo" Type="int" />
+          <Property Name="FB_Permissions_Actions" Type="int" />
+          <Property Name="FB_Permissions_Issues" Type="int" />
+          <Property Name="FB_Permissions_Journals" Type="int" />
+          <Property Name="FB_HideComplainant" Type="bit" />
+          <Property Name="FB_HideConsumer" Type="bit" />
+          <Property Name="FB_HideDetails" Type="bit" />
+          <Property Name="FB_HideIssues" Type="bit" />
+          <Property Name="FB_HideActions" Type="bit" />
+          <Property Name="FB_HideJournals" Type="bit" />
+          <Property Name="FB_o_Comp_Surname" Type="smallint" />
+          <Property Name="FB_o_Comp_Firstname" Type="smallint" />
+          <Property Name="FB_o_Comp_Title" Type="smallint" />
+          <Property Name="FB_o_Comp_Address1" Type="smallint" />
+          <Property Name="FB_o_Comp_Address2" Type="smallint" />
+          <Property Name="FB_o_Comp_Suburb" Type="smallint" />
+          <Property Name="FB_o_Comp_State" Type="smallint" />
+          <Property Name="FB_o_Comp_Postcode" Type="smallint" />
+          <Property Name="FB_o_Comp_HPhone" Type="smallint" />
+          <Property Name="FB_o_Comp_WPhone" Type="smallint" />
+          <Property Name="FB_o_Comp_MPhone" Type="smallint" />
+          <Property Name="FB_o_Comp_Fax" Type="smallint" />
+          <Property Name="FB_o_Comp_Email" Type="smallint" />
+          <Property Name="FB_o_Comp_MRN" Type="smallint" />
+          <Property Name="FB_o_Comp_Gender" Type="smallint" />
+          <Property Name="FB_o_Comp_DOB" Type="smallint" />
+          <Property Name="FB_o_Comp_Country" Type="smallint" />
+          <Property Name="FB_o_Comp_AboriginalType" Type="smallint" />
+          <Property Name="FB_o_Comp_PrimaryLanguage" Type="smallint" />
+          <Property Name="FB_o_Comp_Interpreter" Type="smallint" />
+          <Property Name="FB_o_Cons_Surname" Type="smallint" />
+          <Property Name="FB_o_Cons_Firstname" Type="smallint" />
+          <Property Name="FB_o_Cons_Title" Type="smallint" />
+          <Property Name="FB_o_Cons_Address1" Type="smallint" />
+          <Property Name="FB_o_Cons_Address2" Type="smallint" />
+          <Property Name="FB_o_Cons_Suburb" Type="smallint" />
+          <Property Name="FB_o_Cons_State" Type="smallint" />
+          <Property Name="FB_o_Cons_Postcode" Type="smallint" />
+          <Property Name="FB_o_Cons_HPhone" Type="smallint" />
+          <Property Name="FB_o_Cons_WPhone" Type="smallint" />
+          <Property Name="FB_o_Cons_MPhone" Type="smallint" />
+          <Property Name="FB_o_Cons_Fax" Type="smallint" />
+          <Property Name="FB_o_Cons_Email" Type="smallint" />
+          <Property Name="FB_o_Cons_MRN" Type="smallint" />
+          <Property Name="FB_o_Cons_Gender" Type="smallint" />
+          <Property Name="FB_o_Cons_DOB" Type="smallint" />
+          <Property Name="FB_o_Cons_Country" Type="smallint" />
+          <Property Name="FB_o_Cons_AboriginalType" Type="smallint" />
+          <Property Name="FB_o_Cons_PrimaryLanguage" Type="smallint" />
+          <Property Name="FB_o_Cons_Interpreter" Type="smallint" />
+          <Property Name="FB_o_FBC_DocType" Type="smallint" />
+          <Property Name="FB_o_FBC_FormalityLevel" Type="smallint" />
+          <Property Name="FB_o_FBC_ComplainantID" Type="smallint" />
+          <Property Name="FB_o_FBC_Relationship" Type="smallint" />
+          <Property Name="FB_o_FBC_ConsumerID" Type="smallint" />
+          <Property Name="FB_o_FBC_RecDate" Type="smallint" />
+          <Property Name="FB_o_FBC_ModeReceived" Type="smallint" />
+          <Property Name="FB_o_FBC_CreateDate" Type="smallint" />
+          <Property Name="FB_o_FBC_AckDate" Type="smallint" />
+          <Property Name="FB_o_FBC_OpenDate" Type="smallint" />
+          <Property Name="FB_o_FBC_CloseDate" Type="smallint" />
+          <Property Name="FB_o_FBC_FirstFormalDate" Type="smallint" />
+          <Property Name="FB_o_FBC_Summary" Type="smallint" />
+          <Property Name="FB_o_FBC_Details" Type="smallint" />
+          <Property Name="FB_o_FBC_InsurerNotifReq" Type="smallint" />
+          <Property Name="FB_o_FBC_InsurerNotifDate" Type="smallint" />
+          <Property Name="FB_o_FBC_InsurerNotifMode" Type="smallint" />
+          <Property Name="FB_o_FBC_ReportedYN" Type="smallint" />
+          <Property Name="FB_o_FBC_RefpathID" Type="smallint" />
+          <Property Name="FB_o_FBC_AssocInc" Type="smallint" />
+          <Property Name="FB_o_FBC_AssocIncNo" Type="smallint" />
+          <Property Name="FB_o_FBC_SAC" Type="smallint" />
+          <Property Name="FB_o_FBC_SACRowLabel" Type="smallint" />
+          <Property Name="FB_o_FBC_SACColLabel" Type="smallint" />
+          <Property Name="FB_o_FBC_SACScore" Type="smallint" />
+          <Property Name="FB_o_FBC_ReportedTo" Type="smallint" />
+          <Property Name="FB_o_FBC_ReportedToPosition" Type="smallint" />
+          <Property Name="FB_o_FBC_ReferredTo" Type="smallint" />
+          <Property Name="FB_o_FBC_ReferredToPosition" Type="smallint" />
+          <Property Name="FB_o_FBC_ResponsiblePerson1" Type="smallint" />
+          <Property Name="FB_o_FBC_ResponsiblePerson2" Type="smallint" />
+          <Property Name="FB_o_FBC_Site" Type="smallint" />
+          <Property Name="FB_o_FBC_Location" Type="smallint" />
+          <Property Name="FB_o_FBC_ClinicalArea" Type="smallint" />
+          <Property Name="FB_o_FBC_Program" Type="smallint" />
+          <Property Name="FB_o_FBC_Specialty" Type="smallint" />
+          <Property Name="FB_o_FBC_FileName" Type="smallint" />
+          <Property Name="FB_o_FBC_ResultedInQIA" Type="smallint" />
+          <Property Name="FB_o_FBC_ResultedInQIANotes" Type="smallint" />
+          <Property Name="FB_o_FBC_ComplainantStatus" Type="smallint" />
+          <Property Name="FB_o_FBC_ComplainantOrganisation" Type="smallint" />
+          <Property Name="FB_o_FBC_ConsumerStatus" Type="smallint" />
+          <Property Name="FB_o_FBC_ConsumerOrganisation" Type="smallint" />
+          <Property Name="FB_o_FBC_ConsumerType" Type="smallint" />
+          <Property Name="FB_o_FBC_ConsumerAdmissionDate" Type="smallint" />
+          <Property Name="FB_o_FBC_ConsumerDischargeDate" Type="smallint" />
+          <Property Name="FB_o_FBC_ConsumerDeceased" Type="smallint" />
+          <Property Name="FB_o_FBC_CompPermMedicalInfo" Type="smallint" />
+          <Property Name="FB_o_FBC_CompPermMedicalInfoDate" Type="smallint" />
+          <Property Name="FB_o_FBC_CompPermMedicalInfoMode" Type="smallint" />
+          <Property Name="FB_o_FBC_CompPermToComplain" Type="smallint" />
+          <Property Name="FB_o_FBC_CompPermToComplainDate" Type="smallint" />
+          <Property Name="FB_o_FBC_CompPermToComplainMode" Type="smallint" />
+          <Property Name="FB_o_FBC_ActualOutcome" Type="smallint" />
+          <Property Name="FB_o_FBC_Outcome" Type="smallint" />
+          <Property Name="FB_o_FBCA_Issue" Type="smallint" />
+          <Property Name="FB_o_FBCA_ActionBy" Type="smallint" />
+          <Property Name="FB_o_FBCA_ActionComplete" Type="smallint" />
+          <Property Name="FB_o_FBCA_CompletedOn" Type="smallint" />
+          <Property Name="FB_o_FBCA_ActionDesc" Type="smallint" />
+          <Property Name="FB_o_FBCA_AllocatedTo" Type="smallint" />
+          <Property Name="FB_o_FBCA_AllocatedDate" Type="smallint" />
+          <Property Name="FB_o_FBCI_IssueCode" Type="smallint" />
+          <Property Name="FB_o_FBCI_IssueType" Type="smallint" />
+          <Property Name="FB_o_FBCI_IssueGroup" Type="smallint" />
+          <Property Name="FB_o_FBCI_Issue" Type="smallint" />
+          <Property Name="FB_o_FBCI_IssueSub" Type="smallint" />
+          <Property Name="FB_o_FBCI_CreateDate" Type="smallint" />
+          <Property Name="FB_o_FBCI_Service" Type="smallint" />
+          <Property Name="FB_o_FBCI_Site" Type="smallint" />
+          <Property Name="FB_o_FBCI_Location" Type="smallint" />
+          <Property Name="FB_o_FBCI_ClinicalArea" Type="smallint" />
+          <Property Name="FB_o_FBCI_Program" Type="smallint" />
+          <Property Name="FB_o_FBCI_Specialty" Type="smallint" />
+          <Property Name="FB_o_FBCI_FileName" Type="smallint" />
+          <Property Name="FB_o_FBCI_ResultedInQIA" Type="smallint" />
+          <Property Name="FB_o_FBCI_ResultedInQIANotes" Type="smallint" />
+          <Property Name="FB_o_FBCI_Objective" Type="smallint" />
+          <Property Name="FB_o_FBCI_ObjectiveMulti" Type="smallint" />
+          <Property Name="FB_o_FBCI_SAC" Type="smallint" />
+          <Property Name="FB_o_FBCI_SACRowLabel" Type="smallint" />
+          <Property Name="FB_o_FBCI_SACColLabel" Type="smallint" />
+          <Property Name="FB_o_FBCI_SACScore" Type="smallint" />
+          <Property Name="FB_o_FBCI_OpenDate" Type="smallint" />
+          <Property Name="FB_o_FBCI_CloseDate" Type="smallint" />
+          <Property Name="FB_o_FBCI_Outcome" Type="smallint" />
+          <Property Name="FB_o_FBCI_Ease" Type="smallint" />
+          <Property Name="FB_o_FBCI_Satisfy" Type="smallint" />
+          <Property Name="FB_o_FBCI_ReportedTo" Type="smallint" />
+          <Property Name="FB_o_FBCI_ReferredTo" Type="smallint" />
+          <Property Name="FB_o_FBCI_ReferralOutcome" Type="smallint" />
+          <Property Name="FB_o_FBCI_CurrentStatus" Type="smallint" />
+          <Property Name="FB_o_FBCI_IssueNotes" Type="smallint" />
+          <Property Name="FB_o_FBCJ_Date" Type="smallint" />
+          <Property Name="FB_o_FBCJ_Time" Type="smallint" />
+          <Property Name="FB_o_FBCJ_JournalType" Type="smallint" />
+          <Property Name="FB_o_FBCJ_JournalReference" Type="smallint" />
+          <Property Name="FB_o_FBCJ_JournalAmount" Type="smallint" />
+          <Property Name="FB_o_FBCJ_DateSent" Type="smallint" />
+          <Property Name="FB_o_FBCJ_SentTo" Type="smallint" />
+          <Property Name="FB_o_FBCJ_DateReceived" Type="smallint" />
+          <Property Name="FB_o_FBCJ_ReceivedFrom" Type="smallint" />
+          <Property Name="FB_o_FBCJ_FollowUpUser" Type="smallint" />
+          <Property Name="FB_o_FBCJ_JournalFollowUp" Type="smallint" />
+          <Property Name="FB_o_FBCJ_ItemActioned" Type="smallint" />
+          <Property Name="FB_o_FBCJ_TheLink" Type="smallint" />
+          <Property Name="FB_o_FBCJ_JournalDescr" Type="smallint" />
+          <Property Name="FB_o_FBCI_Behave_RoleName" Type="smallint" />
+          <Property Name="FB_o_FBCI_Behave_Qual" Type="smallint" />
+          <Property Name="FB_o_FBCI_Behave_Gender" Type="smallint" />
+          <Property Name="FB_o_FBCI_Behave_AgeRange" Type="smallint" />
+          <Property Name="FB_o_FBCI_IsAnIncident" Type="smallint" />
+          <Property Name="FB_o_FBCI_IsPrimaryIssue" Type="smallint" />
+          <Property Name="FB_o_FBCI_ActivityProcDesc" Type="smallint" />
+          <Property Name="FB_o_FBCI_ServiceProvidedOth" Type="smallint" />
+          <Property Name="FB_o_FBC_GroupID" Type="smallint" />
+          <Property Name="FB_o_FBCI_Substantiation" Type="smallint" />
+          <Property Name="FB_o_FBCI_LitigationStatus" Type="smallint" />
+          <Property Name="FB_o_FBCI_PrevRecID3" Type="smallint" />
+          <Property Name="FB_o_FBCI_UserFld1" Type="smallint" />
+          <Property Name="FB_o_FBCI_UserFld2" Type="smallint" />
+          <Property Name="FB_o_FBCI_UserFld3" Type="smallint" />
+          <Property Name="FB_o_FBCI_UserFld4" Type="smallint" />
+          <Property Name="FB_o_FBCI_UserFld5" Type="smallint" />
+          <Property Name="FB_o_FBCI_UserFld6" Type="smallint" />
+          <Property Name="FB_o_FBCI_UserFld7" Type="smallint" />
+          <Property Name="FB_o_FBCI_UserFld8" Type="smallint" />
+          <Property Name="FB_o_FBCI_UserFld9" Type="smallint" />
+          <Property Name="FB_o_FBCI_UserFld10" Type="smallint" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.extract_riskman.vwsf_preventativecorrectiveaction' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwsf_preventativecorrectiveaction">
+          <Key>
+            <PropertyRef Name="keydata" />
+            <PropertyRef Name="RecordID" />
+          </Key>
+          <Property Name="keydata" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="RecordID" Type="int" Nullable="false" />
+          <Property Name="PCAPrevCorAct" Type="nvarchar(max)" />
+          <Property Name="PCAPrevCorActOth" Type="nvarchar(max)" />
+          <Property Name="PCAImpRespPer_name" Type="nvarchar(max)" />
+          <Property Name="PCAImpRespPer" Type="nvarchar(max)" />
+          <Property Name="PCAImpRespMgr_name" Type="nvarchar(max)" />
+          <Property Name="PCAImpRespMgr" Type="nvarchar(max)" />
+          <Property Name="PCANotif" Type="datetime" />
+          <Property Name="PCAOverdueFollowUp" Type="datetime" />
+          <Property Name="PCAActImpDate" Type="datetime" />
+          <Property Name="PCAPrevCorActCompleted" Type="nvarchar(max)" />
+          <Property Name="PCAPrevCorActNotCompleted" Type="nvarchar(max)" />
+          <Property Name="PCAActComDate" Type="datetime" />
+        </EntityType>
         <EntityContainer Name="extract_riskmanStoreContainer">
-          <EntitySet Name="ANGCARE_IFR" EntityType="Self.ANGCARE_IFR" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="CH_IFR" EntityType="Self.CH_IFR" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FRM_BATCH" EntityType="Self.FRM_BATCH" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FRM_DATA" EntityType="Self.FRM_DATA" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="FRM_RECORD" EntityType="Self.FRM_RECORD" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="IncidentClassificationsIFR" EntityType="Self.IncidentClassificationsIFR" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="IncidentsForReview" EntityType="Self.IncidentsForReview" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ANGCARE_IFR" EntityType="Self.ANGCARE_IFR" Schema="extract_riskman" store:Type="Tables" />
+          <EntitySet Name="BEN_IFR" EntityType="Self.BEN_IFR" Schema="extract_riskman" store:Type="Tables" />
+          <EntitySet Name="CH_IFR" EntityType="Self.CH_IFR" Schema="extract_riskman" store:Type="Tables" />
+          <EntitySet Name="FRM_BATCH" EntityType="Self.FRM_BATCH" Schema="extract_riskman" store:Type="Tables" />
+          <EntitySet Name="FRM_DATA" EntityType="Self.FRM_DATA" Schema="extract_riskman" store:Type="Tables" />
+          <EntitySet Name="FRM_RECORD" EntityType="Self.FRM_RECORD" Schema="extract_riskman" store:Type="Tables" />
+          <EntitySet Name="IncidentClassificationsIFR" EntityType="Self.IncidentClassificationsIFR" Schema="extract_riskman" store:Type="Tables" />
+          <EntitySet Name="IncidentsForReview" EntityType="Self.IncidentsForReview" Schema="extract_riskman" store:Type="Tables" />
+          <EntitySet Name="IncNotif_IFR" EntityType="Self.IncNotif_IFR" Schema="extract_riskman" store:Type="Tables" />
+          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="extract_riskman" store:Type="Tables" />
+          <EntitySet Name="vwsf_preventativecorrectiveaction" EntityType="Self.vwsf_preventativecorrectiveaction" store:Type="Tables" store:Schema="extract_riskman">
+            <DefiningQuery>SELECT 
+    [vwsf_preventativecorrectiveaction].[keydata] AS [keydata], 
+    [vwsf_preventativecorrectiveaction].[RecordID] AS [RecordID], 
+    [vwsf_preventativecorrectiveaction].[PCAPrevCorAct] AS [PCAPrevCorAct], 
+    [vwsf_preventativecorrectiveaction].[PCAPrevCorActOth] AS [PCAPrevCorActOth], 
+    [vwsf_preventativecorrectiveaction].[PCAImpRespPer_name] AS [PCAImpRespPer_name], 
+    [vwsf_preventativecorrectiveaction].[PCAImpRespPer] AS [PCAImpRespPer], 
+    [vwsf_preventativecorrectiveaction].[PCAImpRespMgr_name] AS [PCAImpRespMgr_name], 
+    [vwsf_preventativecorrectiveaction].[PCAImpRespMgr] AS [PCAImpRespMgr], 
+    [vwsf_preventativecorrectiveaction].[PCANotif] AS [PCANotif], 
+    [vwsf_preventativecorrectiveaction].[PCAOverdueFollowUp] AS [PCAOverdueFollowUp], 
+    [vwsf_preventativecorrectiveaction].[PCAActImpDate] AS [PCAActImpDate], 
+    [vwsf_preventativecorrectiveaction].[PCAPrevCorActCompleted] AS [PCAPrevCorActCompleted], 
+    [vwsf_preventativecorrectiveaction].[PCAPrevCorActNotCompleted] AS [PCAPrevCorActNotCompleted], 
+    [vwsf_preventativecorrectiveaction].[PCAActComDate] AS [PCAActComDate]
+    FROM [extract_riskman].[vwsf_preventativecorrectiveaction] AS [vwsf_preventativecorrectiveaction]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="extract_riskman" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
         <EntityContainer Name="extract_riskmanContainer" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="IncidentClassificationsIFRs" EntityType="extract_riskman.IncidentClassificationsIFR" />
-          <EntitySet Name="IncidentsForReviews" EntityType="extract_riskman.IncidentsForReview" />
           <EntitySet Name="ANGCARE_IFR" EntityType="extract_riskman.ANGCARE_IFR" />
+          <EntitySet Name="BEN_IFR" EntityType="extract_riskman.BEN_IFR" />
           <EntitySet Name="CH_IFR" EntityType="extract_riskman.CH_IFR" />
           <EntitySet Name="FRM_BATCH" EntityType="extract_riskman.FRM_BATCH" />
           <EntitySet Name="FRM_DATA" EntityType="extract_riskman.FRM_DATA" />
           <EntitySet Name="FRM_RECORD" EntityType="extract_riskman.FRM_RECORD" />
+          <EntitySet Name="IncidentClassificationsIFRs" EntityType="extract_riskman.IncidentClassificationsIFR" />
+          <EntitySet Name="IncidentsForReviews" EntityType="extract_riskman.IncidentsForReview" />
+          <EntitySet Name="IncNotif_IFR" EntityType="extract_riskman.IncNotif_IFR" />
+          <EntitySet Name="UserProfiles" EntityType="extract_riskman.UserProfile" />
+          <EntitySet Name="vwsf_preventativecorrectiveaction" EntityType="extract_riskman.vwsf_preventativecorrectiveaction" />
         </EntityContainer>
+        <EntityType Name="ANGCARE_IFR">
+          <Key>
+            <PropertyRef Name="ANGCARE_ID" />
+          </Key>
+          <Property Name="ANGCARE_ID" Type="Int32" Nullable="false" />
+          <Property Name="ANGPolNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PersonRespNotif" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AHNotif" Type="Boolean" />
+          <Property Name="AHContactedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AHContactedDate" Type="DateTime" Precision="3" />
+          <Property Name="PHNotif" Type="Boolean" />
+          <Property Name="PHContactedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PHContactedDate" Type="DateTime" Precision="3" />
+          <Property Name="ACATNotif" Type="Boolean" />
+          <Property Name="ACATContactedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ACATContactedDate" Type="DateTime" Precision="3" />
+          <Property Name="EntBehalfOfPos" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ACShiftSupervisor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ACWhoReportName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ACWhoReportPosition" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ACReportBehalfPosition" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OthersInvolvedRECID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OthersInvolvedPrevRECID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InjuryType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ClientMedicalRequired" Type="Boolean" />
+          <Property Name="MedAttType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CorActWhyNot" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="InvInit" Type="Boolean" />
+          <Property Name="InvDate" Type="DateTime" Precision="3" />
+          <Property Name="InvestComp" Type="Boolean" />
+          <Property Name="InvestCompDate" Type="DateTime" Precision="3" />
+          <Property Name="CustomerSite" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IndigenousState" Type="Boolean" />
+          <Property Name="IncSeen" Type="Boolean" />
+          <Property Name="FirstInformedDate" Type="DateTime" Precision="3" />
+          <Property Name="FirstInformedTime" Type="DateTime" Precision="3" />
+          <Property Name="MedAttName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IncStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="InjuryActivity" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CustService" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="InjuryOth" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Wing" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BEN_IFR">
+          <Key>
+            <PropertyRef Name="BEN_ID" />
+          </Key>
+          <Property Name="BEN_ID" Type="Int32" Nullable="false" />
+          <Property Name="CoName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TreatReq" Type="Boolean" />
+          <Property Name="CLScase" Type="Boolean" />
+          <Property Name="Chambersenquiry" Type="Boolean" />
+          <Property Name="Inquest" Type="Boolean" />
+          <Property Name="EHOcontactby" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="EHOdate" Type="DateTime" Precision="3" />
+          <Property Name="Vicdhs" Type="Boolean" />
+          <Property Name="Vicdhscontact" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Vicdhsdate" Type="DateTime" Precision="3" />
+          <Property Name="DoHACIS" Type="Boolean" />
+          <Property Name="DoHACIScontact" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DoHACISdate" Type="DateTime" Precision="3" />
+          <Property Name="BENPolice" Type="Boolean" />
+          <Property Name="policecontact" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="BENPolicedate" Type="DateTime" Precision="3" />
+          <Property Name="NOKNotifDate" Type="DateTime" Precision="3" />
+          <Property Name="Transferred" Type="Boolean" />
+          <Property Name="StaffBodyPart" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="SerDelivery" Type="Boolean" />
+          <Property Name="ManualRx" Type="Boolean" />
+          <Property Name="Area" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="WorksafeDate" Type="DateTime" Precision="3" />
+          <Property Name="BenetasOutcome" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="ClientBodyPart" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="DeathDate" Type="DateTime" Precision="3" />
+          <Property Name="CorInititateDate" Type="DateTime" Precision="3" />
+          <Property Name="CorFindingDate" Type="DateTime" Precision="3" />
+          <Property Name="CorCloseDate" Type="DateTime" Precision="3" />
+          <Property Name="CorCaseID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CorType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TransferOutcome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IncidentOutcome" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SpecificTransDesc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SuggPrevRec" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="VisPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IncSourceBaseID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IncSouceSubmodule" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="CH_IFR">
+          <Key>
+            <PropertyRef Name="CH_ID" />
+          </Key>
+          <Property Name="CH_ID" Type="Int32" Nullable="false" />
+          <Property Name="PCARECID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PCAPrevRECID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CHReportBehalf" Type="Boolean" />
+          <Property Name="CHReportWho" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CHExpYrs" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CHWhereEventOccur" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CHStaffTraining" Type="Boolean" />
+          <Property Name="CHPrevActReq" Type="Boolean" />
+          <Property Name="OHSAltDuty" Type="Boolean" />
+          <Property Name="HasHSRNot" Type="Boolean" />
+          <Property Name="CHLocalGovtMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CHLocalGovtContact" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CHDHSMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CHDHSContact" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CHDoHAMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CHDoHAContact" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CHPhysLocOther" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CHWorkStartTime" Type="DateTime" Precision="3" />
+          <Property Name="CreatComp" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SiteAdd" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="OthService" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OthCustSite" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OthSite" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IncRelChild" Type="Boolean" />
+          <Property Name="ComplaintID" Type="Int32" />
+          <Property Name="ContFactOth" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RiskCatFactOth" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SafeWorkOth" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="FRM_BATCH">
+          <Key>
+            <PropertyRef Name="BatchID" />
+          </Key>
+          <Property Name="BatchID" Type="Int32" Nullable="false" />
+          <Property Name="RecordID" Type="Int32" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SavedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="FRM_DATA">
+          <Key>
+            <PropertyRef Name="DataID" />
+          </Key>
+          <Property Name="DataID" Type="Int32" Nullable="false" />
+          <Property Name="BatchID" Type="Int32" Nullable="false" />
+          <Property Name="FieldName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ValueString" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ValueDate" Type="DateTime" Precision="3" />
+          <Property Name="ValueNumber" Type="Double" />
+          <Property Name="ValueBit" Type="Boolean" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FRM_RECORD">
+          <Key>
+            <PropertyRef Name="RecordID" />
+          </Key>
+          <Property Name="RecordID" Type="Int32" Nullable="false" />
+          <Property Name="KeyData" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="KeySequence" Type="Int32" Nullable="false" />
+          <Property Name="FormName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+        </EntityType>
         <EntityType Name="IncidentClassificationsIFR">
           <Key>
             <PropertyRef Name="autonum" />
@@ -303,7 +818,7 @@
           <Property Name="SortSeq" Type="Int16" />
           <Property Name="ClassID" Type="Int32" />
           <Property Name="DefinitionID" Type="Int32" />
-          <Property Name="autonum" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="autonum" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="IncidentsForReview">
           <Key>
@@ -448,116 +963,298 @@
           <Property Name="DisplayID" Type="Int32" />
           <Property Name="Detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="ANGCARE_IFR">
+        <EntityType Name="IncNotif_IFR">
           <Key>
-            <PropertyRef Name="ANGCARE_ID" />
+            <PropertyRef Name="IncNotif_ID" />
           </Key>
-          <Property Name="ANGCARE_ID" Type="Int32" Nullable="false" />
-          <Property Name="ANGPolNo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PersonRespNotif" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="AHNotif" Type="Boolean" />
-          <Property Name="AHContactedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="AHContactedDate" Type="DateTime" Precision="3" />
-          <Property Name="PHNotif" Type="Boolean" />
-          <Property Name="PHContactedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PHContactedDate" Type="DateTime" Precision="3" />
-          <Property Name="ACATNotif" Type="Boolean" />
-          <Property Name="ACATContactedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ACATContactedDate" Type="DateTime" Precision="3" />
-          <Property Name="EntBehalfOfPos" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ACShiftSupervisor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ACWhoReportName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ACWhoReportPosition" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ACReportBehalfPosition" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OthersInvolvedRECID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="OthersInvolvedPrevRECID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="InjuryType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ClientMedicalRequired" Type="Boolean" />
-          <Property Name="MedAttType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CorActWhyNot" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="InvInit" Type="Boolean" />
-          <Property Name="InvDate" Type="DateTime" Precision="3" />
-          <Property Name="InvestComp" Type="Boolean" />
-          <Property Name="InvestCompDate" Type="DateTime" Precision="3" />
-          <Property Name="CustomerSite" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="IndigenousState" Type="Boolean" />
-          <Property Name="IncSeen" Type="Boolean" />
-          <Property Name="FirstInformedDate" Type="DateTime" Precision="3" />
-          <Property Name="FirstInformedTime" Type="DateTime" Precision="3" />
-          <Property Name="MedAttName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IncStatus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="InjuryActivity" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CustService" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="InjuryOth" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Wing" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IncNotif_ID" Type="Int32" Nullable="false" />
+          <Property Name="FireNotif" Type="Boolean" />
+          <Property Name="FireComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="AmbNotif" Type="Boolean" />
+          <Property Name="AmbComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PoliceNotif" Type="Boolean" />
+          <Property Name="PoliceComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="NOKComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CarerNotif" Type="Boolean" />
+          <Property Name="ChildAbuseNotif" Type="Boolean" />
+          <Property Name="CorrOffNotif" Type="Boolean" />
+          <Property Name="DECDCareNotif" Type="Boolean" />
+          <Property Name="DCSINotif" Type="Boolean" />
+          <Property Name="FaCHSIANotif" Type="Boolean" />
+          <Property Name="EmergContNotif" Type="Boolean" />
+          <Property Name="OPANotif" Type="Boolean" />
+          <Property Name="OtherNotif" Type="Boolean" />
+          <Property Name="GuardNotif" Type="Boolean" />
+          <Property Name="AGNotif" Type="Boolean" />
+          <Property Name="UCWNotif" Type="Boolean" />
+          <Property Name="CarerComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ChildAbuseComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CorrOffComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FaCHSIAComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DECDComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DCSIComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="EmergContComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="OPAComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="OtherComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="GuardComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="AGComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="UCWComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DECDCareComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DECDNotif" Type="Boolean" />
+          <Property Name="HouseReg" Type="Boolean" />
+          <Property Name="HouseRegComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Funder" Type="Boolean" />
+          <Property Name="FunderComm" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="CH_IFR">
+        <EntityType Name="UserProfile">
           <Key>
-            <PropertyRef Name="CH_ID" />
+            <PropertyRef Name="UserName" />
           </Key>
-          <Property Name="CH_ID" Type="Int32" Nullable="false" />
-          <Property Name="PCARECID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PCAPrevRECID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CHReportBehalf" Type="Boolean" />
-          <Property Name="CHReportWho" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CHExpYrs" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CHWhereEventOccur" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CHStaffTraining" Type="Boolean" />
-          <Property Name="CHPrevActReq" Type="Boolean" />
-          <Property Name="OHSAltDuty" Type="Boolean" />
-          <Property Name="HasHSRNot" Type="Boolean" />
-          <Property Name="CHLocalGovtMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CHLocalGovtContact" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CHDHSMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CHDHSContact" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CHDoHAMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CHDoHAContact" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CHPhysLocOther" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CHWorkStartTime" Type="DateTime" Precision="3" />
-          <Property Name="CreatComp" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="SiteAdd" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="OthService" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OthCustSite" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OthSite" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IncRelChild" Type="Boolean" />
-          <Property Name="ComplaintID" Type="Int32" />
-          <Property Name="ContFactOth" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="RiskCatFactOth" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SafeWorkOth" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserDisplayName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="isTemplate" Type="Boolean" />
+          <Property Name="UserType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordEncrypted" Type="Boolean" />
+          <Property Name="PreviousPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordLastChanged" Type="DateTime" Precision="3" />
+          <Property Name="PasswordDoesntExpire" Type="Boolean" />
+          <Property Name="PasswordBadAttempts" Type="Int32" />
+          <Property Name="PasswordBadIP" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserPosition" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Email2" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MobileNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PagerNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LDAP_Username" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="LDAP_DN" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="LDAP_Site" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="LDAP_Status" Type="Int32" />
+          <Property Name="LastLoginDate" Type="DateTime" Precision="3" />
+          <Property Name="DateEntered" Type="DateTime" Precision="3" />
+          <Property Name="DateDeleted" Type="DateTime" Precision="3" />
+          <Property Name="ExpiryDate" Type="DateTime" Precision="3" />
+          <Property Name="DefaultPage" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="UsersSettings" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PrimarySite" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PrimaryLocation" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="USR_Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="USR_Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RP_Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RP_Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RP_ClinicalArea" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RP_Program" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RP_Specialty" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Permissions" Type="Int32" />
+          <Property Name="Permissions2" Type="Int32" />
+          <Property Name="Permissions3" Type="Int32" />
+          <Property Name="Permissions4" Type="Int32" />
+          <Property Name="Permissions5" Type="Int32" />
+          <Property Name="FB_UserType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FB_JournalRestrictions" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FB_Permissions_Feedback" Type="Int32" />
+          <Property Name="FB_Permissions_FeedbackTwo" Type="Int32" />
+          <Property Name="FB_Permissions_Actions" Type="Int32" />
+          <Property Name="FB_Permissions_Issues" Type="Int32" />
+          <Property Name="FB_Permissions_Journals" Type="Int32" />
+          <Property Name="FB_HideComplainant" Type="Boolean" />
+          <Property Name="FB_HideConsumer" Type="Boolean" />
+          <Property Name="FB_HideDetails" Type="Boolean" />
+          <Property Name="FB_HideIssues" Type="Boolean" />
+          <Property Name="FB_HideActions" Type="Boolean" />
+          <Property Name="FB_HideJournals" Type="Boolean" />
+          <Property Name="FB_o_Comp_Surname" Type="Int16" />
+          <Property Name="FB_o_Comp_Firstname" Type="Int16" />
+          <Property Name="FB_o_Comp_Title" Type="Int16" />
+          <Property Name="FB_o_Comp_Address1" Type="Int16" />
+          <Property Name="FB_o_Comp_Address2" Type="Int16" />
+          <Property Name="FB_o_Comp_Suburb" Type="Int16" />
+          <Property Name="FB_o_Comp_State" Type="Int16" />
+          <Property Name="FB_o_Comp_Postcode" Type="Int16" />
+          <Property Name="FB_o_Comp_HPhone" Type="Int16" />
+          <Property Name="FB_o_Comp_WPhone" Type="Int16" />
+          <Property Name="FB_o_Comp_MPhone" Type="Int16" />
+          <Property Name="FB_o_Comp_Fax" Type="Int16" />
+          <Property Name="FB_o_Comp_Email" Type="Int16" />
+          <Property Name="FB_o_Comp_MRN" Type="Int16" />
+          <Property Name="FB_o_Comp_Gender" Type="Int16" />
+          <Property Name="FB_o_Comp_DOB" Type="Int16" />
+          <Property Name="FB_o_Comp_Country" Type="Int16" />
+          <Property Name="FB_o_Comp_AboriginalType" Type="Int16" />
+          <Property Name="FB_o_Comp_PrimaryLanguage" Type="Int16" />
+          <Property Name="FB_o_Comp_Interpreter" Type="Int16" />
+          <Property Name="FB_o_Cons_Surname" Type="Int16" />
+          <Property Name="FB_o_Cons_Firstname" Type="Int16" />
+          <Property Name="FB_o_Cons_Title" Type="Int16" />
+          <Property Name="FB_o_Cons_Address1" Type="Int16" />
+          <Property Name="FB_o_Cons_Address2" Type="Int16" />
+          <Property Name="FB_o_Cons_Suburb" Type="Int16" />
+          <Property Name="FB_o_Cons_State" Type="Int16" />
+          <Property Name="FB_o_Cons_Postcode" Type="Int16" />
+          <Property Name="FB_o_Cons_HPhone" Type="Int16" />
+          <Property Name="FB_o_Cons_WPhone" Type="Int16" />
+          <Property Name="FB_o_Cons_MPhone" Type="Int16" />
+          <Property Name="FB_o_Cons_Fax" Type="Int16" />
+          <Property Name="FB_o_Cons_Email" Type="Int16" />
+          <Property Name="FB_o_Cons_MRN" Type="Int16" />
+          <Property Name="FB_o_Cons_Gender" Type="Int16" />
+          <Property Name="FB_o_Cons_DOB" Type="Int16" />
+          <Property Name="FB_o_Cons_Country" Type="Int16" />
+          <Property Name="FB_o_Cons_AboriginalType" Type="Int16" />
+          <Property Name="FB_o_Cons_PrimaryLanguage" Type="Int16" />
+          <Property Name="FB_o_Cons_Interpreter" Type="Int16" />
+          <Property Name="FB_o_FBC_DocType" Type="Int16" />
+          <Property Name="FB_o_FBC_FormalityLevel" Type="Int16" />
+          <Property Name="FB_o_FBC_ComplainantID" Type="Int16" />
+          <Property Name="FB_o_FBC_Relationship" Type="Int16" />
+          <Property Name="FB_o_FBC_ConsumerID" Type="Int16" />
+          <Property Name="FB_o_FBC_RecDate" Type="Int16" />
+          <Property Name="FB_o_FBC_ModeReceived" Type="Int16" />
+          <Property Name="FB_o_FBC_CreateDate" Type="Int16" />
+          <Property Name="FB_o_FBC_AckDate" Type="Int16" />
+          <Property Name="FB_o_FBC_OpenDate" Type="Int16" />
+          <Property Name="FB_o_FBC_CloseDate" Type="Int16" />
+          <Property Name="FB_o_FBC_FirstFormalDate" Type="Int16" />
+          <Property Name="FB_o_FBC_Summary" Type="Int16" />
+          <Property Name="FB_o_FBC_Details" Type="Int16" />
+          <Property Name="FB_o_FBC_InsurerNotifReq" Type="Int16" />
+          <Property Name="FB_o_FBC_InsurerNotifDate" Type="Int16" />
+          <Property Name="FB_o_FBC_InsurerNotifMode" Type="Int16" />
+          <Property Name="FB_o_FBC_ReportedYN" Type="Int16" />
+          <Property Name="FB_o_FBC_RefpathID" Type="Int16" />
+          <Property Name="FB_o_FBC_AssocInc" Type="Int16" />
+          <Property Name="FB_o_FBC_AssocIncNo" Type="Int16" />
+          <Property Name="FB_o_FBC_SAC" Type="Int16" />
+          <Property Name="FB_o_FBC_SACRowLabel" Type="Int16" />
+          <Property Name="FB_o_FBC_SACColLabel" Type="Int16" />
+          <Property Name="FB_o_FBC_SACScore" Type="Int16" />
+          <Property Name="FB_o_FBC_ReportedTo" Type="Int16" />
+          <Property Name="FB_o_FBC_ReportedToPosition" Type="Int16" />
+          <Property Name="FB_o_FBC_ReferredTo" Type="Int16" />
+          <Property Name="FB_o_FBC_ReferredToPosition" Type="Int16" />
+          <Property Name="FB_o_FBC_ResponsiblePerson1" Type="Int16" />
+          <Property Name="FB_o_FBC_ResponsiblePerson2" Type="Int16" />
+          <Property Name="FB_o_FBC_Site" Type="Int16" />
+          <Property Name="FB_o_FBC_Location" Type="Int16" />
+          <Property Name="FB_o_FBC_ClinicalArea" Type="Int16" />
+          <Property Name="FB_o_FBC_Program" Type="Int16" />
+          <Property Name="FB_o_FBC_Specialty" Type="Int16" />
+          <Property Name="FB_o_FBC_FileName" Type="Int16" />
+          <Property Name="FB_o_FBC_ResultedInQIA" Type="Int16" />
+          <Property Name="FB_o_FBC_ResultedInQIANotes" Type="Int16" />
+          <Property Name="FB_o_FBC_ComplainantStatus" Type="Int16" />
+          <Property Name="FB_o_FBC_ComplainantOrganisation" Type="Int16" />
+          <Property Name="FB_o_FBC_ConsumerStatus" Type="Int16" />
+          <Property Name="FB_o_FBC_ConsumerOrganisation" Type="Int16" />
+          <Property Name="FB_o_FBC_ConsumerType" Type="Int16" />
+          <Property Name="FB_o_FBC_ConsumerAdmissionDate" Type="Int16" />
+          <Property Name="FB_o_FBC_ConsumerDischargeDate" Type="Int16" />
+          <Property Name="FB_o_FBC_ConsumerDeceased" Type="Int16" />
+          <Property Name="FB_o_FBC_CompPermMedicalInfo" Type="Int16" />
+          <Property Name="FB_o_FBC_CompPermMedicalInfoDate" Type="Int16" />
+          <Property Name="FB_o_FBC_CompPermMedicalInfoMode" Type="Int16" />
+          <Property Name="FB_o_FBC_CompPermToComplain" Type="Int16" />
+          <Property Name="FB_o_FBC_CompPermToComplainDate" Type="Int16" />
+          <Property Name="FB_o_FBC_CompPermToComplainMode" Type="Int16" />
+          <Property Name="FB_o_FBC_ActualOutcome" Type="Int16" />
+          <Property Name="FB_o_FBC_Outcome" Type="Int16" />
+          <Property Name="FB_o_FBCA_Issue" Type="Int16" />
+          <Property Name="FB_o_FBCA_ActionBy" Type="Int16" />
+          <Property Name="FB_o_FBCA_ActionComplete" Type="Int16" />
+          <Property Name="FB_o_FBCA_CompletedOn" Type="Int16" />
+          <Property Name="FB_o_FBCA_ActionDesc" Type="Int16" />
+          <Property Name="FB_o_FBCA_AllocatedTo" Type="Int16" />
+          <Property Name="FB_o_FBCA_AllocatedDate" Type="Int16" />
+          <Property Name="FB_o_FBCI_IssueCode" Type="Int16" />
+          <Property Name="FB_o_FBCI_IssueType" Type="Int16" />
+          <Property Name="FB_o_FBCI_IssueGroup" Type="Int16" />
+          <Property Name="FB_o_FBCI_Issue" Type="Int16" />
+          <Property Name="FB_o_FBCI_IssueSub" Type="Int16" />
+          <Property Name="FB_o_FBCI_CreateDate" Type="Int16" />
+          <Property Name="FB_o_FBCI_Service" Type="Int16" />
+          <Property Name="FB_o_FBCI_Site" Type="Int16" />
+          <Property Name="FB_o_FBCI_Location" Type="Int16" />
+          <Property Name="FB_o_FBCI_ClinicalArea" Type="Int16" />
+          <Property Name="FB_o_FBCI_Program" Type="Int16" />
+          <Property Name="FB_o_FBCI_Specialty" Type="Int16" />
+          <Property Name="FB_o_FBCI_FileName" Type="Int16" />
+          <Property Name="FB_o_FBCI_ResultedInQIA" Type="Int16" />
+          <Property Name="FB_o_FBCI_ResultedInQIANotes" Type="Int16" />
+          <Property Name="FB_o_FBCI_Objective" Type="Int16" />
+          <Property Name="FB_o_FBCI_ObjectiveMulti" Type="Int16" />
+          <Property Name="FB_o_FBCI_SAC" Type="Int16" />
+          <Property Name="FB_o_FBCI_SACRowLabel" Type="Int16" />
+          <Property Name="FB_o_FBCI_SACColLabel" Type="Int16" />
+          <Property Name="FB_o_FBCI_SACScore" Type="Int16" />
+          <Property Name="FB_o_FBCI_OpenDate" Type="Int16" />
+          <Property Name="FB_o_FBCI_CloseDate" Type="Int16" />
+          <Property Name="FB_o_FBCI_Outcome" Type="Int16" />
+          <Property Name="FB_o_FBCI_Ease" Type="Int16" />
+          <Property Name="FB_o_FBCI_Satisfy" Type="Int16" />
+          <Property Name="FB_o_FBCI_ReportedTo" Type="Int16" />
+          <Property Name="FB_o_FBCI_ReferredTo" Type="Int16" />
+          <Property Name="FB_o_FBCI_ReferralOutcome" Type="Int16" />
+          <Property Name="FB_o_FBCI_CurrentStatus" Type="Int16" />
+          <Property Name="FB_o_FBCI_IssueNotes" Type="Int16" />
+          <Property Name="FB_o_FBCJ_Date" Type="Int16" />
+          <Property Name="FB_o_FBCJ_Time" Type="Int16" />
+          <Property Name="FB_o_FBCJ_JournalType" Type="Int16" />
+          <Property Name="FB_o_FBCJ_JournalReference" Type="Int16" />
+          <Property Name="FB_o_FBCJ_JournalAmount" Type="Int16" />
+          <Property Name="FB_o_FBCJ_DateSent" Type="Int16" />
+          <Property Name="FB_o_FBCJ_SentTo" Type="Int16" />
+          <Property Name="FB_o_FBCJ_DateReceived" Type="Int16" />
+          <Property Name="FB_o_FBCJ_ReceivedFrom" Type="Int16" />
+          <Property Name="FB_o_FBCJ_FollowUpUser" Type="Int16" />
+          <Property Name="FB_o_FBCJ_JournalFollowUp" Type="Int16" />
+          <Property Name="FB_o_FBCJ_ItemActioned" Type="Int16" />
+          <Property Name="FB_o_FBCJ_TheLink" Type="Int16" />
+          <Property Name="FB_o_FBCJ_JournalDescr" Type="Int16" />
+          <Property Name="FB_o_FBCI_Behave_RoleName" Type="Int16" />
+          <Property Name="FB_o_FBCI_Behave_Qual" Type="Int16" />
+          <Property Name="FB_o_FBCI_Behave_Gender" Type="Int16" />
+          <Property Name="FB_o_FBCI_Behave_AgeRange" Type="Int16" />
+          <Property Name="FB_o_FBCI_IsAnIncident" Type="Int16" />
+          <Property Name="FB_o_FBCI_IsPrimaryIssue" Type="Int16" />
+          <Property Name="FB_o_FBCI_ActivityProcDesc" Type="Int16" />
+          <Property Name="FB_o_FBCI_ServiceProvidedOth" Type="Int16" />
+          <Property Name="FB_o_FBC_GroupID" Type="Int16" />
+          <Property Name="FB_o_FBCI_Substantiation" Type="Int16" />
+          <Property Name="FB_o_FBCI_LitigationStatus" Type="Int16" />
+          <Property Name="FB_o_FBCI_PrevRecID3" Type="Int16" />
+          <Property Name="FB_o_FBCI_UserFld1" Type="Int16" />
+          <Property Name="FB_o_FBCI_UserFld2" Type="Int16" />
+          <Property Name="FB_o_FBCI_UserFld3" Type="Int16" />
+          <Property Name="FB_o_FBCI_UserFld4" Type="Int16" />
+          <Property Name="FB_o_FBCI_UserFld5" Type="Int16" />
+          <Property Name="FB_o_FBCI_UserFld6" Type="Int16" />
+          <Property Name="FB_o_FBCI_UserFld7" Type="Int16" />
+          <Property Name="FB_o_FBCI_UserFld8" Type="Int16" />
+          <Property Name="FB_o_FBCI_UserFld9" Type="Int16" />
+          <Property Name="FB_o_FBCI_UserFld10" Type="Int16" />
         </EntityType>
-        <EntityType Name="FRM_BATCH">
+        <EntityType Name="vwsf_preventativecorrectiveaction">
           <Key>
-            <PropertyRef Name="BatchID" />
-          </Key>
-          <Property Name="BatchID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RecordID" Type="Int32" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="SavedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="FRM_DATA">
-          <Key>
-            <PropertyRef Name="DataID" />
-          </Key>
-          <Property Name="DataID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BatchID" Type="Int32" Nullable="false" />
-          <Property Name="FieldName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ValueString" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ValueDate" Type="DateTime" Precision="3" />
-          <Property Name="ValueNumber" Type="Double" />
-          <Property Name="ValueBit" Type="Boolean" />
-          <Property Name="Active" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="FRM_RECORD">
-          <Key>
+            <PropertyRef Name="keydata" />
             <PropertyRef Name="RecordID" />
           </Key>
-          <Property Name="RecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="KeyData" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="KeySequence" Type="Int32" Nullable="false" />
-          <Property Name="FormName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Deleted" Type="Boolean" Nullable="false" />
+          <Property Name="keydata" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="RecordID" Type="Int32" Nullable="false" />
+          <Property Name="PCAPrevCorAct" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PCAPrevCorActOth" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PCAImpRespPer_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PCAImpRespPer" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PCAImpRespMgr_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PCAImpRespMgr" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PCANotif" Type="DateTime" Precision="3" />
+          <Property Name="PCAOverdueFollowUp" Type="DateTime" Precision="3" />
+          <Property Name="PCAActImpDate" Type="DateTime" Precision="3" />
+          <Property Name="PCAPrevCorActCompleted" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PCAPrevCorActNotCompleted" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PCAActComDate" Type="DateTime" Precision="3" />
         </EntityType>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -565,6 +1262,165 @@
         <Alias Key="Model" Value="extract_riskman" />
         <Alias Key="Target" Value="extract_riskman.Store" />
         <EntityContainerMapping CdmEntityContainer="extract_riskmanContainer" StorageEntityContainer="extract_riskmanStoreContainer">
+          <EntitySetMapping Name="ANGCARE_IFR">
+            <EntityTypeMapping TypeName="extract_riskman.ANGCARE_IFR">
+              <MappingFragment StoreEntitySet="ANGCARE_IFR">
+                <ScalarProperty Name="Wing" ColumnName="Wing" />
+                <ScalarProperty Name="InjuryOth" ColumnName="InjuryOth" />
+                <ScalarProperty Name="CustService" ColumnName="CustService" />
+                <ScalarProperty Name="InjuryActivity" ColumnName="InjuryActivity" />
+                <ScalarProperty Name="IncStatus" ColumnName="IncStatus" />
+                <ScalarProperty Name="MedAttName" ColumnName="MedAttName" />
+                <ScalarProperty Name="FirstInformedTime" ColumnName="FirstInformedTime" />
+                <ScalarProperty Name="FirstInformedDate" ColumnName="FirstInformedDate" />
+                <ScalarProperty Name="IncSeen" ColumnName="IncSeen" />
+                <ScalarProperty Name="IndigenousState" ColumnName="IndigenousState" />
+                <ScalarProperty Name="CustomerSite" ColumnName="CustomerSite" />
+                <ScalarProperty Name="InvestCompDate" ColumnName="InvestCompDate" />
+                <ScalarProperty Name="InvestComp" ColumnName="InvestComp" />
+                <ScalarProperty Name="InvDate" ColumnName="InvDate" />
+                <ScalarProperty Name="InvInit" ColumnName="InvInit" />
+                <ScalarProperty Name="CorActWhyNot" ColumnName="CorActWhyNot" />
+                <ScalarProperty Name="MedAttType" ColumnName="MedAttType" />
+                <ScalarProperty Name="ClientMedicalRequired" ColumnName="ClientMedicalRequired" />
+                <ScalarProperty Name="InjuryType" ColumnName="InjuryType" />
+                <ScalarProperty Name="OthersInvolvedPrevRECID" ColumnName="OthersInvolvedPrevRECID" />
+                <ScalarProperty Name="OthersInvolvedRECID" ColumnName="OthersInvolvedRECID" />
+                <ScalarProperty Name="ACReportBehalfPosition" ColumnName="ACReportBehalfPosition" />
+                <ScalarProperty Name="ACWhoReportPosition" ColumnName="ACWhoReportPosition" />
+                <ScalarProperty Name="ACWhoReportName" ColumnName="ACWhoReportName" />
+                <ScalarProperty Name="ACShiftSupervisor" ColumnName="ACShiftSupervisor" />
+                <ScalarProperty Name="EntBehalfOfPos" ColumnName="EntBehalfOfPos" />
+                <ScalarProperty Name="ACATContactedDate" ColumnName="ACATContactedDate" />
+                <ScalarProperty Name="ACATContactedBy" ColumnName="ACATContactedBy" />
+                <ScalarProperty Name="ACATNotif" ColumnName="ACATNotif" />
+                <ScalarProperty Name="PHContactedDate" ColumnName="PHContactedDate" />
+                <ScalarProperty Name="PHContactedBy" ColumnName="PHContactedBy" />
+                <ScalarProperty Name="PHNotif" ColumnName="PHNotif" />
+                <ScalarProperty Name="AHContactedDate" ColumnName="AHContactedDate" />
+                <ScalarProperty Name="AHContactedBy" ColumnName="AHContactedBy" />
+                <ScalarProperty Name="AHNotif" ColumnName="AHNotif" />
+                <ScalarProperty Name="PersonRespNotif" ColumnName="PersonRespNotif" />
+                <ScalarProperty Name="ANGPolNo" ColumnName="ANGPolNo" />
+                <ScalarProperty Name="ANGCARE_ID" ColumnName="ANGCARE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BEN_IFR">
+            <EntityTypeMapping TypeName="extract_riskman.BEN_IFR">
+              <MappingFragment StoreEntitySet="BEN_IFR">
+                <ScalarProperty Name="IncSouceSubmodule" ColumnName="IncSouceSubmodule" />
+                <ScalarProperty Name="IncSourceBaseID" ColumnName="IncSourceBaseID" />
+                <ScalarProperty Name="VisPhone" ColumnName="VisPhone" />
+                <ScalarProperty Name="SuggPrevRec" ColumnName="SuggPrevRec" />
+                <ScalarProperty Name="SpecificTransDesc" ColumnName="SpecificTransDesc" />
+                <ScalarProperty Name="IncidentOutcome" ColumnName="IncidentOutcome" />
+                <ScalarProperty Name="TransferOutcome" ColumnName="TransferOutcome" />
+                <ScalarProperty Name="CorType" ColumnName="CorType" />
+                <ScalarProperty Name="CorCaseID" ColumnName="CorCaseID" />
+                <ScalarProperty Name="CorCloseDate" ColumnName="CorCloseDate" />
+                <ScalarProperty Name="CorFindingDate" ColumnName="CorFindingDate" />
+                <ScalarProperty Name="CorInititateDate" ColumnName="CorInititateDate" />
+                <ScalarProperty Name="DeathDate" ColumnName="DeathDate" />
+                <ScalarProperty Name="ClientBodyPart" ColumnName="ClientBodyPart" />
+                <ScalarProperty Name="BenetasOutcome" ColumnName="BenetasOutcome" />
+                <ScalarProperty Name="WorksafeDate" ColumnName="WorksafeDate" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="ManualRx" ColumnName="ManualRx" />
+                <ScalarProperty Name="SerDelivery" ColumnName="SerDelivery" />
+                <ScalarProperty Name="StaffBodyPart" ColumnName="StaffBodyPart" />
+                <ScalarProperty Name="Transferred" ColumnName="Transferred" />
+                <ScalarProperty Name="NOKNotifDate" ColumnName="NOKNotifDate" />
+                <ScalarProperty Name="BENPolicedate" ColumnName="BENPolicedate" />
+                <ScalarProperty Name="policecontact" ColumnName="policecontact" />
+                <ScalarProperty Name="BENPolice" ColumnName="BENPolice" />
+                <ScalarProperty Name="DoHACISdate" ColumnName="DoHACISdate" />
+                <ScalarProperty Name="DoHACIScontact" ColumnName="DoHACIScontact" />
+                <ScalarProperty Name="DoHACIS" ColumnName="DoHACIS" />
+                <ScalarProperty Name="Vicdhsdate" ColumnName="Vicdhsdate" />
+                <ScalarProperty Name="Vicdhscontact" ColumnName="Vicdhscontact" />
+                <ScalarProperty Name="Vicdhs" ColumnName="Vicdhs" />
+                <ScalarProperty Name="EHOdate" ColumnName="EHOdate" />
+                <ScalarProperty Name="EHOcontactby" ColumnName="EHOcontactby" />
+                <ScalarProperty Name="Inquest" ColumnName="Inquest" />
+                <ScalarProperty Name="Chambersenquiry" ColumnName="Chambersenquiry" />
+                <ScalarProperty Name="CLScase" ColumnName="CLScase" />
+                <ScalarProperty Name="TreatReq" ColumnName="TreatReq" />
+                <ScalarProperty Name="CoName" ColumnName="CoName" />
+                <ScalarProperty Name="BEN_ID" ColumnName="BEN_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CH_IFR">
+            <EntityTypeMapping TypeName="extract_riskman.CH_IFR">
+              <MappingFragment StoreEntitySet="CH_IFR">
+                <ScalarProperty Name="SafeWorkOth" ColumnName="SafeWorkOth" />
+                <ScalarProperty Name="RiskCatFactOth" ColumnName="RiskCatFactOth" />
+                <ScalarProperty Name="ContFactOth" ColumnName="ContFactOth" />
+                <ScalarProperty Name="ComplaintID" ColumnName="ComplaintID" />
+                <ScalarProperty Name="IncRelChild" ColumnName="IncRelChild" />
+                <ScalarProperty Name="OthSite" ColumnName="OthSite" />
+                <ScalarProperty Name="OthCustSite" ColumnName="OthCustSite" />
+                <ScalarProperty Name="OthService" ColumnName="OthService" />
+                <ScalarProperty Name="SiteAdd" ColumnName="SiteAdd" />
+                <ScalarProperty Name="CreatComp" ColumnName="CreatComp" />
+                <ScalarProperty Name="CHWorkStartTime" ColumnName="CHWorkStartTime" />
+                <ScalarProperty Name="CHPhysLocOther" ColumnName="CHPhysLocOther" />
+                <ScalarProperty Name="CHDoHAContact" ColumnName="CHDoHAContact" />
+                <ScalarProperty Name="CHDoHAMethod" ColumnName="CHDoHAMethod" />
+                <ScalarProperty Name="CHDHSContact" ColumnName="CHDHSContact" />
+                <ScalarProperty Name="CHDHSMethod" ColumnName="CHDHSMethod" />
+                <ScalarProperty Name="CHLocalGovtContact" ColumnName="CHLocalGovtContact" />
+                <ScalarProperty Name="CHLocalGovtMethod" ColumnName="CHLocalGovtMethod" />
+                <ScalarProperty Name="HasHSRNot" ColumnName="HasHSRNot" />
+                <ScalarProperty Name="OHSAltDuty" ColumnName="OHSAltDuty" />
+                <ScalarProperty Name="CHPrevActReq" ColumnName="CHPrevActReq" />
+                <ScalarProperty Name="CHStaffTraining" ColumnName="CHStaffTraining" />
+                <ScalarProperty Name="CHWhereEventOccur" ColumnName="CHWhereEventOccur" />
+                <ScalarProperty Name="CHExpYrs" ColumnName="CHExpYrs" />
+                <ScalarProperty Name="CHReportWho" ColumnName="CHReportWho" />
+                <ScalarProperty Name="CHReportBehalf" ColumnName="CHReportBehalf" />
+                <ScalarProperty Name="PCAPrevRECID" ColumnName="PCAPrevRECID" />
+                <ScalarProperty Name="PCARECID" ColumnName="PCARECID" />
+                <ScalarProperty Name="CH_ID" ColumnName="CH_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FRM_BATCH">
+            <EntityTypeMapping TypeName="extract_riskman.FRM_BATCH">
+              <MappingFragment StoreEntitySet="FRM_BATCH">
+                <ScalarProperty Name="SavedBy" ColumnName="SavedBy" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FRM_DATA">
+            <EntityTypeMapping TypeName="extract_riskman.FRM_DATA">
+              <MappingFragment StoreEntitySet="FRM_DATA">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="ValueBit" ColumnName="ValueBit" />
+                <ScalarProperty Name="ValueNumber" ColumnName="ValueNumber" />
+                <ScalarProperty Name="ValueDate" ColumnName="ValueDate" />
+                <ScalarProperty Name="ValueString" ColumnName="ValueString" />
+                <ScalarProperty Name="FieldName" ColumnName="FieldName" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="DataID" ColumnName="DataID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FRM_RECORD">
+            <EntityTypeMapping TypeName="extract_riskman.FRM_RECORD">
+              <MappingFragment StoreEntitySet="FRM_RECORD">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="FormName" ColumnName="FormName" />
+                <ScalarProperty Name="KeySequence" ColumnName="KeySequence" />
+                <ScalarProperty Name="KeyData" ColumnName="KeyData" />
+                <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="IncidentClassificationsIFRs">
             <EntityTypeMapping TypeName="extract_riskman.IncidentClassificationsIFR">
               <MappingFragment StoreEntitySet="IncidentClassificationsIFR">
@@ -722,117 +1578,296 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ANGCARE_IFR">
-            <EntityTypeMapping TypeName="extract_riskman.ANGCARE_IFR">
-              <MappingFragment StoreEntitySet="ANGCARE_IFR">
-                <ScalarProperty Name="Wing" ColumnName="Wing" />
-                <ScalarProperty Name="InjuryOth" ColumnName="InjuryOth" />
-                <ScalarProperty Name="CustService" ColumnName="CustService" />
-                <ScalarProperty Name="InjuryActivity" ColumnName="InjuryActivity" />
-                <ScalarProperty Name="IncStatus" ColumnName="IncStatus" />
-                <ScalarProperty Name="MedAttName" ColumnName="MedAttName" />
-                <ScalarProperty Name="FirstInformedTime" ColumnName="FirstInformedTime" />
-                <ScalarProperty Name="FirstInformedDate" ColumnName="FirstInformedDate" />
-                <ScalarProperty Name="IncSeen" ColumnName="IncSeen" />
-                <ScalarProperty Name="IndigenousState" ColumnName="IndigenousState" />
-                <ScalarProperty Name="CustomerSite" ColumnName="CustomerSite" />
-                <ScalarProperty Name="InvestCompDate" ColumnName="InvestCompDate" />
-                <ScalarProperty Name="InvestComp" ColumnName="InvestComp" />
-                <ScalarProperty Name="InvDate" ColumnName="InvDate" />
-                <ScalarProperty Name="InvInit" ColumnName="InvInit" />
-                <ScalarProperty Name="CorActWhyNot" ColumnName="CorActWhyNot" />
-                <ScalarProperty Name="MedAttType" ColumnName="MedAttType" />
-                <ScalarProperty Name="ClientMedicalRequired" ColumnName="ClientMedicalRequired" />
-                <ScalarProperty Name="InjuryType" ColumnName="InjuryType" />
-                <ScalarProperty Name="OthersInvolvedPrevRECID" ColumnName="OthersInvolvedPrevRECID" />
-                <ScalarProperty Name="OthersInvolvedRECID" ColumnName="OthersInvolvedRECID" />
-                <ScalarProperty Name="ACReportBehalfPosition" ColumnName="ACReportBehalfPosition" />
-                <ScalarProperty Name="ACWhoReportPosition" ColumnName="ACWhoReportPosition" />
-                <ScalarProperty Name="ACWhoReportName" ColumnName="ACWhoReportName" />
-                <ScalarProperty Name="ACShiftSupervisor" ColumnName="ACShiftSupervisor" />
-                <ScalarProperty Name="EntBehalfOfPos" ColumnName="EntBehalfOfPos" />
-                <ScalarProperty Name="ACATContactedDate" ColumnName="ACATContactedDate" />
-                <ScalarProperty Name="ACATContactedBy" ColumnName="ACATContactedBy" />
-                <ScalarProperty Name="ACATNotif" ColumnName="ACATNotif" />
-                <ScalarProperty Name="PHContactedDate" ColumnName="PHContactedDate" />
-                <ScalarProperty Name="PHContactedBy" ColumnName="PHContactedBy" />
-                <ScalarProperty Name="PHNotif" ColumnName="PHNotif" />
-                <ScalarProperty Name="AHContactedDate" ColumnName="AHContactedDate" />
-                <ScalarProperty Name="AHContactedBy" ColumnName="AHContactedBy" />
-                <ScalarProperty Name="AHNotif" ColumnName="AHNotif" />
-                <ScalarProperty Name="PersonRespNotif" ColumnName="PersonRespNotif" />
-                <ScalarProperty Name="ANGPolNo" ColumnName="ANGPolNo" />
-                <ScalarProperty Name="ANGCARE_ID" ColumnName="ANGCARE_ID" />
+          <EntitySetMapping Name="IncNotif_IFR">
+            <EntityTypeMapping TypeName="extract_riskman.IncNotif_IFR">
+              <MappingFragment StoreEntitySet="IncNotif_IFR">
+                <ScalarProperty Name="FunderComm" ColumnName="FunderComm" />
+                <ScalarProperty Name="Funder" ColumnName="Funder" />
+                <ScalarProperty Name="HouseRegComm" ColumnName="HouseRegComm" />
+                <ScalarProperty Name="HouseReg" ColumnName="HouseReg" />
+                <ScalarProperty Name="DECDNotif" ColumnName="DECDNotif" />
+                <ScalarProperty Name="DECDCareComm" ColumnName="DECDCareComm" />
+                <ScalarProperty Name="UCWComm" ColumnName="UCWComm" />
+                <ScalarProperty Name="AGComm" ColumnName="AGComm" />
+                <ScalarProperty Name="GuardComm" ColumnName="GuardComm" />
+                <ScalarProperty Name="OtherComm" ColumnName="OtherComm" />
+                <ScalarProperty Name="OPAComm" ColumnName="OPAComm" />
+                <ScalarProperty Name="EmergContComm" ColumnName="EmergContComm" />
+                <ScalarProperty Name="DCSIComm" ColumnName="DCSIComm" />
+                <ScalarProperty Name="DECDComm" ColumnName="DECDComm" />
+                <ScalarProperty Name="FaCHSIAComm" ColumnName="FaCHSIAComm" />
+                <ScalarProperty Name="CorrOffComm" ColumnName="CorrOffComm" />
+                <ScalarProperty Name="ChildAbuseComm" ColumnName="ChildAbuseComm" />
+                <ScalarProperty Name="CarerComm" ColumnName="CarerComm" />
+                <ScalarProperty Name="UCWNotif" ColumnName="UCWNotif" />
+                <ScalarProperty Name="AGNotif" ColumnName="AGNotif" />
+                <ScalarProperty Name="GuardNotif" ColumnName="GuardNotif" />
+                <ScalarProperty Name="OtherNotif" ColumnName="OtherNotif" />
+                <ScalarProperty Name="OPANotif" ColumnName="OPANotif" />
+                <ScalarProperty Name="EmergContNotif" ColumnName="EmergContNotif" />
+                <ScalarProperty Name="FaCHSIANotif" ColumnName="FaCHSIANotif" />
+                <ScalarProperty Name="DCSINotif" ColumnName="DCSINotif" />
+                <ScalarProperty Name="DECDCareNotif" ColumnName="DECDCareNotif" />
+                <ScalarProperty Name="CorrOffNotif" ColumnName="CorrOffNotif" />
+                <ScalarProperty Name="ChildAbuseNotif" ColumnName="ChildAbuseNotif" />
+                <ScalarProperty Name="CarerNotif" ColumnName="CarerNotif" />
+                <ScalarProperty Name="NOKComm" ColumnName="NOKComm" />
+                <ScalarProperty Name="PoliceComm" ColumnName="PoliceComm" />
+                <ScalarProperty Name="PoliceNotif" ColumnName="PoliceNotif" />
+                <ScalarProperty Name="AmbComm" ColumnName="AmbComm" />
+                <ScalarProperty Name="AmbNotif" ColumnName="AmbNotif" />
+                <ScalarProperty Name="FireComm" ColumnName="FireComm" />
+                <ScalarProperty Name="FireNotif" ColumnName="FireNotif" />
+                <ScalarProperty Name="IncNotif_ID" ColumnName="IncNotif_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CH_IFR">
-            <EntityTypeMapping TypeName="extract_riskman.CH_IFR">
-              <MappingFragment StoreEntitySet="CH_IFR">
-                <ScalarProperty Name="SafeWorkOth" ColumnName="SafeWorkOth" />
-                <ScalarProperty Name="RiskCatFactOth" ColumnName="RiskCatFactOth" />
-                <ScalarProperty Name="ContFactOth" ColumnName="ContFactOth" />
-                <ScalarProperty Name="ComplaintID" ColumnName="ComplaintID" />
-                <ScalarProperty Name="IncRelChild" ColumnName="IncRelChild" />
-                <ScalarProperty Name="OthSite" ColumnName="OthSite" />
-                <ScalarProperty Name="OthCustSite" ColumnName="OthCustSite" />
-                <ScalarProperty Name="OthService" ColumnName="OthService" />
-                <ScalarProperty Name="SiteAdd" ColumnName="SiteAdd" />
-                <ScalarProperty Name="CreatComp" ColumnName="CreatComp" />
-                <ScalarProperty Name="CHWorkStartTime" ColumnName="CHWorkStartTime" />
-                <ScalarProperty Name="CHPhysLocOther" ColumnName="CHPhysLocOther" />
-                <ScalarProperty Name="CHDoHAContact" ColumnName="CHDoHAContact" />
-                <ScalarProperty Name="CHDoHAMethod" ColumnName="CHDoHAMethod" />
-                <ScalarProperty Name="CHDHSContact" ColumnName="CHDHSContact" />
-                <ScalarProperty Name="CHDHSMethod" ColumnName="CHDHSMethod" />
-                <ScalarProperty Name="CHLocalGovtContact" ColumnName="CHLocalGovtContact" />
-                <ScalarProperty Name="CHLocalGovtMethod" ColumnName="CHLocalGovtMethod" />
-                <ScalarProperty Name="HasHSRNot" ColumnName="HasHSRNot" />
-                <ScalarProperty Name="OHSAltDuty" ColumnName="OHSAltDuty" />
-                <ScalarProperty Name="CHPrevActReq" ColumnName="CHPrevActReq" />
-                <ScalarProperty Name="CHStaffTraining" ColumnName="CHStaffTraining" />
-                <ScalarProperty Name="CHWhereEventOccur" ColumnName="CHWhereEventOccur" />
-                <ScalarProperty Name="CHExpYrs" ColumnName="CHExpYrs" />
-                <ScalarProperty Name="CHReportWho" ColumnName="CHReportWho" />
-                <ScalarProperty Name="CHReportBehalf" ColumnName="CHReportBehalf" />
-                <ScalarProperty Name="PCAPrevRECID" ColumnName="PCAPrevRECID" />
-                <ScalarProperty Name="PCARECID" ColumnName="PCARECID" />
-                <ScalarProperty Name="CH_ID" ColumnName="CH_ID" />
+          <EntitySetMapping Name="UserProfiles">
+            <EntityTypeMapping TypeName="extract_riskman.UserProfile">
+              <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="FB_o_FBCI_UserFld10" ColumnName="FB_o_FBCI_UserFld10" />
+                <ScalarProperty Name="FB_o_FBCI_UserFld9" ColumnName="FB_o_FBCI_UserFld9" />
+                <ScalarProperty Name="FB_o_FBCI_UserFld8" ColumnName="FB_o_FBCI_UserFld8" />
+                <ScalarProperty Name="FB_o_FBCI_UserFld7" ColumnName="FB_o_FBCI_UserFld7" />
+                <ScalarProperty Name="FB_o_FBCI_UserFld6" ColumnName="FB_o_FBCI_UserFld6" />
+                <ScalarProperty Name="FB_o_FBCI_UserFld5" ColumnName="FB_o_FBCI_UserFld5" />
+                <ScalarProperty Name="FB_o_FBCI_UserFld4" ColumnName="FB_o_FBCI_UserFld4" />
+                <ScalarProperty Name="FB_o_FBCI_UserFld3" ColumnName="FB_o_FBCI_UserFld3" />
+                <ScalarProperty Name="FB_o_FBCI_UserFld2" ColumnName="FB_o_FBCI_UserFld2" />
+                <ScalarProperty Name="FB_o_FBCI_UserFld1" ColumnName="FB_o_FBCI_UserFld1" />
+                <ScalarProperty Name="FB_o_FBCI_PrevRecID3" ColumnName="FB_o_FBCI_PrevRecID3" />
+                <ScalarProperty Name="FB_o_FBCI_LitigationStatus" ColumnName="FB_o_FBCI_LitigationStatus" />
+                <ScalarProperty Name="FB_o_FBCI_Substantiation" ColumnName="FB_o_FBCI_Substantiation" />
+                <ScalarProperty Name="FB_o_FBC_GroupID" ColumnName="FB_o_FBC_GroupID" />
+                <ScalarProperty Name="FB_o_FBCI_ServiceProvidedOth" ColumnName="FB_o_FBCI_ServiceProvidedOth" />
+                <ScalarProperty Name="FB_o_FBCI_ActivityProcDesc" ColumnName="FB_o_FBCI_ActivityProcDesc" />
+                <ScalarProperty Name="FB_o_FBCI_IsPrimaryIssue" ColumnName="FB_o_FBCI_IsPrimaryIssue" />
+                <ScalarProperty Name="FB_o_FBCI_IsAnIncident" ColumnName="FB_o_FBCI_IsAnIncident" />
+                <ScalarProperty Name="FB_o_FBCI_Behave_AgeRange" ColumnName="FB_o_FBCI_Behave_AgeRange" />
+                <ScalarProperty Name="FB_o_FBCI_Behave_Gender" ColumnName="FB_o_FBCI_Behave_Gender" />
+                <ScalarProperty Name="FB_o_FBCI_Behave_Qual" ColumnName="FB_o_FBCI_Behave_Qual" />
+                <ScalarProperty Name="FB_o_FBCI_Behave_RoleName" ColumnName="FB_o_FBCI_Behave_RoleName" />
+                <ScalarProperty Name="FB_o_FBCJ_JournalDescr" ColumnName="FB_o_FBCJ_JournalDescr" />
+                <ScalarProperty Name="FB_o_FBCJ_TheLink" ColumnName="FB_o_FBCJ_TheLink" />
+                <ScalarProperty Name="FB_o_FBCJ_ItemActioned" ColumnName="FB_o_FBCJ_ItemActioned" />
+                <ScalarProperty Name="FB_o_FBCJ_JournalFollowUp" ColumnName="FB_o_FBCJ_JournalFollowUp" />
+                <ScalarProperty Name="FB_o_FBCJ_FollowUpUser" ColumnName="FB_o_FBCJ_FollowUpUser" />
+                <ScalarProperty Name="FB_o_FBCJ_ReceivedFrom" ColumnName="FB_o_FBCJ_ReceivedFrom" />
+                <ScalarProperty Name="FB_o_FBCJ_DateReceived" ColumnName="FB_o_FBCJ_DateReceived" />
+                <ScalarProperty Name="FB_o_FBCJ_SentTo" ColumnName="FB_o_FBCJ_SentTo" />
+                <ScalarProperty Name="FB_o_FBCJ_DateSent" ColumnName="FB_o_FBCJ_DateSent" />
+                <ScalarProperty Name="FB_o_FBCJ_JournalAmount" ColumnName="FB_o_FBCJ_JournalAmount" />
+                <ScalarProperty Name="FB_o_FBCJ_JournalReference" ColumnName="FB_o_FBCJ_JournalReference" />
+                <ScalarProperty Name="FB_o_FBCJ_JournalType" ColumnName="FB_o_FBCJ_JournalType" />
+                <ScalarProperty Name="FB_o_FBCJ_Time" ColumnName="FB_o_FBCJ_Time" />
+                <ScalarProperty Name="FB_o_FBCJ_Date" ColumnName="FB_o_FBCJ_Date" />
+                <ScalarProperty Name="FB_o_FBCI_IssueNotes" ColumnName="FB_o_FBCI_IssueNotes" />
+                <ScalarProperty Name="FB_o_FBCI_CurrentStatus" ColumnName="FB_o_FBCI_CurrentStatus" />
+                <ScalarProperty Name="FB_o_FBCI_ReferralOutcome" ColumnName="FB_o_FBCI_ReferralOutcome" />
+                <ScalarProperty Name="FB_o_FBCI_ReferredTo" ColumnName="FB_o_FBCI_ReferredTo" />
+                <ScalarProperty Name="FB_o_FBCI_ReportedTo" ColumnName="FB_o_FBCI_ReportedTo" />
+                <ScalarProperty Name="FB_o_FBCI_Satisfy" ColumnName="FB_o_FBCI_Satisfy" />
+                <ScalarProperty Name="FB_o_FBCI_Ease" ColumnName="FB_o_FBCI_Ease" />
+                <ScalarProperty Name="FB_o_FBCI_Outcome" ColumnName="FB_o_FBCI_Outcome" />
+                <ScalarProperty Name="FB_o_FBCI_CloseDate" ColumnName="FB_o_FBCI_CloseDate" />
+                <ScalarProperty Name="FB_o_FBCI_OpenDate" ColumnName="FB_o_FBCI_OpenDate" />
+                <ScalarProperty Name="FB_o_FBCI_SACScore" ColumnName="FB_o_FBCI_SACScore" />
+                <ScalarProperty Name="FB_o_FBCI_SACColLabel" ColumnName="FB_o_FBCI_SACColLabel" />
+                <ScalarProperty Name="FB_o_FBCI_SACRowLabel" ColumnName="FB_o_FBCI_SACRowLabel" />
+                <ScalarProperty Name="FB_o_FBCI_SAC" ColumnName="FB_o_FBCI_SAC" />
+                <ScalarProperty Name="FB_o_FBCI_ObjectiveMulti" ColumnName="FB_o_FBCI_ObjectiveMulti" />
+                <ScalarProperty Name="FB_o_FBCI_Objective" ColumnName="FB_o_FBCI_Objective" />
+                <ScalarProperty Name="FB_o_FBCI_ResultedInQIANotes" ColumnName="FB_o_FBCI_ResultedInQIANotes" />
+                <ScalarProperty Name="FB_o_FBCI_ResultedInQIA" ColumnName="FB_o_FBCI_ResultedInQIA" />
+                <ScalarProperty Name="FB_o_FBCI_FileName" ColumnName="FB_o_FBCI_FileName" />
+                <ScalarProperty Name="FB_o_FBCI_Specialty" ColumnName="FB_o_FBCI_Specialty" />
+                <ScalarProperty Name="FB_o_FBCI_Program" ColumnName="FB_o_FBCI_Program" />
+                <ScalarProperty Name="FB_o_FBCI_ClinicalArea" ColumnName="FB_o_FBCI_ClinicalArea" />
+                <ScalarProperty Name="FB_o_FBCI_Location" ColumnName="FB_o_FBCI_Location" />
+                <ScalarProperty Name="FB_o_FBCI_Site" ColumnName="FB_o_FBCI_Site" />
+                <ScalarProperty Name="FB_o_FBCI_Service" ColumnName="FB_o_FBCI_Service" />
+                <ScalarProperty Name="FB_o_FBCI_CreateDate" ColumnName="FB_o_FBCI_CreateDate" />
+                <ScalarProperty Name="FB_o_FBCI_IssueSub" ColumnName="FB_o_FBCI_IssueSub" />
+                <ScalarProperty Name="FB_o_FBCI_Issue" ColumnName="FB_o_FBCI_Issue" />
+                <ScalarProperty Name="FB_o_FBCI_IssueGroup" ColumnName="FB_o_FBCI_IssueGroup" />
+                <ScalarProperty Name="FB_o_FBCI_IssueType" ColumnName="FB_o_FBCI_IssueType" />
+                <ScalarProperty Name="FB_o_FBCI_IssueCode" ColumnName="FB_o_FBCI_IssueCode" />
+                <ScalarProperty Name="FB_o_FBCA_AllocatedDate" ColumnName="FB_o_FBCA_AllocatedDate" />
+                <ScalarProperty Name="FB_o_FBCA_AllocatedTo" ColumnName="FB_o_FBCA_AllocatedTo" />
+                <ScalarProperty Name="FB_o_FBCA_ActionDesc" ColumnName="FB_o_FBCA_ActionDesc" />
+                <ScalarProperty Name="FB_o_FBCA_CompletedOn" ColumnName="FB_o_FBCA_CompletedOn" />
+                <ScalarProperty Name="FB_o_FBCA_ActionComplete" ColumnName="FB_o_FBCA_ActionComplete" />
+                <ScalarProperty Name="FB_o_FBCA_ActionBy" ColumnName="FB_o_FBCA_ActionBy" />
+                <ScalarProperty Name="FB_o_FBCA_Issue" ColumnName="FB_o_FBCA_Issue" />
+                <ScalarProperty Name="FB_o_FBC_Outcome" ColumnName="FB_o_FBC_Outcome" />
+                <ScalarProperty Name="FB_o_FBC_ActualOutcome" ColumnName="FB_o_FBC_ActualOutcome" />
+                <ScalarProperty Name="FB_o_FBC_CompPermToComplainMode" ColumnName="FB_o_FBC_CompPermToComplainMode" />
+                <ScalarProperty Name="FB_o_FBC_CompPermToComplainDate" ColumnName="FB_o_FBC_CompPermToComplainDate" />
+                <ScalarProperty Name="FB_o_FBC_CompPermToComplain" ColumnName="FB_o_FBC_CompPermToComplain" />
+                <ScalarProperty Name="FB_o_FBC_CompPermMedicalInfoMode" ColumnName="FB_o_FBC_CompPermMedicalInfoMode" />
+                <ScalarProperty Name="FB_o_FBC_CompPermMedicalInfoDate" ColumnName="FB_o_FBC_CompPermMedicalInfoDate" />
+                <ScalarProperty Name="FB_o_FBC_CompPermMedicalInfo" ColumnName="FB_o_FBC_CompPermMedicalInfo" />
+                <ScalarProperty Name="FB_o_FBC_ConsumerDeceased" ColumnName="FB_o_FBC_ConsumerDeceased" />
+                <ScalarProperty Name="FB_o_FBC_ConsumerDischargeDate" ColumnName="FB_o_FBC_ConsumerDischargeDate" />
+                <ScalarProperty Name="FB_o_FBC_ConsumerAdmissionDate" ColumnName="FB_o_FBC_ConsumerAdmissionDate" />
+                <ScalarProperty Name="FB_o_FBC_ConsumerType" ColumnName="FB_o_FBC_ConsumerType" />
+                <ScalarProperty Name="FB_o_FBC_ConsumerOrganisation" ColumnName="FB_o_FBC_ConsumerOrganisation" />
+                <ScalarProperty Name="FB_o_FBC_ConsumerStatus" ColumnName="FB_o_FBC_ConsumerStatus" />
+                <ScalarProperty Name="FB_o_FBC_ComplainantOrganisation" ColumnName="FB_o_FBC_ComplainantOrganisation" />
+                <ScalarProperty Name="FB_o_FBC_ComplainantStatus" ColumnName="FB_o_FBC_ComplainantStatus" />
+                <ScalarProperty Name="FB_o_FBC_ResultedInQIANotes" ColumnName="FB_o_FBC_ResultedInQIANotes" />
+                <ScalarProperty Name="FB_o_FBC_ResultedInQIA" ColumnName="FB_o_FBC_ResultedInQIA" />
+                <ScalarProperty Name="FB_o_FBC_FileName" ColumnName="FB_o_FBC_FileName" />
+                <ScalarProperty Name="FB_o_FBC_Specialty" ColumnName="FB_o_FBC_Specialty" />
+                <ScalarProperty Name="FB_o_FBC_Program" ColumnName="FB_o_FBC_Program" />
+                <ScalarProperty Name="FB_o_FBC_ClinicalArea" ColumnName="FB_o_FBC_ClinicalArea" />
+                <ScalarProperty Name="FB_o_FBC_Location" ColumnName="FB_o_FBC_Location" />
+                <ScalarProperty Name="FB_o_FBC_Site" ColumnName="FB_o_FBC_Site" />
+                <ScalarProperty Name="FB_o_FBC_ResponsiblePerson2" ColumnName="FB_o_FBC_ResponsiblePerson2" />
+                <ScalarProperty Name="FB_o_FBC_ResponsiblePerson1" ColumnName="FB_o_FBC_ResponsiblePerson1" />
+                <ScalarProperty Name="FB_o_FBC_ReferredToPosition" ColumnName="FB_o_FBC_ReferredToPosition" />
+                <ScalarProperty Name="FB_o_FBC_ReferredTo" ColumnName="FB_o_FBC_ReferredTo" />
+                <ScalarProperty Name="FB_o_FBC_ReportedToPosition" ColumnName="FB_o_FBC_ReportedToPosition" />
+                <ScalarProperty Name="FB_o_FBC_ReportedTo" ColumnName="FB_o_FBC_ReportedTo" />
+                <ScalarProperty Name="FB_o_FBC_SACScore" ColumnName="FB_o_FBC_SACScore" />
+                <ScalarProperty Name="FB_o_FBC_SACColLabel" ColumnName="FB_o_FBC_SACColLabel" />
+                <ScalarProperty Name="FB_o_FBC_SACRowLabel" ColumnName="FB_o_FBC_SACRowLabel" />
+                <ScalarProperty Name="FB_o_FBC_SAC" ColumnName="FB_o_FBC_SAC" />
+                <ScalarProperty Name="FB_o_FBC_AssocIncNo" ColumnName="FB_o_FBC_AssocIncNo" />
+                <ScalarProperty Name="FB_o_FBC_AssocInc" ColumnName="FB_o_FBC_AssocInc" />
+                <ScalarProperty Name="FB_o_FBC_RefpathID" ColumnName="FB_o_FBC_RefpathID" />
+                <ScalarProperty Name="FB_o_FBC_ReportedYN" ColumnName="FB_o_FBC_ReportedYN" />
+                <ScalarProperty Name="FB_o_FBC_InsurerNotifMode" ColumnName="FB_o_FBC_InsurerNotifMode" />
+                <ScalarProperty Name="FB_o_FBC_InsurerNotifDate" ColumnName="FB_o_FBC_InsurerNotifDate" />
+                <ScalarProperty Name="FB_o_FBC_InsurerNotifReq" ColumnName="FB_o_FBC_InsurerNotifReq" />
+                <ScalarProperty Name="FB_o_FBC_Details" ColumnName="FB_o_FBC_Details" />
+                <ScalarProperty Name="FB_o_FBC_Summary" ColumnName="FB_o_FBC_Summary" />
+                <ScalarProperty Name="FB_o_FBC_FirstFormalDate" ColumnName="FB_o_FBC_FirstFormalDate" />
+                <ScalarProperty Name="FB_o_FBC_CloseDate" ColumnName="FB_o_FBC_CloseDate" />
+                <ScalarProperty Name="FB_o_FBC_OpenDate" ColumnName="FB_o_FBC_OpenDate" />
+                <ScalarProperty Name="FB_o_FBC_AckDate" ColumnName="FB_o_FBC_AckDate" />
+                <ScalarProperty Name="FB_o_FBC_CreateDate" ColumnName="FB_o_FBC_CreateDate" />
+                <ScalarProperty Name="FB_o_FBC_ModeReceived" ColumnName="FB_o_FBC_ModeReceived" />
+                <ScalarProperty Name="FB_o_FBC_RecDate" ColumnName="FB_o_FBC_RecDate" />
+                <ScalarProperty Name="FB_o_FBC_ConsumerID" ColumnName="FB_o_FBC_ConsumerID" />
+                <ScalarProperty Name="FB_o_FBC_Relationship" ColumnName="FB_o_FBC_Relationship" />
+                <ScalarProperty Name="FB_o_FBC_ComplainantID" ColumnName="FB_o_FBC_ComplainantID" />
+                <ScalarProperty Name="FB_o_FBC_FormalityLevel" ColumnName="FB_o_FBC_FormalityLevel" />
+                <ScalarProperty Name="FB_o_FBC_DocType" ColumnName="FB_o_FBC_DocType" />
+                <ScalarProperty Name="FB_o_Cons_Interpreter" ColumnName="FB_o_Cons_Interpreter" />
+                <ScalarProperty Name="FB_o_Cons_PrimaryLanguage" ColumnName="FB_o_Cons_PrimaryLanguage" />
+                <ScalarProperty Name="FB_o_Cons_AboriginalType" ColumnName="FB_o_Cons_AboriginalType" />
+                <ScalarProperty Name="FB_o_Cons_Country" ColumnName="FB_o_Cons_Country" />
+                <ScalarProperty Name="FB_o_Cons_DOB" ColumnName="FB_o_Cons_DOB" />
+                <ScalarProperty Name="FB_o_Cons_Gender" ColumnName="FB_o_Cons_Gender" />
+                <ScalarProperty Name="FB_o_Cons_MRN" ColumnName="FB_o_Cons_MRN" />
+                <ScalarProperty Name="FB_o_Cons_Email" ColumnName="FB_o_Cons_Email" />
+                <ScalarProperty Name="FB_o_Cons_Fax" ColumnName="FB_o_Cons_Fax" />
+                <ScalarProperty Name="FB_o_Cons_MPhone" ColumnName="FB_o_Cons_MPhone" />
+                <ScalarProperty Name="FB_o_Cons_WPhone" ColumnName="FB_o_Cons_WPhone" />
+                <ScalarProperty Name="FB_o_Cons_HPhone" ColumnName="FB_o_Cons_HPhone" />
+                <ScalarProperty Name="FB_o_Cons_Postcode" ColumnName="FB_o_Cons_Postcode" />
+                <ScalarProperty Name="FB_o_Cons_State" ColumnName="FB_o_Cons_State" />
+                <ScalarProperty Name="FB_o_Cons_Suburb" ColumnName="FB_o_Cons_Suburb" />
+                <ScalarProperty Name="FB_o_Cons_Address2" ColumnName="FB_o_Cons_Address2" />
+                <ScalarProperty Name="FB_o_Cons_Address1" ColumnName="FB_o_Cons_Address1" />
+                <ScalarProperty Name="FB_o_Cons_Title" ColumnName="FB_o_Cons_Title" />
+                <ScalarProperty Name="FB_o_Cons_Firstname" ColumnName="FB_o_Cons_Firstname" />
+                <ScalarProperty Name="FB_o_Cons_Surname" ColumnName="FB_o_Cons_Surname" />
+                <ScalarProperty Name="FB_o_Comp_Interpreter" ColumnName="FB_o_Comp_Interpreter" />
+                <ScalarProperty Name="FB_o_Comp_PrimaryLanguage" ColumnName="FB_o_Comp_PrimaryLanguage" />
+                <ScalarProperty Name="FB_o_Comp_AboriginalType" ColumnName="FB_o_Comp_AboriginalType" />
+                <ScalarProperty Name="FB_o_Comp_Country" ColumnName="FB_o_Comp_Country" />
+                <ScalarProperty Name="FB_o_Comp_DOB" ColumnName="FB_o_Comp_DOB" />
+                <ScalarProperty Name="FB_o_Comp_Gender" ColumnName="FB_o_Comp_Gender" />
+                <ScalarProperty Name="FB_o_Comp_MRN" ColumnName="FB_o_Comp_MRN" />
+                <ScalarProperty Name="FB_o_Comp_Email" ColumnName="FB_o_Comp_Email" />
+                <ScalarProperty Name="FB_o_Comp_Fax" ColumnName="FB_o_Comp_Fax" />
+                <ScalarProperty Name="FB_o_Comp_MPhone" ColumnName="FB_o_Comp_MPhone" />
+                <ScalarProperty Name="FB_o_Comp_WPhone" ColumnName="FB_o_Comp_WPhone" />
+                <ScalarProperty Name="FB_o_Comp_HPhone" ColumnName="FB_o_Comp_HPhone" />
+                <ScalarProperty Name="FB_o_Comp_Postcode" ColumnName="FB_o_Comp_Postcode" />
+                <ScalarProperty Name="FB_o_Comp_State" ColumnName="FB_o_Comp_State" />
+                <ScalarProperty Name="FB_o_Comp_Suburb" ColumnName="FB_o_Comp_Suburb" />
+                <ScalarProperty Name="FB_o_Comp_Address2" ColumnName="FB_o_Comp_Address2" />
+                <ScalarProperty Name="FB_o_Comp_Address1" ColumnName="FB_o_Comp_Address1" />
+                <ScalarProperty Name="FB_o_Comp_Title" ColumnName="FB_o_Comp_Title" />
+                <ScalarProperty Name="FB_o_Comp_Firstname" ColumnName="FB_o_Comp_Firstname" />
+                <ScalarProperty Name="FB_o_Comp_Surname" ColumnName="FB_o_Comp_Surname" />
+                <ScalarProperty Name="FB_HideJournals" ColumnName="FB_HideJournals" />
+                <ScalarProperty Name="FB_HideActions" ColumnName="FB_HideActions" />
+                <ScalarProperty Name="FB_HideIssues" ColumnName="FB_HideIssues" />
+                <ScalarProperty Name="FB_HideDetails" ColumnName="FB_HideDetails" />
+                <ScalarProperty Name="FB_HideConsumer" ColumnName="FB_HideConsumer" />
+                <ScalarProperty Name="FB_HideComplainant" ColumnName="FB_HideComplainant" />
+                <ScalarProperty Name="FB_Permissions_Journals" ColumnName="FB_Permissions_Journals" />
+                <ScalarProperty Name="FB_Permissions_Issues" ColumnName="FB_Permissions_Issues" />
+                <ScalarProperty Name="FB_Permissions_Actions" ColumnName="FB_Permissions_Actions" />
+                <ScalarProperty Name="FB_Permissions_FeedbackTwo" ColumnName="FB_Permissions_FeedbackTwo" />
+                <ScalarProperty Name="FB_Permissions_Feedback" ColumnName="FB_Permissions_Feedback" />
+                <ScalarProperty Name="FB_JournalRestrictions" ColumnName="FB_JournalRestrictions" />
+                <ScalarProperty Name="FB_UserType" ColumnName="FB_UserType" />
+                <ScalarProperty Name="Permissions5" ColumnName="Permissions5" />
+                <ScalarProperty Name="Permissions4" ColumnName="Permissions4" />
+                <ScalarProperty Name="Permissions3" ColumnName="Permissions3" />
+                <ScalarProperty Name="Permissions2" ColumnName="Permissions2" />
+                <ScalarProperty Name="Permissions" ColumnName="Permissions" />
+                <ScalarProperty Name="RP_Specialty" ColumnName="RP_Specialty" />
+                <ScalarProperty Name="RP_Program" ColumnName="RP_Program" />
+                <ScalarProperty Name="RP_ClinicalArea" ColumnName="RP_ClinicalArea" />
+                <ScalarProperty Name="RP_Location" ColumnName="RP_Location" />
+                <ScalarProperty Name="RP_Site" ColumnName="RP_Site" />
+                <ScalarProperty Name="USR_Location" ColumnName="USR_Location" />
+                <ScalarProperty Name="USR_Site" ColumnName="USR_Site" />
+                <ScalarProperty Name="PrimaryLocation" ColumnName="PrimaryLocation" />
+                <ScalarProperty Name="PrimarySite" ColumnName="PrimarySite" />
+                <ScalarProperty Name="UsersSettings" ColumnName="UsersSettings" />
+                <ScalarProperty Name="DefaultPage" ColumnName="DefaultPage" />
+                <ScalarProperty Name="ExpiryDate" ColumnName="ExpiryDate" />
+                <ScalarProperty Name="DateDeleted" ColumnName="DateDeleted" />
+                <ScalarProperty Name="DateEntered" ColumnName="DateEntered" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="LDAP_Status" ColumnName="LDAP_Status" />
+                <ScalarProperty Name="LDAP_Site" ColumnName="LDAP_Site" />
+                <ScalarProperty Name="LDAP_DN" ColumnName="LDAP_DN" />
+                <ScalarProperty Name="LDAP_Username" ColumnName="LDAP_Username" />
+                <ScalarProperty Name="PagerNumber" ColumnName="PagerNumber" />
+                <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Email2" ColumnName="Email2" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserPosition" ColumnName="UserPosition" />
+                <ScalarProperty Name="PasswordBadIP" ColumnName="PasswordBadIP" />
+                <ScalarProperty Name="PasswordBadAttempts" ColumnName="PasswordBadAttempts" />
+                <ScalarProperty Name="PasswordDoesntExpire" ColumnName="PasswordDoesntExpire" />
+                <ScalarProperty Name="PasswordLastChanged" ColumnName="PasswordLastChanged" />
+                <ScalarProperty Name="PreviousPassword" ColumnName="PreviousPassword" />
+                <ScalarProperty Name="PasswordEncrypted" ColumnName="PasswordEncrypted" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="isTemplate" ColumnName="isTemplate" />
+                <ScalarProperty Name="UserDisplayName" ColumnName="UserDisplayName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="FRM_BATCH">
-            <EntityTypeMapping TypeName="extract_riskman.FRM_BATCH">
-              <MappingFragment StoreEntitySet="FRM_BATCH">
-                <ScalarProperty Name="SavedBy" ColumnName="SavedBy" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <EntitySetMapping Name="vwsf_preventativecorrectiveaction">
+            <EntityTypeMapping TypeName="extract_riskman.vwsf_preventativecorrectiveaction">
+              <MappingFragment StoreEntitySet="vwsf_preventativecorrectiveaction">
+                <ScalarProperty Name="PCAActComDate" ColumnName="PCAActComDate" />
+                <ScalarProperty Name="PCAPrevCorActNotCompleted" ColumnName="PCAPrevCorActNotCompleted" />
+                <ScalarProperty Name="PCAPrevCorActCompleted" ColumnName="PCAPrevCorActCompleted" />
+                <ScalarProperty Name="PCAActImpDate" ColumnName="PCAActImpDate" />
+                <ScalarProperty Name="PCAOverdueFollowUp" ColumnName="PCAOverdueFollowUp" />
+                <ScalarProperty Name="PCANotif" ColumnName="PCANotif" />
+                <ScalarProperty Name="PCAImpRespMgr" ColumnName="PCAImpRespMgr" />
+                <ScalarProperty Name="PCAImpRespMgr_name" ColumnName="PCAImpRespMgr_name" />
+                <ScalarProperty Name="PCAImpRespPer" ColumnName="PCAImpRespPer" />
+                <ScalarProperty Name="PCAImpRespPer_name" ColumnName="PCAImpRespPer_name" />
+                <ScalarProperty Name="PCAPrevCorActOth" ColumnName="PCAPrevCorActOth" />
+                <ScalarProperty Name="PCAPrevCorAct" ColumnName="PCAPrevCorAct" />
                 <ScalarProperty Name="RecordID" ColumnName="RecordID" />
-                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="FRM_DATA">
-            <EntityTypeMapping TypeName="extract_riskman.FRM_DATA">
-              <MappingFragment StoreEntitySet="FRM_DATA">
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="ValueBit" ColumnName="ValueBit" />
-                <ScalarProperty Name="ValueNumber" ColumnName="ValueNumber" />
-                <ScalarProperty Name="ValueDate" ColumnName="ValueDate" />
-                <ScalarProperty Name="ValueString" ColumnName="ValueString" />
-                <ScalarProperty Name="FieldName" ColumnName="FieldName" />
-                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
-                <ScalarProperty Name="DataID" ColumnName="DataID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="FRM_RECORD">
-            <EntityTypeMapping TypeName="extract_riskman.FRM_RECORD">
-              <MappingFragment StoreEntitySet="FRM_RECORD">
-                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
-                <ScalarProperty Name="FormName" ColumnName="FormName" />
-                <ScalarProperty Name="KeySequence" ColumnName="KeySequence" />
-                <ScalarProperty Name="KeyData" ColumnName="KeyData" />
-                <ScalarProperty Name="RecordID" ColumnName="RecordID" />
+                <ScalarProperty Name="keydata" ColumnName="keydata" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
