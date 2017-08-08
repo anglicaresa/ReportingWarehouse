@@ -1,6 +1,8 @@
 ﻿------------
 -- EXTRACT
 ------------
+use dwhb;
+GO
 -- riskman -> DWHB.extract_riskman 
 insert into [management].[job_control] values ((select table_key from [management].[table_dim] where table_name = 'angcare_ifr' and [schema] = 'dbo' and [system] = 'riskman'), 'YES', (select table_key from [management].[table_dim] where table_name = 'angcare_ifr' and [schema] = 'extract_riskman' and [system] = 'dwh'), (select package_key from [management].[package_dim] where package_name = 'EXTRACT' and sub_system = 'Extract system'),1,'daily');
 insert into [management].[job_control] values ((select table_key from [management].[table_dim] where table_name = 'ch_ifr' and [schema] = 'dbo' and [system] = 'riskman'), 'YES', (select table_key from [management].[table_dim] where table_name = 'ch_ifr' and [schema] = 'extract_riskman' and [system] = 'dwh'), (select package_key from [management].[package_dim] where package_name = 'EXTRACT' and sub_system = 'Extract system'),1,'daily');
