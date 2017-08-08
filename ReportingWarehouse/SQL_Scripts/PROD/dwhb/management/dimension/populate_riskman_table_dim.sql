@@ -1,7 +1,8 @@
 ﻿-------------------
 -- PROD environment
 -------------------
-
+use dwhb;
+GO
 -- schema: riskman source data
 INSERT INTO [management].[TABLE_DIM] VALUES ('angcare_ifr', 'riskman', 'dbo', 'Riskman', 'ted');
 INSERT INTO [management].[TABLE_DIM] VALUES ('ch_ifr', 'riskman', 'dbo', 'Riskman', 'ted');
@@ -43,6 +44,10 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('person_dim', 'dwh', 'conform_riskm
 INSERT INTO [management].[TABLE_DIM] VALUES ('portfolio_dim', 'dwh', 'conform_riskman', 'dwhb', 'AZ-SQLBI01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('program_dim', 'dwh', 'conform_riskman', 'dwhb', 'AZ-SQLBI01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('service_stream_dim', 'dwh', 'conform_riskman', 'dwhb', 'AZ-SQLBI01');
+
+INSERT INTO [management].[TABLE_DIM] VALUES ('prgram_map_CustomerSite', 'dwh', 'conform_riskman', 'dwhb', 'AZ-SQLBI01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('program_mapping', 'dwh', 'conform_riskman', 'dwhb', 'AZ-SQLBI01');
+
 
 -- schema: riskman
 INSERT INTO [management].[TABLE_DIM] VALUES ('action_dim', 'dwh', 'riskman', 'dwhf_riskman', 'AZ-SQLBI01');

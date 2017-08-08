@@ -253,13 +253,14 @@
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="nvarchar" MaxLength="1" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DWHB.conform_riskman.prgram_map_CustomerSite' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
         <EntityType Name="prgram_map_CustomerSite">
-          <Property Name="CustomerSite" Type="nvarchar" MaxLength="255" />
+          <Key>
+            <PropertyRef Name="CustomerSite" />
+          </Key>
+          <Property Name="CustomerSite" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Record Number" Type="float" />
           <Property Name="T1-Program" Type="nvarchar" MaxLength="255" />
-        </EntityType>-->
+        </EntityType>
         <EntityType Name="program_dim">
           <Key>
             <PropertyRef Name="program_key" />
@@ -301,21 +302,6 @@ warning 6013: The table/view 'DWHB.conform_riskman.prgram_map_CustomerSite' does
           <Property Name="program_name" Type="varchar" MaxLength="50" />
           <Property Name="program_key" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DWHB.conform_riskman.program_mapping_20170525' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="program_mapping_20170525">
-          <Property Name="RiskmanCustomerService" Type="nvarchar" MaxLength="255" />
-          <Property Name="MapsToT1" Type="nvarchar" MaxLength="255" />
-          <Property Name="Type" Type="nvarchar" MaxLength="255" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DWHB.conform_riskman.program_mapping_temp' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="program_mapping_temp">
-          <Property Name="site" Type="nvarchar" MaxLength="255" />
-          <Property Name="incident_location" Type="nvarchar" MaxLength="255" />
-          <Property Name="T1-Program" Type="nvarchar" MaxLength="255" />
-          <Property Name="program_key" Type="int" />
-        </EntityType>-->
         <EntityType Name="service_stream_dim">
           <Key>
             <PropertyRef Name="service_stream_key" />
@@ -545,6 +531,7 @@ warning 6013: The table/view 'DWHB.conform_riskman.program_mapping_temp' does no
           <EntitySet Name="incident_type_fact" EntityType="Self.incident_type_fact" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="person_dim" EntityType="Self.person_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" Schema="conform_riskman" store:Type="Tables" />
+          <EntitySet Name="prgram_map_CustomerSite" EntityType="Self.prgram_map_CustomerSite" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="program_mapping" EntityType="Self.program_mapping" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_riskman" store:Type="Tables" />
@@ -703,6 +690,7 @@ warning 6013: The table/view 'DWHB.conform_riskman.program_mapping_temp' does no
             <End Role="incident_type_dim" EntitySet="incident_type_dim" />
             <End Role="incident_type_fact" EntitySet="incident_type_fact" />
           </AssociationSet>
+          <EntitySet Name="prgram_map_CustomerSite" EntityType="conform_riskman_conceptual.prgram_map_CustomerSite" />
         </EntityContainer>
         <EntityType Name="date_dim">
           <Key>
@@ -1245,6 +1233,14 @@ warning 6013: The table/view 'DWHB.conform_riskman.program_mapping_temp' does no
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="prgram_map_CustomerSite">
+          <Key>
+            <PropertyRef Name="CustomerSite" />
+          </Key>
+          <Property Name="CustomerSite" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Record_Number" Type="Double" />
+          <Property Name="T1_Program" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1566,6 +1562,15 @@ warning 6013: The table/view 'DWHB.conform_riskman.program_mapping_temp' does no
                 <ScalarProperty Name="table1" ColumnName="table1" />
                 <ScalarProperty Name="system" ColumnName="system" />
                 <ScalarProperty Name="program_mapping_key" ColumnName="program_mapping_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="prgram_map_CustomerSite">
+            <EntityTypeMapping TypeName="conform_riskman_conceptual.prgram_map_CustomerSite">
+              <MappingFragment StoreEntitySet="prgram_map_CustomerSite">
+                <ScalarProperty Name="T1_Program" ColumnName="T1-Program" />
+                <ScalarProperty Name="Record_Number" ColumnName="Record Number" />
+                <ScalarProperty Name="CustomerSite" ColumnName="CustomerSite" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
