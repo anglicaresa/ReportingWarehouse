@@ -1,4 +1,7 @@
-﻿ select  d1.[system], d1.[schema] source_schema, d1.[table_name] source_table, d2.[schema] dest_schema, d2.[table_name] dest_table,  d3.package_name, t1.[priority]
+﻿use dwhb;
+go
+
+ select  d1.[system], d1.[schema] source_schema, d1.[table_name] source_table, d2.[schema] dest_schema, d2.[table_name] dest_table,  d3.package_name, t1.[priority]
   from management.job_control t1
   ,management.table_dim d1
   ,management.table_dim d2
