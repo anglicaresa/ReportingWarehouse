@@ -1,5 +1,8 @@
-﻿-- get the ETL jobs run log history from dwhb.etl_process_fact table and dim tables
-select t1.etl_process_key
+﻿use dwhb
+go
+
+-- get the ETL jobs run log history from dwhb.etl_process_fact table and dim tables
+select top 1000 t1.etl_process_key
 ,t6.full_date
 ,t2.batch_type
 ,t3.table_name as 'Destination_Table'
@@ -18,4 +21,4 @@ and t1.table_key=t3.table_key
 and t1.status_key=t4.status_key
 and t1.package_key=t5.package_key
 and t1.date_key=t6.date_key
-order by t1.batch_key asc 
+order by t1.cdc_date_time desc, t1.batch_key asc 
