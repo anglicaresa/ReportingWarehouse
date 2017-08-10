@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - PROD"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="610"
-  DTS:VersionGUID="{3C95006C-53FC-412D-B19C-0670614FC55A}">
+  DTS:VersionBuild="611"
+  DTS:VersionGUID="{066A6ABC-9A62-4554-86EC-72545CCDD155}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">8/10/2017 2:33:53 PM</DTS:VariableValue>
+        DTS:DataType="7">8/11/2017 9:06:59 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">8/10/2017 2:33:53 PM</DTS:VariableValue>
+        DTS:DataType="7">8/11/2017 9:06:59 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">8/10/2017 2:33:53 PM</DTS:VariableValue>
+        DTS:DataType="7">8/11/2017 9:06:59 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -564,7 +564,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{B5E46C99-99F6-4442-BC4D-22FCC2FD0263}"
-                  SQLTask:SqlStatementSource="truncate table  [conform].[employee_payment_summary_fact];&#xA;&#xA;insert into [conform].[employee_payment_summary_fact]&#xA;select &#xA;(select portfolio_key from conform.portfolio_dim where current_row_indicator='Y' and portfolio_name ='No Portfolio'), -- default one&#xA;(select service_stream_key from conform.service_stream_dim where current_row_indicator='Y' and service_stream_name ='No Service Stream'), -- default one&#xA;(select program_key from conform.program_dim where current_row_indicator='Y' and program_name ='No Program'), -- default one&#xA;(select position_key from conform.position_dim where current_row_indicator='Y' and position_name ='No Position'), -- default one&#xA;(select employee_key from conform.employee_dim where current_row_indicator='Y' and given_name ='-'), -- default one  ,&#xA;t1.EMPLOYEE_ID ,&#xA;(select preferred_name from conform.employee_dim where current_row_indicator='Y' and given_name ='-'), -- default one&#xA;d1.date_key,&#xA;sum(t1.period_amount),&#xA;1&#xA;from [DWHB].[extract].[HRPAY_PAYITEMS_SUMMPMNT]  as t1&#xA;inner join conform.date_dim as d1&#xA;on t1.PAY_PERIOD_ENDDATE=d1.full_date&#xA;where t1.PAY_COMPONENT_DEF&lt;800&#xA;and t1.PAYMENT_TYPE='P'&#xA;group by t1.EMPLOYEE_ID , d1.date_key&#xA;&#xA;--update employee_key, postion_key, org_keys based on employee's primary position&#xA;update t1&#xA;set   t1.employee_key= t2.employee_key,&#xA;      t1.position_key= t2.position_key,&#xA;   t1.program_key = t2.program_key,&#xA;   t1.service_stream_key = t2.service_stream_key,&#xA;   t1.portfolio_key = t2. portfolio_key&#xA;from  [conform].[employee_payment_summary_fact] as t1&#xA;inner join conform.employee_temp as t2&#xA;on t1.employee_id=t2.id_number&#xA;and t2.primary_position_flag='p'&#xA;&#xA;--update full_name for active employee&#xA; update t1&#xA;set   t1.employee_name = t2.preferred_name+' '+t2.family_name&#xA;from  [conform].[employee_payment_summary_fact] as t1&#xA;inner join conform.employee_dim as t2&#xA;on t1.employee_id=t2.id_number&#xA;and t2.current_row_indicator='Y'&#xA;&#xA;--update full_name from terminated employee&#xA;  update t1&#xA;set   t1.employee_name = t2.preferred_name+' '+t2.family_name&#xA;from  [conform].[employee_payment_summary_fact] as t1&#xA;inner join conform.employee_dim as t2&#xA;on t1.employee_id=t2.id_number&#xA;and t2.current_row_indicator='N'&#xA;&#xA;--truncate table dwhf.hris.[employee_payment_summary_fact]&#xA; truncate table dwhf.hris.[employee_payment_summary_fact]&#xA;&#xA; insert into  dwhf.hris.[employee_payment_summary_fact]&#xA; select * from  [conform].[employee_payment_summary_fact]&#xA;&#xA; --truncate table in dwhf_comcare&#xA; truncate table dwhf_comcare.comcare.[employee_payment_summary_fact]&#xA;  insert into  dwhf_comcare.comcare.employee_payment_summary_fact&#xA; select * from  [conform].[employee_payment_summary_fact]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="truncate table  [conform].[employee_payment_summary_fact];&#xA;&#xA;insert into [conform].[employee_payment_summary_fact]&#xA;select &#xA;(select portfolio_key from conform.portfolio_dim where current_row_indicator='Y' and portfolio_name ='No Portfolio'), -- default one&#xA;(select service_stream_key from conform.service_stream_dim where current_row_indicator='Y' and service_stream_name ='No Service Stream'), -- default one&#xA;(select program_key from conform.program_dim where current_row_indicator='Y' and program_name ='No Program'), -- default one&#xA;(select position_key from conform.position_dim where current_row_indicator='Y' and position_name ='No Position'), -- default one&#xA;(select employee_key from conform.employee_dim where current_row_indicator='Y' and given_name ='-'), -- default one  ,&#xA;t1.EMPLOYEE_ID ,&#xA;(select preferred_name from conform.employee_dim where current_row_indicator='Y' and given_name ='-'), -- default one&#xA;d1.date_key,&#xA;sum(t1.period_amount),&#xA;1&#xA;from [DWHB].[extract].[HRPAY_PAYITEMS_SUMMPMNT]  as t1&#xA;inner join conform.date_dim as d1&#xA;on t1.PAY_PERIOD_ENDDATE=d1.full_date&#xA;where t1.PAY_COMPONENT_DEF&lt;800&#xA;and t1.PAYMENT_TYPE='P'&#xA;group by t1.EMPLOYEE_ID , d1.date_key&#xA;&#xA;--update employee_key, postion_key, org_keys based on employee's primary position&#xA;update t1&#xA;set   t1.employee_key= t2.employee_key,&#xA;      t1.position_key= t2.position_key,&#xA;   t1.program_key = t2.program_key,&#xA;   t1.service_stream_key = t2.service_stream_key,&#xA;   t1.portfolio_key = t2. portfolio_key&#xA;from  [conform].[employee_payment_summary_fact] as t1&#xA;inner join conform.employee_temp as t2&#xA;on t1.employee_id=t2.id_number&#xA;and t2.primary_position_flag='p'&#xA;&#xA;--update full_name for active employee&#xA; update t1&#xA;set   t1.employee_name = t2.preferred_name+' '+t2.family_name&#xA;from  [conform].[employee_payment_summary_fact] as t1&#xA;inner join conform.employee_dim as t2&#xA;on t1.employee_id=t2.id_number&#xA;and t2.current_row_indicator='Y'&#xA;&#xA;--update full_name from terminated employee&#xA;  update t1&#xA;set   t1.employee_name = t2.preferred_name+' '+t2.family_name&#xA;from  [conform].[employee_payment_summary_fact] as t1&#xA;inner join conform.employee_dim as t2&#xA;on t1.employee_id=t2.id_number&#xA;and t2.current_row_indicator='N'&#xA;&#xA;--truncate table dwhf.hris.[employee_payment_summary_fact]&#xA; truncate table dwhf.hris.[employee_payment_summary_fact]&#xA;&#xA;-- insert into  dwhf.hris.[employee_payment_summary_fact]&#xA; --select * from  [conform].[employee_payment_summary_fact]&#xA;&#xA; --truncate table in dwhf_comcare&#xA; truncate table dwhf_comcare.comcare.[employee_payment_summary_fact]&#xA;  insert into  dwhf_comcare.comcare.employee_payment_summary_fact&#xA; select * from  [conform].[employee_payment_summary_fact]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -14989,6 +14989,69 @@ where employee_key=? </property>
           TopLeft="13.0000000000011,8464.5" />
         <NodeLayout
           Size="206,42"
+          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact\EST - Write Job Finish info"
+          TopLeft="31.0587121212121,263.090909090908" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact\EST - Write Job Start info"
+          TopLeft="45.9375,15" />
+        <NodeLayout
+          Size="168,42"
+          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact\Update data"
+          TopLeft="57.6041666666666,129.757575757578" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact.PrecedenceConstraints[Constraint]"
+          TopLeft="144.020833333333,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,72.7575757575778"
+              Start="0,0"
+              End="0,65.2575757575778">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,65.2575757575778" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="137.831439393939,171.757575757578">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,91.3333333333302"
+              Start="0,0"
+              End="0,83.8333333333302">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,83.8333333333302" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="77"
+          IsExpanded="True"
+          PanelSize="345,360"
+          Size="345,437"
+          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact"
+          TopLeft="13.0000000000014,10817.5" />
+        <NodeLayout
+          Size="206,42"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\EST - Write Job Finish info"
           TopLeft="47.0587121212121,229.090909090908" />
         <NodeLayout
@@ -17953,6 +18016,30 @@ where employee_key=? </property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 24]"
+          TopLeft="185.500000000001,10757.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
           TopLeft="185.5,3690.5">
           <EdgeLayout.Curve>
@@ -18120,93 +18207,6 @@ where employee_key=? </property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="206,42"
-          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact\EST - Write Job Finish info"
-          TopLeft="31.0587121212121,263.090909090908" />
-        <NodeLayout
-          Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact\EST - Write Job Start info"
-          TopLeft="45.9375,15" />
-        <NodeLayout
-          Size="168,42"
-          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact\Update data"
-          TopLeft="57.6041666666666,129.757575757578" />
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact.PrecedenceConstraints[Constraint]"
-          TopLeft="144.020833333333,57">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,72.7575757575778"
-              Start="0,0"
-              End="0,65.2575757575778">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,65.2575757575778" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact.PrecedenceConstraints[Constraint 2]"
-          TopLeft="137.831439393939,171.757575757578">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,91.3333333333302"
-              Start="0,0"
-              End="0,83.8333333333302">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,83.8333333333302" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="77"
-          IsExpanded="True"
-          PanelSize="345,360"
-          Size="345,437"
-          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact"
-          TopLeft="13.0000000000014,10817.5" />
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 24]"
-          TopLeft="185.500000000001,10757.5">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,60"
-              Start="0,0"
-              End="0,52.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,52.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
@@ -18237,6 +18237,18 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\employee_last_paid_date_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\employee_payment_summary_fact.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
@@ -18293,7 +18305,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - Delete">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="343,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - Delete\OLE DB Source - Get data from employee_position_fact"
@@ -18311,7 +18323,7 @@ where employee_key=? </property>
           TopLeft="508.25,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="0,50.5">
@@ -18325,7 +18337,9 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -18333,7 +18347,7 @@ where employee_key=? </property>
           TopLeft="508,285">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,90"
               Start="0,0"
               End="0,82.5">
@@ -20358,18 +20372,6 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
-          TopLeft="448,222" />
-      </GraphLayout>
-    </LayoutInfo>
-  </DtsEventHandler>
-  <DtsEventHandler
-    design-time-name="Package\Sequence Container - Fact Tables\employee_payment_summary_fact.EventHandlers[OnError]">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
-        <NodeLayout
-          Size="264,42"
-          Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
