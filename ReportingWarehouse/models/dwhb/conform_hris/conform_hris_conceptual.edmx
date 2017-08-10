@@ -419,6 +419,22 @@
           <Property Name="posted_ind" Type="varchar" MaxLength="1" />
           <Property Name="count" Type="int" />
         </EntityType>
+        <EntityType Name="employee_payment_summary_fact">
+          <Key>
+            <PropertyRef Name="employee_payment_key" />
+          </Key>
+          <Property Name="employee_payment_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="position_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="employee_id" Type="int" Nullable="false" />
+          <Property Name="employee_name" Type="varchar" MaxLength="50" />
+          <Property Name="pay_period_date_key" Type="int" Nullable="false" />
+          <Property Name="period_amount" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="count" Type="int" />
+        </EntityType>
         <EntityType Name="employee_position_fact">
           <Key>
             <PropertyRef Name="employee_position_key" />
@@ -587,6 +603,46 @@
           <Property Name="comments" Type="varchar" MaxLength="500" />
           <Property Name="count" Type="int" />
           <Property Name="status" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="employee_work_pattern_payroll">
+          <Property Name="roster_code" Type="varchar" MaxLength="10" />
+          <Property Name="day_number" Type="int" />
+          <Property Name="shift_code" Type="varchar" MaxLength="10" />
+          <Property Name="clock_in_time" Type="datetime" />
+          <Property Name="clock_out_time" Type="datetime" />
+          <Property Name="roster_desc" Type="varchar" MaxLength="50" />
+          <Property Name="rotation_no_days" Type="int" />
+          <Property Name="roster_start_date" Type="datetime" />
+          <Property Name="id_number" Type="int" />
+          <Property Name="position_code" Type="varchar" MaxLength="10" />
+          <Property Name="job_pos_title" Type="varchar" MaxLength="50" />
+          <Property Name="position_type_ind" Type="varchar" MaxLength="1" />
+          <Property Name="position_effective_date" Type="datetime" />
+          <Property Name="map_date" Type="datetime" />
+          <Property Name="days_rosterstartdate_pps" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="timesheet_date" Type="datetime" />
+          <Property Name="weekday" Type="varchar" MaxLength="30" />
+          <Property Name="payperiod_start_day" Type="varchar" MaxLength="10" />
+          <Property Name="employee_name" Type="varchar" MaxLength="50" />
+        </EntityType>-->
+        <EntityType Name="employee_working_hours_fact">
+          <Key>
+            <PropertyRef Name="employee_working_hours_key" />
+          </Key>
+          <Property Name="employee_working_hours_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="position_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="date_key" Type="int" Nullable="false" />
+          <Property Name="leave_type_key" Type="int" Nullable="false" />
+          <Property Name="payment_type_key" Type="int" Nullable="false" />
+          <Property Name="working_hours" Type="decimal" Precision="4" Scale="2" />
+          <Property Name="paid_leave_hours" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="unpaid_leave_hours" Type="decimal" Precision="18" Scale="6" />
         </EntityType>
         <EntityType Name="item_dim">
           <Key>
@@ -850,6 +906,31 @@
           <Property Name="sub_program_key" Type="int" />
           <Property Name="sub_program_code" Type="varchar" MaxLength="20" />
           <Property Name="program_code" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="timesheet_validation_fact">
+          <Key>
+            <PropertyRef Name="timesheet_validation_key" />
+          </Key>
+          <Property Name="timesheet_validation_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="position_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="manager_key" Type="int" Nullable="false" />
+          <Property Name="manager_position_key" Type="int" Nullable="false" />
+          <Property Name="activity_date_key" Type="int" Nullable="false" />
+          <Property Name="validation_type" Type="varchar" MaxLength="50" />
+          <Property Name="activity1_start_time" Type="time" Precision="7" Nullable="false" />
+          <Property Name="activity1_end_time" Type="time" Precision="7" Nullable="false" />
+          <Property Name="activity1_cost_centre" Type="varchar" MaxLength="10" />
+          <Property Name="activity1_activity_code" Type="varchar" MaxLength="10" />
+          <Property Name="activity1_activity_desc" Type="varchar" MaxLength="50" />
+          <Property Name="activity2_start_time" Type="time" Precision="7" />
+          <Property Name="activity2_end_time" Type="time" Precision="7" />
+          <Property Name="activity2_cost_centre" Type="varchar" MaxLength="10" />
+          <Property Name="activity2_activity_code" Type="varchar" MaxLength="10" />
+          <Property Name="activity2_activity_desc" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="work_pattern_fact">
           <Key>
@@ -1745,6 +1826,78 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_employee_payment_summary_fact_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="pay_period_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_employee_position_fact_anniversary_date">
           <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
           <End Role="employee_position_fact" Type="Self.employee_position_fact" Multiplicity="*" />
@@ -2234,6 +2387,102 @@
             </Principal>
             <Dependent Role="employee_timesheet_fact">
               <PropertyRef Name="timesheet_entry_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="employee_working_hours_fact" Type="Self.employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="employee_working_hours_fact" Type="Self.employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_leave_type_key">
+          <End Role="leave_type_dim" Type="Self.leave_type_dim" Multiplicity="1" />
+          <End Role="employee_working_hours_fact" Type="Self.employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="leave_type_dim">
+              <PropertyRef Name="leave_type_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="leave_type_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_payment_type_key">
+          <End Role="payment_type_dim" Type="Self.payment_type_dim" Multiplicity="1" />
+          <End Role="employee_working_hours_fact" Type="Self.employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="payment_type_dim">
+              <PropertyRef Name="payment_type_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="payment_type_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="employee_working_hours_fact" Type="Self.employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="employee_working_hours_fact" Type="Self.employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="employee_working_hours_fact" Type="Self.employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="employee_working_hours_fact" Type="Self.employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="service_stream_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2813,6 +3062,102 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_timesheet_validation_activity_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="timesheet_validation_fact" Type="Self.timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="activity_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="timesheet_validation_fact" Type="Self.timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_manager_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="timesheet_validation_fact" Type="Self.timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_manager_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="timesheet_validation_fact" Type="Self.timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="manager_position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="timesheet_validation_fact" Type="Self.timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="timesheet_validation_fact" Type="Self.timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="timesheet_validation_fact" Type="Self.timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="timesheet_validation_fact" Type="Self.timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_work_pattern_fact_employee_key">
           <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
           <End Role="work_pattern_fact" Type="Self.work_pattern_fact" Multiplicity="*" />
@@ -2904,6 +3249,7 @@
           <EntitySet Name="employee_pay_temp" EntityType="Self.employee_pay_temp" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_payment_dim" EntityType="Self.employee_payment_dim" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_payment_fact" EntityType="Self.employee_payment_fact" Schema="conform" store:Type="Tables" />
+          <EntitySet Name="employee_payment_summary_fact" EntityType="Self.employee_payment_summary_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_position_fact" EntityType="Self.employee_position_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_profile_fact" EntityType="Self.employee_profile_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_recruitment_fact" EntityType="Self.employee_recruitment_fact" Schema="conform" store:Type="Tables" />
@@ -2911,6 +3257,7 @@
           <EntitySet Name="employee_temp" EntityType="Self.employee_temp" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_termination_fact" EntityType="Self.employee_termination_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_timesheet_fact" EntityType="Self.employee_timesheet_fact" Schema="conform" store:Type="Tables" />
+          <EntitySet Name="employee_working_hours_fact" EntityType="Self.employee_working_hours_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="item_dim" EntityType="Self.item_dim" Schema="conform" store:Type="Tables" />
           <EntitySet Name="labour_turnover_fact" EntityType="Self.labour_turnover_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="labour_turnover_report_fact" EntityType="Self.labour_turnover_report_fact" Schema="conform" store:Type="Tables" />
@@ -2930,6 +3277,7 @@
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform" store:Type="Tables" />
           <EntitySet Name="service_stream_temp" EntityType="Self.service_stream_temp" Schema="conform" store:Type="Tables" />
           <EntitySet Name="sub_program_temp" EntityType="Self.sub_program_temp" Schema="conform" store:Type="Tables" />
+          <EntitySet Name="timesheet_validation_fact" EntityType="Self.timesheet_validation_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="work_pattern_fact" EntityType="Self.work_pattern_fact" Schema="conform" store:Type="Tables" />
           <AssociationSet Name="fk_all_employees_report_fact_commencement_date_key" Association="Self.fk_all_employees_report_fact_commencement_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
@@ -3223,6 +3571,30 @@
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="employee_payment_fact" EntitySet="employee_payment_fact" />
           </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_date_key" Association="Self.fk_employee_payment_summary_fact_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_employee_key" Association="Self.fk_employee_payment_summary_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_portfolio_key" Association="Self.fk_employee_payment_summary_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_position_key" Association="Self.fk_employee_payment_summary_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_program_key" Association="Self.fk_employee_payment_summary_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_service_stream_key" Association="Self.fk_employee_payment_summary_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
           <AssociationSet Name="fk_employee_position_fact_anniversary_date" Association="Self.fk_employee_position_fact_anniversary_date">
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="employee_position_fact" EntitySet="employee_position_fact" />
@@ -3386,6 +3758,38 @@
           <AssociationSet Name="fk_employee_timesheet_fact_timesheet_entry_date_key" Association="Self.fk_employee_timesheet_fact_timesheet_entry_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="employee_timesheet_fact" EntitySet="employee_timesheet_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_date_key" Association="Self.fk_employee_working_hours_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_employee_key" Association="Self.fk_employee_working_hours_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_leave_type_key" Association="Self.fk_employee_working_hours_leave_type_key">
+            <End Role="leave_type_dim" EntitySet="leave_type_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_payment_type_key" Association="Self.fk_employee_working_hours_payment_type_key">
+            <End Role="payment_type_dim" EntitySet="payment_type_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_portfolio_key" Association="Self.fk_employee_working_hours_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_position_key" Association="Self.fk_employee_working_hours_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_program_key" Association="Self.fk_employee_working_hours_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_service_stream_key" Association="Self.fk_employee_working_hours_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_labour_turnover_fact_month_date_key" Association="Self.fk_labour_turnover_fact_month_date_key">
             <End Role="month_dim" EntitySet="month_dim" />
@@ -3578,6 +3982,38 @@
           <AssociationSet Name="fk_service_stream_dimemployee_termination_fact" Association="Self.fk_service_stream_dimemployee_termination_fact">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="employee_termination_fact" EntitySet="employee_termination_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_activity_date_key" Association="Self.fk_timesheet_validation_activity_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_employee_key" Association="Self.fk_timesheet_validation_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_manager_key" Association="Self.fk_timesheet_validation_manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_manager_position_key" Association="Self.fk_timesheet_validation_manager_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_portfolio_key" Association="Self.fk_timesheet_validation_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_position_key" Association="Self.fk_timesheet_validation_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_program_key" Association="Self.fk_timesheet_validation_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_service_stream_key" Association="Self.fk_timesheet_validation_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_work_pattern_fact_employee_key" Association="Self.fk_work_pattern_fact_employee_key">
             <End Role="employee_dim" EntitySet="employee_dim" />
@@ -4326,6 +4762,97 @@
             <End Role="month_dim" EntitySet="month_dim" />
             <End Role="labour_turnover_report_fact" EntitySet="labour_turnover_report_fact" />
           </AssociationSet>
+          <EntitySet Name="employee_payment_summary_fact" EntityType="conform_hris_conceptual.employee_payment_summary_fact" />
+          <EntitySet Name="employee_working_hours_fact" EntityType="conform_hris_conceptual.employee_working_hours_fact" />
+          <EntitySet Name="timesheet_validation_fact" EntityType="conform_hris_conceptual.timesheet_validation_fact" />
+          <AssociationSet Name="fk_employee_payment_summary_fact_date_key" Association="conform_hris_conceptual.fk_employee_payment_summary_fact_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_date_key" Association="conform_hris_conceptual.fk_employee_working_hours_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_activity_date_key" Association="conform_hris_conceptual.fk_timesheet_validation_activity_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_employee_key" Association="conform_hris_conceptual.fk_employee_payment_summary_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_employee_key" Association="conform_hris_conceptual.fk_employee_working_hours_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_employee_key" Association="conform_hris_conceptual.fk_timesheet_validation_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_manager_key" Association="conform_hris_conceptual.fk_timesheet_validation_manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_portfolio_key" Association="conform_hris_conceptual.fk_employee_payment_summary_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_position_key" Association="conform_hris_conceptual.fk_employee_payment_summary_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_program_key" Association="conform_hris_conceptual.fk_employee_payment_summary_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_service_stream_key" Association="conform_hris_conceptual.fk_employee_payment_summary_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_leave_type_key" Association="conform_hris_conceptual.fk_employee_working_hours_leave_type_key">
+            <End Role="leave_type_dim" EntitySet="leave_type_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_payment_type_key" Association="conform_hris_conceptual.fk_employee_working_hours_payment_type_key">
+            <End Role="payment_type_dim" EntitySet="payment_type_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_portfolio_key" Association="conform_hris_conceptual.fk_employee_working_hours_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_position_key" Association="conform_hris_conceptual.fk_employee_working_hours_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_program_key" Association="conform_hris_conceptual.fk_employee_working_hours_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_working_hours_service_stream_key" Association="conform_hris_conceptual.fk_employee_working_hours_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_portfolio_key" Association="conform_hris_conceptual.fk_timesheet_validation_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_manager_position_key" Association="conform_hris_conceptual.fk_timesheet_validation_manager_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_position_key" Association="conform_hris_conceptual.fk_timesheet_validation_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_program_key" Association="conform_hris_conceptual.fk_timesheet_validation_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_timesheet_validation_service_stream_key" Association="conform_hris_conceptual.fk_timesheet_validation_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="timesheet_validation_fact" EntitySet="timesheet_validation_fact" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="account_dim">
           <Key>
@@ -4431,6 +4958,9 @@
           <NavigationProperty Name="employee_last_paid_date_fact" Relationship="conform_hris_conceptual.fk_employee_last_paid_date_fact_date_key" FromRole="date_dim" ToRole="employee_last_paid_date_fact" />
           <NavigationProperty Name="employee_last_paid_date_fact1" Relationship="conform_hris_conceptual.fk_employee_last_paid_date_fact_paid_date_key" FromRole="date_dim" ToRole="employee_last_paid_date_fact" />
           <NavigationProperty Name="employee_renumeration_fact" Relationship="conform_hris_conceptual.fk_employee_renumeration_fact_date_key" FromRole="date_dim" ToRole="employee_renumeration_fact" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_date_key" FromRole="date_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="employee_working_hours_fact" Relationship="conform_hris_conceptual.fk_employee_working_hours_date_key" FromRole="date_dim" ToRole="employee_working_hours_fact" />
+          <NavigationProperty Name="timesheet_validation_fact" Relationship="conform_hris_conceptual.fk_timesheet_validation_activity_date_key" FromRole="date_dim" ToRole="timesheet_validation_fact" />
           </EntityType>
         <EntityType Name="employee_accreditation_fact">
           <Key>
@@ -4616,6 +5146,10 @@
           <Property Name="user_id" Type="String" MaxLength="14" FixedLength="false" Unicode="false" />
           <Property Name="AD_UserID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ASA_Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_employee_key" FromRole="employee_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="employee_working_hours_fact" Relationship="conform_hris_conceptual.fk_employee_working_hours_employee_key" FromRole="employee_dim" ToRole="employee_working_hours_fact" />
+          <NavigationProperty Name="timesheet_validation_fact" Relationship="conform_hris_conceptual.fk_timesheet_validation_employee_key" FromRole="employee_dim" ToRole="timesheet_validation_fact" />
+          <NavigationProperty Name="timesheet_validation_fact1" Relationship="conform_hris_conceptual.fk_timesheet_validation_manager_key" FromRole="employee_dim" ToRole="timesheet_validation_fact" />
         </EntityType>
         <EntityType Name="employee_leave_accrued_fact">
           <Key>
@@ -5077,6 +5611,7 @@
           <NavigationProperty Name="employee_leave_booked_txn_fact" Relationship="conform_hris_conceptual.fk_employee_leave_booked_txn_fact_leave_type_key" FromRole="leave_type_dim" ToRole="employee_leave_booked_txn_fact" />
           <NavigationProperty Name="employee_leave_snapshot_fact" Relationship="conform_hris_conceptual.fk_employee_leave_snapshot_fact_leave_type_key" FromRole="leave_type_dim" ToRole="employee_leave_snapshot_fact" />
           <NavigationProperty Name="employee_leave_taken_fact" Relationship="conform_hris_conceptual.fk_leave_type_dimemployee_leave_taken_fact" FromRole="leave_type_dim" ToRole="employee_leave_taken_fact" />
+          <NavigationProperty Name="employee_working_hours_fact" Relationship="conform_hris_conceptual.fk_employee_working_hours_leave_type_key" FromRole="leave_type_dim" ToRole="employee_working_hours_fact" />
         </EntityType>
         <EntityType Name="month_dim">
           <Key>
@@ -5133,6 +5668,7 @@
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="employee_timesheet_fact" Relationship="conform_hris_conceptual.fk_employee_timesheet_fact_payment_type_key" FromRole="payment_type_dim" ToRole="employee_timesheet_fact" />
+          <NavigationProperty Name="employee_working_hours_fact" Relationship="conform_hris_conceptual.fk_employee_working_hours_payment_type_key" FromRole="payment_type_dim" ToRole="employee_working_hours_fact" />
         </EntityType>
         <EntityType Name="portfolio_dim">
           <Key>
@@ -5165,6 +5701,9 @@
           <NavigationProperty Name="employee_last_paid_date_fact" Relationship="conform_hris_conceptual.fk_employee_last_paid_date_fact_portfolio_key" FromRole="portfolio_dim" ToRole="employee_last_paid_date_fact" />
           <NavigationProperty Name="labour_turnover_fact" Relationship="conform_hris_conceptual.fk_labour_turnover_fact_portfolio_key" FromRole="portfolio_dim" ToRole="labour_turnover_fact" />
           <NavigationProperty Name="employee_renumeration_fact" Relationship="conform_hris_conceptual.fk_employee_renumeration_fact_portfolio_key" FromRole="portfolio_dim" ToRole="employee_renumeration_fact" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_portfolio_key" FromRole="portfolio_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="employee_working_hours_fact" Relationship="conform_hris_conceptual.fk_employee_working_hours_portfolio_key" FromRole="portfolio_dim" ToRole="employee_working_hours_fact" />
+          <NavigationProperty Name="timesheet_validation_fact" Relationship="conform_hris_conceptual.fk_timesheet_validation_portfolio_key" FromRole="portfolio_dim" ToRole="timesheet_validation_fact" />
         </EntityType>
         <EntityType Name="portfolio_temp">
           <Key>
@@ -5223,6 +5762,10 @@
           <NavigationProperty Name="employee_last_paid_date_fact" Relationship="conform_hris_conceptual.fk_employee_last_paid_date_fact_position_key" FromRole="position_dim" ToRole="employee_last_paid_date_fact" />
           <NavigationProperty Name="employee_renumeration_fact" Relationship="conform_hris_conceptual.fk_employee_renumeration_fact_manager_position_key" FromRole="position_dim" ToRole="employee_renumeration_fact" />
           <NavigationProperty Name="employee_renumeration_fact1" Relationship="conform_hris_conceptual.fk_employee_renumeration_fact_position_key" FromRole="position_dim" ToRole="employee_renumeration_fact" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_position_key" FromRole="position_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="employee_working_hours_fact" Relationship="conform_hris_conceptual.fk_employee_working_hours_position_key" FromRole="position_dim" ToRole="employee_working_hours_fact" />
+          <NavigationProperty Name="timesheet_validation_fact" Relationship="conform_hris_conceptual.fk_timesheet_validation_manager_position_key" FromRole="position_dim" ToRole="timesheet_validation_fact" />
+          <NavigationProperty Name="timesheet_validation_fact1" Relationship="conform_hris_conceptual.fk_timesheet_validation_position_key" FromRole="position_dim" ToRole="timesheet_validation_fact" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -5256,6 +5799,9 @@
           <NavigationProperty Name="position_establishment_fact" Relationship="conform_hris_conceptual.fk_position_establishment_fact_program_key" FromRole="program_dim" ToRole="position_establishment_fact1" />
           <NavigationProperty Name="employee_last_paid_date_fact" Relationship="conform_hris_conceptual.fk_employee_last_paid_date_fact_program_key" FromRole="program_dim" ToRole="employee_last_paid_date_fact" />
           <NavigationProperty Name="employee_renumeration_fact" Relationship="conform_hris_conceptual.fk_employee_renumeration_fact_program_key" FromRole="program_dim" ToRole="employee_renumeration_fact" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_program_key" FromRole="program_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="employee_working_hours_fact" Relationship="conform_hris_conceptual.fk_employee_working_hours_program_key" FromRole="program_dim" ToRole="employee_working_hours_fact" />
+          <NavigationProperty Name="timesheet_validation_fact" Relationship="conform_hris_conceptual.fk_timesheet_validation_program_key" FromRole="program_dim" ToRole="timesheet_validation_fact" />
         </EntityType>
         <EntityType Name="program_temp">
           <Key>
@@ -5316,6 +5862,9 @@
           <NavigationProperty Name="employee_last_paid_date_fact" Relationship="conform_hris_conceptual.fk_employee_last_paid_date_fact_service_stream_key" FromRole="service_stream_dim" ToRole="employee_last_paid_date_fact" />
           <NavigationProperty Name="labour_turnover_fact" Relationship="conform_hris_conceptual.fk_labour_turnover_fact_service_stream_key" FromRole="service_stream_dim" ToRole="labour_turnover_fact" />
           <NavigationProperty Name="employee_renumeration_fact" Relationship="conform_hris_conceptual.fk_employee_renumeration_fact_service_stream_key" FromRole="service_stream_dim" ToRole="employee_renumeration_fact" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_service_stream_key" FromRole="service_stream_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="employee_working_hours_fact" Relationship="conform_hris_conceptual.fk_employee_working_hours_service_stream_key" FromRole="service_stream_dim" ToRole="employee_working_hours_fact" />
+          <NavigationProperty Name="timesheet_validation_fact" Relationship="conform_hris_conceptual.fk_timesheet_validation_service_stream_key" FromRole="service_stream_dim" ToRole="timesheet_validation_fact" />
         </EntityType>
         <EntityType Name="service_stream_temp">
           <Key>
@@ -7543,6 +8092,350 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="employee_payment_summary_fact">
+          <Key>
+            <PropertyRef Name="employee_payment_key" />
+          </Key>
+          <Property Name="employee_payment_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="position_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_id" Type="Int32" Nullable="false" />
+          <Property Name="employee_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="pay_period_date_key" Type="Int32" Nullable="false" />
+          <Property Name="period_amount" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="count" Type="Int32" />
+          <NavigationProperty Name="date_dim" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_date_key" FromRole="employee_payment_summary_fact" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_employee_key" FromRole="employee_payment_summary_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_portfolio_key" FromRole="employee_payment_summary_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="position_dim" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_position_key" FromRole="employee_payment_summary_fact" ToRole="position_dim" />
+          <NavigationProperty Name="program_dim" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_program_key" FromRole="employee_payment_summary_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="conform_hris_conceptual.fk_employee_payment_summary_fact_service_stream_key" FromRole="employee_payment_summary_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <EntityType Name="employee_working_hours_fact">
+          <Key>
+            <PropertyRef Name="employee_working_hours_key" />
+          </Key>
+          <Property Name="employee_working_hours_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="position_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="date_key" Type="Int32" Nullable="false" />
+          <Property Name="leave_type_key" Type="Int32" Nullable="false" />
+          <Property Name="payment_type_key" Type="Int32" Nullable="false" />
+          <Property Name="working_hours" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="paid_leave_hours" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="unpaid_leave_hours" Type="Decimal" Precision="18" Scale="6" />
+          <NavigationProperty Name="date_dim" Relationship="conform_hris_conceptual.fk_employee_working_hours_date_key" FromRole="employee_working_hours_fact" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="conform_hris_conceptual.fk_employee_working_hours_employee_key" FromRole="employee_working_hours_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="leave_type_dim" Relationship="conform_hris_conceptual.fk_employee_working_hours_leave_type_key" FromRole="employee_working_hours_fact" ToRole="leave_type_dim" />
+          <NavigationProperty Name="payment_type_dim" Relationship="conform_hris_conceptual.fk_employee_working_hours_payment_type_key" FromRole="employee_working_hours_fact" ToRole="payment_type_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="conform_hris_conceptual.fk_employee_working_hours_portfolio_key" FromRole="employee_working_hours_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="position_dim" Relationship="conform_hris_conceptual.fk_employee_working_hours_position_key" FromRole="employee_working_hours_fact" ToRole="position_dim" />
+          <NavigationProperty Name="program_dim" Relationship="conform_hris_conceptual.fk_employee_working_hours_program_key" FromRole="employee_working_hours_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="conform_hris_conceptual.fk_employee_working_hours_service_stream_key" FromRole="employee_working_hours_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <EntityType Name="timesheet_validation_fact">
+          <Key>
+            <PropertyRef Name="timesheet_validation_key" />
+          </Key>
+          <Property Name="timesheet_validation_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="position_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="manager_key" Type="Int32" Nullable="false" />
+          <Property Name="manager_position_key" Type="Int32" Nullable="false" />
+          <Property Name="activity_date_key" Type="Int32" Nullable="false" />
+          <Property Name="validation_type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="activity1_start_time" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="activity1_end_time" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="activity1_cost_centre" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="activity1_activity_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="activity1_activity_desc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="activity2_start_time" Type="Time" Precision="7" />
+          <Property Name="activity2_end_time" Type="Time" Precision="7" />
+          <Property Name="activity2_cost_centre" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="activity2_activity_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="activity2_activity_desc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="date_dim" Relationship="conform_hris_conceptual.fk_timesheet_validation_activity_date_key" FromRole="timesheet_validation_fact" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="conform_hris_conceptual.fk_timesheet_validation_employee_key" FromRole="timesheet_validation_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="employee_dim1" Relationship="conform_hris_conceptual.fk_timesheet_validation_manager_key" FromRole="timesheet_validation_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="conform_hris_conceptual.fk_timesheet_validation_portfolio_key" FromRole="timesheet_validation_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="position_dim" Relationship="conform_hris_conceptual.fk_timesheet_validation_manager_position_key" FromRole="timesheet_validation_fact" ToRole="position_dim" />
+          <NavigationProperty Name="position_dim1" Relationship="conform_hris_conceptual.fk_timesheet_validation_position_key" FromRole="timesheet_validation_fact" ToRole="position_dim" />
+          <NavigationProperty Name="program_dim" Relationship="conform_hris_conceptual.fk_timesheet_validation_program_key" FromRole="timesheet_validation_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="conform_hris_conceptual.fk_timesheet_validation_service_stream_key" FromRole="timesheet_validation_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <Association Name="fk_employee_payment_summary_fact_date_key">
+          <End Type="conform_hris_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="pay_period_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_date_key">
+          <End Type="conform_hris_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_working_hours_fact" Role="employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_activity_date_key">
+          <End Type="conform_hris_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.timesheet_validation_fact" Role="timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="activity_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_employee_key">
+          <End Type="conform_hris_conceptual.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_employee_key">
+          <End Type="conform_hris_conceptual.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_working_hours_fact" Role="employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_employee_key">
+          <End Type="conform_hris_conceptual.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.timesheet_validation_fact" Role="timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_manager_key">
+          <End Type="conform_hris_conceptual.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.timesheet_validation_fact" Role="timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_portfolio_key">
+          <End Type="conform_hris_conceptual.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_position_key">
+          <End Type="conform_hris_conceptual.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_program_key">
+          <End Type="conform_hris_conceptual.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_service_stream_key">
+          <End Type="conform_hris_conceptual.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_leave_type_key">
+          <End Type="conform_hris_conceptual.leave_type_dim" Role="leave_type_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_working_hours_fact" Role="employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="leave_type_dim">
+              <PropertyRef Name="leave_type_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="leave_type_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_payment_type_key">
+          <End Type="conform_hris_conceptual.payment_type_dim" Role="payment_type_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_working_hours_fact" Role="employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="payment_type_dim">
+              <PropertyRef Name="payment_type_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="payment_type_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_portfolio_key">
+          <End Type="conform_hris_conceptual.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_working_hours_fact" Role="employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_position_key">
+          <End Type="conform_hris_conceptual.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_working_hours_fact" Role="employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_program_key">
+          <End Type="conform_hris_conceptual.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_working_hours_fact" Role="employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_working_hours_service_stream_key">
+          <End Type="conform_hris_conceptual.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_working_hours_fact" Role="employee_working_hours_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="employee_working_hours_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_portfolio_key">
+          <End Type="conform_hris_conceptual.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.timesheet_validation_fact" Role="timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_manager_position_key">
+          <End Type="conform_hris_conceptual.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.timesheet_validation_fact" Role="timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="manager_position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_position_key">
+          <End Type="conform_hris_conceptual.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.timesheet_validation_fact" Role="timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_program_key">
+          <End Type="conform_hris_conceptual.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.timesheet_validation_fact" Role="timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_timesheet_validation_service_stream_key">
+          <End Type="conform_hris_conceptual.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.timesheet_validation_fact" Role="timesheet_validation_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="timesheet_validation_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8457,6 +9350,67 @@
                 <ScalarProperty Name="total" ColumnName="total" />
                 <ScalarProperty Name="month_date_key" ColumnName="month_date_key" />
                 <ScalarProperty Name="labour_turnover_report__key" ColumnName="labour_turnover_report__key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employee_payment_summary_fact">
+            <EntityTypeMapping TypeName="conform_hris_conceptual.employee_payment_summary_fact">
+              <MappingFragment StoreEntitySet="employee_payment_summary_fact">
+                <ScalarProperty Name="count" ColumnName="count" />
+                <ScalarProperty Name="period_amount" ColumnName="period_amount" />
+                <ScalarProperty Name="pay_period_date_key" ColumnName="pay_period_date_key" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="employee_id" ColumnName="employee_id" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="position_key" ColumnName="position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="employee_payment_key" ColumnName="employee_payment_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employee_working_hours_fact">
+            <EntityTypeMapping TypeName="conform_hris_conceptual.employee_working_hours_fact">
+              <MappingFragment StoreEntitySet="employee_working_hours_fact">
+                <ScalarProperty Name="unpaid_leave_hours" ColumnName="unpaid_leave_hours" />
+                <ScalarProperty Name="paid_leave_hours" ColumnName="paid_leave_hours" />
+                <ScalarProperty Name="working_hours" ColumnName="working_hours" />
+                <ScalarProperty Name="payment_type_key" ColumnName="payment_type_key" />
+                <ScalarProperty Name="leave_type_key" ColumnName="leave_type_key" />
+                <ScalarProperty Name="date_key" ColumnName="date_key" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="position_key" ColumnName="position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="employee_working_hours_key" ColumnName="employee_working_hours_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="timesheet_validation_fact">
+            <EntityTypeMapping TypeName="conform_hris_conceptual.timesheet_validation_fact">
+              <MappingFragment StoreEntitySet="timesheet_validation_fact">
+                <ScalarProperty Name="activity2_activity_desc" ColumnName="activity2_activity_desc" />
+                <ScalarProperty Name="activity2_activity_code" ColumnName="activity2_activity_code" />
+                <ScalarProperty Name="activity2_cost_centre" ColumnName="activity2_cost_centre" />
+                <ScalarProperty Name="activity2_end_time" ColumnName="activity2_end_time" />
+                <ScalarProperty Name="activity2_start_time" ColumnName="activity2_start_time" />
+                <ScalarProperty Name="activity1_activity_desc" ColumnName="activity1_activity_desc" />
+                <ScalarProperty Name="activity1_activity_code" ColumnName="activity1_activity_code" />
+                <ScalarProperty Name="activity1_cost_centre" ColumnName="activity1_cost_centre" />
+                <ScalarProperty Name="activity1_end_time" ColumnName="activity1_end_time" />
+                <ScalarProperty Name="activity1_start_time" ColumnName="activity1_start_time" />
+                <ScalarProperty Name="validation_type" ColumnName="validation_type" />
+                <ScalarProperty Name="activity_date_key" ColumnName="activity_date_key" />
+                <ScalarProperty Name="manager_position_key" ColumnName="manager_position_key" />
+                <ScalarProperty Name="manager_key" ColumnName="manager_key" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="position_key" ColumnName="position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="timesheet_validation_key" ColumnName="timesheet_validation_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
