@@ -222,6 +222,9 @@
           <Property Name="contact_mobile2" Type="varchar" MaxLength="20" />
           <Property Name="contact_email1" Type="varchar" MaxLength="100" />
           <Property Name="contact_email2" Type="varchar" MaxLength="100" />
+          <Property Name="user_id" Type="varchar" MaxLength="14" />
+          <Property Name="AD_UserID" Type="varchar" MaxLength="100" />
+          <Property Name="ASA_Email" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="employee_last_paid_date_fact">
           <Key>
@@ -366,6 +369,22 @@
           <Property Name="pay_component_ref" Type="decimal" Precision="10" Scale="4" />
           <Property Name="pay_period_type" Type="varchar" MaxLength="10" />
           <Property Name="posted_ind" Type="varchar" MaxLength="1" />
+          <Property Name="count" Type="int" />
+        </EntityType>
+        <EntityType Name="employee_payment_summary_fact">
+          <Key>
+            <PropertyRef Name="employee_payment_key" />
+          </Key>
+          <Property Name="employee_payment_key" Type="int" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="position_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="employee_id" Type="int" Nullable="false" />
+          <Property Name="employee_name" Type="varchar" MaxLength="50" />
+          <Property Name="pay_period_date_key" Type="int" Nullable="false" />
+          <Property Name="period_amount" Type="decimal" Precision="10" Scale="4" />
           <Property Name="count" Type="int" />
         </EntityType>
         <EntityType Name="employee_position_fact">
@@ -1661,6 +1680,78 @@
               <PropertyRef Name="service_stream_key" />
             </Principal>
             <Dependent Role="employee_payment_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="pay_period_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="employee_payment_summary_fact" Type="Self.employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
               <PropertyRef Name="service_stream_key" />
             </Dependent>
           </ReferentialConstraint>
@@ -3014,6 +3105,7 @@
           <EntitySet Name="employee_leave_taken_fact" EntityType="Self.employee_leave_taken_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_payment_dim" EntityType="Self.employee_payment_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_payment_fact" EntityType="Self.employee_payment_fact" Schema="hris" store:Type="Tables" />
+          <EntitySet Name="employee_payment_summary_fact" EntityType="Self.employee_payment_summary_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_position_fact" EntityType="Self.employee_position_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_profile_fact" EntityType="Self.employee_profile_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_recruitment_fact" EntityType="Self.employee_recruitment_fact" Schema="hris" store:Type="Tables" />
@@ -3328,6 +3420,30 @@
           <AssociationSet Name="fk_employee_payment_fact_service_stream_key" Association="Self.fk_employee_payment_fact_service_stream_key">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="employee_payment_fact" EntitySet="employee_payment_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_date_key" Association="Self.fk_employee_payment_summary_fact_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_employee_key" Association="Self.fk_employee_payment_summary_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_portfolio_key" Association="Self.fk_employee_payment_summary_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_position_key" Association="Self.fk_employee_payment_summary_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_program_key" Association="Self.fk_employee_payment_summary_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_service_stream_key" Association="Self.fk_employee_payment_summary_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_employee_position_fact_anniversary_date" Association="Self.fk_employee_position_fact_anniversary_date">
             <End Role="date_dim" EntitySet="date_dim" />
@@ -4554,6 +4670,31 @@
             <End Role="month_dim" EntitySet="month_dim" />
             <End Role="labour_turnover_report_fact" EntitySet="labour_turnover_report_fact" />
           </AssociationSet>
+          <EntitySet Name="employee_payment_summary_fact" EntityType="hris_physical.employee_payment_summary_fact" />
+          <AssociationSet Name="fk_employee_payment_summary_fact_date_key" Association="hris_physical.fk_employee_payment_summary_fact_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_employee_key" Association="hris_physical.fk_employee_payment_summary_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_portfolio_key" Association="hris_physical.fk_employee_payment_summary_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_position_key" Association="hris_physical.fk_employee_payment_summary_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_program_key" Association="hris_physical.fk_employee_payment_summary_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_payment_summary_fact_service_stream_key" Association="hris_physical.fk_employee_payment_summary_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="account_dim">
           <Key>
@@ -4661,6 +4802,7 @@
           <NavigationProperty Name="all_employees_report_fact3" Relationship="hris_physical.fk_all_employees_report_fact_terminate_date_key" FromRole="date_dim" ToRole="all_employees_report_fact" />
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_effective_date_key" FromRole="date_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="position_establishment_fact1" Relationship="hris_physical.fk_position_establishment_fact_vacant_date_key" FromRole="date_dim" ToRole="position_establishment_fact" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_date_key" FromRole="date_dim" ToRole="employee_payment_summary_fact" />
           </EntityType>
         <EntityType Name="employee_accreditation_fact">
           <Key>
@@ -4846,6 +4988,10 @@
           <NavigationProperty Name="all_employees_report_fact1" Relationship="hris_physical.fk_all_employees_report_fact_manager_employee_key" FromRole="employee_dim" ToRole="all_employees_report_fact" />
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_employee_key" FromRole="employee_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="position_establishment_fact1" Relationship="hris_physical.fk_position_establishment_fact_manager_employee_key" FromRole="employee_dim" ToRole="position_establishment_fact" />
+          <Property Name="user_id" Type="String" MaxLength="14" FixedLength="false" Unicode="false" />
+          <Property Name="AD_UserID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ASA_Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_employee_key" FromRole="employee_dim" ToRole="employee_payment_summary_fact" />
         </EntityType>
         <EntityType Name="employee_leave_accrued_fact">
           <Key>
@@ -5285,6 +5431,7 @@
           <NavigationProperty Name="timesheet_validation_fact" Relationship="hris_physical.fk_timesheet_validation_portfolio_key" FromRole="portfolio_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="all_employees_report_fact" Relationship="hris_physical.fk_all_employees_report_fact_portfolio_key" FromRole="portfolio_dim" ToRole="all_employees_report_fact" />
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_portfolio_key" FromRole="portfolio_dim" ToRole="position_establishment_fact" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_portfolio_key" FromRole="portfolio_dim" ToRole="employee_payment_summary_fact" />
         </EntityType>
         <EntityType Name="position_dim">
           <Key>
@@ -5337,6 +5484,7 @@
           <NavigationProperty Name="all_employees_report_fact1" Relationship="hris_physical.fk_all_employees_report_fact_position_key" FromRole="position_dim" ToRole="all_employees_report_fact" />
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_manager_position_key" FromRole="position_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="position_establishment_fact1" Relationship="hris_physical.fk_position_establishment_fact_position_key" FromRole="position_dim" ToRole="position_establishment_fact" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_position_key" FromRole="position_dim" ToRole="employee_payment_summary_fact" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -5372,6 +5520,7 @@
           <NavigationProperty Name="timesheet_validation_fact" Relationship="hris_physical.fk_timesheet_validation_program_key" FromRole="program_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="all_employees_report_fact" Relationship="hris_physical.fk_all_employees_report_fact_program_key" FromRole="program_dim" ToRole="all_employees_report_fact" />
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_program_key" FromRole="program_dim" ToRole="position_establishment_fact" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_program_key" FromRole="program_dim" ToRole="employee_payment_summary_fact" />
         </EntityType>
         <EntityType Name="salary_code_dim">
           <Key>
@@ -5425,6 +5574,7 @@
           <NavigationProperty Name="timesheet_validation_fact" Relationship="hris_physical.fk_timesheet_validation_service_stream_key" FromRole="service_stream_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="all_employees_report_fact" Relationship="hris_physical.fk_all_employees_report_fact_service_stream_key" FromRole="service_stream_dim" ToRole="all_employees_report_fact" />
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_service_stream_key" FromRole="service_stream_dim" ToRole="position_establishment_fact" />
+          <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_service_stream_key" FromRole="service_stream_dim" ToRole="employee_payment_summary_fact" />
         </EntityType>
         <EntityType Name="work_pattern_fact">
           <Key>
@@ -7915,6 +8065,100 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="employee_payment_summary_fact">
+          <Key>
+            <PropertyRef Name="employee_payment_key" />
+          </Key>
+          <Property Name="employee_payment_key" Type="Int32" Nullable="false" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="position_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_id" Type="Int32" Nullable="false" />
+          <Property Name="employee_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="pay_period_date_key" Type="Int32" Nullable="false" />
+          <Property Name="period_amount" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="count" Type="Int32" />
+          <NavigationProperty Name="date_dim" Relationship="hris_physical.fk_employee_payment_summary_fact_date_key" FromRole="employee_payment_summary_fact" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="hris_physical.fk_employee_payment_summary_fact_employee_key" FromRole="employee_payment_summary_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="hris_physical.fk_employee_payment_summary_fact_portfolio_key" FromRole="employee_payment_summary_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="position_dim" Relationship="hris_physical.fk_employee_payment_summary_fact_position_key" FromRole="employee_payment_summary_fact" ToRole="position_dim" />
+          <NavigationProperty Name="program_dim" Relationship="hris_physical.fk_employee_payment_summary_fact_program_key" FromRole="employee_payment_summary_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="hris_physical.fk_employee_payment_summary_fact_service_stream_key" FromRole="employee_payment_summary_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <Association Name="fk_employee_payment_summary_fact_date_key">
+          <End Type="hris_physical.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="pay_period_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_employee_key">
+          <End Type="hris_physical.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_portfolio_key">
+          <End Type="hris_physical.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_position_key">
+          <End Type="hris_physical.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_program_key">
+          <End Type="hris_physical.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_payment_summary_fact_service_stream_key">
+          <End Type="hris_physical.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_payment_summary_fact" Role="employee_payment_summary_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="employee_payment_summary_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8050,6 +8294,9 @@
           <EntitySetMapping Name="employee_dim">
             <EntityTypeMapping TypeName="hris_physical.employee_dim">
               <MappingFragment StoreEntitySet="employee_dim">
+                <ScalarProperty Name="ASA_Email" ColumnName="ASA_Email" />
+                <ScalarProperty Name="AD_UserID" ColumnName="AD_UserID" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
                 <ScalarProperty Name="contact_email2" ColumnName="contact_email2" />
                 <ScalarProperty Name="contact_email1" ColumnName="contact_email1" />
                 <ScalarProperty Name="contact_mobile2" ColumnName="contact_mobile2" />
@@ -8743,6 +8990,23 @@
                 <ScalarProperty Name="total" ColumnName="total" />
                 <ScalarProperty Name="month_date_key" ColumnName="month_date_key" />
                 <ScalarProperty Name="labour_turnover_report_key" ColumnName="labour_turnover_report_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employee_payment_summary_fact">
+            <EntityTypeMapping TypeName="hris_physical.employee_payment_summary_fact">
+              <MappingFragment StoreEntitySet="employee_payment_summary_fact">
+                <ScalarProperty Name="count" ColumnName="count" />
+                <ScalarProperty Name="period_amount" ColumnName="period_amount" />
+                <ScalarProperty Name="pay_period_date_key" ColumnName="pay_period_date_key" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="employee_id" ColumnName="employee_id" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="position_key" ColumnName="position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="employee_payment_key" ColumnName="employee_payment_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
