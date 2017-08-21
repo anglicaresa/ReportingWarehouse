@@ -23,7 +23,7 @@ GO
 
 -- Creating table 'position_dim'
 CREATE TABLE [finance].[position_dim] (
-    [position_key] int IDENTITY(1,1) NOT NULL,
+    [position_key] int NOT NULL,
     [position_name] varchar(50)  NULL,
     [position_code] varchar(50)  NULL,
     [contract_type] varchar(20)  NULL,

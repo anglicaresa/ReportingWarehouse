@@ -6,7 +6,6 @@ GO
 
 create table [finance].[cost_centre_dim] (
 	[cost_centre_key] int	not null,
-
 	[LDG_NAME] [varchar] (8) NULL,
 	[ACCNBRI] [varchar] (32) NULL,
 	[EDACCNBR] [varchar] (32) NULL,
