@@ -23,7 +23,7 @@ GO
 
 -- Creating table 'employee_dim'
 CREATE TABLE [finance].[employee_dim] (
-    [employee_key] int IDENTITY(1,1) NOT NULL,
+    [employee_key] int NOT NULL,
     [id_number] int  NULL,
     [given_name] varchar(50)  NULL,
     [family_name] varchar(50)  NULL,

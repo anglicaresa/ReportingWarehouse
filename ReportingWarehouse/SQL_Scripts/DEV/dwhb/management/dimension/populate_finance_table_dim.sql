@@ -17,9 +17,11 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('ledger_dim', 'dwh', 'conform_finan
 INSERT INTO [management].[TABLE_DIM] VALUES ('portfolio_dim', 'dwh', 'conform_finance', 'dwhb', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('program_dim', 'dwh', 'conform_finance', 'dwhb', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('service_stream_dim', 'dwh', 'conform_finance', 'dwhb', 'devsql-1');
-
 INSERT INTO [management].[TABLE_DIM] VALUES ('debtor_fact', 'dwh', 'conform_finance', 'dwhb', 'devsql-1');
 
+INSERT INTO [management].[TABLE_DIM] VALUES ('lsl_fact', 'dwh', 'conform_finance', 'dwhb', 'devsql-1');
+INSERT INTO [management].[TABLE_DIM] VALUES ('employee_dim', 'dwh', 'conform_finance', 'dwhb', 'devsql-1');
+INSERT INTO [management].[TABLE_DIM] VALUES ('position_dim', 'dwh', 'conform_finance', 'dwhb', 'devsql-1');
 -- schema: finance tables
 INSERT INTO [management].[TABLE_DIM] VALUES ('account_dim', 'dwh', 'finance', 'dwhb', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('accounting_period_dim', 'dwh', 'finance', 'dwhb', 'devsql-1');
@@ -31,3 +33,10 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('program_dim', 'dwh', 'finance', 'd
 INSERT INTO [management].[TABLE_DIM] VALUES ('service_stream_dim', 'dwh', 'finance', 'dwhb', 'devsql-1');
 
 INSERT INTO [management].[TABLE_DIM] VALUES ('debtor_fact', 'dwh', 'finance', 'dwhb', 'devsql-1');
+
+INSERT INTO [management].[TABLE_DIM] VALUES ('employee_dim', 'dwh', 'finance', 'dwhf_finance', 'devsql-1');
+INSERT INTO [management].[TABLE_DIM] VALUES ('position_dim', 'dwh', 'finance', 'dwhf_finance', 'devsql-1');
+INSERT INTO [management].[TABLE_DIM] VALUES ('lsl_fact', 'dwh', 'finance', 'dwhf_finance', 'devsql-1');
+
+
+select * from management.table_dim
