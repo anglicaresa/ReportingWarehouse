@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Dim - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="417"
-  DTS:VersionGUID="{53F6C830-350E-451B-A141-5853672C2A1B}">
+  DTS:VersionBuild="422"
+  DTS:VersionGUID="{0AE0DEAD-D6CD-4EE7-AE62-20E4DF20E59C}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -137,7 +137,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/26/2017 12:24:35 PM</DTS:VariableValue>
+        DTS:DataType="7">8/21/2017 3:17:19 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -148,7 +148,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">7/26/2017 12:24:35 PM</DTS:VariableValue>
+        DTS:DataType="7">8/21/2017 3:17:19 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -364,6 +364,89 @@
           </DTS:PrecedenceConstraints>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{7eb0dd1b-b528-4fb2-b042-e343dc785821}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Sequence Container - employee_dim">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim\EST - Write Job Finish information"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{8627416e-d8e6-4da2-aed5-948be7d310df}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish information"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{CB7BBA2A-20B6-4CB5-B259-7C1037296A45}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;1,&#xA;'Update DIM table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_finance.cost_centre_dim'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim\EST - Write Job Start information"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{b62e16ea-ff26-4695-98e2-072ae66b8d77}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start information"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{CB7BBA2A-20B6-4CB5-B259-7C1037296A45}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;1,&#xA;'Update DIM table'&#xA;&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_finance.cost_centre_dim'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim\Insert - Update - Delete"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{14b5cde3-9b98-4d20-b569-7286eed0d519}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Insert - Update - Delete"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{CB7BBA2A-20B6-4CB5-B259-7C1037296A45}"
+                  SQLTask:SqlStatementSource="use dwhb &#xA;---create new ones&#xA;insert into conform_finance.employee_dim&#xA;(   [id_number]&#xA;      ,[given_name]&#xA;      ,[family_name]&#xA;      ,[preferred_name]&#xA;      ,[gender]&#xA;      ,[date_of_birth]&#xA;      ,[country_of_origin]&#xA;      ,[employee_type]&#xA;      ,[employee_class]&#xA;      ,[change_reason_code]&#xA;      ,[change_reason_description]&#xA;      ,[row_effective_date]&#xA;      ,[row_expiration_date]&#xA;      ,[current_row_indicator]&#x9;)&#xA;&#xA;select &#xA;      d1.[id_number]&#xA;      ,d1.[given_name]&#xA;      ,d1.[family_name]&#xA;      ,d1.[preferred_name]&#xA;      ,d1.[gender]&#xA;      ,d1.[date_of_birth]&#xA;     -- ,d1.[passport_number]&#xA;     -- ,d1.[visa_number]&#xA;      ,d1.[country_of_origin]&#xA;      ,d1.[employee_type]&#xA;      ,d1.[employee_class]&#xA;      ,d1.[change_reason_code]&#xA;      ,d1.[change_reason_description]&#xA;      ,d1.row_effective_date&#xA;      ,d1.[row_expiration_date]&#xA;      ,d1.[current_row_indicator]&#xA;&#xA;from conform.employee_dim  as d1&#xA;inner join&#xA;  (select id_number&#xA;   from conform.employee_dim   where current_row_indicator='Y'&#xA;   except&#xA;   select  id_number&#xA;   from conform_finance.employee_dim   where current_row_indicator='Y' &#xA;   ) as t1  &#xA;   on d1.id_number=t1.id_number&#xA;&#xA;where d1.current_row_indicator='Y'&#xA;&#xA;&#xA;&#xA;&#xA;--update expired ones&#xA;update d1&#xA;set  d1.current_row_indicator='N',&#xA;     d1.row_expiration_date=getdate(),&#xA;  d1.change_reason_code='U',&#xA;  d1.change_reason_description='Update'&#xA;from  conform_finance.employee_dim as d1&#xA;where d1.id_number not in (select id_number from  conform.employee_dim   where current_row_indicator='Y')&#xA;&#xA;--update ad information&#xA;&#xA;update t1&#xA;set&#x9; t1.user_id =t2.user_id,&#xA;     t1.AD_UserID=t2.AD_UserID,&#xA;&#x9; t1.ASA_Email=t2.ASA_Email&#xA;from conform_finance.employee_dim  as t1&#xA;inner join &#x9;conform.employee_dim  as t2&#xA;on t1.id_number =t2.id_number &#xA;and t1.current_row_indicator='Y'&#xA;and t2.current_row_indicator='Y'&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{c8c3fff3-6f82-460d-aa38-9c2557f98366}"
+              DTS:From="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim\EST - Write Job Start information"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim\Insert - Update - Delete" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{50aa3cbd-5941-497b-be29-6b841cc47f0c}"
+              DTS:From="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim\Insert - Update - Delete"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim\EST - Write Job Finish information" />
+          </DTS:PrecedenceConstraints>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - ledger_dim"
           DTS:CreationName="STOCK:SEQUENCE"
           DTS:Description="Sequence Container"
@@ -552,6 +635,89 @@
               DTS:LogicalAnd="True"
               DTS:ObjectName="Constraint 1"
               DTS:To="Package\Sequence Container - DIM TABLES\Sequence Container - portfolio_dim\EST - Write Job Finish information" />
+          </DTS:PrecedenceConstraints>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{fe9d9721-f7a8-41c8-b5bc-a9d4b94714c0}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Sequence Container - position_dim">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim\EST - Write Job Finish information"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{567b6d3b-2676-4bd5-babb-17a2d072dab0}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish information"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{CB7BBA2A-20B6-4CB5-B259-7C1037296A45}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;1,&#xA;'Update DIM table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_finance.cost_centre_dim'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim\EST - Write Job Start information"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{3557ca84-c951-439e-b691-e7318e9fde4d}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start information"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{CB7BBA2A-20B6-4CB5-B259-7C1037296A45}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;1,&#xA;'Update DIM table'&#xA;&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_finance.cost_centre_dim'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim\Insert - Update - Delete"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{95633643-67bd-43a8-8645-67a5162f0fbb}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Insert - Update - Delete"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{CB7BBA2A-20B6-4CB5-B259-7C1037296A45}"
+                  SQLTask:SqlStatementSource="---create new ones&#xA;insert into conform_finance.position_dim &#xA;select &#xA;  d1.position_name,&#xA;  d1.position_code,&#xA;  d1.contract_type,&#xA;  d1.condition,&#xA;  d1.grade,&#xA;  d1.level,&#xA;  d1.work_location,&#xA;  d1.change_reason_code,&#xA;  d1.change_reason_description,&#xA;  d1.row_effective_date,&#xA;  d1.row_expiration_date,&#xA;  d1.current_row_indicator,&#xA;  d1.trade_code,&#xA;  d1.position_class,&#xA;  d1.ts_fmt_name&#xA;from conform.position_dim  as d1&#xA;inner join&#xA;  (select position_code,position_name,contract_type,condition,grade,level,work_location, ts_fmt_name&#xA;   from conform.position_dim   where current_row_indicator='Y'&#xA;   except&#xA;   select   position_code,position_name,contract_type,condition,grade,level,work_location, ts_fmt_name&#xA;   from conform_finance.position_dim   where current_row_indicator='Y' &#xA;   ) as t1  &#xA;   on d1.position_code=t1.position_code&#x9; &#xA;    and d1.position_name=t1.position_name &#xA;&#x9;and d1.condition=t1.condition&#xA;&#x9;and d1.grade=t1.grade&#xA;&#x9;and d1.level=t1.level&#xA;&#x9;and d1.work_location=t1.work_location&#xA;&#x9;and d1.ts_fmt_name=t1.ts_fmt_name&#xA;where d1.current_row_indicator='Y'&#xA;&#xA;&#xA;&#xA;&#xA;--update expired ones&#xA;update d1&#xA;set  d1.current_row_indicator='N',&#xA;     d1.row_expiration_date=getdate(),&#xA;  d1.change_reason_code='U',&#xA;  d1.change_reason_description='Update'&#xA;from  conform_finance.position_dim as d1&#xA;where d1.position_code not in (select position_code from  conform.position_dim   where current_row_indicator='Y')&#xA;&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{0fd87158-02e2-47d6-bbe1-4774bc9cdf54}"
+              DTS:From="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim\EST - Write Job Start information"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim\Insert - Update - Delete" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{31a526c6-17ba-4d24-bb12-b6096a215443}"
+              DTS:From="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim\Insert - Update - Delete"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim\EST - Write Job Finish information" />
           </DTS:PrecedenceConstraints>
         </DTS:Executable>
         <DTS:Executable
@@ -781,6 +947,24 @@
           DTS:ObjectName="Constraint 6"
           DTS:To="Package\Sequence Container - DIM TABLES\Sequence Container - cost_centre_dim"
           DTS:Value="2" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 7]"
+          DTS:CreationName=""
+          DTS:DTSID="{3F3C3E22-6711-4901-B280-76ACBDC44B91}"
+          DTS:From="Package\Sequence Container - DIM TABLES\Sequence Container - cost_centre_dim"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 7"
+          DTS:To="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim"
+          DTS:Value="2" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 8]"
+          DTS:CreationName=""
+          DTS:DTSID="{2F17B22D-8512-4EF1-B191-ABA1427CC11C}"
+          DTS:From="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 8"
+          DTS:To="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim"
+          DTS:Value="2" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
   </DTS:Executables>
@@ -818,7 +1002,7 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="304,42"
           Id="Package\Sequence Container - DIM TABLES\Sequence Container - account_dim\EST - Write Job Finish information"
@@ -836,7 +1020,7 @@
           TopLeft="188.4,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -858,7 +1042,7 @@
           TopLeft="188.4,134">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -910,7 +1094,7 @@
           TopLeft="188.4,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -932,7 +1116,7 @@
           TopLeft="188.4,134">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -973,7 +1157,7 @@
           TopLeft="188.4,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -995,7 +1179,7 @@
           TopLeft="188.4,134">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -1047,7 +1231,7 @@
           TopLeft="188.4,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -1069,7 +1253,7 @@
           TopLeft="188.4,134">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -1110,7 +1294,7 @@
           TopLeft="188.4,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -1132,7 +1316,7 @@
           TopLeft="188.4,134">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -1173,7 +1357,7 @@
           TopLeft="188.4,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -1195,7 +1379,7 @@
           TopLeft="188.4,134">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,35"
               Start="0,0"
               End="0,27.5">
@@ -1224,7 +1408,7 @@
           TopLeft="196,294.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1248,7 +1432,7 @@
           TopLeft="196,643.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1272,7 +1456,7 @@
           TopLeft="196,992.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1296,7 +1480,7 @@
           TopLeft="196,1341.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1320,7 +1504,7 @@
           TopLeft="196,1584.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1344,7 +1528,7 @@
           TopLeft="196,1827.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1368,7 +1552,7 @@
           TopLeft="196,2176.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1387,11 +1571,185 @@
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="304,42"
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim\EST - Write Job Finish information"
+          TopLeft="36.4,169" />
+        <NodeLayout
+          Size="304,42"
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim\EST - Write Job Start information"
+          TopLeft="36.4,15" />
+        <NodeLayout
+          Size="304,42"
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim\Insert - Update - Delete"
+          TopLeft="36.4,92" />
+        <EdgeLayout
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim.PrecedenceConstraints[Constraint]"
+          TopLeft="188.4,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,35"
+              Start="0,0"
+              End="0,27.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim.PrecedenceConstraints[Constraint 1]"
+          TopLeft="188.4,134">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,35"
+              Start="0,0"
+              End="0,27.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="392,2581"
-          Size="392,2624"
+          PanelSize="381,246"
+          Size="381,289"
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - employee_dim"
+          TopLeft="5.50000000000006,2585.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 7]"
+          TopLeft="196,2525.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="304,42"
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim\EST - Write Job Finish information"
+          TopLeft="36.4,169" />
+        <NodeLayout
+          Size="304,42"
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim\EST - Write Job Start information"
+          TopLeft="36.4,15" />
+        <NodeLayout
+          Size="304,42"
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim\Insert - Update - Delete"
+          TopLeft="36.4,92" />
+        <EdgeLayout
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim.PrecedenceConstraints[Constraint]"
+          TopLeft="188.4,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,35"
+              Start="0,0"
+              End="0,27.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim.PrecedenceConstraints[Constraint 1]"
+          TopLeft="188.4,134">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,35"
+              Start="0,0"
+              End="0,27.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="381,246"
+          Size="381,289"
+          Id="Package\Sequence Container - DIM TABLES\Sequence Container - position_dim"
+          TopLeft="0,2946" />
+        <EdgeLayout
+          Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 8]"
+          TopLeft="193.25,2874.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,71.5"
+              Start="0,0"
+              End="0,64">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,64" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-25.304453125,26.1953125,50.60890625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="706,3290"
+          Size="706,3333"
           Id="Package\Sequence Container - DIM TABLES"
           TopLeft="50,32.75" />
       </GraphLayout>
