@@ -47,7 +47,8 @@
 	[parent_guardian_notified] varchar(3),
 	[detail] varchar(255),
 	[cust_service] varchar(100),
-	[customer_site] varchar(200)
+	[customer_site] varchar(200),
+    [site]  varchar(200) NULL
 );
 go
 -- PK
