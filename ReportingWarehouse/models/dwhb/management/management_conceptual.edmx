@@ -5,6 +5,23 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="management_conceptual.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="audit_fact">
+          <Key>
+            <PropertyRef Name="audit_key" />
+          </Key>
+          <Property Name="audit_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="database" Type="varchar" MaxLength="80" />
+          <Property Name="schema" Type="varchar" MaxLength="80" />
+          <Property Name="table_name" Type="varchar" MaxLength="80" />
+          <Property Name="column_name" Type="varchar" MaxLength="80" />
+          <Property Name="dwh_key" Type="int" />
+          <Property Name="source_system_key" Type="varchar" MaxLength="20" />
+          <Property Name="check_description" Type="varchar" MaxLength="255" />
+          <Property Name="check_type" Type="varchar" MaxLength="10" />
+          <Property Name="message" Type="varchar" MaxLength="255" />
+          <Property Name="audit_date" Type="date" />
+          <Property Name="quality_check_key" Type="int" />
+        </EntityType>
         <EntityType Name="batch_dim">
           <Key>
             <PropertyRef Name="batch_key" />
@@ -128,6 +145,18 @@
           <Property Name="database" Type="nvarchar(max)" Nullable="false" />
           <Property Name="server" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
+        <Association Name="fk_audit_fact_quality_check_key">
+          <End Role="quality_check_fact" Type="Self.quality_check_fact" Multiplicity="0..1" />
+          <End Role="audit_fact" Type="Self.audit_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quality_check_fact">
+              <PropertyRef Name="quality_check_key" />
+            </Principal>
+            <Dependent Role="audit_fact">
+              <PropertyRef Name="quality_check_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_batch_dimerror_event_detail_fact">
           <End Role="batch_dim" Type="Self.batch_dim" Multiplicity="1" />
           <End Role="error_event_detail_fact" Type="Self.error_event_detail_fact" Multiplicity="*" />
@@ -321,6 +350,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="management_conceptualStoreContainer">
+          <EntitySet Name="audit_fact" EntityType="Self.audit_fact" Schema="management" store:Type="Tables" />
           <EntitySet Name="batch_dim" EntityType="Self.batch_dim" Schema="management" store:Type="Tables" />
           <EntitySet Name="date_dim" EntityType="Self.date_dim" Schema="management" store:Type="Tables" />
           <EntitySet Name="error_event_detail_fact" EntityType="Self.error_event_detail_fact" Schema="management" store:Type="Tables" />
@@ -331,6 +361,10 @@
           <EntitySet Name="quality_check_fact" EntityType="Self.quality_check_fact" Schema="management" store:Type="Tables" />
           <EntitySet Name="status_dim" EntityType="Self.status_dim" Schema="management" store:Type="Tables" />
           <EntitySet Name="table_dim" EntityType="Self.table_dim" Schema="management" store:Type="Tables" />
+          <AssociationSet Name="fk_audit_fact_quality_check_key" Association="Self.fk_audit_fact_quality_check_key">
+            <End Role="quality_check_fact" EntitySet="quality_check_fact" />
+            <End Role="audit_fact" EntitySet="audit_fact" />
+          </AssociationSet>
           <AssociationSet Name="fk_batch_dimerror_event_detail_fact" Association="Self.fk_batch_dimerror_event_detail_fact">
             <End Role="batch_dim" EntitySet="batch_dim" />
             <End Role="error_event_detail_fact" EntitySet="error_event_detail_fact" />
@@ -474,6 +508,11 @@
           <AssociationSet Name="fk_quality_check_fact_table_dim" Association="management_conceptual.fk_quality_check_fact_table_dim">
             <End Role="table_dim" EntitySet="table_dim" />
             <End Role="quality_check_fact" EntitySet="quality_check_fact" />
+          </AssociationSet>
+          <EntitySet Name="audit_fact" EntityType="management_conceptual.audit_fact" />
+          <AssociationSet Name="fk_audit_fact_quality_check_key" Association="management_conceptual.fk_audit_fact_quality_check_key">
+            <End Role="quality_check_fact" EntitySet="quality_check_fact" />
+            <End Role="audit_fact" EntitySet="audit_fact" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="batch_dim">
@@ -810,6 +849,7 @@
           <Property Name="error_action" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="on_off_flag" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="table_dim" Relationship="management_conceptual.fk_quality_check_fact_table_dim" FromRole="quality_check_fact" ToRole="table_dim" />
+          <NavigationProperty Name="audit_fact" Relationship="management_conceptual.fk_audit_fact_quality_check_key" FromRole="quality_check_fact" ToRole="audit_fact" />
         </EntityType>
         <Association Name="fk_quality_check_fact_table_dim">
           <End Type="management_conceptual.table_dim" Role="table_dim" Multiplicity="1" />
@@ -820,6 +860,36 @@
             </Principal>
             <Dependent Role="quality_check_fact">
               <PropertyRef Name="table_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="audit_fact">
+          <Key>
+            <PropertyRef Name="audit_key" />
+          </Key>
+          <Property Name="audit_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="database" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="schema" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="table_name" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="column_name" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="dwh_key" Type="Int32" />
+          <Property Name="source_system_key" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="check_description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="check_type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="message" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="audit_date" Type="DateTime" Precision="0" />
+          <Property Name="quality_check_key" Type="Int32" />
+          <NavigationProperty Name="quality_check_fact" Relationship="management_conceptual.fk_audit_fact_quality_check_key" FromRole="audit_fact" ToRole="quality_check_fact" />
+        </EntityType>
+        <Association Name="fk_audit_fact_quality_check_key">
+          <End Type="management_conceptual.quality_check_fact" Role="quality_check_fact" Multiplicity="0..1" />
+          <End Type="management_conceptual.audit_fact" Role="audit_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quality_check_fact">
+              <PropertyRef Name="quality_check_key" />
+            </Principal>
+            <Dependent Role="audit_fact">
+              <PropertyRef Name="quality_check_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -961,6 +1031,24 @@
                 <ScalarProperty Name="business_owner" ColumnName="business_owner" />
                 <ScalarProperty Name="table_key" ColumnName="table_key" />
                 <ScalarProperty Name="quality_check_key" ColumnName="quality_check_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="audit_fact">
+            <EntityTypeMapping TypeName="management_conceptual.audit_fact">
+              <MappingFragment StoreEntitySet="audit_fact">
+                <ScalarProperty Name="quality_check_key" ColumnName="quality_check_key" />
+                <ScalarProperty Name="audit_date" ColumnName="audit_date" />
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="check_type" ColumnName="check_type" />
+                <ScalarProperty Name="check_description" ColumnName="check_description" />
+                <ScalarProperty Name="source_system_key" ColumnName="source_system_key" />
+                <ScalarProperty Name="dwh_key" ColumnName="dwh_key" />
+                <ScalarProperty Name="column_name" ColumnName="column_name" />
+                <ScalarProperty Name="table_name" ColumnName="table_name" />
+                <ScalarProperty Name="schema" ColumnName="schema" />
+                <ScalarProperty Name="database" ColumnName="database" />
+                <ScalarProperty Name="audit_key" ColumnName="audit_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
