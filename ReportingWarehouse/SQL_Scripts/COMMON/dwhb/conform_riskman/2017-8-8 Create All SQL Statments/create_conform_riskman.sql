@@ -367,7 +367,8 @@ CREATE TABLE [conform_riskman].[incident_fact] (
     [parent_guardian_notified] varchar(3)  NULL,
     [detail] varchar(255)  NULL,
     [cust_service] varchar(100)  NULL,
-    [customer_site] varchar(200)  NULL
+    [customer_site] varchar(200)  NULL,
+	[site]  varchar(200) NULL
 );
 GO
 
