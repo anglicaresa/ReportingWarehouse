@@ -370,6 +370,27 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="program_name" Type="varchar" MaxLength="50" />
           <Property Name="program_key" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="RECONCILE_INVOICE_FACT">
+          <Key>
+            <PropertyRef Name="reconcile_invocie_key" />
+          </Key>
+          <Property Name="reconcile_invocie_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Accnbri" Type="int" />
+          <Property Name="Client_key" Type="int" />
+          <Property Name="Portfolio_key" Type="int" />
+          <Property Name="Service_key" Type="int" />
+          <Property Name="Program_key" Type="int" />
+          <Property Name="ComCare_service_type" Type="varchar" MaxLength="20" />
+          <Property Name="Invocie_date_key" Type="int" />
+          <Property Name="Invocie_Amount" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="Invoice_Period" Type="varchar" MaxLength="40" />
+          <Property Name="Invoice_Description" Type="varchar" MaxLength="40" />
+          <Property Name="ComCare_serviced_hours" Type="smallint" />
+          <Property Name="ComCare_service_charges" Type="decimal" Precision="9" Scale="2" />
+          <Property Name="Balance_flag" Type="varchar" MaxLength="1" />
+        </EntityType>
         <EntityType Name="service_stream_dim">
           <Key>
             <PropertyRef Name="service_stream_key" />
@@ -635,6 +656,24 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
     [program_mapping].[program_name] AS [program_name], 
     [program_mapping].[program_key] AS [program_key]
     FROM [conform_finance].[program_mapping] AS [program_mapping]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="Self.RECONCILE_INVOICE_FACT" store:Type="Tables" store:Schema="conform_finance">
+            <DefiningQuery>SELECT 
+    [RECONCILE_INVOICE_FACT].[reconcile_invocie_key] AS [reconcile_invocie_key], 
+    [RECONCILE_INVOICE_FACT].[Accnbri] AS [Accnbri], 
+    [RECONCILE_INVOICE_FACT].[Client_key] AS [Client_key], 
+    [RECONCILE_INVOICE_FACT].[Portfolio_key] AS [Portfolio_key], 
+    [RECONCILE_INVOICE_FACT].[Service_key] AS [Service_key], 
+    [RECONCILE_INVOICE_FACT].[Program_key] AS [Program_key], 
+    [RECONCILE_INVOICE_FACT].[ComCare_service_type] AS [ComCare_service_type], 
+    [RECONCILE_INVOICE_FACT].[Invocie_date_key] AS [Invocie_date_key], 
+    [RECONCILE_INVOICE_FACT].[Invocie_Amount] AS [Invocie_Amount], 
+    [RECONCILE_INVOICE_FACT].[Invoice_Period] AS [Invoice_Period], 
+    [RECONCILE_INVOICE_FACT].[Invoice_Description] AS [Invoice_Description], 
+    [RECONCILE_INVOICE_FACT].[ComCare_serviced_hours] AS [ComCare_serviced_hours], 
+    [RECONCILE_INVOICE_FACT].[ComCare_service_charges] AS [ComCare_service_charges], 
+    [RECONCILE_INVOICE_FACT].[Balance_flag] AS [Balance_flag]
+    FROM [conform_finance].[RECONCILE_INVOICE_FACT] AS [RECONCILE_INVOICE_FACT]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="Self.fk_conform_finance_DEBTOR_FACT_account_key">
             <End Role="account_dim" EntitySet="account_dim" />
@@ -914,6 +953,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="lsl_fact" EntitySet="lsl_fact" />
           </AssociationSet>
+          <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="DWHBModel1.RECONCILE_INVOICE_FACT" />
         </EntityContainer>
         <EntityType Name="program_mapping">
           <Key>
@@ -1384,6 +1424,25 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="RECONCILE_INVOICE_FACT">
+          <Key>
+            <PropertyRef Name="reconcile_invocie_key" />
+          </Key>
+          <Property Name="reconcile_invocie_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Accnbri" Type="Int32" />
+          <Property Name="Client_key" Type="Int32" />
+          <Property Name="Portfolio_key" Type="Int32" />
+          <Property Name="Service_key" Type="Int32" />
+          <Property Name="Program_key" Type="Int32" />
+          <Property Name="ComCare_service_type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Invocie_date_key" Type="Int32" />
+          <Property Name="Invocie_Amount" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="Invoice_Period" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Invoice_Description" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ComCare_serviced_hours" Type="Int16" />
+          <Property Name="ComCare_service_charges" Type="Decimal" Precision="9" Scale="2" />
+          <Property Name="Balance_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1775,6 +1834,26 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
                 <ScalarProperty Name="position_code" ColumnName="position_code" />
                 <ScalarProperty Name="position_name" ColumnName="position_name" />
                 <ScalarProperty Name="position_key" ColumnName="position_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RECONCILE_INVOICE_FACT">
+            <EntityTypeMapping TypeName="DWHBModel1.RECONCILE_INVOICE_FACT">
+              <MappingFragment StoreEntitySet="RECONCILE_INVOICE_FACT">
+                <ScalarProperty Name="Balance_flag" ColumnName="Balance_flag" />
+                <ScalarProperty Name="ComCare_service_charges" ColumnName="ComCare_service_charges" />
+                <ScalarProperty Name="ComCare_serviced_hours" ColumnName="ComCare_serviced_hours" />
+                <ScalarProperty Name="Invoice_Description" ColumnName="Invoice_Description" />
+                <ScalarProperty Name="Invoice_Period" ColumnName="Invoice_Period" />
+                <ScalarProperty Name="Invocie_Amount" ColumnName="Invocie_Amount" />
+                <ScalarProperty Name="Invocie_date_key" ColumnName="Invocie_date_key" />
+                <ScalarProperty Name="ComCare_service_type" ColumnName="ComCare_service_type" />
+                <ScalarProperty Name="Program_key" ColumnName="Program_key" />
+                <ScalarProperty Name="Service_key" ColumnName="Service_key" />
+                <ScalarProperty Name="Portfolio_key" ColumnName="Portfolio_key" />
+                <ScalarProperty Name="Client_key" ColumnName="Client_key" />
+                <ScalarProperty Name="Accnbri" ColumnName="Accnbri" />
+                <ScalarProperty Name="reconcile_invocie_key" ColumnName="reconcile_invocie_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
