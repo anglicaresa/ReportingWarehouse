@@ -218,6 +218,35 @@
           <Property Name="AD_UserID" Type="varchar" MaxLength="100" />
           <Property Name="ASA_Email" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="EXPENSE_FACT">
+          <Key>
+            <PropertyRef Name="Expense_key" />
+          </Key>
+          <Property Name="Expense_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Transaction_no" Type="varchar" MaxLength="10" />
+          <Property Name="Transaction_date_key" Type="int" />
+          <Property Name="Merchant_Name" Type="varchar" MaxLength="50" />
+          <Property Name="Employee_Email" Type="varchar" MaxLength="50" />
+          <Property Name="Employee_key" Type="int" />
+          <Property Name="Portfolio_key" Type="int" />
+          <Property Name="Service_stream_key" Type="int" />
+          <Property Name="Program_key" Type="int" />
+          <Property Name="Manager_key" Type="int" />
+          <Property Name="Card_Infomation" Type="varchar" MaxLength="50" />
+          <Property Name="Amount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="Net_Amount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="Tax_Amount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="GST" Type="varchar" MaxLength="10" />
+          <Property Name="Description" Type="varchar" MaxLength="100" />
+          <Property Name="Activity code" Type="varchar" MaxLength="50" />
+          <Property Name="Expense_Type" Type="varchar" MaxLength="100" />
+          <Property Name="Line_desription" Type="varchar" MaxLength="100" />
+          <Property Name="Entity" Type="varchar" MaxLength="10" />
+          <Property Name="Costing" Type="varchar" MaxLength="10" />
+          <Property Name="Activity" Type="varchar" MaxLength="10" />
+          <Property Name="Natural" Type="varchar" MaxLength="10" />
+          <Property Name="Staus" Type="varchar" MaxLength="10" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DWHB.conform_finance.kpi_fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="kpi_fact">
@@ -370,8 +399,6 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="program_name" Type="varchar" MaxLength="50" />
           <Property Name="program_key" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="RECONCILE_INVOICE_FACT">
           <Key>
             <PropertyRef Name="reconcile_invocie_key" />
@@ -387,6 +414,8 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <Property Name="Invocie_date_key" Type="int" />
           <Property Name="Invocie_Amount" Type="decimal" Precision="14" Scale="2" />
           <Property Name="Invoice_Period" Type="varchar" MaxLength="40" />
+          <Property Name="Invoice_Period_Start_Date_Key" Type="int" />
+          <Property Name="Invoice_Period_End_Date_Key" Type="int" />
           <Property Name="Invoice_Description" Type="varchar" MaxLength="40" />
           <Property Name="ComCare_serviced_hours" Type="decimal" Precision="28" Scale="5" />
           <Property Name="ComCare_service_charges" Type="decimal" Precision="28" Scale="5" />
@@ -514,6 +543,78 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="EXPENSE_FACT" Type="Self.EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Transaction_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="0..1" />
+          <End Role="EXPENSE_FACT" Type="Self.EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_Manager_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="0..1" />
+          <End Role="EXPENSE_FACT" Type="Self.EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="0..1" />
+          <End Role="EXPENSE_FACT" Type="Self.EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="0..1" />
+          <End Role="EXPENSE_FACT" Type="Self.EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="0..1" />
+          <End Role="EXPENSE_FACT" Type="Self.EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_conform_finance_kpi_fact_date_key">
           <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
           <End Role="kpi_fact" Type="Self.kpi_fact" Multiplicity="*" />
@@ -605,11 +706,13 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <EntitySet Name="date_dim" EntityType="Self.date_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="debtor_fact" EntityType="Self.debtor_fact" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="employee_dim" EntityType="Self.employee_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="EXPENSE_FACT" EntityType="Self.EXPENSE_FACT" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="ledger_dim" EntityType="Self.ledger_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="lsl_fact" EntityType="Self.lsl_fact" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="position_dim" EntityType="Self.position_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="Self.RECONCILE_INVOICE_FACT" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="kpi_fact" EntityType="Self.kpi_fact" store:Type="Tables" store:Schema="conform_finance">
             <DefiningQuery>SELECT 
@@ -658,25 +761,6 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
     [program_mapping].[program_key] AS [program_key]
     FROM [conform_finance].[program_mapping] AS [program_mapping]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="Self.RECONCILE_INVOICE_FACT" store:Type="Tables" store:Schema="conform_finance">
-            <DefiningQuery>SELECT 
-    [RECONCILE_INVOICE_FACT].[reconcile_invocie_key] AS [reconcile_invocie_key], 
-    [RECONCILE_INVOICE_FACT].[account_key] AS [account_key], 
-    [RECONCILE_INVOICE_FACT].[Accnbri] AS [Accnbri], 
-    [RECONCILE_INVOICE_FACT].[Client_id] AS [Client_id], 
-    [RECONCILE_INVOICE_FACT].[Portfolio_key] AS [Portfolio_key], 
-    [RECONCILE_INVOICE_FACT].[Service_key] AS [Service_key], 
-    [RECONCILE_INVOICE_FACT].[Program_key] AS [Program_key], 
-    [RECONCILE_INVOICE_FACT].[ComCare_service_type] AS [ComCare_service_type], 
-    [RECONCILE_INVOICE_FACT].[Invocie_date_key] AS [Invocie_date_key], 
-    [RECONCILE_INVOICE_FACT].[Invocie_Amount] AS [Invocie_Amount], 
-    [RECONCILE_INVOICE_FACT].[Invoice_Period] AS [Invoice_Period], 
-    [RECONCILE_INVOICE_FACT].[Invoice_Description] AS [Invoice_Description], 
-    [RECONCILE_INVOICE_FACT].[ComCare_serviced_hours] AS [ComCare_serviced_hours], 
-    [RECONCILE_INVOICE_FACT].[ComCare_service_charges] AS [ComCare_service_charges], 
-    [RECONCILE_INVOICE_FACT].[Balance_flag] AS [Balance_flag]
-    FROM [conform_finance].[RECONCILE_INVOICE_FACT] AS [RECONCILE_INVOICE_FACT]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="Self.fk_conform_finance_DEBTOR_FACT_account_key">
             <End Role="account_dim" EntitySet="account_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
@@ -712,6 +796,30 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_service_stream_key" Association="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_date_key" Association="Self.fk_conform_finance_EXPENSE_FACT_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_employee_key" Association="Self.fk_conform_finance_EXPENSE_FACT_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_Manager_key" Association="Self.fk_conform_finance_EXPENSE_FACT_Manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_portfolio_key" Association="Self.fk_conform_finance_EXPENSE_FACT_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_program_key" Association="Self.fk_conform_finance_EXPENSE_FACT_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_service_stream_key" Association="Self.fk_conform_finance_EXPENSE_FACT_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
           </AssociationSet>
           <AssociationSet Name="fk_conform_finance_kpi_fact_date_key" Association="Self.fk_conform_finance_kpi_fact_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
@@ -813,6 +921,7 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <NavigationProperty Name="debtor_fact1" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="date_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="kpi_fact" Relationship="DWHBModel1.fk_conform_finance_kpi_fact_date_key" FromRole="date_dim" ToRole="kpi_fact" />
           <NavigationProperty Name="lsl_fact" Relationship="DWHBModel1.fk_lsl_fact_calcualte_date_key" FromRole="date_dim" ToRole="lsl_fact" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_date_key" FromRole="date_dim" ToRole="EXPENSE_FACT1" />
           </EntityType>
         <EntityType Name="ledger_dim">
           <Key>
@@ -841,6 +950,7 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_portfolio_key" FromRole="portfolio_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="lsl_fact" Relationship="DWHBModel1.fk_lsl_fact_portfolio_key" FromRole="portfolio_dim" ToRole="lsl_fact" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_portfolio_key" FromRole="portfolio_dim" ToRole="EXPENSE_FACT1" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -859,6 +969,7 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_program_key" FromRole="program_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="lsl_fact" Relationship="DWHBModel1.fk_lsl_fact_program_key" FromRole="program_dim" ToRole="lsl_fact" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_program_key" FromRole="program_dim" ToRole="EXPENSE_FACT1" />
         </EntityType>
         <EntityType Name="service_stream_dim">
           <Key>
@@ -875,6 +986,7 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_service_stream_key" FromRole="service_stream_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="lsl_fact" Relationship="DWHBModel1.fk_lsl_fact_service_stream_key" FromRole="service_stream_dim" ToRole="lsl_fact" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_service_stream_key" FromRole="service_stream_dim" ToRole="EXPENSE_FACT1" />
         </EntityType>
         <EntityContainer Name="DWHBEntities3" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="account_dim" EntityType="Self.account_dim" />
@@ -956,6 +1068,48 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
             <End Role="lsl_fact" EntitySet="lsl_fact" />
           </AssociationSet>
           <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="DWHBModel1.RECONCILE_INVOICE_FACT" />
+          <EntitySet Name="expense_fact" EntityType="DWHBModel1.expense_fact" />
+          <AssociationSet Name="expense_factdate_dim" Association="DWHBModel1.expense_factdate_dim">
+            <End Role="expense_fact" EntitySet="expense_fact" />
+            <End Role="date_dim" EntitySet="date_dim" />
+          </AssociationSet>
+          <AssociationSet Name="expense_factdate_dim1" Association="DWHBModel1.expense_factdate_dim1">
+            <End Role="expense_fact" EntitySet="expense_fact" />
+            <End Role="date_dim" EntitySet="date_dim" />
+          </AssociationSet>
+          <AssociationSet Name="expense_factdate_dim2" Association="DWHBModel1.expense_factdate_dim2">
+            <End Role="expense_fact" EntitySet="expense_fact" />
+            <End Role="date_dim" EntitySet="date_dim" />
+          </AssociationSet>
+          <AssociationSet Name="expense_factdate_dim3" Association="DWHBModel1.expense_factdate_dim3">
+            <End Role="expense_fact" EntitySet="expense_fact" />
+            <End Role="date_dim" EntitySet="date_dim" />
+          </AssociationSet>
+          <EntitySet Name="EXPENSE_FACT1" EntityType="DWHBModel1.EXPENSE_FACT1" />
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_date_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_employee_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_Manager_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_Manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_portfolio_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_program_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_service_stream_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="program_mapping">
           <Key>
@@ -1289,6 +1443,8 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <Property Name="AD_UserID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ASA_Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="lsl_fact" Relationship="DWHBModel1.fk_lsl_fact_employee_key" FromRole="employee_dim" ToRole="lsl_fact" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_employee_key" FromRole="employee_dim" ToRole="EXPENSE_FACT1" />
+          <NavigationProperty Name="EXPENSE_FACT1" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_Manager_key" FromRole="employee_dim" ToRole="EXPENSE_FACT1" />
         </EntityType>
         <EntityType Name="lsl_fact">
           <Key>
@@ -1445,7 +1601,193 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <Property Name="ComCare_serviced_hours" Type="Decimal" Precision="28" Scale="5" />
           <Property Name="ComCare_service_charges" Type="Decimal" Precision="28" Scale="5" />
           <Property Name="Balance_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Invoice_Period_Start_Date_Key" Type="Int32" />
+          <Property Name="Invoice_Period_End_Date_Key" Type="Int32" />
         </EntityType>
+        <EntityType Name="expense_fact">
+          <Key>
+            <PropertyRef Name="Expense_key" />
+          </Key>
+          <Property Name="Expense_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Transaction_no" Type="String" Nullable="false" />
+          <Property Name="Transaction_date_key" Type="Int32" Nullable="false" />
+          <Property Name="Merchant_Name" Type="String" Nullable="false" />
+          <Property Name="Employee_Email" Type="String" Nullable="false" />
+          <Property Name="Employee_Key" Type="Int32" Nullable="false" />
+          <Property Name="Portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="Service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="Program_key" Type="Int32" Nullable="false" />
+          <Property Name="manager_key" Type="Int32" Nullable="false" />
+          <Property Name="Card_Infomation" Type="String" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" />
+          <Property Name="Net_Amount" Type="Decimal" Nullable="false" />
+          <Property Name="Tax_Amount" Type="Decimal" Nullable="false" />
+          <Property Name="GST" Type="String" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <Property Name="Activity_code" Type="String" Nullable="false" />
+          <Property Name="Expense_Type" Type="String" Nullable="false" />
+          <Property Name="Line_desription" Type="String" Nullable="false" />
+          <Property Name="Entity" Type="String" Nullable="false" />
+          <Property Name="Costing" Type="String" Nullable="false" />
+          <Property Name="Activity" Type="String" Nullable="false" />
+          <Property Name="Natural" Type="String" Nullable="false" />
+          <Property Name="Staus" Type="String" Nullable="false" />
+        </EntityType>
+        <Association Name="expense_factdate_dim">
+          <End Type="DWHBModel1.expense_fact" Role="expense_fact" Multiplicity="1" />
+          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expense_fact">
+              <PropertyRef Name="Expense_key" />
+            </Principal>
+            <Dependent Role="date_dim">
+              <PropertyRef Name="expense_factExpense_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="expense_factdate_dim1">
+          <End Type="DWHBModel1.expense_fact" Role="expense_fact" Multiplicity="1" />
+          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expense_fact">
+              <PropertyRef Name="Expense_key" />
+            </Principal>
+            <Dependent Role="date_dim">
+              <PropertyRef Name="expense_factExpense_key1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="expense_factdate_dim2">
+          <End Type="DWHBModel1.expense_fact" Role="expense_fact" Multiplicity="1" />
+          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expense_fact">
+              <PropertyRef Name="Expense_key" />
+            </Principal>
+            <Dependent Role="date_dim">
+              <PropertyRef Name="expense_factExpense_key2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="expense_factdate_dim3">
+          <End Type="DWHBModel1.expense_fact" Role="expense_fact" Multiplicity="1" />
+          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expense_fact">
+              <PropertyRef Name="Expense_key" />
+            </Principal>
+            <Dependent Role="date_dim">
+              <PropertyRef Name="expense_factExpense_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EXPENSE_FACT1">
+          <Key>
+            <PropertyRef Name="Expense_key" />
+          </Key>
+          <Property Name="Expense_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Transaction_no" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Transaction_date_key" Type="Int32" />
+          <Property Name="Merchant_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Employee_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Employee_key" Type="Int32" />
+          <Property Name="Portfolio_key" Type="Int32" />
+          <Property Name="Service_stream_key" Type="Int32" />
+          <Property Name="Program_key" Type="Int32" />
+          <Property Name="Manager_key" Type="Int32" />
+          <Property Name="Card_Infomation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Amount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="Net_Amount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="Tax_Amount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="GST" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Activity_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Expense_Type" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Line_desription" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Entity" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Costing" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Activity" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Natural" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Staus" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="date_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_date_key" FromRole="EXPENSE_FACT1" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_employee_key" FromRole="EXPENSE_FACT1" ToRole="employee_dim" />
+          <NavigationProperty Name="employee_dim1" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_Manager_key" FromRole="EXPENSE_FACT1" ToRole="employee_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_portfolio_key" FromRole="EXPENSE_FACT1" ToRole="portfolio_dim" />
+          <NavigationProperty Name="program_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_program_key" FromRole="EXPENSE_FACT1" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_service_stream_key" FromRole="EXPENSE_FACT1" ToRole="service_stream_dim" />
+        </EntityType>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_date_key">
+          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT1">
+              <PropertyRef Name="Transaction_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_employee_key">
+          <End Type="DWHBModel1.employee_dim" Role="employee_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT1">
+              <PropertyRef Name="Employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_Manager_key">
+          <End Type="DWHBModel1.employee_dim" Role="employee_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT1">
+              <PropertyRef Name="Manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_portfolio_key">
+          <End Type="DWHBModel1.portfolio_dim" Role="portfolio_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT1">
+              <PropertyRef Name="Portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_program_key">
+          <End Type="DWHBModel1.program_dim" Role="program_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT1">
+              <PropertyRef Name="Program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_finance_EXPENSE_FACT_service_stream_key">
+          <End Type="DWHBModel1.service_stream_dim" Role="service_stream_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT1">
+              <PropertyRef Name="Service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1843,6 +2185,8 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <EntitySetMapping Name="RECONCILE_INVOICE_FACT">
             <EntityTypeMapping TypeName="DWHBModel1.RECONCILE_INVOICE_FACT">
               <MappingFragment StoreEntitySet="RECONCILE_INVOICE_FACT">
+                <ScalarProperty Name="Invoice_Period_End_Date_Key" ColumnName="Invoice_Period_End_Date_Key" />
+                <ScalarProperty Name="Invoice_Period_Start_Date_Key" ColumnName="Invoice_Period_Start_Date_Key" />
                 <ScalarProperty Name="Balance_flag" ColumnName="Balance_flag" />
                 <ScalarProperty Name="ComCare_service_charges" ColumnName="ComCare_service_charges" />
                 <ScalarProperty Name="ComCare_serviced_hours" ColumnName="ComCare_serviced_hours" />
@@ -1858,6 +2202,36 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
                 <ScalarProperty Name="Accnbri" ColumnName="Accnbri" />
                 <ScalarProperty Name="account_key" ColumnName="account_key" />
                 <ScalarProperty Name="reconcile_invocie_key" ColumnName="reconcile_invocie_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EXPENSE_FACT1">
+            <EntityTypeMapping TypeName="DWHBModel1.EXPENSE_FACT1">
+              <MappingFragment StoreEntitySet="EXPENSE_FACT">
+                <ScalarProperty Name="Staus" ColumnName="Staus" />
+                <ScalarProperty Name="Natural" ColumnName="Natural" />
+                <ScalarProperty Name="Activity" ColumnName="Activity" />
+                <ScalarProperty Name="Costing" ColumnName="Costing" />
+                <ScalarProperty Name="Entity" ColumnName="Entity" />
+                <ScalarProperty Name="Line_desription" ColumnName="Line_desription" />
+                <ScalarProperty Name="Expense_Type" ColumnName="Expense_Type" />
+                <ScalarProperty Name="Activity_code" ColumnName="Activity code" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="GST" ColumnName="GST" />
+                <ScalarProperty Name="Tax_Amount" ColumnName="Tax_Amount" />
+                <ScalarProperty Name="Net_Amount" ColumnName="Net_Amount" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Card_Infomation" ColumnName="Card_Infomation" />
+                <ScalarProperty Name="Manager_key" ColumnName="Manager_key" />
+                <ScalarProperty Name="Program_key" ColumnName="Program_key" />
+                <ScalarProperty Name="Service_stream_key" ColumnName="Service_stream_key" />
+                <ScalarProperty Name="Portfolio_key" ColumnName="Portfolio_key" />
+                <ScalarProperty Name="Employee_key" ColumnName="Employee_key" />
+                <ScalarProperty Name="Employee_Email" ColumnName="Employee_Email" />
+                <ScalarProperty Name="Merchant_Name" ColumnName="Merchant_Name" />
+                <ScalarProperty Name="Transaction_date_key" ColumnName="Transaction_date_key" />
+                <ScalarProperty Name="Transaction_no" ColumnName="Transaction_no" />
+                <ScalarProperty Name="Expense_key" ColumnName="Expense_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
