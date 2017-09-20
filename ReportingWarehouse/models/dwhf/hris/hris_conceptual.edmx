@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DWHFModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DWHFModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="account_dim">
           <Key>
             <PropertyRef Name="account_key" />
@@ -165,7 +165,6 @@
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="nvarchar" MaxLength="1" />
           <Property Name="pay_per_period" Type="decimal" Precision="12" Scale="6" />
-          <Property Name="hours_per_period" Type="decimal" Precision="9" Scale="6" />
           <Property Name="rem_level" Type="varchar" MaxLength="60" />
           <Property Name="rem_range" Type="varchar" MaxLength="60" />
           <Property Name="car_flag" Type="varchar" MaxLength="3" />
@@ -201,6 +200,7 @@
           <Property Name="postal_email2" Type="varchar" MaxLength="100" />
           <Property Name="ethnic_group" Type="varchar" MaxLength="10" />
           <Property Name="pay_period_unit" Type="varchar" MaxLength="1" />
+          <Property Name="units_per_period" Type="decimal" Precision="9" Scale="6" />
           <Property Name="visa_type" Type="varchar" MaxLength="64" />
           <Property Name="fte" Type="decimal" Precision="7" Scale="6" />
           <Property Name="salary" Type="decimal" Precision="18" Scale="6" />
@@ -529,29 +529,6 @@
           <Property Name="count" Type="int" />
           <Property Name="status" Type="varchar" MaxLength="20" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="employee_work_pattern_payroll">
-          <Property Name="roster_code" Type="varchar" MaxLength="10" />
-          <Property Name="day_number" Type="int" />
-          <Property Name="shift_code" Type="varchar" MaxLength="10" />
-          <Property Name="clock_in_time" Type="datetime" />
-          <Property Name="clock_out_time" Type="datetime" />
-          <Property Name="roster_desc" Type="varchar" MaxLength="50" />
-          <Property Name="rotation_no_days" Type="int" />
-          <Property Name="roster_start_date" Type="datetime" />
-          <Property Name="id_number" Type="int" />
-          <Property Name="position_code" Type="varchar" MaxLength="10" />
-          <Property Name="job_pos_title" Type="varchar" MaxLength="50" />
-          <Property Name="position_type_ind" Type="varchar" MaxLength="1" />
-          <Property Name="position_effective_date" Type="datetime" />
-          <Property Name="map_date" Type="datetime" />
-          <Property Name="days_rosterstartdate_pps" Type="decimal" Precision="10" Scale="2" />
-          <Property Name="timesheet_date" Type="datetime" />
-          <Property Name="weekday" Type="varchar" MaxLength="30" />
-          <Property Name="payperiod_start_day" Type="varchar" MaxLength="10" />
-          <Property Name="employee_name" Type="varchar" MaxLength="50" />
-        </EntityType>-->
         <EntityType Name="employee_working_hours_fact">
           <Key>
             <PropertyRef Name="employee_working_hours_key" />
@@ -568,21 +545,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <Property Name="working_hours" Type="decimal" Precision="4" Scale="2" />
           <Property Name="paid_leave_hours" Type="decimal" Precision="18" Scale="6" />
           <Property Name="unpaid_leave_hours" Type="decimal" Precision="18" Scale="6" />
-        </EntityType>
-        <EntityType Name="issued_item_fact">
-          <Key>
-            <PropertyRef Name="issued_item_key" />
-          </Key>
-          <Property Name="issued_item_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="item_key" Type="int" Nullable="false" />
-          <Property Name="issued_date_key" Type="int" Nullable="false" />
-          <Property Name="employee_key" Type="int" Nullable="false" />
-          <Property Name="returned_date_key" Type="int" Nullable="false" />
-          <Property Name="organisation_key" Type="int" Nullable="false" />
-          <Property Name="portfolio_key" Type="int" Nullable="false" />
-          <Property Name="service_stream_key" Type="int" Nullable="false" />
-          <Property Name="program_key" Type="int" Nullable="false" />
-          <Property Name="position_key" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="item_dim">
           <Key>
@@ -657,6 +619,24 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <Property Name="quarter_number" Type="nvarchar(max)" Nullable="false" />
           <Property Name="quarter_name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="year" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="non_primary_positions_fact">
+          <Key>
+            <PropertyRef Name="non_primary_position_key" />
+          </Key>
+          <Property Name="non_primary_position_key" Type="int" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="position_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="position_type" Type="varchar" MaxLength="100" />
+          <Property Name="position_code" Type="varchar" MaxLength="100" />
+          <Property Name="manager_key" Type="int" Nullable="false" />
+          <Property Name="manager_position_key" Type="int" Nullable="false" />
+          <Property Name="contract_expire_date_key" Type="int" />
+          <Property Name="position_effective_date_key" Type="int" />
+          <Property Name="position_end_date_key" Type="int" />
         </EntityType>
         <EntityType Name="organisation_dim">
           <Key>
@@ -978,6 +958,126 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_contract_expire_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="contract_expire_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_manager_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_manager_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="manager_position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_effective_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_effective_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_end_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_end_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_date_dimemployee_accreditation_fact1">
           <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
           <End Role="employee_accreditation_fact" Type="Self.employee_accreditation_fact" Multiplicity="*" />
@@ -1035,30 +1135,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             </Principal>
             <Dependent Role="employee_termination_fact">
               <PropertyRef Name="commencement_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_date_dimissued_item_fact">
-          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
-          <End Role="issued_item_fact" Type="Self.issued_item_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="issued_item_fact">
-              <PropertyRef Name="issued_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_date_dimissued_item_fact1">
-          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
-          <End Role="issued_item_fact" Type="Self.issued_item_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="issued_item_fact">
-              <PropertyRef Name="returned_date_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1274,18 +1350,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
               <PropertyRef Name="employee_key" />
             </Principal>
             <Dependent Role="employee_termination_fact">
-              <PropertyRef Name="employee_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_employee_dimissued_item_fact">
-          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
-          <End Role="issued_item_fact" Type="Self.issued_item_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="employee_dim">
-              <PropertyRef Name="employee_key" />
-            </Principal>
-            <Dependent Role="issued_item_fact">
               <PropertyRef Name="employee_key" />
             </Dependent>
           </ReferentialConstraint>
@@ -2418,18 +2482,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_item_dimissued_item_fact">
-          <End Role="item_dim" Type="Self.item_dim" Multiplicity="1" />
-          <End Role="issued_item_fact" Type="Self.issued_item_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="item_dim">
-              <PropertyRef Name="item_key" />
-            </Principal>
-            <Dependent Role="issued_item_fact">
-              <PropertyRef Name="item_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_labour_turnover_fact_month_date_key">
           <End Role="month_dim" Type="Self.month_dim" Multiplicity="1" />
           <End Role="labour_turnover_fact" Type="Self.labour_turnover_fact" Multiplicity="*" />
@@ -2610,18 +2662,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_organisation_dimissued_item_fact">
-          <End Role="organisation_dim" Type="Self.organisation_dim" Multiplicity="1" />
-          <End Role="issued_item_fact" Type="Self.issued_item_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="organisation_dim">
-              <PropertyRef Name="organisation_key" />
-            </Principal>
-            <Dependent Role="issued_item_fact">
-              <PropertyRef Name="organisation_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_personalleave_usage_report_fact_date_key">
           <End Role="month_dim" Type="Self.month_dim" Multiplicity="1" />
           <End Role="personalleave_usage_report_fact" Type="Self.personalleave_usage_report_fact" Multiplicity="*" />
@@ -2706,18 +2746,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_portfolio_dimissued_item_fact">
-          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
-          <End Role="issued_item_fact" Type="Self.issued_item_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="portfolio_dim">
-              <PropertyRef Name="portfolio_key" />
-            </Principal>
-            <Dependent Role="issued_item_fact">
-              <PropertyRef Name="portfolio_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_position_dimemployee_leave_booked_fact">
           <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
           <End Role="employee_leave_booked_fact" Type="Self.employee_leave_booked_fact" Multiplicity="*" />
@@ -2774,18 +2802,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
               <PropertyRef Name="position_key" />
             </Principal>
             <Dependent Role="employee_termination_fact">
-              <PropertyRef Name="position_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_position_dimissued_item_fact">
-          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
-          <End Role="issued_item_fact" Type="Self.issued_item_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="position_dim">
-              <PropertyRef Name="position_key" />
-            </Principal>
-            <Dependent Role="issued_item_fact">
               <PropertyRef Name="position_key" />
             </Dependent>
           </ReferentialConstraint>
@@ -2970,18 +2986,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_program_dimissued_item_fact">
-          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
-          <End Role="issued_item_fact" Type="Self.issued_item_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="program_dim">
-              <PropertyRef Name="program_key" />
-            </Principal>
-            <Dependent Role="issued_item_fact">
-              <PropertyRef Name="program_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_service_stream_dimemployee_accreditation_fact">
           <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
           <End Role="employee_accreditation_fact" Type="Self.employee_accreditation_fact" Multiplicity="*" />
@@ -3050,18 +3054,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
               <PropertyRef Name="service_stream_key" />
             </Principal>
             <Dependent Role="employee_termination_fact">
-              <PropertyRef Name="service_stream_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_service_stream_dimissued_item_fact">
-          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
-          <End Role="issued_item_fact" Type="Self.issued_item_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="service_stream_dim">
-              <PropertyRef Name="service_stream_key" />
-            </Principal>
-            <Dependent Role="issued_item_fact">
               <PropertyRef Name="service_stream_key" />
             </Dependent>
           </ReferentialConstraint>
@@ -3259,12 +3251,12 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <EntitySet Name="employee_termination_fact" EntityType="Self.employee_termination_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_timesheet_fact" EntityType="Self.employee_timesheet_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_working_hours_fact" EntityType="Self.employee_working_hours_fact" Schema="hris" store:Type="Tables" />
-          <EntitySet Name="issued_item_fact" EntityType="Self.issued_item_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="item_dim" EntityType="Self.item_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="labour_turnover_fact" EntityType="Self.labour_turnover_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="labour_turnover_report_fact" EntityType="Self.labour_turnover_report_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="leave_type_dim" EntityType="Self.leave_type_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="month_dim" EntityType="Self.month_dim" Schema="hris" store:Type="Tables" />
+          <EntitySet Name="non_primary_positions_fact" EntityType="Self.non_primary_positions_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="organisation_dim" EntityType="Self.organisation_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="payment_type_dim" EntityType="Self.payment_type_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="personalleave_usage_report_fact" EntityType="Self.personalleave_usage_report_fact" Schema="hris" store:Type="Tables" />
@@ -3320,6 +3312,46 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="all_employees_report_fact" EntitySet="all_employees_report_fact" />
           </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_contract_expire_date_key" Association="Self.fk_conform_non_primary_positions_fact_contract_expire_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_employee_key" Association="Self.fk_conform_non_primary_positions_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_manager_key" Association="Self.fk_conform_non_primary_positions_fact_manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_manager_position_key" Association="Self.fk_conform_non_primary_positions_fact_manager_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_portfolio_key" Association="Self.fk_conform_non_primary_positions_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_effective_date_key" Association="Self.fk_conform_non_primary_positions_fact_position_effective_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_end_date_key" Association="Self.fk_conform_non_primary_positions_fact_position_end_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_key" Association="Self.fk_conform_non_primary_positions_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_program_key" Association="Self.fk_conform_non_primary_positions_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_service_stream_key" Association="Self.fk_conform_non_primary_positions_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
           <AssociationSet Name="fk_date_dimemployee_accreditation_fact1" Association="Self.fk_date_dimemployee_accreditation_fact1">
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="employee_accreditation_fact" EntitySet="employee_accreditation_fact" />
@@ -3339,14 +3371,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <AssociationSet Name="fk_date_dimemployee_termination_fact_commencement_date" Association="Self.fk_date_dimemployee_termination_fact_commencement_date">
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="employee_termination_fact" EntitySet="employee_termination_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_date_dimissued_item_fact" Association="Self.fk_date_dimissued_item_fact">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="issued_item_fact" EntitySet="issued_item_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_date_dimissued_item_fact1" Association="Self.fk_date_dimissued_item_fact1">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="issued_item_fact" EntitySet="issued_item_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_employee_accreditation_dimemployee_accreditation_fact" Association="Self.fk_employee_accreditation_dimemployee_accreditation_fact">
             <End Role="accreditation_dim" EntitySet="accreditation_dim" />
@@ -3419,10 +3443,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <AssociationSet Name="fk_employee_dimemployee_termination_fact" Association="Self.fk_employee_dimemployee_termination_fact">
             <End Role="employee_dim" EntitySet="employee_dim" />
             <End Role="employee_termination_fact" EntitySet="employee_termination_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_employee_dimissued_item_fact" Association="Self.fk_employee_dimissued_item_fact">
-            <End Role="employee_dim" EntitySet="employee_dim" />
-            <End Role="issued_item_fact" EntitySet="issued_item_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_employee_last_paid_date_fact_date_key" Association="Self.fk_employee_last_paid_date_fact_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
@@ -3800,10 +3820,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="employee_working_hours_fact" EntitySet="employee_working_hours_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_item_dimissued_item_fact" Association="Self.fk_item_dimissued_item_fact">
-            <End Role="item_dim" EntitySet="item_dim" />
-            <End Role="issued_item_fact" EntitySet="issued_item_fact" />
-          </AssociationSet>
           <AssociationSet Name="fk_labour_turnover_fact_month_date_key" Association="Self.fk_labour_turnover_fact_month_date_key">
             <End Role="month_dim" EntitySet="month_dim" />
             <End Role="labour_turnover_fact" EntitySet="labour_turnover_fact" />
@@ -3864,10 +3880,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             <End Role="organisation_dim" EntitySet="organisation_dim" />
             <End Role="employee_termination_fact" EntitySet="employee_termination_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_organisation_dimissued_item_fact" Association="Self.fk_organisation_dimissued_item_fact">
-            <End Role="organisation_dim" EntitySet="organisation_dim" />
-            <End Role="issued_item_fact" EntitySet="issued_item_fact" />
-          </AssociationSet>
           <AssociationSet Name="fk_personalleave_usage_report_fact_date_key" Association="Self.fk_personalleave_usage_report_fact_date_key">
             <End Role="month_dim" EntitySet="month_dim" />
             <End Role="personalleave_usage_report_fact" EntitySet="personalleave_usage_report_fact" />
@@ -3896,10 +3908,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             <End Role="portfolio_dim" EntitySet="portfolio_dim" />
             <End Role="employee_termination_fact" EntitySet="employee_termination_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_portfolio_dimissued_item_fact" Association="Self.fk_portfolio_dimissued_item_fact">
-            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
-            <End Role="issued_item_fact" EntitySet="issued_item_fact" />
-          </AssociationSet>
           <AssociationSet Name="fk_position_dimemployee_leave_booked_fact" Association="Self.fk_position_dimemployee_leave_booked_fact">
             <End Role="position_dim" EntitySet="position_dim" />
             <End Role="employee_leave_booked_fact" EntitySet="employee_leave_booked_fact" />
@@ -3919,10 +3927,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <AssociationSet Name="fk_position_dimemployee_termination_fact" Association="Self.fk_position_dimemployee_termination_fact">
             <End Role="position_dim" EntitySet="position_dim" />
             <End Role="employee_termination_fact" EntitySet="employee_termination_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_position_dimissued_item_fact" Association="Self.fk_position_dimissued_item_fact">
-            <End Role="position_dim" EntitySet="position_dim" />
-            <End Role="issued_item_fact" EntitySet="issued_item_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_position_establishment_fact_effective_date_key" Association="Self.fk_position_establishment_fact_effective_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
@@ -3984,10 +3988,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             <End Role="program_dim" EntitySet="program_dim" />
             <End Role="employee_termination_fact" EntitySet="employee_termination_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_program_dimissued_item_fact" Association="Self.fk_program_dimissued_item_fact">
-            <End Role="program_dim" EntitySet="program_dim" />
-            <End Role="issued_item_fact" EntitySet="issued_item_fact" />
-          </AssociationSet>
           <AssociationSet Name="fk_service_stream_dimemployee_accreditation_fact" Association="Self.fk_service_stream_dimemployee_accreditation_fact">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="employee_accreditation_fact" EntitySet="employee_accreditation_fact" />
@@ -4011,10 +4011,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <AssociationSet Name="fk_service_stream_dimemployee_termination_fact" Association="Self.fk_service_stream_dimemployee_termination_fact">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="employee_termination_fact" EntitySet="employee_termination_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_service_stream_dimissued_item_fact" Association="Self.fk_service_stream_dimissued_item_fact">
-            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
-            <End Role="issued_item_fact" EntitySet="issued_item_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_timesheet_validation_activity_date_key" Association="Self.fk_timesheet_validation_activity_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
@@ -4073,8 +4069,7 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             <End Role="work_pattern_fact" EntitySet="work_pattern_fact" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DWHFModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -4218,6 +4213,9 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <NavigationProperty Name="position_establishment_fact" Relationship="Self.fk_position_establishment_fact_effective_date_key" FromRole="date_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="position_establishment_fact1" Relationship="Self.fk_position_establishment_fact_vacant_date_key" FromRole="date_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="timesheet_validation_fact" Relationship="Self.fk_timesheet_validation_activity_date_key" FromRole="date_dim" ToRole="timesheet_validation_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_contract_expire_date_key" FromRole="date_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="non_primary_positions_fact1" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_position_effective_date_key" FromRole="date_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="non_primary_positions_fact2" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_position_end_date_key" FromRole="date_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="employee_accreditation_fact">
           <Key>
@@ -4408,6 +4406,9 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <NavigationProperty Name="timesheet_validation_fact1" Relationship="Self.fk_timesheet_validation_manager_key" FromRole="employee_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="work_pattern_fact" Relationship="Self.fk_work_pattern_fact_employee_key" FromRole="employee_dim" ToRole="work_pattern_fact" />
           <NavigationProperty Name="work_pattern_fact1" Relationship="Self.fk_work_pattern_fact_manager_key" FromRole="employee_dim" ToRole="work_pattern_fact" />
+          <Property Name="units_per_period" Type="Decimal" Precision="9" Scale="6" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_employee_key" FromRole="employee_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="non_primary_positions_fact1" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_manager_key" FromRole="employee_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="employee_last_paid_date_fact">
           <Key>
@@ -5061,6 +5062,7 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <NavigationProperty Name="position_establishment_fact" Relationship="Self.fk_position_establishment_fact_portfolio_key" FromRole="portfolio_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="timesheet_validation_fact" Relationship="Self.fk_timesheet_validation_portfolio_key" FromRole="portfolio_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="work_pattern_fact" Relationship="Self.fk_work_pattern_fact_portfolio_key" FromRole="portfolio_dim" ToRole="work_pattern_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_portfolio_key" FromRole="portfolio_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="position_dim">
           <Key>
@@ -5115,6 +5117,8 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <NavigationProperty Name="timesheet_validation_fact" Relationship="Self.fk_timesheet_validation_manager_position_key" FromRole="position_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="timesheet_validation_fact1" Relationship="Self.fk_timesheet_validation_position_key" FromRole="position_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="work_pattern_fact" Relationship="Self.fk_work_pattern_fact_position_key" FromRole="position_dim" ToRole="work_pattern_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_manager_position_key" FromRole="position_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="non_primary_positions_fact1" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_position_key" FromRole="position_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="position_establishment_fact">
           <Key>
@@ -5181,6 +5185,7 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <NavigationProperty Name="position_establishment_fact" Relationship="Self.fk_position_establishment_fact_program_key" FromRole="program_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="timesheet_validation_fact" Relationship="Self.fk_timesheet_validation_program_key" FromRole="program_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="work_pattern_fact" Relationship="Self.fk_work_pattern_fact_program_key" FromRole="program_dim" ToRole="work_pattern_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_program_key" FromRole="program_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="salary_code_dim">
           <Key>
@@ -5236,6 +5241,7 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <NavigationProperty Name="position_establishment_fact" Relationship="Self.fk_position_establishment_fact_service_stream_key" FromRole="service_stream_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="timesheet_validation_fact" Relationship="Self.fk_timesheet_validation_service_stream_key" FromRole="service_stream_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="work_pattern_fact" Relationship="Self.fk_work_pattern_fact_service_stream_key" FromRole="service_stream_dim" ToRole="work_pattern_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_service_stream_key" FromRole="service_stream_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="timesheet_validation_fact">
           <Key>
@@ -8520,7 +8526,196 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="work_pattern_fact" EntitySet="work_pattern_fact" />
           </AssociationSet>
+          <EntitySet Name="non_primary_positions_fact" EntityType="DWHFModel.non_primary_positions_fact" />
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_contract_expire_date_key" Association="DWHFModel.fk_conform_non_primary_positions_fact_contract_expire_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_effective_date_key" Association="DWHFModel.fk_conform_non_primary_positions_fact_position_effective_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_end_date_key" Association="DWHFModel.fk_conform_non_primary_positions_fact_position_end_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_employee_key" Association="DWHFModel.fk_conform_non_primary_positions_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_manager_key" Association="DWHFModel.fk_conform_non_primary_positions_fact_manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_manager_position_key" Association="DWHFModel.fk_conform_non_primary_positions_fact_manager_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_portfolio_key" Association="DWHFModel.fk_conform_non_primary_positions_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_key" Association="DWHFModel.fk_conform_non_primary_positions_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_program_key" Association="DWHFModel.fk_conform_non_primary_positions_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_service_stream_key" Association="DWHFModel.fk_conform_non_primary_positions_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="non_primary_positions_fact">
+          <Key>
+            <PropertyRef Name="non_primary_position_key" />
+          </Key>
+          <Property Name="non_primary_position_key" Type="Int32" Nullable="false" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="position_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="position_type" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="position_code" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="manager_key" Type="Int32" Nullable="false" />
+          <Property Name="manager_position_key" Type="Int32" Nullable="false" />
+          <Property Name="contract_expire_date_key" Type="Int32" />
+          <Property Name="position_effective_date_key" Type="Int32" />
+          <Property Name="position_end_date_key" Type="Int32" />
+          <NavigationProperty Name="date_dim" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_contract_expire_date_key" FromRole="non_primary_positions_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim1" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_position_effective_date_key" FromRole="non_primary_positions_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim2" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_position_end_date_key" FromRole="non_primary_positions_fact" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_employee_key" FromRole="non_primary_positions_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="employee_dim1" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_manager_key" FromRole="non_primary_positions_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="position_dim" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_manager_position_key" FromRole="non_primary_positions_fact" ToRole="position_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_portfolio_key" FromRole="non_primary_positions_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="position_dim1" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_position_key" FromRole="non_primary_positions_fact" ToRole="position_dim" />
+          <NavigationProperty Name="program_dim" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_program_key" FromRole="non_primary_positions_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="DWHFModel.fk_conform_non_primary_positions_fact_service_stream_key" FromRole="non_primary_positions_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <Association Name="fk_conform_non_primary_positions_fact_contract_expire_date_key">
+          <End Type="DWHFModel.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="DWHFModel.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="contract_expire_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_effective_date_key">
+          <End Type="DWHFModel.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="DWHFModel.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_effective_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_end_date_key">
+          <End Type="DWHFModel.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="DWHFModel.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_end_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_employee_key">
+          <End Type="DWHFModel.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="DWHFModel.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_manager_key">
+          <End Type="DWHFModel.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="DWHFModel.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_manager_position_key">
+          <End Type="DWHFModel.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="DWHFModel.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="manager_position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_portfolio_key">
+          <End Type="DWHFModel.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="DWHFModel.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_key">
+          <End Type="DWHFModel.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="DWHFModel.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_program_key">
+          <End Type="DWHFModel.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="DWHFModel.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_service_stream_key">
+          <End Type="DWHFModel.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="DWHFModel.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8675,6 +8870,7 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
           <EntitySetMapping Name="employee_dim">
             <EntityTypeMapping TypeName="DWHFModel.employee_dim">
               <MappingFragment StoreEntitySet="employee_dim">
+                <ScalarProperty Name="units_per_period" ColumnName="units_per_period" />
                 <ScalarProperty Name="employee_key" ColumnName="employee_key" />
                 <ScalarProperty Name="id_number" ColumnName="id_number" />
                 <ScalarProperty Name="given_name" ColumnName="given_name" />
@@ -8693,7 +8889,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
                 <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
                 <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
                 <ScalarProperty Name="pay_per_period" ColumnName="pay_per_period" />
-                <ScalarProperty Name="hours_per_period" ColumnName="hours_per_period" />
                 <ScalarProperty Name="rem_level" ColumnName="rem_level" />
                 <ScalarProperty Name="rem_range" ColumnName="rem_range" />
                 <ScalarProperty Name="car_flag" ColumnName="car_flag" />
@@ -9092,22 +9287,6 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="issued_item_fact">
-            <EntityTypeMapping TypeName="DWHFModel.issued_item_fact">
-              <MappingFragment StoreEntitySet="issued_item_fact">
-                <ScalarProperty Name="issued_item_key" ColumnName="issued_item_key" />
-                <ScalarProperty Name="item_key" ColumnName="item_key" />
-                <ScalarProperty Name="issued_date_key" ColumnName="issued_date_key" />
-                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
-                <ScalarProperty Name="returned_date_key" ColumnName="returned_date_key" />
-                <ScalarProperty Name="organisation_key" ColumnName="organisation_key" />
-                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
-                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
-                <ScalarProperty Name="program_key" ColumnName="program_key" />
-                <ScalarProperty Name="position_key" ColumnName="position_key" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="item_dim">
             <EntityTypeMapping TypeName="DWHFModel.item_dim">
               <MappingFragment StoreEntitySet="item_dim">
@@ -9386,6 +9565,25 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="non_primary_positions_fact">
+            <EntityTypeMapping TypeName="DWHFModel.non_primary_positions_fact">
+              <MappingFragment StoreEntitySet="non_primary_positions_fact">
+                <ScalarProperty Name="position_end_date_key" ColumnName="position_end_date_key" />
+                <ScalarProperty Name="position_effective_date_key" ColumnName="position_effective_date_key" />
+                <ScalarProperty Name="contract_expire_date_key" ColumnName="contract_expire_date_key" />
+                <ScalarProperty Name="manager_position_key" ColumnName="manager_position_key" />
+                <ScalarProperty Name="manager_key" ColumnName="manager_key" />
+                <ScalarProperty Name="position_code" ColumnName="position_code" />
+                <ScalarProperty Name="position_type" ColumnName="position_type" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="position_key" ColumnName="position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="non_primary_position_key" ColumnName="non_primary_position_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -9404,6 +9602,7 @@ warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not 
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="DefaultDatabaseSchema" Value="hris" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
