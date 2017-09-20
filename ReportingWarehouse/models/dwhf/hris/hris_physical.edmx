@@ -620,6 +620,24 @@
           <Property Name="quarter_name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="year" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
+        <EntityType Name="non_primary_positions_fact">
+          <Key>
+            <PropertyRef Name="non_primary_position_key" />
+          </Key>
+          <Property Name="non_primary_position_key" Type="int" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="position_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="position_type" Type="varchar" MaxLength="100" />
+          <Property Name="position_code" Type="varchar" MaxLength="100" />
+          <Property Name="manager_key" Type="int" Nullable="false" />
+          <Property Name="manager_position_key" Type="int" Nullable="false" />
+          <Property Name="contract_expire_date_key" Type="int" />
+          <Property Name="position_effective_date_key" Type="int" />
+          <Property Name="position_end_date_key" Type="int" />
+        </EntityType>
         <EntityType Name="organisation_dim">
           <Key>
             <PropertyRef Name="organisation_key" />
@@ -937,6 +955,126 @@
             </Principal>
             <Dependent Role="all_employees_report_fact">
               <PropertyRef Name="terminate_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_contract_expire_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="contract_expire_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_manager_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_manager_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="manager_position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_effective_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_effective_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_end_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_end_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="non_primary_positions_fact" Type="Self.non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="service_stream_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3118,6 +3256,7 @@
           <EntitySet Name="labour_turnover_report_fact" EntityType="Self.labour_turnover_report_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="leave_type_dim" EntityType="Self.leave_type_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="month_dim" EntityType="Self.month_dim" Schema="hris" store:Type="Tables" />
+          <EntitySet Name="non_primary_positions_fact" EntityType="Self.non_primary_positions_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="organisation_dim" EntityType="Self.organisation_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="payment_type_dim" EntityType="Self.payment_type_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="personalleave_usage_report_fact" EntityType="Self.personalleave_usage_report_fact" Schema="hris" store:Type="Tables" />
@@ -3172,6 +3311,46 @@
           <AssociationSet Name="fk_all_employees_report_fact_terminate_date_key" Association="Self.fk_all_employees_report_fact_terminate_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="all_employees_report_fact" EntitySet="all_employees_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_contract_expire_date_key" Association="Self.fk_conform_non_primary_positions_fact_contract_expire_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_employee_key" Association="Self.fk_conform_non_primary_positions_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_manager_key" Association="Self.fk_conform_non_primary_positions_fact_manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_manager_position_key" Association="Self.fk_conform_non_primary_positions_fact_manager_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_portfolio_key" Association="Self.fk_conform_non_primary_positions_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_effective_date_key" Association="Self.fk_conform_non_primary_positions_fact_position_effective_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_end_date_key" Association="Self.fk_conform_non_primary_positions_fact_position_end_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_key" Association="Self.fk_conform_non_primary_positions_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_program_key" Association="Self.fk_conform_non_primary_positions_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_service_stream_key" Association="Self.fk_conform_non_primary_positions_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_date_dimemployee_accreditation_fact1" Association="Self.fk_date_dimemployee_accreditation_fact1">
             <End Role="date_dim" EntitySet="date_dim" />
@@ -4695,6 +4874,47 @@
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="employee_payment_summary_fact" EntitySet="employee_payment_summary_fact" />
           </AssociationSet>
+          <EntitySet Name="non_primary_positions_fact" EntityType="hris_physical.non_primary_positions_fact" />
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_contract_expire_date_key" Association="hris_physical.fk_conform_non_primary_positions_fact_contract_expire_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_effective_date_key" Association="hris_physical.fk_conform_non_primary_positions_fact_position_effective_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_end_date_key" Association="hris_physical.fk_conform_non_primary_positions_fact_position_end_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_employee_key" Association="hris_physical.fk_conform_non_primary_positions_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_manager_key" Association="hris_physical.fk_conform_non_primary_positions_fact_manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_manager_position_key" Association="hris_physical.fk_conform_non_primary_positions_fact_manager_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_portfolio_key" Association="hris_physical.fk_conform_non_primary_positions_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_position_key" Association="hris_physical.fk_conform_non_primary_positions_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_program_key" Association="hris_physical.fk_conform_non_primary_positions_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_conform_non_primary_positions_fact_service_stream_key" Association="hris_physical.fk_conform_non_primary_positions_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="account_dim">
           <Key>
@@ -4803,6 +5023,9 @@
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_effective_date_key" FromRole="date_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="position_establishment_fact1" Relationship="hris_physical.fk_position_establishment_fact_vacant_date_key" FromRole="date_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_date_key" FromRole="date_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_contract_expire_date_key" FromRole="date_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="non_primary_positions_fact1" Relationship="hris_physical.fk_conform_non_primary_positions_fact_position_effective_date_key" FromRole="date_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="non_primary_positions_fact2" Relationship="hris_physical.fk_conform_non_primary_positions_fact_position_end_date_key" FromRole="date_dim" ToRole="non_primary_positions_fact" />
           </EntityType>
         <EntityType Name="employee_accreditation_fact">
           <Key>
@@ -4992,6 +5215,8 @@
           <Property Name="AD_UserID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ASA_Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_employee_key" FromRole="employee_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_employee_key" FromRole="employee_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="non_primary_positions_fact1" Relationship="hris_physical.fk_conform_non_primary_positions_fact_manager_key" FromRole="employee_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="employee_leave_accrued_fact">
           <Key>
@@ -5432,6 +5657,7 @@
           <NavigationProperty Name="all_employees_report_fact" Relationship="hris_physical.fk_all_employees_report_fact_portfolio_key" FromRole="portfolio_dim" ToRole="all_employees_report_fact" />
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_portfolio_key" FromRole="portfolio_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_portfolio_key" FromRole="portfolio_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_portfolio_key" FromRole="portfolio_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="position_dim">
           <Key>
@@ -5485,6 +5711,8 @@
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_manager_position_key" FromRole="position_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="position_establishment_fact1" Relationship="hris_physical.fk_position_establishment_fact_position_key" FromRole="position_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_position_key" FromRole="position_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_manager_position_key" FromRole="position_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="non_primary_positions_fact1" Relationship="hris_physical.fk_conform_non_primary_positions_fact_position_key" FromRole="position_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -5521,6 +5749,7 @@
           <NavigationProperty Name="all_employees_report_fact" Relationship="hris_physical.fk_all_employees_report_fact_program_key" FromRole="program_dim" ToRole="all_employees_report_fact" />
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_program_key" FromRole="program_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_program_key" FromRole="program_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_program_key" FromRole="program_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="salary_code_dim">
           <Key>
@@ -5575,6 +5804,7 @@
           <NavigationProperty Name="all_employees_report_fact" Relationship="hris_physical.fk_all_employees_report_fact_service_stream_key" FromRole="service_stream_dim" ToRole="all_employees_report_fact" />
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_service_stream_key" FromRole="service_stream_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_service_stream_key" FromRole="service_stream_dim" ToRole="employee_payment_summary_fact" />
+          <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_service_stream_key" FromRole="service_stream_dim" ToRole="non_primary_positions_fact" />
         </EntityType>
         <EntityType Name="work_pattern_fact">
           <Key>
@@ -8159,6 +8389,154 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="non_primary_positions_fact">
+          <Key>
+            <PropertyRef Name="non_primary_position_key" />
+          </Key>
+          <Property Name="non_primary_position_key" Type="Int32" Nullable="false" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="position_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="position_type" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="position_code" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="manager_key" Type="Int32" Nullable="false" />
+          <Property Name="manager_position_key" Type="Int32" Nullable="false" />
+          <Property Name="contract_expire_date_key" Type="Int32" />
+          <Property Name="position_effective_date_key" Type="Int32" />
+          <Property Name="position_end_date_key" Type="Int32" />
+          <NavigationProperty Name="date_dim" Relationship="hris_physical.fk_conform_non_primary_positions_fact_contract_expire_date_key" FromRole="non_primary_positions_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim1" Relationship="hris_physical.fk_conform_non_primary_positions_fact_position_effective_date_key" FromRole="non_primary_positions_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim2" Relationship="hris_physical.fk_conform_non_primary_positions_fact_position_end_date_key" FromRole="non_primary_positions_fact" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="hris_physical.fk_conform_non_primary_positions_fact_employee_key" FromRole="non_primary_positions_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="employee_dim1" Relationship="hris_physical.fk_conform_non_primary_positions_fact_manager_key" FromRole="non_primary_positions_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="position_dim" Relationship="hris_physical.fk_conform_non_primary_positions_fact_manager_position_key" FromRole="non_primary_positions_fact" ToRole="position_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="hris_physical.fk_conform_non_primary_positions_fact_portfolio_key" FromRole="non_primary_positions_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="position_dim1" Relationship="hris_physical.fk_conform_non_primary_positions_fact_position_key" FromRole="non_primary_positions_fact" ToRole="position_dim" />
+          <NavigationProperty Name="program_dim" Relationship="hris_physical.fk_conform_non_primary_positions_fact_program_key" FromRole="non_primary_positions_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="hris_physical.fk_conform_non_primary_positions_fact_service_stream_key" FromRole="non_primary_positions_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <Association Name="fk_conform_non_primary_positions_fact_contract_expire_date_key">
+          <End Type="hris_physical.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="hris_physical.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="contract_expire_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_effective_date_key">
+          <End Type="hris_physical.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="hris_physical.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_effective_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_end_date_key">
+          <End Type="hris_physical.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="hris_physical.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_end_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_employee_key">
+          <End Type="hris_physical.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="hris_physical.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_manager_key">
+          <End Type="hris_physical.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="hris_physical.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_manager_position_key">
+          <End Type="hris_physical.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="hris_physical.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="manager_position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_portfolio_key">
+          <End Type="hris_physical.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="hris_physical.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_position_key">
+          <End Type="hris_physical.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="hris_physical.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_program_key">
+          <End Type="hris_physical.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="hris_physical.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_conform_non_primary_positions_fact_service_stream_key">
+          <End Type="hris_physical.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="hris_physical.non_primary_positions_fact" Role="non_primary_positions_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -9007,6 +9385,25 @@
                 <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
                 <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
                 <ScalarProperty Name="employee_payment_key" ColumnName="employee_payment_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="non_primary_positions_fact">
+            <EntityTypeMapping TypeName="hris_physical.non_primary_positions_fact">
+              <MappingFragment StoreEntitySet="non_primary_positions_fact">
+                <ScalarProperty Name="position_end_date_key" ColumnName="position_end_date_key" />
+                <ScalarProperty Name="position_effective_date_key" ColumnName="position_effective_date_key" />
+                <ScalarProperty Name="contract_expire_date_key" ColumnName="contract_expire_date_key" />
+                <ScalarProperty Name="manager_position_key" ColumnName="manager_position_key" />
+                <ScalarProperty Name="manager_key" ColumnName="manager_key" />
+                <ScalarProperty Name="position_code" ColumnName="position_code" />
+                <ScalarProperty Name="position_type" ColumnName="position_type" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="position_key" ColumnName="position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="non_primary_position_key" ColumnName="non_primary_position_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
