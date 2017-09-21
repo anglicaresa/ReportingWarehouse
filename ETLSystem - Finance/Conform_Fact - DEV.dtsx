@@ -7,13 +7,13 @@
   DTS:CreatorName="ANGLICARE-SA\jshen"
   DTS:DTSID="{6DB2316E-CE42-4B09-8609-FE52BF1A9A9D}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="13.0.2164.0"
+  DTS:LastModifiedProductVersion="13.0.2165.0"
   DTS:LocaleID="3081"
   DTS:ObjectName="Conform_Fact - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="673"
-  DTS:VersionGUID="{5C0CF376-5431-4BE3-8725-AF53D314AD5D}">
+  DTS:VersionBuild="676"
+  DTS:VersionGUID="{B92BD779-5B3E-4187-AB1A-F0096E11CF74}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">9/20/2017 10:47:23 AM</DTS:VariableValue>
+        DTS:DataType="7">9/21/2017 10:10:14 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">9/20/2017 10:47:23 AM</DTS:VariableValue>
+        DTS:DataType="7">9/21/2017 10:10:14 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">9/20/2017 10:47:23 AM</DTS:VariableValue>
+        DTS:DataType="7">9/21/2017 10:10:14 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -312,6 +312,158 @@
                   DTS:CreationName="Microsoft.ExecuteSQLTask"
                   DTS:Description="Execute SQL Task"
                   DTS:DTSID="{4982DC4A-388C-4508-8541-61BB3B4DB4F7}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{f1c0cb4b-f786-4ae7-bc92-d7a362a9e4fa}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SD1 - EXPENSE_FACT">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{bbd74161-1cd6-477a-9855-4c28b9341741}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_finance.KPI_fact'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{f4804e35-ef6a-4140-b75a-71c1b3cdae35}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_finance.KPI_FACT'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\Get new records and update columns"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{1164f90c-846f-4985-aefa-edae8caf84e7}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Get new records and update columns"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                            Purpose: ETL for expense_fact&#xA;Developer: Frank Wang&#xA;Version: V1.0 20/09/2017 Created by Frank Wang&#xA;Note:&#xA;Source table: extract.[expense_transaction]&#xA;Need to map key from conform to conform_finance as they use different primary key.&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;SET XACT_ABORT, NOCOUNT ON;&#xA;BEGIN TRANSACTION;&#xA;   use dwhb;&#xA;&#xA;&#xA;   -- temp table&#xA;    declare @t_expense TABLE&#xA;   (&#xA;&#x9;[Transaction_no] [varchar](10) NULL,&#xA;&#x9;[Transaction_date_key] [int] NULL,&#xA;&#x9;[Merchant_Name] [varchar](50) NULL,&#xA;&#x9;[Employee_Email] [varchar](50) NULL,&#xA;&#x9;[Employee_key] [int] NULL,&#xA;&#x9;[Portfolio_key] [int] NULL,&#xA;&#x9;[Service_stream_key] [int] NULL,&#xA;&#x9;[Program_key] [int] NULL,&#xA;&#x9;[Manager_key] [int] NULL,&#xA;&#x9;[Card_Infomation] [varchar](50) NULL,&#xA;&#x9;[Amount] [decimal](10, 2) NULL,&#xA;&#x9;[Net_Amount] [decimal](10, 2) NULL,&#xA;&#x9;[Tax_Amount] [decimal](10, 2) NULL,&#xA;&#x9;[GST] [varchar](10) NULL,&#xA;&#x9;[Description] [varchar](200) NULL,&#xA;&#x9;[Activity code] [varchar](50) NULL,&#xA;&#x9;[Expense_Type] [varchar](50) NULL,&#xA;&#x9;[Line_desription] [varchar](100) NULL,&#xA;&#x9;[Entity] [varchar](10) NULL,&#xA;&#x9;[Costing] [varchar](10) NULL,&#xA;&#x9;[Activity] [varchar](10) NULL,&#xA;&#x9;[Natural] [varchar](10) NULL,&#xA;&#x9;[Staus] [varchar](20) NULL   &#xA;   );&#xA;&#xA;   insert into  @t_expense&#xA;select &#xA;  TRY_CONVERT(varchar(10),et.Transaction_no) AS Transaction_no,&#xA;  dd.date_key as transaction_date_key,&#xA;  et.[Merchant Name],&#xA;  et.[card_holder_email],&#xA;  d.employee_key,&#xA;  f.portfolio_key,&#xA;  f.service_stream_key,&#xA;  f.program_key,&#xA; -- f.position_key,&#xA;  f.manager_key,&#xA;  et.Card_No,&#xA;  TRY_CONVERT([decimal](10, 2),et.amount) AS Amount,&#xA;  TRY_CONVERT([decimal](10, 2),et.Net_Amount) AS Net_Amount,&#xA;  TRY_CONVERT([decimal](10, 2),et.Tax_Amount) AS Tax_Amount,&#xA;  TRY_CONVERT(varchar(10),et.GST) AS GST,&#xA;  et.[Description],&#xA;  et.[Activity code],&#xA;  et.[Expense Type],&#xA;  et.[Line desription],&#xA;  TRY_CONVERT(varchar(10),et.Entity) AS Entity,&#xA;  TRY_CONVERT(varchar(10),et.Costing) AS Costing,&#xA;  TRY_CONVERT(varchar(10), et.Activity) AS Activity,&#xA;  TRY_CONVERT(varchar(10),et.Natural) AS Natural,&#xA;   'Waiting for approval' AS [Status]&#xA;  from extract.expense_transaction et inner join conform.employee_dim d &#xA;  on et.employee_Costing = d.id_number and d.current_row_indicator = 'Y'&#xA;  inner join  conform.employee_position_fact f on d.employee_key = f.employee_key&#xA;  left join conform_finance.date_dim dd on et.Transaction_Date = CONVERT(VARCHAR(8), dd.full_date, 112)&#xA;&#xA; --update status &#xA; -- If costing information is NULL then Uncoded else Waiting for approval&#xA; update  @t_expense&#xA; set Staus = 'Uncoded'&#xA; where len(ltrim(rtrim(costing)))&gt;0;&#xA;&#xA; --update keys:&#xA;--&#x9;[Program_key],&#xA;&#xA;WITH  t_program_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.program_key as fp_key, p.program_key as p_key &#xA;from conform_finance.program_dim fp inner join conform.program_dim p on fp.program_code = p.program_code&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.program_key = t_program_map.fp_key&#xA;FROM @t_expense AS t inner join t_program_map&#xA;on t.program_key = t_program_map.p_key;&#xA;&#xA; --update keys:&#xA;--[Portfolio_key],&#xA;WITH  t_portfolio_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.portfolio_key as fp_key, p.portfolio_key as p_key &#xA;from conform_finance.portfolio_dim fp inner join conform.portfolio_dim p on fp.portfolio_code = p.portfolio_code&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.portfolio_key = t_portfolio_map.fp_key&#xA;FROM @t_expense AS t inner join t_portfolio_map&#xA;on t.portfolio_key = t_portfolio_map.p_key;&#xA;&#xA; --update keys:&#xA;--[Service_stream_key],&#xA;WITH  t_Service_stream_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.Service_stream_key as fp_key, p.Service_stream_key as p_key &#xA;from conform_finance.Service_stream_dim fp inner join conform.Service_stream_dim p on fp.Service_stream_code = p.Service_stream_code&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.Service_stream_key = t_Service_stream_map.fp_key&#xA;FROM @t_expense AS t inner join t_Service_stream_map&#xA;on t.Service_stream_key = t_Service_stream_map.p_key;&#xA;&#xA; --update keys:&#xA;--[employee_key],&#xA;WITH  t_employee_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.employee_key as fp_key, p.employee_key as p_key &#xA;from conform_finance.employee_dim fp inner join conform.employee_dim p on fp.id_number = p.id_number&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.employee_key = t_employee_map.fp_key&#xA;FROM @t_expense AS t inner join t_employee_map&#xA;on t.employee_key = t_employee_map.p_key;&#xA;&#xA; --update keys:&#xA;--[manager_key],&#xA;WITH  t_employee_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.employee_key as fp_key, p.employee_key as p_key &#xA;from conform_finance.employee_dim fp inner join conform.employee_dim p on fp.id_number = p.id_number&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.manager_key = t_employee_map.fp_key&#xA;FROM @t_expense AS t inner join t_employee_map&#xA;on t.manager_key = t_employee_map.p_key;&#xA;&#xA;--Insert result to destination&#xA; insert into conform_finance.expense_fact&#xA; (&#xA;[Transaction_no],&#xA;&#x9;[Transaction_date_key],&#xA;&#x9;[Merchant_Name] ,&#xA;&#x9;[Employee_Email],&#xA;&#x9;[Employee_key],&#xA;&#x9;[Portfolio_key],&#xA;&#x9;[Service_stream_key],&#xA;&#x9;[Program_key],&#xA;&#x9;[Manager_key],&#xA;&#x9;[Card_Infomation] ,&#xA;&#x9;[Amount] ,&#xA;&#x9;[Net_Amount] ,&#xA;&#x9;[Tax_Amount] ,&#xA;&#x9;[GST] ,&#xA;&#x9;[Description],&#xA;&#x9;[Activity code] ,&#xA;&#x9;[Expense_Type] ,&#xA;&#x9;[Line_desription] ,&#xA;&#x9;[Entity],&#xA;&#x9;[Costing] ,&#xA;&#x9;[Activity] ,&#xA;&#x9;[Natural] ,&#xA;&#x9;[Staus] &#xA;     )&#xA;select &#xA;[Transaction_no],&#xA;&#x9;[Transaction_date_key],&#xA;&#x9;[Merchant_Name] ,&#xA;&#x9;[Employee_Email],&#xA;&#x9;[Employee_key],&#xA;&#x9;[Portfolio_key],&#xA;&#x9;[Service_stream_key],&#xA;&#x9;[Program_key],&#xA;&#x9;[Manager_key],&#xA;&#x9;[Card_Infomation] ,&#xA;&#x9;[Amount] ,&#xA;&#x9;[Net_Amount] ,&#xA;&#x9;[Tax_Amount] ,&#xA;&#x9;[GST] ,&#xA;&#x9;[Description],&#xA;&#x9;[Activity code] ,&#xA;&#x9;[Expense_Type] ,&#xA;&#x9;[Line_desription] ,&#xA;&#x9;[Entity],&#xA;&#x9;[Costing] ,&#xA;&#x9;[Activity] ,&#xA;&#x9;[Natural] ,&#xA;&#x9;[Staus] &#xA; from @t_expense;&#xA;&#xA; COMMIT TRANSACTION;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\Truncate table"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{8d483211-78c7-4e3c-9da6-b08d64bf84fd}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Truncate table"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource=" truncate table conform_finance.expense_fact" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{9a3df13e-8276-4649-9996-7e142ee7b13a}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\Truncate table" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{7d916b0d-60d8-4e27-ba47-60ae33d772ad}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\Truncate table"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\Get new records and update columns" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{06d1e22e-3180-420b-80d6-e6e122945c78}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\Get new records and update columns"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{904ca959-b184-4caa-a2ac-6ed475f4f733}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{15d8cf98-ddb9-4028-9a35-6256913d6be3}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{e2f364ba-38db-4c61-bf67-a2c1168c17d5}"
                   DTS:ExecutableType="Microsoft.ExecuteSQLTask"
                   DTS:LocaleID="-1"
                   DTS:ObjectName="Execute SQL Task - Catch Error Details">
@@ -819,6 +971,15 @@
           DTS:ObjectName="Constraint 2"
           DTS:To="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT"
           DTS:Value="2" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{C8E34550-636B-47E2-A0C8-BFB2C88C0D43}"
+          DTS:From="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT"
+          DTS:Value="2" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
   </DTS:Executables>
@@ -946,6 +1107,95 @@
           Size="345,413"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT"
           TopLeft="5.5,5.49999999999989" />
+        <NodeLayout
+          Size="257,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\EST - Write Job Finish info"
+          TopLeft="35.15,273" />
+        <NodeLayout
+          Size="257,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\EST - Write Job Start info"
+          TopLeft="35.15,28" />
+        <NodeLayout
+          Size="257,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\Get new records and update columns"
+          TopLeft="35.15,191" />
+        <NodeLayout
+          Size="257,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\Truncate table"
+          TopLeft="39.15,101" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT.PrecedenceConstraints[Constraint]"
+          TopLeft="165.65,70">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,31"
+              Start="0,0"
+              End="0,23.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT.PrecedenceConstraints[Constraint 1]"
+          TopLeft="165.65,143">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,48"
+              Start="0,0"
+              End="0,40.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,40.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT.PrecedenceConstraints[Constraint 2]"
+          TopLeft="163.65,233">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40"
+              Start="0,0"
+              End="0,32.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="345,370"
+          Size="345,413"
+          Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT"
+          TopLeft="1626.5,5.49999999999989" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Finish info"
@@ -1285,11 +1535,35 @@
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
+          TopLeft="1566.5,212">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="60,0"
+              Start="0,0"
+              End="52.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="52.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0.945546874999998,5,50.60890625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="1572,734"
-          Size="1572,777"
+          PanelSize="1976,734"
+          Size="1976,777"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="31.833333333333,1.99999999999818" />
       </GraphLayout>
@@ -1303,6 +1577,18 @@
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
