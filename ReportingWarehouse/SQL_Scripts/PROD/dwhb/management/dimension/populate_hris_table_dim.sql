@@ -124,7 +124,7 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('employee_working_hours_fact', 'dwh
 INSERT INTO [management].[TABLE_DIM] VALUES ('audit_fact', 'dwh', 'conform', 'dwhb', 'AZ-SQLBI01');
 
 INSERT INTO [dwhb].[management].[TABLE_DIM] VALUES ('employee_payment_summary_fact', 'dwh', 'conform', 'dwhb', 'AZ-SQLBI01');
-
+INSERT INTO [dwhb].[management].[TABLE_DIM] VALUES ('non_primary_positions_fact', 'dwh', 'conform', 'dwhb', 'AZ-SQLBI01');
 -- HRIS Data mart tables
 INSERT INTO [management].[TABLE_DIM] VALUES ('ACCREDITATION_DIM', 'dwh', 'hris', 'dwhf', 'AZ-SQLBI01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('DATE_DIM', 'dwh', 'hris', 'dwhf', 'AZ-SQLBI01');
@@ -164,3 +164,4 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('employee_working_hours_fact', 'dwh
 INSERT INTO [management].[TABLE_DIM] VALUES ('audit_fact', 'dwh', 'hris', 'dwhf', 'AZ-SQLBI01');
 
 INSERT INTO [dwhb].[management].[TABLE_DIM] VALUES ('employee_payment_summary_fact', 'dwh', 'hris', 'dwhf', 'AZ-SQLBI01');
+INSERT INTO [dwhb].[management].[TABLE_DIM] VALUES ('non_primary_positions_fact', 'dwh', 'hris', 'dwhf', 'AZ-SQLBI01');
