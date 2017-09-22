@@ -122,6 +122,7 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('EMPLOYEE_LEAVE_ACCRUED_FACT', 'dwh
 INSERT INTO [management].[TABLE_DIM] VALUES ('timesheet_validation_fact', 'dwh', 'conform', 'dwhb', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('audit_fact', 'dwh', 'conform', 'dwhb', 'devsql-1');
 
+INSERT INTO [management].[TABLE_DIM] VALUES ('non_primary_positions_fact', 'dwh', 'conform', 'dwhb', 'devsql-1');
 -- HRIS Data mart tables
 INSERT INTO [management].[TABLE_DIM] VALUES ('ACCREDITATION_DIM', 'dwh', 'hris', 'dwhf', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('DATE_DIM', 'dwh', 'hris', 'dwhf', 'devsql-1');
@@ -157,3 +158,6 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('WORK_PATTERN_FACT', 'dwh', 'hris',
 INSERT INTO [management].[TABLE_DIM] VALUES ('EMPLOYEE_LEAVE_ACCRUED_FACT', 'dwh', 'hris', 'dwhf', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('timesheet_validation_fact', 'dwh', 'hris', 'dwhf', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('audit_fact', 'dwh', 'hris', 'dwhf', 'devsql-1');
+
+
+INSERT INTO [management].[TABLE_DIM] VALUES ('non_primary_positions_fact', 'dwh', 'hris', 'dwhf', 'devsql-1');

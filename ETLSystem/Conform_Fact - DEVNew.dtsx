@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEVNew"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="634"
-  DTS:VersionGUID="{C8594604-DE07-43E6-96EE-ADCA7452AAA2}">
+  DTS:VersionBuild="635"
+  DTS:VersionGUID="{909E832A-96D4-400E-A841-093DCE471F60}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">9/22/2017 11:49:58 AM</DTS:VariableValue>
+        DTS:DataType="7">9/22/2017 12:04:05 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">9/22/2017 11:49:58 AM</DTS:VariableValue>
+        DTS:DataType="7">9/22/2017 12:04:05 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">9/22/2017 11:49:58 AM</DTS:VariableValue>
+        DTS:DataType="7">9/22/2017 12:04:05 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -813,7 +813,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{476CD5C3-0FB5-46D0-B31E-A8381EC0659A}"
-                  SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                            Purpose: ETL for non_primary_position_fact&#xA;Developer: Frank Wang&#xA;Version: V1.0 22/09/2017 Created by Frank Wang&#xA;Note:&#xA;Source table: conform.employee_position_fact &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;extract.[employee_entitlement_ImportFromT1File]&#xA;Steps:&#xA;1.get all non primary positions from employee_positions_fact&#xA;2.update and begin and end date  as well as  pay rate info from extract.[employee_entitlement_ImportFromT1File]&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;SET XACT_ABORT, NOCOUNT ON;&#xA;BEGIN TRANSACTION;&#xA;&#x9;USE DWHB;&#xA;&#xA;&#x9;&#xA;--1.get all non primary positions from employee_positions_fact&#xA;&#x9;truncate table conform.non_primary_positions_fact;&#xA;&#xA;&#x9;insert into conform.non_primary_positions_fact &#xA;&#x9;(&#xA;&#x9;&#x9;[portfolio_key],&#xA;&#x9;&#x9;[service_stream_key],&#xA;&#x9;&#x9;[program_key],&#xA;&#x9;&#x9;[position_key],&#xA;&#x9;&#x9;[employee_key],&#xA;&#x9;&#x9;[manager_key],&#xA;&#x9;&#x9;[manager_position_key],&#xA;&#x9;&#x9;[position_type]&#xA;&#x9;)&#xA;&#x9;select &#xA;&#x9;&#x9;[portfolio_key],&#xA;&#x9;&#x9;[service_stream_key],&#xA;&#x9;&#x9;[program_key],&#xA;&#x9;&#x9;[position_key],&#xA;&#x9;&#x9;[employee_key],&#xA;&#x9;&#x9;[manager_key],&#xA;&#x9;&#x9;[manager_position_key],&#xA;&#x9;&#x9;[primary_position_flag]&#xA;&#x9;from  conform.employee_position_fact&#xA;&#x9;where primary_position_flag not in ('P','V');&#xA;&#xA;--2.Update &#x9;[position_code]&#xA;&#xA;&#x9;update cf&#xA;&#x9;set cf.position_code = pd.position_code&#xA;&#x9;from&#xA;&#x9;conform.non_primary_positions_fact cf INNER JOIN conform.position_dim pd&#xA;&#x9;on cf.[position_key] = pd.[position_key]&#xA;&#xA;/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;--3.Update &#xA;&#xA;&#x9;[contract_expire_date_key],&#xA;&#x9;[position_effective_date_key],&#xA;&#x9;[position_end_date_key],&#xA;&#x9;[pay_rate] [decimal](18, 6) NULL,&#xA;&#xA;&#x9;from extract.[employee_entitlement_ImportFromT1File]&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;--init with 9999999.&#xA;&#x9;update conform.non_primary_positions_fact set &#x9;&#xA;&#x9;[contract_expire_date_key] = 9999999,&#xA;&#x9;[position_effective_date_key] = 9999999,&#xA;&#x9;[position_end_date_key] = 9999999;&#xA;&#xA;--update dates.&#xA;&#x9;update cf&#xA;&#x9;set&#x9;&#xA;&#x9;&#x9;cf.[contract_expire_date_key] = ced.date_key,&#xA;&#x9;&#x9;cf.[position_effective_date_key] = effd.date_key,&#xA;&#x9;&#x9;cf.[position_end_date_key] = endd.date_key&#xA;&#x9;from&#xA;&#x9;conform.non_primary_positions_fact as cf &#xA;&#x9;INNER JOIN conform.employee_dim d on cf.employee_key = d.employee_key&#xA;&#x9;inner join extract.employee_position_IFT1 t on d.id_number = t.Id_Number and cf.position_code = t.Position_Code and cf.position_type = t.Position_Type&#xA;&#x9;INNER JOIN conform.date_dim as ced&#x9;on &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;convert(datetime,(case t.Contract_Expiry_Date&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;when '' then '1/1/1800'&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else t.Contract_Expiry_Date&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;end)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;,103) = ced.[full_date]&#xA;&#x9;INNER JOIN conform.date_dim as effd&#x9;on &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;convert(datetime,(case t.Effective_Date_Job&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;when '' then '1/1/1800'&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else t.Effective_Date_Job&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;end)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;,103) = effd.[full_date]&#xA;&#x9;INNER JOIN conform.date_dim as endd&#x9;on &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;convert(datetime,(case t.End_Date_Job&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;when '' then '1/1/1800'&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else t.End_Date_Job&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;end)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;,103) = endd.[full_date];&#xA;&#xA;&#xA;--&#x9;[pay_rate] [decimal](18, 6) NULL,&#xA;&#x9;update cf&#xA;&#x9;set cf.pay_rate =  isnull(try_convert(decimal(18,6),Units),0)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;/ case when  try_convert(decimal(18,6),Units) IS NULL then 1&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; ELSE &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;CASE try_convert(decimal(18,6),Units) when 0.000000 then 1&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else try_convert(decimal(18,6),Units)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;end&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;END&#xA;&#x9;from&#xA;&#x9;conform.non_primary_positions_fact cf &#xA;&#x9;INNER JOIN conform.employee_dim d on cf.employee_key = d.employee_key&#xA;&#x9;INNER JOIN extract.[employee_entitlement_ImportFromT1File] t&#xA;&#x9;on cf.position_code = t.position_code&#xA;&#x9;and cf.position_type = t.position_type&#xA;&#x9;and d.id_number = t.id_number;&#xA;--set to 0 when NULL&#xA;&#x9;update &#x9;conform.non_primary_positions_fact  set pay_rate = 0.000000 where pay_rate is null;&#xA;&#xA; COMMIT TRANSACTION;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                            Purpose: ETL for non_primary_position_fact&#xA;Developer: Frank Wang&#xA;Version: V1.0 22/09/2017 Created by Frank Wang&#xA;Note:&#xA;Source table: conform.employee_position_fact &#xA;     extract.[employee_entitlement_ImportFromT1File]&#xA;Steps:&#xA;1.get all non primary positions from employee_positions_fact&#xA;2.update and begin and end date  as well as  pay rate info from extract.[employee_entitlement_ImportFromT1File]&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;SET XACT_ABORT, NOCOUNT ON;&#xA;BEGIN TRANSACTION;&#xA; USE DWHB;&#xA;&#xA; &#xA;--1.get all non primary positions from employee_positions_fact&#xA; truncate table conform.non_primary_positions_fact;&#xA;&#xA; insert into conform.non_primary_positions_fact &#xA; (&#xA;  [portfolio_key],&#xA;  [service_stream_key],&#xA;  [program_key],&#xA;  [position_key],&#xA;  [employee_key],&#xA;  [manager_key],&#xA;  [manager_position_key],&#xA;  [position_type]&#xA; )&#xA; select &#xA;  [portfolio_key],&#xA;  [service_stream_key],&#xA;  [program_key],&#xA;  [position_key],&#xA;  [employee_key],&#xA;  [manager_key],&#xA;  [manager_position_key],&#xA;  [primary_position_flag]&#xA; from  conform.employee_position_fact&#xA; where primary_position_flag not in ('P','V');&#xA;&#xA;--2.Update  [position_code]&#xA;&#xA; update cf&#xA; set cf.position_code = pd.position_code&#xA; from&#xA; conform.non_primary_positions_fact cf INNER JOIN conform.position_dim pd&#xA; on cf.[position_key] = pd.[position_key]&#xA;&#xA;/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;--3.Update &#xA;&#xA; [contract_expire_date_key],&#xA; [position_effective_date_key],&#xA; [position_end_date_key],&#xA; [pay_rate] [decimal](18, 6) NULL,&#xA;&#xA; from extract.[employee_entitlement_ImportFromT1File]&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;--init with 9999999.&#xA; update conform.non_primary_positions_fact set  &#xA; [contract_expire_date_key] = 9999999,&#xA; [position_effective_date_key] = 9999999,&#xA; [position_end_date_key] = 9999999;&#xA;&#xA;--update dates.&#xA; update cf&#xA; set &#xA;  cf.[contract_expire_date_key] = ced.date_key,&#xA;  cf.[position_effective_date_key] = effd.date_key,&#xA;  cf.[position_end_date_key] = endd.date_key&#xA; from&#xA; conform.non_primary_positions_fact as cf &#xA; INNER JOIN conform.employee_dim d on cf.employee_key = d.employee_key&#xA; inner join extract.employee_position_IFT1 t on d.id_number = t.Id_Number and cf.position_code = t.Position_Code and cf.position_type = t.Position_Type&#xA; INNER JOIN conform.date_dim as ced on &#xA;       convert(datetime,(case t.Contract_Expiry_Date&#xA;            when '' then '1/1/1800'&#xA;            else t.Contract_Expiry_Date&#xA;            end)&#xA;            ,103) = ced.[full_date]&#xA; INNER JOIN conform.date_dim as effd on &#xA;        convert(datetime,(case t.Effective_Date_Job&#xA;            when '' then '1/1/1800'&#xA;            else t.Effective_Date_Job&#xA;            end)&#xA;            ,103) = effd.[full_date]&#xA; INNER JOIN conform.date_dim as endd on &#xA;         convert(datetime,(case t.End_Date_Job&#xA;            when '' then '1/1/1800'&#xA;            else t.End_Date_Job&#xA;            end)&#xA;            ,103) = endd.[full_date];&#xA;&#xA;&#xA;-- [pay_rate] [decimal](18, 6) NULL,&#xA; update cf&#xA; set cf.pay_rate =  isnull(try_convert(decimal(18,6),t.amount),0)&#xA;        / case when  try_convert(decimal(18,6),t.Units) IS NULL then 1&#xA;         ELSE &#xA;         CASE try_convert(decimal(18,6),t.Units) when 0.000000 then 1&#xA;         else try_convert(decimal(18,6),t.Units)&#xA;         end&#xA;        END&#xA; from&#xA; conform.non_primary_positions_fact cf &#xA; INNER JOIN conform.employee_dim d on cf.employee_key = d.employee_key&#xA; INNER JOIN extract.[employee_entitlement_ImportFromT1File] t&#xA; on cf.position_code = t.position_code&#xA; and cf.position_type = t.position_type&#xA; and d.id_number = t.id_number;&#xA;--set to 0 when NULL&#xA; update  conform.non_primary_positions_fact  set pay_rate = 0.000000 where pay_rate is null;&#xA;&#xA; COMMIT TRANSACTION;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -15244,6 +15244,69 @@ where employee_key=? </property>
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact"
           TopLeft="24.4999999999997,10894.1666666667" />
         <NodeLayout
+          Size="206,42"
+          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact\EST - Write Job Finish info"
+          TopLeft="31.0587121212121,263.090909090908" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact\EST - Write Job Start info"
+          TopLeft="45.9375,15" />
+        <NodeLayout
+          Size="168,42"
+          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact\insert current data"
+          TopLeft="57.6041666666666,129.757575757578" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact.PrecedenceConstraints[Constraint]"
+          TopLeft="144.020833333333,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,72.7575757575778"
+              Start="0,0"
+              End="0,65.2575757575778">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,65.2575757575778" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="137.831439393939,171.757575757578">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,91.3333333333302"
+              Start="0,0"
+              End="0,83.8333333333302">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,83.8333333333302" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="77"
+          IsExpanded="True"
+          PanelSize="345,358"
+          Size="345,435"
+          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact"
+          TopLeft="27.1666666666667,11902.1666666667" />
+        <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\personalleave_usage_report_fact\EST - Write Job Finish info"
           TopLeft="45.9375,209" />
@@ -18188,6 +18251,30 @@ where employee_key=? </property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 25]"
+          TopLeft="203.666666666667,11833.3888888889">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,68.7777777777737"
+              Start="0,0"
+              End="0,61.2777777777737">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,61.2777777777737" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-25.304453125,24.8342013888869,50.60890625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
           TopLeft="200.499999999999,3682.5">
           <EdgeLayout.Curve>
@@ -18355,93 +18442,6 @@ where employee_key=? </property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="206,42"
-          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact\EST - Write Job Finish info"
-          TopLeft="31.0587121212121,263.090909090908" />
-        <NodeLayout
-          Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact\EST - Write Job Start info"
-          TopLeft="45.9375,15" />
-        <NodeLayout
-          Size="168,42"
-          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact\insert current data"
-          TopLeft="57.6041666666666,129.757575757578" />
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact.PrecedenceConstraints[Constraint]"
-          TopLeft="144.020833333333,57">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,72.7575757575778"
-              Start="0,0"
-              End="0,65.2575757575778">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,65.2575757575778" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact.PrecedenceConstraints[Constraint 2]"
-          TopLeft="137.831439393939,171.757575757578">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,91.3333333333302"
-              Start="0,0"
-              End="0,83.8333333333302">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,83.8333333333302" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="77"
-          IsExpanded="True"
-          PanelSize="345,358"
-          Size="345,435"
-          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact"
-          TopLeft="27.1666666666667,11902.1666666667" />
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 25]"
-          TopLeft="203.666666666667,11833.3888888889">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,68.7777777777737"
-              Start="0,0"
-              End="0,61.2777777777737">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,61.2777777777737" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-25.304453125,24.8342013888869,50.60890625,11.609375"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
@@ -18496,6 +18496,18 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\non_primary_position_fact.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
@@ -20607,18 +20619,6 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
-          TopLeft="448,222" />
-      </GraphLayout>
-    </LayoutInfo>
-  </DtsEventHandler>
-  <DtsEventHandler
-    design-time-name="Package\Sequence Container - Fact Tables\non_primary_position_fact.EventHandlers[OnError]">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
-        <NodeLayout
-          Size="264,42"
-          Id="Package\Sequence Container - Fact Tables\non_primary_position_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
