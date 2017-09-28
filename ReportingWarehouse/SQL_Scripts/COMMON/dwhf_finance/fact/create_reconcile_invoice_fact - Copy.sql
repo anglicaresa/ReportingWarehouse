@@ -27,7 +27,10 @@ CREATE TABLE [finance].[RECONCILE_INVOICE_FACT] (
     [Invoice_Description] varchar(40)  NULL,
     [ComCare_serviced_hours] decimal(28,5)  NULL,
     [ComCare_service_charges] decimal(28,5)  NULL,
-    [Balance_flag] varchar(1)  NULL
+    [Balance_flag] varchar(1)  NULL,
+	[Glcode] varchar(15) NULL,
+	[costing] varchar(4) NULL,
+	[cost_centre] varchar(50) NULL
 );
 GO
 
