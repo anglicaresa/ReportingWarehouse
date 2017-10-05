@@ -370,8 +370,6 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="program_name" Type="varchar" MaxLength="50" />
           <Property Name="program_key" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="RECONCILE_INVOICE_FACT">
           <Key>
             <PropertyRef Name="reconcile_invocie_key" />
@@ -387,10 +385,44 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <Property Name="Invocie_date_key" Type="int" />
           <Property Name="Invocie_Amount" Type="decimal" Precision="14" Scale="2" />
           <Property Name="Invoice_Period" Type="varchar" MaxLength="40" />
+          <Property Name="Invoice_Period_Start_Date_Key" Type="int" />
+          <Property Name="Invoice_Period_End_Date_Key" Type="int" />
           <Property Name="Invoice_Description" Type="varchar" MaxLength="40" />
           <Property Name="ComCare_serviced_hours" Type="decimal" Precision="28" Scale="5" />
           <Property Name="ComCare_service_charges" Type="decimal" Precision="28" Scale="5" />
           <Property Name="Balance_flag" Type="varchar" MaxLength="1" />
+          <Property Name="Glcode" Type="varchar" MaxLength="15" />
+          <Property Name="costing" Type="varchar" MaxLength="4" />
+          <Property Name="cost_centre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_UNBILLEDSERVICE_FACT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="RECONCILE_UNBILLEDSERVICE_FACT">
+          <Key>
+            <PropertyRef Name="notbilled_key" />
+          </Key>
+          <Property Name="notbilled_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="provider_id" Type="int" />
+          <Property Name="provider_name" Type="varchar" MaxLength="50" />
+          <Property Name="provider_contract_type" Type="varchar" MaxLength="10" />
+          <Property Name="client_id" Type="int" />
+          <Property Name="client_name" Type="varchar" MaxLength="50" />
+          <Property Name="service_date_key" Type="int" />
+          <Property Name="service_type_code" Type="varchar" MaxLength="50" />
+          <Property Name="service_name" Type="varchar" MaxLength="50" />
+          <Property Name="service_start_time" Type="time" Precision="7" />
+          <Property Name="service_end_time" Type="time" Precision="7" />
+          <Property Name="service_duration" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="travel_duration" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="schedule_duration" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="billing_funding_prog" Type="varchar" MaxLength="50" />
+          <Property Name="billing_rate" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="billing_unit" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="billing_amount" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="billing_visit_date" Type="varchar" MaxLength="10" />
+          <Property Name="billing_comments" Type="varchar" MaxLength="500" />
+          <Property Name="billing_period" Type="varchar" MaxLength="50" />
+          <Property Name="unbilled_flag" Type="varchar" MaxLength="2" />
         </EntityType>
         <EntityType Name="service_stream_dim">
           <Key>
@@ -610,6 +642,7 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="position_dim" EntityType="Self.position_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_finance" store:Type="Tables" />
+          <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="Self.RECONCILE_INVOICE_FACT" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_finance" store:Type="Tables" />
           <EntitySet Name="kpi_fact" EntityType="Self.kpi_fact" store:Type="Tables" store:Schema="conform_finance">
             <DefiningQuery>SELECT 
@@ -658,24 +691,31 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
     [program_mapping].[program_key] AS [program_key]
     FROM [conform_finance].[program_mapping] AS [program_mapping]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="Self.RECONCILE_INVOICE_FACT" store:Type="Tables" store:Schema="conform_finance">
+          <EntitySet Name="RECONCILE_UNBILLEDSERVICE_FACT" EntityType="Self.RECONCILE_UNBILLEDSERVICE_FACT" store:Type="Tables" store:Schema="conform_finance">
             <DefiningQuery>SELECT 
-    [RECONCILE_INVOICE_FACT].[reconcile_invocie_key] AS [reconcile_invocie_key], 
-    [RECONCILE_INVOICE_FACT].[account_key] AS [account_key], 
-    [RECONCILE_INVOICE_FACT].[Accnbri] AS [Accnbri], 
-    [RECONCILE_INVOICE_FACT].[Client_id] AS [Client_id], 
-    [RECONCILE_INVOICE_FACT].[Portfolio_key] AS [Portfolio_key], 
-    [RECONCILE_INVOICE_FACT].[Service_key] AS [Service_key], 
-    [RECONCILE_INVOICE_FACT].[Program_key] AS [Program_key], 
-    [RECONCILE_INVOICE_FACT].[ComCare_service_type] AS [ComCare_service_type], 
-    [RECONCILE_INVOICE_FACT].[Invocie_date_key] AS [Invocie_date_key], 
-    [RECONCILE_INVOICE_FACT].[Invocie_Amount] AS [Invocie_Amount], 
-    [RECONCILE_INVOICE_FACT].[Invoice_Period] AS [Invoice_Period], 
-    [RECONCILE_INVOICE_FACT].[Invoice_Description] AS [Invoice_Description], 
-    [RECONCILE_INVOICE_FACT].[ComCare_serviced_hours] AS [ComCare_serviced_hours], 
-    [RECONCILE_INVOICE_FACT].[ComCare_service_charges] AS [ComCare_service_charges], 
-    [RECONCILE_INVOICE_FACT].[Balance_flag] AS [Balance_flag]
-    FROM [conform_finance].[RECONCILE_INVOICE_FACT] AS [RECONCILE_INVOICE_FACT]</DefiningQuery>
+    [RECONCILE_UNBILLEDSERVICE_FACT].[notbilled_key] AS [notbilled_key], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[provider_id] AS [provider_id], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[provider_name] AS [provider_name], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[provider_contract_type] AS [provider_contract_type], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[client_id] AS [client_id], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[client_name] AS [client_name], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_date_key] AS [service_date_key], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_type_code] AS [service_type_code], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_name] AS [service_name], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_start_time] AS [service_start_time], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_end_time] AS [service_end_time], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_duration] AS [service_duration], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[travel_duration] AS [travel_duration], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[schedule_duration] AS [schedule_duration], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_funding_prog] AS [billing_funding_prog], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_rate] AS [billing_rate], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_unit] AS [billing_unit], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_amount] AS [billing_amount], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_visit_date] AS [billing_visit_date], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_comments] AS [billing_comments], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_period] AS [billing_period], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[unbilled_flag] AS [unbilled_flag]
+    FROM [conform_finance].[RECONCILE_UNBILLEDSERVICE_FACT] AS [RECONCILE_UNBILLEDSERVICE_FACT]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="Self.fk_conform_finance_DEBTOR_FACT_account_key">
             <End Role="account_dim" EntitySet="account_dim" />
@@ -957,6 +997,7 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           </AssociationSet>
           <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="DWHBModel.RECONCILE_INVOICE_FACT" />
           <EntitySet Name="expense_fact" EntityType="DWHBModel.expense_fact" />
+          <EntitySet Name="RECONCILE_UNBILLEDSERVICE_FACT" EntityType="DWHBModel.RECONCILE_UNBILLEDSERVICE_FACT" />
         </EntityContainer>
         <EntityType Name="program_mapping">
           <Key>
@@ -1449,6 +1490,11 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <Property Name="Glcode" Type="String" Nullable="false" />
           <Property Name="costing" Type="String" Nullable="false" />
           <Property Name="cost_centre" Type="String" Nullable="false" />
+          <Property Name="Invoice_Period_Start_Date_Key" Type="Int32" />
+          <Property Name="Invoice_Period_End_Date_Key" Type="Int32" />
+          <Property Name="Glcode1" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="costing1" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="cost_centre1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="expense_fact">
           <Key>
@@ -1478,6 +1524,33 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <Property Name="Activity" Type="String" Nullable="false" />
           <Property Name="Natural" Type="String" Nullable="false" />
           <Property Name="Staus" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RECONCILE_UNBILLEDSERVICE_FACT">
+          <Key>
+            <PropertyRef Name="notbilled_key" />
+          </Key>
+          <Property Name="notbilled_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="provider_id" Type="Int32" />
+          <Property Name="provider_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="provider_contract_type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="client_id" Type="Int32" />
+          <Property Name="client_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_date_key" Type="Int32" />
+          <Property Name="service_type_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_start_time" Type="Time" Precision="7" />
+          <Property Name="service_end_time" Type="Time" Precision="7" />
+          <Property Name="service_duration" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="travel_duration" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="schedule_duration" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="billing_funding_prog" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_rate" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="billing_unit" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="billing_amount" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="billing_visit_date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="billing_comments" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="billing_period" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="unbilled_flag" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1876,6 +1949,11 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
           <EntitySetMapping Name="RECONCILE_INVOICE_FACT">
             <EntityTypeMapping TypeName="DWHBModel.RECONCILE_INVOICE_FACT">
               <MappingFragment StoreEntitySet="RECONCILE_INVOICE_FACT">
+                <ScalarProperty Name="cost_centre1" ColumnName="cost_centre" />
+                <ScalarProperty Name="costing1" ColumnName="costing" />
+                <ScalarProperty Name="Glcode1" ColumnName="Glcode" />
+                <ScalarProperty Name="Invoice_Period_End_Date_Key" ColumnName="Invoice_Period_End_Date_Key" />
+                <ScalarProperty Name="Invoice_Period_Start_Date_Key" ColumnName="Invoice_Period_Start_Date_Key" />
                 <ScalarProperty Name="Balance_flag" ColumnName="Balance_flag" />
                 <ScalarProperty Name="ComCare_service_charges" ColumnName="ComCare_service_charges" />
                 <ScalarProperty Name="ComCare_serviced_hours" ColumnName="ComCare_serviced_hours" />
@@ -1891,6 +1969,34 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_INVOICE_FACT' does 
                 <ScalarProperty Name="Accnbri" ColumnName="Accnbri" />
                 <ScalarProperty Name="account_key" ColumnName="account_key" />
                 <ScalarProperty Name="reconcile_invocie_key" ColumnName="reconcile_invocie_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RECONCILE_UNBILLEDSERVICE_FACT">
+            <EntityTypeMapping TypeName="DWHBModel.RECONCILE_UNBILLEDSERVICE_FACT">
+              <MappingFragment StoreEntitySet="RECONCILE_UNBILLEDSERVICE_FACT">
+                <ScalarProperty Name="unbilled_flag" ColumnName="unbilled_flag" />
+                <ScalarProperty Name="billing_period" ColumnName="billing_period" />
+                <ScalarProperty Name="billing_comments" ColumnName="billing_comments" />
+                <ScalarProperty Name="billing_visit_date" ColumnName="billing_visit_date" />
+                <ScalarProperty Name="billing_amount" ColumnName="billing_amount" />
+                <ScalarProperty Name="billing_unit" ColumnName="billing_unit" />
+                <ScalarProperty Name="billing_rate" ColumnName="billing_rate" />
+                <ScalarProperty Name="billing_funding_prog" ColumnName="billing_funding_prog" />
+                <ScalarProperty Name="schedule_duration" ColumnName="schedule_duration" />
+                <ScalarProperty Name="travel_duration" ColumnName="travel_duration" />
+                <ScalarProperty Name="service_duration" ColumnName="service_duration" />
+                <ScalarProperty Name="service_end_time" ColumnName="service_end_time" />
+                <ScalarProperty Name="service_start_time" ColumnName="service_start_time" />
+                <ScalarProperty Name="service_name" ColumnName="service_name" />
+                <ScalarProperty Name="service_type_code" ColumnName="service_type_code" />
+                <ScalarProperty Name="service_date_key" ColumnName="service_date_key" />
+                <ScalarProperty Name="client_name" ColumnName="client_name" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="provider_contract_type" ColumnName="provider_contract_type" />
+                <ScalarProperty Name="provider_name" ColumnName="provider_name" />
+                <ScalarProperty Name="provider_id" ColumnName="provider_id" />
+                <ScalarProperty Name="notbilled_key" ColumnName="notbilled_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

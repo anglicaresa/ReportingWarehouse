@@ -237,7 +237,7 @@
           <Property Name="Net_Amount" Type="decimal" Precision="10" Scale="2" />
           <Property Name="Tax_Amount" Type="decimal" Precision="10" Scale="2" />
           <Property Name="GST" Type="varchar" MaxLength="10" />
-          <Property Name="Description" Type="varchar" MaxLength="100" />
+          <Property Name="Description" Type="varchar" MaxLength="200" />
           <Property Name="Activity code" Type="varchar" MaxLength="50" />
           <Property Name="Expense_Type" Type="varchar" MaxLength="100" />
           <Property Name="Line_desription" Type="varchar" MaxLength="100" />
@@ -245,7 +245,7 @@
           <Property Name="Costing" Type="varchar" MaxLength="10" />
           <Property Name="Activity" Type="varchar" MaxLength="10" />
           <Property Name="Natural" Type="varchar" MaxLength="10" />
-          <Property Name="Staus" Type="varchar" MaxLength="10" />
+          <Property Name="Staus" Type="varchar" MaxLength="20" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DWHB.conform_finance.kpi_fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -420,6 +420,38 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="ComCare_serviced_hours" Type="decimal" Precision="28" Scale="5" />
           <Property Name="ComCare_service_charges" Type="decimal" Precision="28" Scale="5" />
           <Property Name="Balance_flag" Type="varchar" MaxLength="1" />
+          <Property Name="Glcode" Type="varchar" MaxLength="15" />
+          <Property Name="costing" Type="varchar" MaxLength="4" />
+          <Property Name="cost_centre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_UNBILLEDSERVICE_FACT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="RECONCILE_UNBILLEDSERVICE_FACT">
+          <Key>
+            <PropertyRef Name="notbilled_key" />
+          </Key>
+          <Property Name="notbilled_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="provider_id" Type="int" />
+          <Property Name="provider_name" Type="varchar" MaxLength="50" />
+          <Property Name="provider_contract_type" Type="varchar" MaxLength="10" />
+          <Property Name="client_id" Type="int" />
+          <Property Name="client_name" Type="varchar" MaxLength="50" />
+          <Property Name="service_date_key" Type="int" />
+          <Property Name="service_type_code" Type="varchar" MaxLength="50" />
+          <Property Name="service_name" Type="varchar" MaxLength="50" />
+          <Property Name="service_start_time" Type="time" Precision="7" />
+          <Property Name="service_end_time" Type="time" Precision="7" />
+          <Property Name="service_duration" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="travel_duration" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="schedule_duration" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="billing_funding_prog" Type="varchar" MaxLength="50" />
+          <Property Name="billing_rate" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="billing_unit" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="billing_amount" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="billing_visit_date" Type="varchar" MaxLength="10" />
+          <Property Name="billing_comments" Type="varchar" MaxLength="500" />
+          <Property Name="billing_period" Type="varchar" MaxLength="50" />
+          <Property Name="unbilled_flag" Type="varchar" MaxLength="2" />
         </EntityType>
         <EntityType Name="service_stream_dim">
           <Key>
@@ -761,6 +793,32 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
     [program_mapping].[program_key] AS [program_key]
     FROM [conform_finance].[program_mapping] AS [program_mapping]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="RECONCILE_UNBILLEDSERVICE_FACT" EntityType="Self.RECONCILE_UNBILLEDSERVICE_FACT" store:Type="Tables" store:Schema="conform_finance">
+            <DefiningQuery>SELECT 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[notbilled_key] AS [notbilled_key], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[provider_id] AS [provider_id], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[provider_name] AS [provider_name], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[provider_contract_type] AS [provider_contract_type], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[client_id] AS [client_id], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[client_name] AS [client_name], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_date_key] AS [service_date_key], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_type_code] AS [service_type_code], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_name] AS [service_name], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_start_time] AS [service_start_time], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_end_time] AS [service_end_time], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[service_duration] AS [service_duration], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[travel_duration] AS [travel_duration], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[schedule_duration] AS [schedule_duration], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_funding_prog] AS [billing_funding_prog], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_rate] AS [billing_rate], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_unit] AS [billing_unit], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_amount] AS [billing_amount], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_visit_date] AS [billing_visit_date], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_comments] AS [billing_comments], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[billing_period] AS [billing_period], 
+    [RECONCILE_UNBILLEDSERVICE_FACT].[unbilled_flag] AS [unbilled_flag]
+    FROM [conform_finance].[RECONCILE_UNBILLEDSERVICE_FACT] AS [RECONCILE_UNBILLEDSERVICE_FACT]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="Self.fk_conform_finance_DEBTOR_FACT_account_key">
             <End Role="account_dim" EntitySet="account_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
@@ -921,7 +979,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <NavigationProperty Name="debtor_fact1" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="date_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="kpi_fact" Relationship="DWHBModel1.fk_conform_finance_kpi_fact_date_key" FromRole="date_dim" ToRole="kpi_fact" />
           <NavigationProperty Name="lsl_fact" Relationship="DWHBModel1.fk_lsl_fact_calcualte_date_key" FromRole="date_dim" ToRole="lsl_fact" />
-          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_date_key" FromRole="date_dim" ToRole="EXPENSE_FACT1" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_date_key" FromRole="date_dim" ToRole="EXPENSE_FACT" />
           </EntityType>
         <EntityType Name="ledger_dim">
           <Key>
@@ -950,7 +1008,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_portfolio_key" FromRole="portfolio_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="lsl_fact" Relationship="DWHBModel1.fk_lsl_fact_portfolio_key" FromRole="portfolio_dim" ToRole="lsl_fact" />
-          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_portfolio_key" FromRole="portfolio_dim" ToRole="EXPENSE_FACT1" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_portfolio_key" FromRole="portfolio_dim" ToRole="EXPENSE_FACT" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -969,7 +1027,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_program_key" FromRole="program_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="lsl_fact" Relationship="DWHBModel1.fk_lsl_fact_program_key" FromRole="program_dim" ToRole="lsl_fact" />
-          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_program_key" FromRole="program_dim" ToRole="EXPENSE_FACT1" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_program_key" FromRole="program_dim" ToRole="EXPENSE_FACT" />
         </EntityType>
         <EntityType Name="service_stream_dim">
           <Key>
@@ -986,7 +1044,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="debtor_fact" Relationship="DWHBModel1.fk_conform_finance_DEBTOR_FACT_service_stream_key" FromRole="service_stream_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="lsl_fact" Relationship="DWHBModel1.fk_lsl_fact_service_stream_key" FromRole="service_stream_dim" ToRole="lsl_fact" />
-          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_service_stream_key" FromRole="service_stream_dim" ToRole="EXPENSE_FACT1" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_service_stream_key" FromRole="service_stream_dim" ToRole="EXPENSE_FACT" />
         </EntityType>
         <EntityContainer Name="DWHBEntities3" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="account_dim" EntityType="Self.account_dim" />
@@ -1068,47 +1126,31 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
             <End Role="lsl_fact" EntitySet="lsl_fact" />
           </AssociationSet>
           <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="DWHBModel1.RECONCILE_INVOICE_FACT" />
-          <EntitySet Name="expense_fact" EntityType="DWHBModel1.expense_fact" />
-          <AssociationSet Name="expense_factdate_dim" Association="DWHBModel1.expense_factdate_dim">
-            <End Role="expense_fact" EntitySet="expense_fact" />
-            <End Role="date_dim" EntitySet="date_dim" />
-          </AssociationSet>
-          <AssociationSet Name="expense_factdate_dim1" Association="DWHBModel1.expense_factdate_dim1">
-            <End Role="expense_fact" EntitySet="expense_fact" />
-            <End Role="date_dim" EntitySet="date_dim" />
-          </AssociationSet>
-          <AssociationSet Name="expense_factdate_dim2" Association="DWHBModel1.expense_factdate_dim2">
-            <End Role="expense_fact" EntitySet="expense_fact" />
-            <End Role="date_dim" EntitySet="date_dim" />
-          </AssociationSet>
-          <AssociationSet Name="expense_factdate_dim3" Association="DWHBModel1.expense_factdate_dim3">
-            <End Role="expense_fact" EntitySet="expense_fact" />
-            <End Role="date_dim" EntitySet="date_dim" />
-          </AssociationSet>
-          <EntitySet Name="EXPENSE_FACT1" EntityType="DWHBModel1.EXPENSE_FACT1" />
+          <EntitySet Name="RECONCILE_UNBILLEDSERVICE_FACT" EntityType="DWHBModel1.RECONCILE_UNBILLEDSERVICE_FACT" />
+          <EntitySet Name="EXPENSE_FACT" EntityType="DWHBModel1.EXPENSE_FACT" />
           <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_date_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
           </AssociationSet>
           <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_employee_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_employee_key">
             <End Role="employee_dim" EntitySet="employee_dim" />
-            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
           </AssociationSet>
           <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_Manager_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_Manager_key">
             <End Role="employee_dim" EntitySet="employee_dim" />
-            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
           </AssociationSet>
           <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_portfolio_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_portfolio_key">
             <End Role="portfolio_dim" EntitySet="portfolio_dim" />
-            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
           </AssociationSet>
           <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_program_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_program_key">
             <End Role="program_dim" EntitySet="program_dim" />
-            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
           </AssociationSet>
           <AssociationSet Name="fk_conform_finance_EXPENSE_FACT_service_stream_key" Association="DWHBModel1.fk_conform_finance_EXPENSE_FACT_service_stream_key">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
-            <End Role="EXPENSE_FACT1" EntitySet="EXPENSE_FACT1" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="program_mapping">
@@ -1443,8 +1485,8 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="AD_UserID" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ASA_Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="lsl_fact" Relationship="DWHBModel1.fk_lsl_fact_employee_key" FromRole="employee_dim" ToRole="lsl_fact" />
-          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_employee_key" FromRole="employee_dim" ToRole="EXPENSE_FACT1" />
-          <NavigationProperty Name="EXPENSE_FACT1" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_Manager_key" FromRole="employee_dim" ToRole="EXPENSE_FACT1" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_employee_key" FromRole="employee_dim" ToRole="EXPENSE_FACT" />
+          <NavigationProperty Name="EXPENSE_FACT1" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_Manager_key" FromRole="employee_dim" ToRole="EXPENSE_FACT" />
         </EntityType>
         <EntityType Name="lsl_fact">
           <Key>
@@ -1603,85 +1645,38 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="Balance_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="Invoice_Period_Start_Date_Key" Type="Int32" />
           <Property Name="Invoice_Period_End_Date_Key" Type="Int32" />
+          <Property Name="Glcode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="costing" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="cost_centre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="expense_fact">
+        <EntityType Name="RECONCILE_UNBILLEDSERVICE_FACT">
           <Key>
-            <PropertyRef Name="Expense_key" />
+            <PropertyRef Name="notbilled_key" />
           </Key>
-          <Property Name="Expense_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Transaction_no" Type="String" Nullable="false" />
-          <Property Name="Transaction_date_key" Type="Int32" Nullable="false" />
-          <Property Name="Merchant_Name" Type="String" Nullable="false" />
-          <Property Name="Employee_Email" Type="String" Nullable="false" />
-          <Property Name="Employee_Key" Type="Int32" Nullable="false" />
-          <Property Name="Portfolio_key" Type="Int32" Nullable="false" />
-          <Property Name="Service_stream_key" Type="Int32" Nullable="false" />
-          <Property Name="Program_key" Type="Int32" Nullable="false" />
-          <Property Name="manager_key" Type="Int32" Nullable="false" />
-          <Property Name="Card_Infomation" Type="String" Nullable="false" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" />
-          <Property Name="Net_Amount" Type="Decimal" Nullable="false" />
-          <Property Name="Tax_Amount" Type="Decimal" Nullable="false" />
-          <Property Name="GST" Type="String" Nullable="false" />
-          <Property Name="Description" Type="String" Nullable="false" />
-          <Property Name="Activity_code" Type="String" Nullable="false" />
-          <Property Name="Expense_Type" Type="String" Nullable="false" />
-          <Property Name="Line_desription" Type="String" Nullable="false" />
-          <Property Name="Entity" Type="String" Nullable="false" />
-          <Property Name="Costing" Type="String" Nullable="false" />
-          <Property Name="Activity" Type="String" Nullable="false" />
-          <Property Name="Natural" Type="String" Nullable="false" />
-          <Property Name="Staus" Type="String" Nullable="false" />
+          <Property Name="notbilled_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="provider_id" Type="Int32" />
+          <Property Name="provider_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="provider_contract_type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="client_id" Type="Int32" />
+          <Property Name="client_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_date_key" Type="Int32" />
+          <Property Name="service_type_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_start_time" Type="Time" Precision="7" />
+          <Property Name="service_end_time" Type="Time" Precision="7" />
+          <Property Name="service_duration" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="travel_duration" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="schedule_duration" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="billing_funding_prog" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_rate" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="billing_unit" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="billing_amount" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="billing_visit_date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="billing_comments" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="billing_period" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="unbilled_flag" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
         </EntityType>
-        <Association Name="expense_factdate_dim">
-          <End Type="DWHBModel1.expense_fact" Role="expense_fact" Multiplicity="1" />
-          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="expense_fact">
-              <PropertyRef Name="Expense_key" />
-            </Principal>
-            <Dependent Role="date_dim">
-              <PropertyRef Name="expense_factExpense_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="expense_factdate_dim1">
-          <End Type="DWHBModel1.expense_fact" Role="expense_fact" Multiplicity="1" />
-          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="expense_fact">
-              <PropertyRef Name="Expense_key" />
-            </Principal>
-            <Dependent Role="date_dim">
-              <PropertyRef Name="expense_factExpense_key1" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="expense_factdate_dim2">
-          <End Type="DWHBModel1.expense_fact" Role="expense_fact" Multiplicity="1" />
-          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="expense_fact">
-              <PropertyRef Name="Expense_key" />
-            </Principal>
-            <Dependent Role="date_dim">
-              <PropertyRef Name="expense_factExpense_key2" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="expense_factdate_dim3">
-          <End Type="DWHBModel1.expense_fact" Role="expense_fact" Multiplicity="1" />
-          <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="expense_fact">
-              <PropertyRef Name="Expense_key" />
-            </Principal>
-            <Dependent Role="date_dim">
-              <PropertyRef Name="expense_factExpense_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="EXPENSE_FACT1">
+        <EntityType Name="EXPENSE_FACT">
           <Key>
             <PropertyRef Name="Expense_key" />
           </Key>
@@ -1700,7 +1695,7 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="Net_Amount" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="Tax_Amount" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="GST" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="Activity_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Expense_Type" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Line_desription" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -1708,82 +1703,82 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="Costing" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Activity" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Natural" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Staus" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="date_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_date_key" FromRole="EXPENSE_FACT1" ToRole="date_dim" />
-          <NavigationProperty Name="employee_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_employee_key" FromRole="EXPENSE_FACT1" ToRole="employee_dim" />
-          <NavigationProperty Name="employee_dim1" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_Manager_key" FromRole="EXPENSE_FACT1" ToRole="employee_dim" />
-          <NavigationProperty Name="portfolio_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_portfolio_key" FromRole="EXPENSE_FACT1" ToRole="portfolio_dim" />
-          <NavigationProperty Name="program_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_program_key" FromRole="EXPENSE_FACT1" ToRole="program_dim" />
-          <NavigationProperty Name="service_stream_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_service_stream_key" FromRole="EXPENSE_FACT1" ToRole="service_stream_dim" />
+          <Property Name="Staus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="date_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_date_key" FromRole="EXPENSE_FACT" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_employee_key" FromRole="EXPENSE_FACT" ToRole="employee_dim" />
+          <NavigationProperty Name="employee_dim1" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_Manager_key" FromRole="EXPENSE_FACT" ToRole="employee_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_portfolio_key" FromRole="EXPENSE_FACT" ToRole="portfolio_dim" />
+          <NavigationProperty Name="program_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_program_key" FromRole="EXPENSE_FACT" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="DWHBModel1.fk_conform_finance_EXPENSE_FACT_service_stream_key" FromRole="EXPENSE_FACT" ToRole="service_stream_dim" />
         </EntityType>
         <Association Name="fk_conform_finance_EXPENSE_FACT_date_key">
           <End Type="DWHBModel1.date_dim" Role="date_dim" Multiplicity="0..1" />
-          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <End Type="DWHBModel1.EXPENSE_FACT" Role="EXPENSE_FACT" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="date_dim">
               <PropertyRef Name="date_key" />
             </Principal>
-            <Dependent Role="EXPENSE_FACT1">
+            <Dependent Role="EXPENSE_FACT">
               <PropertyRef Name="Transaction_date_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_conform_finance_EXPENSE_FACT_employee_key">
           <End Type="DWHBModel1.employee_dim" Role="employee_dim" Multiplicity="0..1" />
-          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <End Type="DWHBModel1.EXPENSE_FACT" Role="EXPENSE_FACT" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="employee_dim">
               <PropertyRef Name="employee_key" />
             </Principal>
-            <Dependent Role="EXPENSE_FACT1">
+            <Dependent Role="EXPENSE_FACT">
               <PropertyRef Name="Employee_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_conform_finance_EXPENSE_FACT_Manager_key">
           <End Type="DWHBModel1.employee_dim" Role="employee_dim" Multiplicity="0..1" />
-          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <End Type="DWHBModel1.EXPENSE_FACT" Role="EXPENSE_FACT" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="employee_dim">
               <PropertyRef Name="employee_key" />
             </Principal>
-            <Dependent Role="EXPENSE_FACT1">
+            <Dependent Role="EXPENSE_FACT">
               <PropertyRef Name="Manager_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_conform_finance_EXPENSE_FACT_portfolio_key">
           <End Type="DWHBModel1.portfolio_dim" Role="portfolio_dim" Multiplicity="0..1" />
-          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <End Type="DWHBModel1.EXPENSE_FACT" Role="EXPENSE_FACT" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="portfolio_dim">
               <PropertyRef Name="portfolio_key" />
             </Principal>
-            <Dependent Role="EXPENSE_FACT1">
+            <Dependent Role="EXPENSE_FACT">
               <PropertyRef Name="Portfolio_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_conform_finance_EXPENSE_FACT_program_key">
           <End Type="DWHBModel1.program_dim" Role="program_dim" Multiplicity="0..1" />
-          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <End Type="DWHBModel1.EXPENSE_FACT" Role="EXPENSE_FACT" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="program_dim">
               <PropertyRef Name="program_key" />
             </Principal>
-            <Dependent Role="EXPENSE_FACT1">
+            <Dependent Role="EXPENSE_FACT">
               <PropertyRef Name="Program_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_conform_finance_EXPENSE_FACT_service_stream_key">
           <End Type="DWHBModel1.service_stream_dim" Role="service_stream_dim" Multiplicity="0..1" />
-          <End Type="DWHBModel1.EXPENSE_FACT1" Role="EXPENSE_FACT1" Multiplicity="*" />
+          <End Type="DWHBModel1.EXPENSE_FACT" Role="EXPENSE_FACT" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="service_stream_dim">
               <PropertyRef Name="service_stream_key" />
             </Principal>
-            <Dependent Role="EXPENSE_FACT1">
+            <Dependent Role="EXPENSE_FACT">
               <PropertyRef Name="Service_stream_key" />
             </Dependent>
           </ReferentialConstraint>
@@ -2185,6 +2180,9 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <EntitySetMapping Name="RECONCILE_INVOICE_FACT">
             <EntityTypeMapping TypeName="DWHBModel1.RECONCILE_INVOICE_FACT">
               <MappingFragment StoreEntitySet="RECONCILE_INVOICE_FACT">
+                <ScalarProperty Name="cost_centre" ColumnName="cost_centre" />
+                <ScalarProperty Name="costing" ColumnName="costing" />
+                <ScalarProperty Name="Glcode" ColumnName="Glcode" />
                 <ScalarProperty Name="Invoice_Period_End_Date_Key" ColumnName="Invoice_Period_End_Date_Key" />
                 <ScalarProperty Name="Invoice_Period_Start_Date_Key" ColumnName="Invoice_Period_Start_Date_Key" />
                 <ScalarProperty Name="Balance_flag" ColumnName="Balance_flag" />
@@ -2205,8 +2203,36 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="EXPENSE_FACT1">
-            <EntityTypeMapping TypeName="DWHBModel1.EXPENSE_FACT1">
+          <EntitySetMapping Name="RECONCILE_UNBILLEDSERVICE_FACT">
+            <EntityTypeMapping TypeName="DWHBModel1.RECONCILE_UNBILLEDSERVICE_FACT">
+              <MappingFragment StoreEntitySet="RECONCILE_UNBILLEDSERVICE_FACT">
+                <ScalarProperty Name="unbilled_flag" ColumnName="unbilled_flag" />
+                <ScalarProperty Name="billing_period" ColumnName="billing_period" />
+                <ScalarProperty Name="billing_comments" ColumnName="billing_comments" />
+                <ScalarProperty Name="billing_visit_date" ColumnName="billing_visit_date" />
+                <ScalarProperty Name="billing_amount" ColumnName="billing_amount" />
+                <ScalarProperty Name="billing_unit" ColumnName="billing_unit" />
+                <ScalarProperty Name="billing_rate" ColumnName="billing_rate" />
+                <ScalarProperty Name="billing_funding_prog" ColumnName="billing_funding_prog" />
+                <ScalarProperty Name="schedule_duration" ColumnName="schedule_duration" />
+                <ScalarProperty Name="travel_duration" ColumnName="travel_duration" />
+                <ScalarProperty Name="service_duration" ColumnName="service_duration" />
+                <ScalarProperty Name="service_end_time" ColumnName="service_end_time" />
+                <ScalarProperty Name="service_start_time" ColumnName="service_start_time" />
+                <ScalarProperty Name="service_name" ColumnName="service_name" />
+                <ScalarProperty Name="service_type_code" ColumnName="service_type_code" />
+                <ScalarProperty Name="service_date_key" ColumnName="service_date_key" />
+                <ScalarProperty Name="client_name" ColumnName="client_name" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="provider_contract_type" ColumnName="provider_contract_type" />
+                <ScalarProperty Name="provider_name" ColumnName="provider_name" />
+                <ScalarProperty Name="provider_id" ColumnName="provider_id" />
+                <ScalarProperty Name="notbilled_key" ColumnName="notbilled_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EXPENSE_FACT">
+            <EntityTypeMapping TypeName="DWHBModel1.EXPENSE_FACT">
               <MappingFragment StoreEntitySet="EXPENSE_FACT">
                 <ScalarProperty Name="Staus" ColumnName="Staus" />
                 <ScalarProperty Name="Natural" ColumnName="Natural" />
