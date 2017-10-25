@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="703"
-  DTS:VersionGUID="{2747A8FA-2DD7-4564-82DC-029831B9BDD3}">
+  DTS:VersionBuild="706"
+  DTS:VersionGUID="{A9088B4A-4428-4BC6-8A8F-76EB6B25FD73}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -34,11 +34,7 @@
       DTS:ObjectName="devsql-1\whouse.DWHB.asadwh 1">
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=devsql-1\whouse;User ID=asadwh;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Auto Translate=False;">
-          <DTS:Password
-            DTS:Name="Password"
-            Sensitive="1"></DTS:Password>
-        </DTS:ConnectionManager>
+          DTS:ConnectionString="Data Source=devsql-1\whouse;User ID=asadwh;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -106,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">10/23/2017 11:36:21 AM</DTS:VariableValue>
+        DTS:DataType="7">10/25/2017 1:53:34 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -153,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">10/23/2017 11:36:21 AM</DTS:VariableValue>
+        DTS:DataType="7">10/25/2017 1:53:34 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -164,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">10/23/2017 11:36:21 AM</DTS:VariableValue>
+        DTS:DataType="7">10/25/2017 1:53:34 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -641,6 +637,134 @@
           </DTS:EventHandlers>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{34958c72-9235-4ca8-b9cd-20b18cc931a5}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SD1 - Kypera_Tenancy_Balance_Fact">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{93e88a5c-8f43-4d94-b1b4-8fb389f81df1}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_finance.KPI_fact'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:Disabled="True"
+              DTS:DTSID="{4378d390-149f-44a2-8e10-22ad519c32f7}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_finance.KPI_FACT'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\Get new records and update columns"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{b48add00-e8d6-4eba-b4c6-8c2318180b92}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Get new records and update columns"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                  SQLTask:SqlStatementSource="use DWHB&#xA;&#xA;/*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                                     Purpose: populate Kypera_Tenancy_Balance_Fact&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Developer: Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Version: V1.0 25/10/2017 Created by Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Note:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;Entity: LAW  / Scheme: Laura and Alfred West Community Housing&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;Entity: ASA / Scheme:  not in ('Regional Housing')&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;For arrears current arrears - we need to filter on property tree for ASAH and LAWCH only (not including AC Care as they are not on board yet), &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;then use the advance filter for effective days greater than or equal to 0 days (for arrears) and less than or equal to  0 days for credit.&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;For former – same property tree filter, but advance filter on greater than 0 for arrears and less than zero for credit.&#xA;&#xA;&#xA;&#xA;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;--get date_key&#xA;declare @datekey int = (select date_key from conform_finance.date_dim where convert(date,full_date)= convert(date,getdate()-1));&#xA;&#xA;--delete existing data for @datekey&#xA;delete from conform_finance.Kypera_Tenancy_Balance_Fact where BK_day_key =@datekey;&#xA;&#xA;--populate new data&#xA;insert into conform_finance.Kypera_Tenancy_Balance_Fact&#xA;SELECT&#xA;  a.id AS TenancyID,&#xA;  case a.CurrentOccupancy&#xA;  when '1' then 'Current'&#xA;  else 'Former'&#xA;  end as Status ,&#xA;  a.Salutation AS Salutaion,&#xA;  f.Address1Line AS Address,&#xA;  a.unit AS PropertyID,&#xA;  convert(varchar,a.StartDate,103) as StartDate,&#xA;  convert(varchar,a.EndDate,103) as EndDate,&#xA;  su.FullName AS HousingOfficer,&#xA;  e.code AS Entity,&#xA;  d.Name AS Scheme,&#xA;  ISNULL(j.ActualRentBalance, 0) AS RentBalance,&#xA;  ISNULL(j.ActualNonRentBalance, 0) AS OtherChargesBalance,&#xA;  ISNULL(j.ActualTotalBalance, 0) AS Balance,&#xA;  ISNULL(j.EffectiveRentDaysInArrears,0) as EffectiveRentDaysInArrears,&#xA;  ISNULL(j.EffectiveTotalDaysInArrears,0) as EffectiveTotalDaysInArrears,&#xA;  case &#xA;  when a.CurrentOccupancy=1 and j.EffectiveRentDaysInArrears&gt;=0 then 'Arrears'&#xA;  when a.CurrentOccupancy=1 and j.EffectiveRentDaysInArrears&lt;0 then 'Credit'&#xA;  when a.CurrentOccupancy=0 and j.EffectiveRentDaysInArrears&gt;=0 then 'Arrears'&#xA;  when a.CurrentOccupancy=0 and j.EffectiveRentDaysInArrears&lt;0 then 'Credit'&#xA;  end as CreditORArrears,&#xA;  @datekey&#xA;&#xA;FROM&#xA;--use test database and have to add anglicare.&#xA;[appsql-3].anglicare.dbo.Occupancies_Occupancy AS a with (NOLOCK)&#xA;&#xA;-- Property info at Block Unit Level&#xA;INNER JOIN [appsql-3].anglicare.dbo.PropertyStructure_BlockUnit AS b&#xA;  ON a.Unit = b.Unit&#xA;  AND a.Company = '1'&#xA;&#xA;--Block Level&#xA;INNER JOIN [appsql-3].anglicare.dbo.PropertyStructure_Block AS c&#xA;  ON b.block = c.Code&#xA;&#xA;--District Level&#xA;INNER JOIN [appsql-3].anglicare.dbo.PropertyStructure_District AS e&#xA;  ON c.District = e.Code&#xA;&#xA;--Scheme Level&#xA;INNER JOIN [appsql-3].anglicare.dbo.PropertyStructure_scheme AS d&#xA;  ON c.Scheme = d.Code&#xA;&#xA;--Property Unit Level&#xA;INNER JOIN [appsql-3].anglicare.dbo.PropertyStructure_Unit AS f&#xA;  ON a.Unit = f.ID&#xA;&#xA;--For rent balance, other charges balance, total, arrears&#xA;LEFT JOIN [appsql-3].anglicare.dbo.Occupancies_RentCalculation_Arrears_EffectiveBalances AS j&#xA;  ON a.id = j.occupancy&#xA;&#xA;--For Housing Officer&#xA;LEFT JOIN [appsql-3].anglicare.dbo.Security_User AS su ON su.[User] = f.HousingOfficer&#xA;&#xA;where &#xA;&#xA; ((e.code='ASA' and d.Name not in ('Regional Housing')) or (e.code='LAW' and d.Name in ('Laura and Alfred West Community Housing')));&#xA;&#xA;&#xA; --delivery to front table&#xA; truncate table  dwhf_finance.finance.[Kypera_Tenancy_Balance_Fact];&#xA;&#xA; insert into  dwhf_finance.finance.[Kypera_Tenancy_Balance_Fact]&#xA; select * from conform_finance.Kypera_Tenancy_Balance_Fact;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{F75A0B04-E3F5-457C-ACA2-39F253D3D523}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\Get new records and update columns" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{7d7e51ba-907e-47f1-8bfb-a13fa30518a6}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\Get new records and update columns"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{981b3ffe-8dce-49ff-b00a-0e852fa9e1b2}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{4e2e8e09-94c9-4c57-8429-6c60709a359b}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{6b6bd610-0825-4584-94a1-37130f3514b6}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT"
           DTS:CreationName="STOCK:SEQUENCE"
           DTS:Description="Sequence Container"
@@ -1031,6 +1155,15 @@
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 3"
           DTS:To="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT"
+          DTS:Value="2" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{F0139C96-BBCC-44FE-8B91-B7538F809593}"
+          DTS:From="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact"
           DTS:Value="2" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
@@ -1735,11 +1868,98 @@
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="257,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\EST - Write Job Finish info"
+          TopLeft="35.15,273" />
+        <NodeLayout
+          Size="257,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\EST - Write Job Start info"
+          TopLeft="35.15,28" />
+        <NodeLayout
+          Size="257,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\Get new records and update columns"
+          TopLeft="35.15,191" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="163.65,233">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40"
+              Start="0,0"
+              End="0,32.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact.PrecedenceConstraints[Constraint]"
+          TopLeft="163.65,70">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,121"
+              Start="0,0"
+              End="0,113.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,113.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="1976,734"
-          Size="1976,777"
+          PanelSize="345,370"
+          Size="345,413"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact"
+          TopLeft="2031.5,5.49999999999989" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 4]"
+          TopLeft="1971.5,212">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="60,0"
+              Start="0,0"
+              End="52.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="52.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0.945546874999998,5,50.60890625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="2382,734"
+          Size="2382,777"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="31.833333333333,1.99999999999818" />
       </GraphLayout>
@@ -1801,6 +2021,18 @@
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
