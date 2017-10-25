@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DWHF_FINANCEModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DWHF_FINANCEModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="account_dim">
           <Key>
             <PropertyRef Name="account_key" />
@@ -135,6 +135,35 @@
           <Property Name="alloc_amt1" Type="decimal" Precision="15" Scale="2" />
           <Property Name="outstanding_amt" Type="decimal" Precision="15" Scale="2" />
         </EntityType>
+        <EntityType Name="EXPENSE_FACT">
+          <Key>
+            <PropertyRef Name="Expense_key" />
+          </Key>
+          <Property Name="Expense_key" Type="int" Nullable="false" />
+          <Property Name="Transaction_no" Type="varchar" MaxLength="10" />
+          <Property Name="Transaction_date_key" Type="int" />
+          <Property Name="Merchant_Name" Type="varchar" MaxLength="50" />
+          <Property Name="Employee_Email" Type="varchar" MaxLength="50" />
+          <Property Name="Employee_key" Type="int" />
+          <Property Name="Portfolio_key" Type="int" />
+          <Property Name="Service_stream_key" Type="int" />
+          <Property Name="Program_key" Type="int" />
+          <Property Name="Manager_key" Type="int" />
+          <Property Name="Card_Infomation" Type="varchar" MaxLength="50" />
+          <Property Name="Amount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="Net_Amount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="Tax_Amount" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="GST" Type="varchar" MaxLength="10" />
+          <Property Name="Description" Type="varchar" MaxLength="200" />
+          <Property Name="Activity code" Type="varchar" MaxLength="50" />
+          <Property Name="Expense_Type" Type="varchar" MaxLength="100" />
+          <Property Name="Line_desription" Type="varchar" MaxLength="100" />
+          <Property Name="Entity" Type="varchar" MaxLength="10" />
+          <Property Name="Costing" Type="varchar" MaxLength="10" />
+          <Property Name="Activity" Type="varchar" MaxLength="10" />
+          <Property Name="Natural" Type="varchar" MaxLength="10" />
+          <Property Name="Staus" Type="varchar" MaxLength="20" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="kpi_fact">
@@ -162,6 +191,32 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
           <Property Name="kpi_recom_2_name" Type="varchar" MaxLength="50" />
           <Property Name="kpi_recom_2_value" Type="decimal" Precision="20" Scale="2" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHF_FINANCE.finance.Kypera_Tenancy_Balance_Fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Kypera_Tenancy_Balance_Fact">
+          <Key>
+            <PropertyRef Name="Balance_key" />
+            <PropertyRef Name="Balance" />
+          </Key>
+          <Property Name="Balance_key" Type="int" Nullable="false" />
+          <Property Name="TenancyID" Type="int" />
+          <Property Name="Status" Type="varchar" MaxLength="7" />
+          <Property Name="Salutaion" Type="varchar" MaxLength="100" />
+          <Property Name="Address" Type="varchar" MaxLength="256" />
+          <Property Name="PropertyID" Type="varchar" MaxLength="13" />
+          <Property Name="StartDate" Type="varchar" MaxLength="30" />
+          <Property Name="EndDate" Type="varchar" MaxLength="30" />
+          <Property Name="HousingOfficer" Type="varchar" MaxLength="255" />
+          <Property Name="Entity" Type="varchar" MaxLength="3" />
+          <Property Name="Scheme" Type="varchar" MaxLength="50" />
+          <Property Name="RentBalance" Type="money" />
+          <Property Name="OtherChargesBalance" Type="money" />
+          <Property Name="Balance" Type="money" Nullable="false" />
+          <Property Name="EffectiveRentDaysInArrears" Type="money" />
+          <Property Name="EffectiveTotalDaysInArrears" Type="money" />
+          <Property Name="CreditORArrears" Type="varchar" MaxLength="7" />
+          <Property Name="BK_day_key" Type="int" />
+        </EntityType>
         <EntityType Name="ledger_dim">
           <Key>
             <PropertyRef Name="ledger_key" />
@@ -173,6 +228,42 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
           <Property Name="row_effective_date" Type="datetime" />
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="lsl_fact">
+          <Key>
+            <PropertyRef Name="LSL_Key" />
+          </Key>
+          <Property Name="LSL_Key" Type="int" Nullable="false" />
+          <Property Name="calcualte_date_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="primary_position_key" Type="int" Nullable="false" />
+          <Property Name="Date_of_Service" Type="datetime" />
+          <Property Name="Years_of_Completed_Service_asat_calculateday" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Years_Rounded_Down" Type="int" />
+          <Property Name="Weeks_basedon_Completed_yearsofService" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Weeks_asat_calculateday" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="LSL_Average_Hours" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Hours" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Hourly_Rate" Type="decimal" Precision="15" Scale="6" />
+          <Property Name="Liability" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Probability" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Revised_Liability_based_on_probability" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Primary_Cost_Centre" Type="varchar" MaxLength="10" />
+          <Property Name="Primary_Work_Location" Type="varchar" MaxLength="100" />
+          <Property Name="WorkCover_20162017" Type="decimal" Precision="15" Scale="6" />
+          <Property Name="Liability_at_Entitlement_Wagesgrowth" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="NPV_of_Liability" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Casual_Factor" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="NPV_after_casual_factor" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Add_Super" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Add_Workcover" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Ave_WC_Rate" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="LY_Ave_Workcover_rate" Type="decimal" Precision="15" Scale="4" />
+          <Property Name="Current_NonCurrent" Type="varchar" MaxLength="20" />
+          <Property Name="C8000or9000" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="portfolio_dim">
           <Key>
@@ -227,6 +318,71 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
           <Property Name="mapping_type" Type="varchar" MaxLength="20" />
           <Property Name="program_name" Type="varchar" MaxLength="50" />
           <Property Name="program_key" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DWHF_FINANCE.finance.RECONCILE_BILLEDPERCENTAGE_FACT' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="RECONCILE_BILLEDPERCENTAGE_FACT">
+          <Property Name="billedhours_key" Type="int" />
+          <Property Name="pay_period_end_date_key" Type="int" />
+          <Property Name="cost_centre" Type="varchar" MaxLength="50" />
+          <Property Name="employee_paid_hours" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="employee_paid_amount" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="client_billed_hours" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="client_billed_amount" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="billed_hours_percentage" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="billed_amount_percentage" Type="decimal" Precision="10" Scale="4" />
+        </EntityType>-->
+        <EntityType Name="RECONCILE_INVOICE_FACT">
+          <Key>
+            <PropertyRef Name="reconcile_invocie_key" />
+          </Key>
+          <Property Name="reconcile_invocie_key" Type="int" Nullable="false" />
+          <Property Name="account_key" Type="int" />
+          <Property Name="Accnbri" Type="int" />
+          <Property Name="Client_id" Type="int" />
+          <Property Name="Portfolio_key" Type="int" />
+          <Property Name="Service_key" Type="int" />
+          <Property Name="Program_key" Type="int" />
+          <Property Name="ComCare_service_type" Type="varchar" MaxLength="20" />
+          <Property Name="Invocie_date_key" Type="int" />
+          <Property Name="Invocie_Amount" Type="decimal" Precision="14" Scale="2" />
+          <Property Name="Invoice_Period" Type="varchar" MaxLength="40" />
+          <Property Name="Invoice_Period_Start_Date_Key" Type="int" />
+          <Property Name="Invoice_Period_End_Date_Key" Type="int" />
+          <Property Name="Invoice_Description" Type="varchar" MaxLength="40" />
+          <Property Name="ComCare_serviced_hours" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="ComCare_service_charges" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="Balance_flag" Type="varchar" MaxLength="1" />
+          <Property Name="Glcode" Type="varchar" MaxLength="15" />
+          <Property Name="costing" Type="varchar" MaxLength="4" />
+          <Property Name="cost_centre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="RECONCILE_UNBILLEDSERVICE_FACT">
+          <Key>
+            <PropertyRef Name="notbilled_key" />
+          </Key>
+          <Property Name="notbilled_key" Type="int" Nullable="false" />
+          <Property Name="provider_id" Type="int" />
+          <Property Name="provider_name" Type="varchar" MaxLength="50" />
+          <Property Name="provider_contract_type" Type="varchar" MaxLength="10" />
+          <Property Name="client_id" Type="int" />
+          <Property Name="client_name" Type="varchar" MaxLength="50" />
+          <Property Name="service_date_key" Type="int" />
+          <Property Name="service_type_code" Type="varchar" MaxLength="50" />
+          <Property Name="service_name" Type="varchar" MaxLength="50" />
+          <Property Name="service_start_time" Type="time" Precision="7" />
+          <Property Name="service_end_time" Type="time" Precision="7" />
+          <Property Name="service_duration" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="travel_duration" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="schedule_duration" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="billing_funding_prog" Type="varchar" MaxLength="50" />
+          <Property Name="billing_rate" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="billing_unit" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="billing_amount" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="billing_visit_date" Type="varchar" MaxLength="10" />
+          <Property Name="billing_comments" Type="varchar" MaxLength="500" />
+          <Property Name="billing_period" Type="varchar" MaxLength="50" />
+          <Property Name="unbilled_flag" Type="varchar" MaxLength="2" />
         </EntityType>
         <EntityType Name="service_stream_dim">
           <Key>
@@ -362,16 +518,116 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_finance_EXPENSE_FACT_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="EXPENSE_FACT" Type="Self.EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Transaction_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_finance_EXPENSE_FACT_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="0..1" />
+          <End Role="EXPENSE_FACT" Type="Self.EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_finance_EXPENSE_FACT_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="0..1" />
+          <End Role="EXPENSE_FACT" Type="Self.EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_finance_EXPENSE_FACT_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="0..1" />
+          <End Role="EXPENSE_FACT" Type="Self.EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_lsl_fact_calcualte_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="lsl_fact" Type="Self.lsl_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="lsl_fact">
+              <PropertyRef Name="calcualte_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_lsl_fact_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="lsl_fact" Type="Self.lsl_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="lsl_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_lsl_fact_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="lsl_fact" Type="Self.lsl_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="lsl_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_lsl_fact_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="lsl_fact" Type="Self.lsl_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="lsl_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="DWHF_FINANCEModel1StoreContainer">
           <EntitySet Name="account_dim" EntityType="Self.account_dim" Schema="finance" store:Type="Tables" />
           <EntitySet Name="accounting_period_dim" EntityType="Self.accounting_period_dim" Schema="finance" store:Type="Tables" />
           <EntitySet Name="cost_centre_dim" EntityType="Self.cost_centre_dim" Schema="finance" store:Type="Tables" />
           <EntitySet Name="date_dim" EntityType="Self.date_dim" Schema="finance" store:Type="Tables" />
           <EntitySet Name="debtor_fact" EntityType="Self.debtor_fact" Schema="finance" store:Type="Tables" />
+          <EntitySet Name="EXPENSE_FACT" EntityType="Self.EXPENSE_FACT" Schema="finance" store:Type="Tables" />
           <EntitySet Name="ledger_dim" EntityType="Self.ledger_dim" Schema="finance" store:Type="Tables" />
+          <EntitySet Name="lsl_fact" EntityType="Self.lsl_fact" Schema="finance" store:Type="Tables" />
           <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" Schema="finance" store:Type="Tables" />
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="finance" store:Type="Tables" />
           <EntitySet Name="program_mapping" EntityType="Self.program_mapping" Schema="finance" store:Type="Tables" />
+          <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="Self.RECONCILE_INVOICE_FACT" Schema="finance" store:Type="Tables" />
+          <EntitySet Name="RECONCILE_UNBILLEDSERVICE_FACT" EntityType="Self.RECONCILE_UNBILLEDSERVICE_FACT" Schema="finance" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="finance" store:Type="Tables" />
           <EntitySet Name="kpi_fact" EntityType="Self.kpi_fact" store:Type="Tables" store:Schema="finance">
             <DefiningQuery>SELECT 
@@ -395,6 +651,28 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
     [kpi_fact].[kpi_recom_2_name] AS [kpi_recom_2_name], 
     [kpi_fact].[kpi_recom_2_value] AS [kpi_recom_2_value]
     FROM [finance].[kpi_fact] AS [kpi_fact]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Kypera_Tenancy_Balance_Fact" EntityType="Self.Kypera_Tenancy_Balance_Fact" store:Type="Tables" store:Schema="finance">
+            <DefiningQuery>SELECT 
+    [Kypera_Tenancy_Balance_Fact].[Balance_key] AS [Balance_key], 
+    [Kypera_Tenancy_Balance_Fact].[TenancyID] AS [TenancyID], 
+    [Kypera_Tenancy_Balance_Fact].[Status] AS [Status], 
+    [Kypera_Tenancy_Balance_Fact].[Salutaion] AS [Salutaion], 
+    [Kypera_Tenancy_Balance_Fact].[Address] AS [Address], 
+    [Kypera_Tenancy_Balance_Fact].[PropertyID] AS [PropertyID], 
+    [Kypera_Tenancy_Balance_Fact].[StartDate] AS [StartDate], 
+    [Kypera_Tenancy_Balance_Fact].[EndDate] AS [EndDate], 
+    [Kypera_Tenancy_Balance_Fact].[HousingOfficer] AS [HousingOfficer], 
+    [Kypera_Tenancy_Balance_Fact].[Entity] AS [Entity], 
+    [Kypera_Tenancy_Balance_Fact].[Scheme] AS [Scheme], 
+    [Kypera_Tenancy_Balance_Fact].[RentBalance] AS [RentBalance], 
+    [Kypera_Tenancy_Balance_Fact].[OtherChargesBalance] AS [OtherChargesBalance], 
+    [Kypera_Tenancy_Balance_Fact].[Balance] AS [Balance], 
+    [Kypera_Tenancy_Balance_Fact].[EffectiveRentDaysInArrears] AS [EffectiveRentDaysInArrears], 
+    [Kypera_Tenancy_Balance_Fact].[EffectiveTotalDaysInArrears] AS [EffectiveTotalDaysInArrears], 
+    [Kypera_Tenancy_Balance_Fact].[CreditORArrears] AS [CreditORArrears], 
+    [Kypera_Tenancy_Balance_Fact].[BK_day_key] AS [BK_day_key]
+    FROM [finance].[Kypera_Tenancy_Balance_Fact] AS [Kypera_Tenancy_Balance_Fact]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="fk_conform_finance_DEBTOR_FACT_account_key" Association="Self.fk_conform_finance_DEBTOR_FACT_account_key">
             <End Role="account_dim" EntitySet="account_dim" />
@@ -436,9 +714,40 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="kpi_fact" EntitySet="kpi_fact" />
           </AssociationSet>
+          <AssociationSet Name="fk_finance_EXPENSE_FACT_date_key" Association="Self.fk_finance_EXPENSE_FACT_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_finance_EXPENSE_FACT_portfolio_key" Association="Self.fk_finance_EXPENSE_FACT_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_finance_EXPENSE_FACT_program_key" Association="Self.fk_finance_EXPENSE_FACT_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_finance_EXPENSE_FACT_service_stream_key" Association="Self.fk_finance_EXPENSE_FACT_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_lsl_fact_calcualte_date_key" Association="Self.fk_lsl_fact_calcualte_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="lsl_fact" EntitySet="lsl_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_lsl_fact_portfolio_key" Association="Self.fk_lsl_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="lsl_fact" EntitySet="lsl_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_lsl_fact_program_key" Association="Self.fk_lsl_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="lsl_fact" EntitySet="lsl_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_lsl_fact_service_stream_key" Association="Self.fk_lsl_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="lsl_fact" EntitySet="lsl_fact" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DWHF_FINANCEModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -552,6 +861,8 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
           <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_processed_key" FromRole="date_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="debtor_fact1" Relationship="Self.fk_conform_finance_DEBTOR_FACT_date_received_key" FromRole="date_dim" ToRole="debtor_fact" />
           <NavigationProperty Name="kpi_fact" Relationship="Self.fk_conform_finance_kpi_fact_date_key" FromRole="date_dim" ToRole="kpi_fact" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_date_key" FromRole="date_dim" ToRole="EXPENSE_FACT" />
+          <NavigationProperty Name="lsl_fact" Relationship="DWHF_FINANCEModel1.fk_lsl_fact_calcualte_date_key" FromRole="date_dim" ToRole="lsl_fact" />
         </EntityType>
         <EntityType Name="debtor_fact">
           <Key>
@@ -613,6 +924,8 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_portfolio_key" FromRole="portfolio_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_portfolio_key" FromRole="portfolio_dim" ToRole="EXPENSE_FACT" />
+          <NavigationProperty Name="lsl_fact" Relationship="DWHF_FINANCEModel1.fk_lsl_fact_portfolio_key" FromRole="portfolio_dim" ToRole="lsl_fact" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -630,6 +943,8 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_program_key" FromRole="program_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_program_key" FromRole="program_dim" ToRole="EXPENSE_FACT" />
+          <NavigationProperty Name="lsl_fact" Relationship="DWHF_FINANCEModel1.fk_lsl_fact_program_key" FromRole="program_dim" ToRole="lsl_fact" />
         </EntityType>
         <EntityType Name="program_mapping">
           <Key>
@@ -670,6 +985,8 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="debtor_fact" Relationship="Self.fk_conform_finance_DEBTOR_FACT_service_stream_key" FromRole="service_stream_dim" ToRole="debtor_fact" />
+          <NavigationProperty Name="EXPENSE_FACT" Relationship="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_service_stream_key" FromRole="service_stream_dim" ToRole="EXPENSE_FACT" />
+          <NavigationProperty Name="lsl_fact" Relationship="DWHF_FINANCEModel1.fk_lsl_fact_service_stream_key" FromRole="service_stream_dim" ToRole="lsl_fact" />
         </EntityType>
         <EntityType Name="kpi_fact">
           <Key>
@@ -869,7 +1186,289 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="debtor_fact" EntitySet="debtor_fact" />
           </AssociationSet>
+          <EntitySet Name="EXPENSE_FACT" EntityType="DWHF_FINANCEModel1.EXPENSE_FACT" />
+          <EntitySet Name="lsl_fact" EntityType="DWHF_FINANCEModel1.lsl_fact" />
+          <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="DWHF_FINANCEModel1.RECONCILE_INVOICE_FACT" />
+          <EntitySet Name="RECONCILE_UNBILLEDSERVICE_FACT" EntityType="DWHF_FINANCEModel1.RECONCILE_UNBILLEDSERVICE_FACT" />
+          <EntitySet Name="Kypera_Tenancy_Balance_Fact" EntityType="DWHF_FINANCEModel1.Kypera_Tenancy_Balance_Fact" />
+          <AssociationSet Name="fk_finance_EXPENSE_FACT_date_key" Association="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_lsl_fact_calcualte_date_key" Association="DWHF_FINANCEModel1.fk_lsl_fact_calcualte_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="lsl_fact" EntitySet="lsl_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_finance_EXPENSE_FACT_portfolio_key" Association="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_finance_EXPENSE_FACT_program_key" Association="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_finance_EXPENSE_FACT_service_stream_key" Association="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
+          </AssociationSet>
+          <AssociationSet Name="fk_lsl_fact_portfolio_key" Association="DWHF_FINANCEModel1.fk_lsl_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="lsl_fact" EntitySet="lsl_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_lsl_fact_program_key" Association="DWHF_FINANCEModel1.fk_lsl_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="lsl_fact" EntitySet="lsl_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_lsl_fact_service_stream_key" Association="DWHF_FINANCEModel1.fk_lsl_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="lsl_fact" EntitySet="lsl_fact" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="EXPENSE_FACT">
+          <Key>
+            <PropertyRef Name="Expense_key" />
+          </Key>
+          <Property Name="Expense_key" Type="Int32" Nullable="false" />
+          <Property Name="Transaction_no" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Transaction_date_key" Type="Int32" />
+          <Property Name="Merchant_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Employee_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Employee_key" Type="Int32" />
+          <Property Name="Portfolio_key" Type="Int32" />
+          <Property Name="Service_stream_key" Type="Int32" />
+          <Property Name="Program_key" Type="Int32" />
+          <Property Name="Manager_key" Type="Int32" />
+          <Property Name="Card_Infomation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Amount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="Net_Amount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="Tax_Amount" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="GST" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Activity_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Expense_Type" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Line_desription" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Entity" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Costing" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Activity" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Natural" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Staus" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="date_dim" Relationship="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_date_key" FromRole="EXPENSE_FACT" ToRole="date_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_portfolio_key" FromRole="EXPENSE_FACT" ToRole="portfolio_dim" />
+          <NavigationProperty Name="program_dim" Relationship="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_program_key" FromRole="EXPENSE_FACT" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="DWHF_FINANCEModel1.fk_finance_EXPENSE_FACT_service_stream_key" FromRole="EXPENSE_FACT" ToRole="service_stream_dim" />
+        </EntityType>
+        <EntityType Name="lsl_fact">
+          <Key>
+            <PropertyRef Name="LSL_Key" />
+          </Key>
+          <Property Name="LSL_Key" Type="Int32" Nullable="false" />
+          <Property Name="calcualte_date_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="primary_position_key" Type="Int32" Nullable="false" />
+          <Property Name="Date_of_Service" Type="DateTime" Precision="3" />
+          <Property Name="Years_of_Completed_Service_asat_calculateday" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Years_Rounded_Down" Type="Int32" />
+          <Property Name="Weeks_basedon_Completed_yearsofService" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Weeks_asat_calculateday" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="LSL_Average_Hours" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Hours" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Hourly_Rate" Type="Decimal" Precision="15" Scale="6" />
+          <Property Name="Liability" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Probability" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Revised_Liability_based_on_probability" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Primary_Cost_Centre" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Primary_Work_Location" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="WorkCover_20162017" Type="Decimal" Precision="15" Scale="6" />
+          <Property Name="Liability_at_Entitlement_Wagesgrowth" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="NPV_of_Liability" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Casual_Factor" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="NPV_after_casual_factor" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Add_Super" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Add_Workcover" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Ave_WC_Rate" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="LY_Ave_Workcover_rate" Type="Decimal" Precision="15" Scale="4" />
+          <Property Name="Current_NonCurrent" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="C8000or9000" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="date_dim" Relationship="DWHF_FINANCEModel1.fk_lsl_fact_calcualte_date_key" FromRole="lsl_fact" ToRole="date_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="DWHF_FINANCEModel1.fk_lsl_fact_portfolio_key" FromRole="lsl_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="program_dim" Relationship="DWHF_FINANCEModel1.fk_lsl_fact_program_key" FromRole="lsl_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="DWHF_FINANCEModel1.fk_lsl_fact_service_stream_key" FromRole="lsl_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <EntityType Name="RECONCILE_INVOICE_FACT">
+          <Key>
+            <PropertyRef Name="reconcile_invocie_key" />
+          </Key>
+          <Property Name="reconcile_invocie_key" Type="Int32" Nullable="false" />
+          <Property Name="account_key" Type="Int32" />
+          <Property Name="Accnbri" Type="Int32" />
+          <Property Name="Client_id" Type="Int32" />
+          <Property Name="Portfolio_key" Type="Int32" />
+          <Property Name="Service_key" Type="Int32" />
+          <Property Name="Program_key" Type="Int32" />
+          <Property Name="ComCare_service_type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Invocie_date_key" Type="Int32" />
+          <Property Name="Invocie_Amount" Type="Decimal" Precision="14" Scale="2" />
+          <Property Name="Invoice_Period" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Invoice_Period_Start_Date_Key" Type="Int32" />
+          <Property Name="Invoice_Period_End_Date_Key" Type="Int32" />
+          <Property Name="Invoice_Description" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="ComCare_serviced_hours" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="ComCare_service_charges" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="Balance_flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Glcode" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="costing" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="cost_centre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="RECONCILE_UNBILLEDSERVICE_FACT">
+          <Key>
+            <PropertyRef Name="notbilled_key" />
+          </Key>
+          <Property Name="notbilled_key" Type="Int32" Nullable="false" />
+          <Property Name="provider_id" Type="Int32" />
+          <Property Name="provider_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="provider_contract_type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="client_id" Type="Int32" />
+          <Property Name="client_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_date_key" Type="Int32" />
+          <Property Name="service_type_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_start_time" Type="Time" Precision="7" />
+          <Property Name="service_end_time" Type="Time" Precision="7" />
+          <Property Name="service_duration" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="travel_duration" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="schedule_duration" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="billing_funding_prog" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_rate" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="billing_unit" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="billing_amount" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="billing_visit_date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="billing_comments" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="billing_period" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="unbilled_flag" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Kypera_Tenancy_Balance_Fact">
+          <Key>
+            <PropertyRef Name="Balance_key" />
+            <PropertyRef Name="Balance" />
+          </Key>
+          <Property Name="Balance_key" Type="Int32" Nullable="false" />
+          <Property Name="TenancyID" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="Salutaion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="PropertyID" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="StartDate" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="EndDate" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="HousingOfficer" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Entity" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Scheme" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RentBalance" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="OtherChargesBalance" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Balance" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="EffectiveRentDaysInArrears" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="EffectiveTotalDaysInArrears" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CreditORArrears" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="BK_day_key" Type="Int32" />
+        </EntityType>
+        <Association Name="fk_finance_EXPENSE_FACT_date_key">
+          <End Type="DWHF_FINANCEModel1.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="DWHF_FINANCEModel1.EXPENSE_FACT" Role="EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Transaction_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_lsl_fact_calcualte_date_key">
+          <End Type="DWHF_FINANCEModel1.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="DWHF_FINANCEModel1.lsl_fact" Role="lsl_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="lsl_fact">
+              <PropertyRef Name="calcualte_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_finance_EXPENSE_FACT_portfolio_key">
+          <End Type="DWHF_FINANCEModel1.portfolio_dim" Role="portfolio_dim" Multiplicity="0..1" />
+          <End Type="DWHF_FINANCEModel1.EXPENSE_FACT" Role="EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_finance_EXPENSE_FACT_program_key">
+          <End Type="DWHF_FINANCEModel1.program_dim" Role="program_dim" Multiplicity="0..1" />
+          <End Type="DWHF_FINANCEModel1.EXPENSE_FACT" Role="EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_finance_EXPENSE_FACT_service_stream_key">
+          <End Type="DWHF_FINANCEModel1.service_stream_dim" Role="service_stream_dim" Multiplicity="0..1" />
+          <End Type="DWHF_FINANCEModel1.EXPENSE_FACT" Role="EXPENSE_FACT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="EXPENSE_FACT">
+              <PropertyRef Name="Service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_lsl_fact_portfolio_key">
+          <End Type="DWHF_FINANCEModel1.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="DWHF_FINANCEModel1.lsl_fact" Role="lsl_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="lsl_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_lsl_fact_program_key">
+          <End Type="DWHF_FINANCEModel1.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="DWHF_FINANCEModel1.lsl_fact" Role="lsl_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="lsl_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_lsl_fact_service_stream_key">
+          <End Type="DWHF_FINANCEModel1.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="DWHF_FINANCEModel1.lsl_fact" Role="lsl_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="lsl_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1118,6 +1717,151 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.kpi_fact' does not have a pri
                 <ScalarProperty Name="kpi_recom_1_value" ColumnName="kpi_recom_1_value" />
                 <ScalarProperty Name="kpi_recom_2_name" ColumnName="kpi_recom_2_name" />
                 <ScalarProperty Name="kpi_recom_2_value" ColumnName="kpi_recom_2_value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EXPENSE_FACT">
+            <EntityTypeMapping TypeName="DWHF_FINANCEModel1.EXPENSE_FACT">
+              <MappingFragment StoreEntitySet="EXPENSE_FACT">
+                <ScalarProperty Name="Staus" ColumnName="Staus" />
+                <ScalarProperty Name="Natural" ColumnName="Natural" />
+                <ScalarProperty Name="Activity" ColumnName="Activity" />
+                <ScalarProperty Name="Costing" ColumnName="Costing" />
+                <ScalarProperty Name="Entity" ColumnName="Entity" />
+                <ScalarProperty Name="Line_desription" ColumnName="Line_desription" />
+                <ScalarProperty Name="Expense_Type" ColumnName="Expense_Type" />
+                <ScalarProperty Name="Activity_code" ColumnName="Activity code" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="GST" ColumnName="GST" />
+                <ScalarProperty Name="Tax_Amount" ColumnName="Tax_Amount" />
+                <ScalarProperty Name="Net_Amount" ColumnName="Net_Amount" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Card_Infomation" ColumnName="Card_Infomation" />
+                <ScalarProperty Name="Manager_key" ColumnName="Manager_key" />
+                <ScalarProperty Name="Program_key" ColumnName="Program_key" />
+                <ScalarProperty Name="Service_stream_key" ColumnName="Service_stream_key" />
+                <ScalarProperty Name="Portfolio_key" ColumnName="Portfolio_key" />
+                <ScalarProperty Name="Employee_key" ColumnName="Employee_key" />
+                <ScalarProperty Name="Employee_Email" ColumnName="Employee_Email" />
+                <ScalarProperty Name="Merchant_Name" ColumnName="Merchant_Name" />
+                <ScalarProperty Name="Transaction_date_key" ColumnName="Transaction_date_key" />
+                <ScalarProperty Name="Transaction_no" ColumnName="Transaction_no" />
+                <ScalarProperty Name="Expense_key" ColumnName="Expense_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lsl_fact">
+            <EntityTypeMapping TypeName="DWHF_FINANCEModel1.lsl_fact">
+              <MappingFragment StoreEntitySet="lsl_fact">
+                <ScalarProperty Name="C8000or9000" ColumnName="C8000or9000" />
+                <ScalarProperty Name="Current_NonCurrent" ColumnName="Current_NonCurrent" />
+                <ScalarProperty Name="LY_Ave_Workcover_rate" ColumnName="LY_Ave_Workcover_rate" />
+                <ScalarProperty Name="Ave_WC_Rate" ColumnName="Ave_WC_Rate" />
+                <ScalarProperty Name="Add_Workcover" ColumnName="Add_Workcover" />
+                <ScalarProperty Name="Add_Super" ColumnName="Add_Super" />
+                <ScalarProperty Name="NPV_after_casual_factor" ColumnName="NPV_after_casual_factor" />
+                <ScalarProperty Name="Casual_Factor" ColumnName="Casual_Factor" />
+                <ScalarProperty Name="NPV_of_Liability" ColumnName="NPV_of_Liability" />
+                <ScalarProperty Name="Liability_at_Entitlement_Wagesgrowth" ColumnName="Liability_at_Entitlement_Wagesgrowth" />
+                <ScalarProperty Name="WorkCover_20162017" ColumnName="WorkCover_20162017" />
+                <ScalarProperty Name="Primary_Work_Location" ColumnName="Primary_Work_Location" />
+                <ScalarProperty Name="Primary_Cost_Centre" ColumnName="Primary_Cost_Centre" />
+                <ScalarProperty Name="Revised_Liability_based_on_probability" ColumnName="Revised_Liability_based_on_probability" />
+                <ScalarProperty Name="Probability" ColumnName="Probability" />
+                <ScalarProperty Name="Liability" ColumnName="Liability" />
+                <ScalarProperty Name="Hourly_Rate" ColumnName="Hourly_Rate" />
+                <ScalarProperty Name="Hours" ColumnName="Hours" />
+                <ScalarProperty Name="LSL_Average_Hours" ColumnName="LSL_Average_Hours" />
+                <ScalarProperty Name="Weeks_asat_calculateday" ColumnName="Weeks_asat_calculateday" />
+                <ScalarProperty Name="Weeks_basedon_Completed_yearsofService" ColumnName="Weeks_basedon_Completed_yearsofService" />
+                <ScalarProperty Name="Years_Rounded_Down" ColumnName="Years_Rounded_Down" />
+                <ScalarProperty Name="Years_of_Completed_Service_asat_calculateday" ColumnName="Years_of_Completed_Service_asat_calculateday" />
+                <ScalarProperty Name="Date_of_Service" ColumnName="Date_of_Service" />
+                <ScalarProperty Name="primary_position_key" ColumnName="primary_position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="calcualte_date_key" ColumnName="calcualte_date_key" />
+                <ScalarProperty Name="LSL_Key" ColumnName="LSL_Key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RECONCILE_INVOICE_FACT">
+            <EntityTypeMapping TypeName="DWHF_FINANCEModel1.RECONCILE_INVOICE_FACT">
+              <MappingFragment StoreEntitySet="RECONCILE_INVOICE_FACT">
+                <ScalarProperty Name="cost_centre" ColumnName="cost_centre" />
+                <ScalarProperty Name="costing" ColumnName="costing" />
+                <ScalarProperty Name="Glcode" ColumnName="Glcode" />
+                <ScalarProperty Name="Balance_flag" ColumnName="Balance_flag" />
+                <ScalarProperty Name="ComCare_service_charges" ColumnName="ComCare_service_charges" />
+                <ScalarProperty Name="ComCare_serviced_hours" ColumnName="ComCare_serviced_hours" />
+                <ScalarProperty Name="Invoice_Description" ColumnName="Invoice_Description" />
+                <ScalarProperty Name="Invoice_Period_End_Date_Key" ColumnName="Invoice_Period_End_Date_Key" />
+                <ScalarProperty Name="Invoice_Period_Start_Date_Key" ColumnName="Invoice_Period_Start_Date_Key" />
+                <ScalarProperty Name="Invoice_Period" ColumnName="Invoice_Period" />
+                <ScalarProperty Name="Invocie_Amount" ColumnName="Invocie_Amount" />
+                <ScalarProperty Name="Invocie_date_key" ColumnName="Invocie_date_key" />
+                <ScalarProperty Name="ComCare_service_type" ColumnName="ComCare_service_type" />
+                <ScalarProperty Name="Program_key" ColumnName="Program_key" />
+                <ScalarProperty Name="Service_key" ColumnName="Service_key" />
+                <ScalarProperty Name="Portfolio_key" ColumnName="Portfolio_key" />
+                <ScalarProperty Name="Client_id" ColumnName="Client_id" />
+                <ScalarProperty Name="Accnbri" ColumnName="Accnbri" />
+                <ScalarProperty Name="account_key" ColumnName="account_key" />
+                <ScalarProperty Name="reconcile_invocie_key" ColumnName="reconcile_invocie_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RECONCILE_UNBILLEDSERVICE_FACT">
+            <EntityTypeMapping TypeName="DWHF_FINANCEModel1.RECONCILE_UNBILLEDSERVICE_FACT">
+              <MappingFragment StoreEntitySet="RECONCILE_UNBILLEDSERVICE_FACT">
+                <ScalarProperty Name="unbilled_flag" ColumnName="unbilled_flag" />
+                <ScalarProperty Name="billing_period" ColumnName="billing_period" />
+                <ScalarProperty Name="billing_comments" ColumnName="billing_comments" />
+                <ScalarProperty Name="billing_visit_date" ColumnName="billing_visit_date" />
+                <ScalarProperty Name="billing_amount" ColumnName="billing_amount" />
+                <ScalarProperty Name="billing_unit" ColumnName="billing_unit" />
+                <ScalarProperty Name="billing_rate" ColumnName="billing_rate" />
+                <ScalarProperty Name="billing_funding_prog" ColumnName="billing_funding_prog" />
+                <ScalarProperty Name="schedule_duration" ColumnName="schedule_duration" />
+                <ScalarProperty Name="travel_duration" ColumnName="travel_duration" />
+                <ScalarProperty Name="service_duration" ColumnName="service_duration" />
+                <ScalarProperty Name="service_end_time" ColumnName="service_end_time" />
+                <ScalarProperty Name="service_start_time" ColumnName="service_start_time" />
+                <ScalarProperty Name="service_name" ColumnName="service_name" />
+                <ScalarProperty Name="service_type_code" ColumnName="service_type_code" />
+                <ScalarProperty Name="service_date_key" ColumnName="service_date_key" />
+                <ScalarProperty Name="client_name" ColumnName="client_name" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="provider_contract_type" ColumnName="provider_contract_type" />
+                <ScalarProperty Name="provider_name" ColumnName="provider_name" />
+                <ScalarProperty Name="provider_id" ColumnName="provider_id" />
+                <ScalarProperty Name="notbilled_key" ColumnName="notbilled_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kypera_Tenancy_Balance_Fact">
+            <EntityTypeMapping TypeName="DWHF_FINANCEModel1.Kypera_Tenancy_Balance_Fact">
+              <MappingFragment StoreEntitySet="Kypera_Tenancy_Balance_Fact">
+                <ScalarProperty Name="BK_day_key" ColumnName="BK_day_key" />
+                <ScalarProperty Name="CreditORArrears" ColumnName="CreditORArrears" />
+                <ScalarProperty Name="EffectiveTotalDaysInArrears" ColumnName="EffectiveTotalDaysInArrears" />
+                <ScalarProperty Name="EffectiveRentDaysInArrears" ColumnName="EffectiveRentDaysInArrears" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="OtherChargesBalance" ColumnName="OtherChargesBalance" />
+                <ScalarProperty Name="RentBalance" ColumnName="RentBalance" />
+                <ScalarProperty Name="Scheme" ColumnName="Scheme" />
+                <ScalarProperty Name="Entity" ColumnName="Entity" />
+                <ScalarProperty Name="HousingOfficer" ColumnName="HousingOfficer" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="PropertyID" ColumnName="PropertyID" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Salutaion" ColumnName="Salutaion" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TenancyID" ColumnName="TenancyID" />
+                <ScalarProperty Name="Balance_key" ColumnName="Balance_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
