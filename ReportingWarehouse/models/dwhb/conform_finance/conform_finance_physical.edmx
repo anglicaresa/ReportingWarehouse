@@ -274,6 +274,32 @@ warning 6002: The table/view 'DWHB.conform_finance.kpi_fact' does not have a pri
           <Property Name="kpi_recom_2_name" Type="varchar" MaxLength="50" />
           <Property Name="kpi_recom_2_value" Type="decimal" Precision="20" Scale="2" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_finance.Kypera_Tenancy_Balance_Fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Kypera_Tenancy_Balance_Fact">
+          <Key>
+            <PropertyRef Name="Balance_key" />
+            <PropertyRef Name="Balance" />
+          </Key>
+          <Property Name="Balance_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TenancyID" Type="int" />
+          <Property Name="Status" Type="varchar" MaxLength="7" />
+          <Property Name="Salutaion" Type="varchar" MaxLength="100" />
+          <Property Name="Address" Type="varchar" MaxLength="256" />
+          <Property Name="PropertyID" Type="varchar" MaxLength="13" />
+          <Property Name="StartDate" Type="varchar" MaxLength="30" />
+          <Property Name="EndDate" Type="varchar" MaxLength="30" />
+          <Property Name="HousingOfficer" Type="varchar" MaxLength="255" />
+          <Property Name="Entity" Type="varchar" MaxLength="3" />
+          <Property Name="Scheme" Type="varchar" MaxLength="50" />
+          <Property Name="RentBalance" Type="money" />
+          <Property Name="OtherChargesBalance" Type="money" />
+          <Property Name="Balance" Type="money" Nullable="false" />
+          <Property Name="EffectiveRentDaysInArrears" Type="money" />
+          <Property Name="EffectiveTotalDaysInArrears" Type="money" />
+          <Property Name="CreditORArrears" Type="varchar" MaxLength="7" />
+          <Property Name="BK_day_key" Type="int" />
+        </EntityType>
         <EntityType Name="ledger_dim">
           <Key>
             <PropertyRef Name="ledger_key" />
@@ -398,6 +424,22 @@ warning 6002: The table/view 'DWHB.conform_finance.program_mapping' does not hav
           <Property Name="mapping_type" Type="varchar" MaxLength="20" />
           <Property Name="program_name" Type="varchar" MaxLength="50" />
           <Property Name="program_key" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_BILLEDPERCENTAGE_FACT' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="RECONCILE_BILLEDPERCENTAGE_FACT">
+          <Key>
+            <PropertyRef Name="billedhours_key" />
+          </Key>
+          <Property Name="billedhours_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="pay_period_end_date_key" Type="int" />
+          <Property Name="cost_centre" Type="varchar" MaxLength="50" />
+          <Property Name="employee_paid_hours" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="employee_paid_amount" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="client_billed_hours" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="client_billed_amount" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="billed_hours_percentage" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="billed_amount_percentage" Type="decimal" Precision="10" Scale="4" />
         </EntityType>
         <EntityType Name="RECONCILE_INVOICE_FACT">
           <Key>
@@ -769,6 +811,28 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_UNBILLEDSERVICE_FAC
     [kpi_fact].[kpi_recom_2_value] AS [kpi_recom_2_value]
     FROM [conform_finance].[kpi_fact] AS [kpi_fact]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="Kypera_Tenancy_Balance_Fact" EntityType="Self.Kypera_Tenancy_Balance_Fact" store:Type="Tables" store:Schema="conform_finance">
+            <DefiningQuery>SELECT 
+    [Kypera_Tenancy_Balance_Fact].[Balance_key] AS [Balance_key], 
+    [Kypera_Tenancy_Balance_Fact].[TenancyID] AS [TenancyID], 
+    [Kypera_Tenancy_Balance_Fact].[Status] AS [Status], 
+    [Kypera_Tenancy_Balance_Fact].[Salutaion] AS [Salutaion], 
+    [Kypera_Tenancy_Balance_Fact].[Address] AS [Address], 
+    [Kypera_Tenancy_Balance_Fact].[PropertyID] AS [PropertyID], 
+    [Kypera_Tenancy_Balance_Fact].[StartDate] AS [StartDate], 
+    [Kypera_Tenancy_Balance_Fact].[EndDate] AS [EndDate], 
+    [Kypera_Tenancy_Balance_Fact].[HousingOfficer] AS [HousingOfficer], 
+    [Kypera_Tenancy_Balance_Fact].[Entity] AS [Entity], 
+    [Kypera_Tenancy_Balance_Fact].[Scheme] AS [Scheme], 
+    [Kypera_Tenancy_Balance_Fact].[RentBalance] AS [RentBalance], 
+    [Kypera_Tenancy_Balance_Fact].[OtherChargesBalance] AS [OtherChargesBalance], 
+    [Kypera_Tenancy_Balance_Fact].[Balance] AS [Balance], 
+    [Kypera_Tenancy_Balance_Fact].[EffectiveRentDaysInArrears] AS [EffectiveRentDaysInArrears], 
+    [Kypera_Tenancy_Balance_Fact].[EffectiveTotalDaysInArrears] AS [EffectiveTotalDaysInArrears], 
+    [Kypera_Tenancy_Balance_Fact].[CreditORArrears] AS [CreditORArrears], 
+    [Kypera_Tenancy_Balance_Fact].[BK_day_key] AS [BK_day_key]
+    FROM [conform_finance].[Kypera_Tenancy_Balance_Fact] AS [Kypera_Tenancy_Balance_Fact]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="program_mapping" EntityType="Self.program_mapping" store:Type="Tables" store:Schema="conform_finance">
             <DefiningQuery>SELECT 
     [program_mapping].[program_mapping_key] AS [program_mapping_key], 
@@ -792,6 +856,19 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_UNBILLEDSERVICE_FAC
     [program_mapping].[program_name] AS [program_name], 
     [program_mapping].[program_key] AS [program_key]
     FROM [conform_finance].[program_mapping] AS [program_mapping]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="RECONCILE_BILLEDPERCENTAGE_FACT" EntityType="Self.RECONCILE_BILLEDPERCENTAGE_FACT" store:Type="Tables" store:Schema="conform_finance">
+            <DefiningQuery>SELECT 
+    [RECONCILE_BILLEDPERCENTAGE_FACT].[billedhours_key] AS [billedhours_key], 
+    [RECONCILE_BILLEDPERCENTAGE_FACT].[pay_period_end_date_key] AS [pay_period_end_date_key], 
+    [RECONCILE_BILLEDPERCENTAGE_FACT].[cost_centre] AS [cost_centre], 
+    [RECONCILE_BILLEDPERCENTAGE_FACT].[employee_paid_hours] AS [employee_paid_hours], 
+    [RECONCILE_BILLEDPERCENTAGE_FACT].[employee_paid_amount] AS [employee_paid_amount], 
+    [RECONCILE_BILLEDPERCENTAGE_FACT].[client_billed_hours] AS [client_billed_hours], 
+    [RECONCILE_BILLEDPERCENTAGE_FACT].[client_billed_amount] AS [client_billed_amount], 
+    [RECONCILE_BILLEDPERCENTAGE_FACT].[billed_hours_percentage] AS [billed_hours_percentage], 
+    [RECONCILE_BILLEDPERCENTAGE_FACT].[billed_amount_percentage] AS [billed_amount_percentage]
+    FROM [conform_finance].[RECONCILE_BILLEDPERCENTAGE_FACT] AS [RECONCILE_BILLEDPERCENTAGE_FACT]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="RECONCILE_UNBILLEDSERVICE_FACT" EntityType="Self.RECONCILE_UNBILLEDSERVICE_FACT" store:Type="Tables" store:Schema="conform_finance">
             <DefiningQuery>SELECT 
@@ -1152,6 +1229,8 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_UNBILLEDSERVICE_FAC
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="EXPENSE_FACT" EntitySet="EXPENSE_FACT" />
           </AssociationSet>
+          <EntitySet Name="Kypera_Tenancy_Balance_Fact" EntityType="DWHBModel1.Kypera_Tenancy_Balance_Fact" />
+          <EntitySet Name="RECONCILE_BILLEDPERCENTAGE_FACT" EntityType="DWHBModel1.RECONCILE_BILLEDPERCENTAGE_FACT" />
         </EntityContainer>
         <EntityType Name="program_mapping">
           <Key>
@@ -1783,6 +1862,44 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_UNBILLEDSERVICE_FAC
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Kypera_Tenancy_Balance_Fact">
+          <Key>
+            <PropertyRef Name="Balance_key" />
+            <PropertyRef Name="Balance" />
+          </Key>
+          <Property Name="Balance_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TenancyID" Type="Int32" />
+          <Property Name="Status" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="Salutaion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="PropertyID" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="StartDate" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="EndDate" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="HousingOfficer" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Entity" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Scheme" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RentBalance" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="OtherChargesBalance" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Balance" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="EffectiveRentDaysInArrears" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="EffectiveTotalDaysInArrears" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="CreditORArrears" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="BK_day_key" Type="Int32" />
+        </EntityType>
+        <EntityType Name="RECONCILE_BILLEDPERCENTAGE_FACT">
+          <Key>
+            <PropertyRef Name="billedhours_key" />
+          </Key>
+          <Property Name="billedhours_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="pay_period_end_date_key" Type="Int32" />
+          <Property Name="cost_centre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="employee_paid_hours" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="employee_paid_amount" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="client_billed_hours" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="client_billed_amount" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="billed_hours_percentage" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="billed_amount_percentage" Type="Decimal" Precision="10" Scale="4" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2258,6 +2375,45 @@ warning 6002: The table/view 'DWHB.conform_finance.RECONCILE_UNBILLEDSERVICE_FAC
                 <ScalarProperty Name="Transaction_date_key" ColumnName="Transaction_date_key" />
                 <ScalarProperty Name="Transaction_no" ColumnName="Transaction_no" />
                 <ScalarProperty Name="Expense_key" ColumnName="Expense_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kypera_Tenancy_Balance_Fact">
+            <EntityTypeMapping TypeName="DWHBModel1.Kypera_Tenancy_Balance_Fact">
+              <MappingFragment StoreEntitySet="Kypera_Tenancy_Balance_Fact">
+                <ScalarProperty Name="BK_day_key" ColumnName="BK_day_key" />
+                <ScalarProperty Name="CreditORArrears" ColumnName="CreditORArrears" />
+                <ScalarProperty Name="EffectiveTotalDaysInArrears" ColumnName="EffectiveTotalDaysInArrears" />
+                <ScalarProperty Name="EffectiveRentDaysInArrears" ColumnName="EffectiveRentDaysInArrears" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="OtherChargesBalance" ColumnName="OtherChargesBalance" />
+                <ScalarProperty Name="RentBalance" ColumnName="RentBalance" />
+                <ScalarProperty Name="Scheme" ColumnName="Scheme" />
+                <ScalarProperty Name="Entity" ColumnName="Entity" />
+                <ScalarProperty Name="HousingOfficer" ColumnName="HousingOfficer" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="PropertyID" ColumnName="PropertyID" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Salutaion" ColumnName="Salutaion" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TenancyID" ColumnName="TenancyID" />
+                <ScalarProperty Name="Balance_key" ColumnName="Balance_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RECONCILE_BILLEDPERCENTAGE_FACT">
+            <EntityTypeMapping TypeName="DWHBModel1.RECONCILE_BILLEDPERCENTAGE_FACT">
+              <MappingFragment StoreEntitySet="RECONCILE_BILLEDPERCENTAGE_FACT">
+                <ScalarProperty Name="billed_amount_percentage" ColumnName="billed_amount_percentage" />
+                <ScalarProperty Name="billed_hours_percentage" ColumnName="billed_hours_percentage" />
+                <ScalarProperty Name="client_billed_amount" ColumnName="client_billed_amount" />
+                <ScalarProperty Name="client_billed_hours" ColumnName="client_billed_hours" />
+                <ScalarProperty Name="employee_paid_amount" ColumnName="employee_paid_amount" />
+                <ScalarProperty Name="employee_paid_hours" ColumnName="employee_paid_hours" />
+                <ScalarProperty Name="cost_centre" ColumnName="cost_centre" />
+                <ScalarProperty Name="pay_period_end_date_key" ColumnName="pay_period_end_date_key" />
+                <ScalarProperty Name="billedhours_key" ColumnName="billedhours_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
