@@ -423,10 +423,11 @@ warning 6002: The table/view 'DWHF_FINANCE.finance.Kypera_Tenancy_Balance_Fact' 
           <Property Name="program_name" Type="varchar" MaxLength="50" />
           <Property Name="program_key" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DWHF_FINANCE.finance.RECONCILE_BILLEDPERCENTAGE_FACT' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
         <EntityType Name="RECONCILE_BILLEDPERCENTAGE_FACT">
-          <Property Name="billedhours_key" Type="int" />
+          <Key>
+            <PropertyRef Name="billedhours_key" />
+          </Key>
+          <Property Name="billedhours_key" Type="int" Nullable="false" />
           <Property Name="pay_period_end_date_key" Type="int" />
           <Property Name="cost_centre" Type="varchar" MaxLength="50" />
           <Property Name="employee_paid_hours" Type="decimal" Precision="10" Scale="4" />
@@ -435,7 +436,7 @@ warning 6013: The table/view 'DWHF_FINANCE.finance.RECONCILE_BILLEDPERCENTAGE_FA
           <Property Name="client_billed_amount" Type="decimal" Precision="10" Scale="4" />
           <Property Name="billed_hours_percentage" Type="decimal" Precision="10" Scale="4" />
           <Property Name="billed_amount_percentage" Type="decimal" Precision="10" Scale="4" />
-        </EntityType>-->
+        </EntityType>
         <EntityType Name="RECONCILE_INVOICE_FACT">
           <Key>
             <PropertyRef Name="reconcile_invocie_key" />
@@ -780,6 +781,7 @@ warning 6013: The table/view 'DWHF_FINANCE.finance.RECONCILE_BILLEDPERCENTAGE_FA
           <EntitySet Name="position_dim" EntityType="Self.position_dim" Schema="finance" store:Type="Tables" />
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="finance" store:Type="Tables" />
           <EntitySet Name="program_mapping" EntityType="Self.program_mapping" Schema="finance" store:Type="Tables" />
+          <EntitySet Name="RECONCILE_BILLEDPERCENTAGE_FACT" EntityType="Self.RECONCILE_BILLEDPERCENTAGE_FACT" Schema="finance" store:Type="Tables" />
           <EntitySet Name="RECONCILE_INVOICE_FACT" EntityType="Self.RECONCILE_INVOICE_FACT" Schema="finance" store:Type="Tables" />
           <EntitySet Name="RECONCILE_UNBILLEDSERVICE_FACT" EntityType="Self.RECONCILE_UNBILLEDSERVICE_FACT" Schema="finance" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="finance" store:Type="Tables" />
@@ -1411,6 +1413,7 @@ warning 6013: The table/view 'DWHF_FINANCE.finance.RECONCILE_BILLEDPERCENTAGE_FA
             <End Role="lsl_fact" EntitySet="lsl_fact" />
           </AssociationSet>
           <EntitySet Name="Kypera_Tenancy_Balance_Fact" EntityType="DWHF_FINANCEModel.Kypera_Tenancy_Balance_Fact" />
+          <EntitySet Name="RECONCILE_BILLEDPERCENTAGE_FACT" EntityType="DWHF_FINANCEModel.RECONCILE_BILLEDPERCENTAGE_FACT" />
         </EntityContainer>
         <EntityType Name="EXPENSE_FACT">
           <Key>
@@ -1816,6 +1819,20 @@ warning 6013: The table/view 'DWHF_FINANCE.finance.RECONCILE_BILLEDPERCENTAGE_FA
           <Property Name="EffectiveTotalDaysInArrears" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="CreditORArrears" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
           <Property Name="BK_day_key" Type="Int32" />
+        </EntityType>
+        <EntityType Name="RECONCILE_BILLEDPERCENTAGE_FACT">
+          <Key>
+            <PropertyRef Name="billedhours_key" />
+          </Key>
+          <Property Name="billedhours_key" Type="Int32" Nullable="false" />
+          <Property Name="pay_period_end_date_key" Type="Int32" />
+          <Property Name="cost_centre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="employee_paid_hours" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="employee_paid_amount" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="client_billed_hours" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="client_billed_amount" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="billed_hours_percentage" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="billed_amount_percentage" Type="Decimal" Precision="10" Scale="4" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2316,6 +2333,21 @@ warning 6013: The table/view 'DWHF_FINANCE.finance.RECONCILE_BILLEDPERCENTAGE_FA
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="TenancyID" ColumnName="TenancyID" />
                 <ScalarProperty Name="Balance_key" ColumnName="Balance_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RECONCILE_BILLEDPERCENTAGE_FACT">
+            <EntityTypeMapping TypeName="DWHF_FINANCEModel.RECONCILE_BILLEDPERCENTAGE_FACT">
+              <MappingFragment StoreEntitySet="RECONCILE_BILLEDPERCENTAGE_FACT">
+                <ScalarProperty Name="billed_amount_percentage" ColumnName="billed_amount_percentage" />
+                <ScalarProperty Name="billed_hours_percentage" ColumnName="billed_hours_percentage" />
+                <ScalarProperty Name="client_billed_amount" ColumnName="client_billed_amount" />
+                <ScalarProperty Name="client_billed_hours" ColumnName="client_billed_hours" />
+                <ScalarProperty Name="employee_paid_amount" ColumnName="employee_paid_amount" />
+                <ScalarProperty Name="employee_paid_hours" ColumnName="employee_paid_hours" />
+                <ScalarProperty Name="cost_centre" ColumnName="cost_centre" />
+                <ScalarProperty Name="pay_period_end_date_key" ColumnName="pay_period_end_date_key" />
+                <ScalarProperty Name="billedhours_key" ColumnName="billedhours_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
