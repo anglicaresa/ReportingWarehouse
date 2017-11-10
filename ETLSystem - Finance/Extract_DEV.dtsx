@@ -12,8 +12,8 @@
   DTS:ObjectName="Extract_DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="13"
-  DTS:VersionGUID="{B0C5694C-7E75-4B8C-BEAE-F051060AA1A2}">
+  DTS:VersionBuild="15"
+  DTS:VersionGUID="{6CB957F6-2022-4B03-949F-528B7F9D6A4F}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -34,11 +34,7 @@
       DTS:ObjectName="devsql-1\whouse.DWHB.asadwh">
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=devsql-1\whouse;User ID=asadwh;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Persist Security Info=True;Auto Translate=False;">
-          <DTS:Password
-            DTS:Name="Password"
-            Sensitive="1"></DTS:Password>
-        </DTS:ConnectionManager>
+          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -2536,7 +2532,9 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select *  
+from dbo.GLF_LDG_ACC_TRANS 
+where  ( ldg_name in ('R1','CNLDG') ) or (  ldg_name like '%ACT' and len(ACCNBRI)=15 and  len(doc_ref1)&gt;0 )</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -2553,7 +2551,7 @@
                   dataType="System.Int32"
                   description="Specifies the mode used to access the database."
                   name="AccessMode"
-                  typeConverter="AccessMode">0</property>
+                  typeConverter="AccessMode">2</property>
                 <property
                   dataType="System.String"
                   description="The mappings between the parameters in the SQL command and variables."
@@ -6689,10 +6687,14 @@
           Size="295,42"
           Id="Package\GLF_LDG_ACC_TRANS -- Using Linked Server"
           TopLeft="224,125" />
+        <NodeLayout
+          Size="298,42"
+          Id="Package\GLF_LDG_ACC_TRANS-Using Source and Target mapping"
+          TopLeft="223,223" />
         <AnnotationLayout
-          Text="GLF_LDG_ACC_TRANS: it is a big table and need to extract date incrementally&#xD;&#xA;"
+          Text="GLF_LDG_ACC_TRANS: it is a big table and need to extract date incrementally&#xA;"
           ParentId="Package"
-          Size="420,60"
+          Size="420,53"
           Id="52cfb6cc-dd06-401d-8237-7c7cde7cb4d6"
           TopLeft="554,126">
           <AnnotationLayout.FontInfo>
@@ -6706,10 +6708,6 @@
             </mssge:FontInfo>
           </AnnotationLayout.FontInfo>
         </AnnotationLayout>
-        <NodeLayout
-          Size="298,42"
-          Id="Package\GLF_LDG_ACC_TRANS-Using Source and Target mapping"
-          TopLeft="223,223" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
@@ -6719,13 +6717,13 @@
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="152,42"
-          Id="Package\GLF_LDG_ACC_TRANS-Using Source and Target mapping\OLE DB Source"
-          TopLeft="375,157" />
-        <NodeLayout
           Size="173,42"
           Id="Package\GLF_LDG_ACC_TRANS-Using Source and Target mapping\OLE DB Destination"
           TopLeft="368,302" />
+        <NodeLayout
+          Size="152,42"
+          Id="Package\GLF_LDG_ACC_TRANS-Using Source and Target mapping\OLE DB Source"
+          TopLeft="375,157" />
         <EdgeLayout
           Id="Package\GLF_LDG_ACC_TRANS-Using Source and Target mapping.Paths[OLE DB Source Output]"
           TopLeft="452.75,199">
@@ -6752,7 +6750,7 @@
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\GLF_LDG_ACC_TRANS-Using Source and Target mapping\OLE DB Source">
+    design-time-name="Package\GLF_LDG_ACC_TRANS-Using Source and Target mapping\OLE DB Destination">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
@@ -6765,7 +6763,7 @@
     </Properties>
   </PipelineComponentMetadata>
   <PipelineComponentMetadata
-    design-time-name="Package\GLF_LDG_ACC_TRANS-Using Source and Target mapping\OLE DB Destination">
+    design-time-name="Package\GLF_LDG_ACC_TRANS-Using Source and Target mapping\OLE DB Source">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
