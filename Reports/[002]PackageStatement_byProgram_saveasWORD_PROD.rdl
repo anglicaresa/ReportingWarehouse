@@ -5,7 +5,7 @@
     <DataSource Name="DWH">
       <ConnectionProperties>
         <DataProvider>SQL</DataProvider>
-        <ConnectString>Data Source=az-sqlbi01;Initial Catalog=DWHB</ConnectString>
+        <ConnectString>Data Source=az-sqlbi01;Initial Catalog=DWHF_COMCARE</ConnectString>
         <IntegratedSecurity>true</IntegratedSecurity>
       </ConnectionProperties>
       <rd:SecurityType>Integrated</rd:SecurityType>
@@ -28,10 +28,10 @@
           </QueryParameter>
         </QueryParameters>
         <CommandText>select distinct d2.client_id   as clientId ,convert(date,@StartDate) as StartDate,	 convert(date,@EndDate) as EndDate
-from conform_comcare.customer_transactions_fact	  as f1
-inner join 	conform_comcare.program_dim as d1 on f1.program_key=d1.program_key and d1.current_row_indicator ='Y' and d1.program_name=@Program
-inner join conform_comcare.customer_dim as d2 on f1.customer_key=d2.customer_key and d2.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d3 on f1.date_key=d3.date_key
+from comcare.customer_transactions_fact	  as f1
+inner join 	comcare.program_dim as d1 on f1.program_key=d1.program_key and d1.current_row_indicator ='Y' and d1.program_name=@Program
+inner join comcare.customer_dim as d2 on f1.customer_key=d2.customer_key and d2.current_row_indicator='Y'
+inner join comcare.date_dim as d3 on f1.date_key=d3.date_key
 where convert(date,d3.full_date)&gt;=convert(date,@StartDate)
 and convert(date,d3.full_date)&lt;=convert(date,@EndDate)
 order by   d2.client_id asc</CommandText>
@@ -54,7 +54,7 @@ order by   d2.client_id asc</CommandText>
     <DataSet Name="homecare_programs">
       <Query>
         <DataSourceName>DWH</DataSourceName>
-        <CommandText>select program_name from conform_comcare.program_dim 
+        <CommandText>select program_name from comcare.program_dim 
 where program_id_cc in (3,4,5,6,7) </CommandText>
       </Query>
       <Fields>
