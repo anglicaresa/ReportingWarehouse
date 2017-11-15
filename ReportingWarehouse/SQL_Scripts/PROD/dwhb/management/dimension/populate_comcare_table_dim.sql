@@ -22,8 +22,63 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('fc_account_type', 'comcare', 'dbo'
 INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_contract_billed_to', 'comcare', 'dbo', 'xxxxxxx', 'xxxxxxx');
 INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_contract_billing', 'comcare', 'dbo', 'xxxxxxx', 'xxxxxxx');
 INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_cb_split', 'comcare', 'dbo', 'xxxxxxx', 'xxxxxxx');
+--added by Frank 15-11-2017
+INSERT INTO [management].[TABLE_DIM] VALUES ('address','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('client','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_cb_split','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_contract_billed_to','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_contract_billing','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fc_account','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fc_account_type','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fc_client_contract','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fc_transaction','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fc_transaction_type','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('indirect_activity_type','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('period_of_residency','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('person','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('provider','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('provider_contract','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('pt_program','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('state','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('suburb','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('task_type','comcare','dbo','comcareprod','appsql-3');
 
 -- schema: extract_comcare
+
+INSERT INTO [management].[TABLE_DIM] VALUES ('address','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('client','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_cb_split','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_contract_billed_to','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_contract_billing','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fc_account','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fc_account_type','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fc_client_contract','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fc_transaction','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('fc_transaction_type','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('indirect_activity_type','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('period_of_residency','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('person','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('provider','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('provider_contract','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('pt_program','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('state','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('suburb','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('task_type','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+--add to job control table
+use dwhb;
+go
+
+DECLARE @t_table varchar(max)= 'fc_account_type';
+
+    insert into [management].[job_control] values 
+        ((select table_key from [management].[table_dim] where table_name = @t_table and [schema] = 'dbo' and [system] = 'comcare'),
+        'YES', 
+        (select table_key from [management].[table_dim] where table_name = @t_table and [schema] = 'extract_comcare' and [system] = 'dwh'), 
+        (select package_key from [management].[package_dim] where package_name = 'EXTRACT' and sub_system = 'Extract system'),1,'daily');
+
+--end of added 
+
+
 INSERT INTO [management].[TABLE_DIM] VALUES ('fc_transaction_type', 'dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('fc_transaction', 'dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('fc_account', 'dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
