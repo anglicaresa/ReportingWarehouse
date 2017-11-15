@@ -1,0 +1,685 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="8/22/2016 12:56:31 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="W7PC01XQ1T"
+  DTS:CreatorName="ANGLICARE-SA\jshen"
+  DTS:DTSID="{18D3AF0C-4204-4F36-968B-FC364A21FE53}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="13.0.2164.0"
+  DTS:LocaleID="3081"
+  DTS:ObjectName="Extract_ComCare - Prod"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="132"
+  DTS:VersionGUID="{82DC167A-2670-47F4-A4EB-BCA36951DCD6}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DWHB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
+      DTS:ObjectName="DWHB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=az-sqlbi01;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{ACC715E3-2206-434E-B083-048E0DDF83AF}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="dblinkedserver">
+      <DTS:VariableValue
+        DTS:DataType="8">[APPSQL-4\prod].</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{5A4B7664-CA0E-48FC-BBD6-4301AC407852}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="DestTableName">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A4B8898F-24A6-4F53-A3D5-8D19BB205B37}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourcetableLists">
+      <DTS:VariableValue
+        DTS:DataSubType="ManagedSerializable"
+        DTS:DataType="13">
+        <SOAP-ENV:Envelope xmlns:clr="http://schemas.microsoft.com/soap/encoding/clr/1.0" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+          <SOAP-ENV:Body>
+            <xsd:anyType
+              id="ref-1"></xsd:anyType>
+          </SOAP-ENV:Body>
+        </SOAP-ENV:Envelope>
+      </DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{27853ADE-F6AA-497D-8B0A-A9638993802D}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceTableName">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\EST - Get all extract source tables in DWHB for extraction  for ComCare"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{2B22CAAA-B3E1-493B-817A-61F30E3F8536}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="EST - Get all extract source tables in DWHB for extraction  for ComCare"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
+          SQLTask:SqlStatementSource="/*&#xA;select    &#xA; (SELECT ' ['+t2.server+'].'+T2.[DATABASE]+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='comcare' )      ---- need to filter source tables just for ComCare&#xA; ORDER BY T1.job_key ASC&#xA;*/&#xA;&#xA;&#xA;--use dblink to comcareprod&#xA;&#xA;select    &#xA; (SELECT '[appsql-3\comcareprod].'+T2.[DATABASE]+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='comcare' )      ---- need to filter source tables just for ComCare&#xA; ORDER BY T1.job_key ASC&#xA;&#xA;&#xA;&#xA;&#xA;--use dblink to comcaredev for v6.7&#xA;/*&#xA;select    &#xA; (SELECT '[devsql-1\dev].'+'ComCareDev'+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='comcare' )      ---- need to filter source tables just for ComCare&#xA; ORDER BY T1.job_key ASC&#xA;*/&#xA;&#xA;&#xA;&#xA;"
+          SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::SourcetableLists" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::dblinkedserver"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="130"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Extract T1 data"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{B68F77FD-2EC5-455A-BD8B-5C957E63FFE6}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Extract T1 data"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
+          SQLTask:SqlStatementSource="truncate table extract.GLF_LDG_ACC_TRANS&#xA;insert into extract.GLF_LDG_ACC_TRANS&#xA;select * from [appsql-4\test].fintest.dbo.GLF_LDG_ACC_TRANS&#xA;where ldg_name in ('R1') or narr1 like '%Opening Balance from CIM%'&#xA;&#xA;--try to get history payment using :  ldg_name ='CNLDG' and narr2 like '%Receipt%'&#xA;&#xA;--New payment formats for Home care package will use: only pick up the receipts in the format 'PKGRECCC'&#xA;--select * from extract.GLF_LDG_ACC_TRANS&#x9;  where accnbri ='22073'  and doc_type ='PKGRECCC'  in T1 Dev.&#xA;&#xA;&#xA;truncate table extract.GLF_CHART_ACCT&#xA;insert into extract.GLF_CHART_ACCT&#xA;select * from [appsql-4\test].fintest.dbo.GLF_CHART_ACCT&#xA;&#xA;truncate table extract.GLF_CHART_ACC_USF&#xA;insert into extract.GLF_CHART_ACC_USF&#xA;select * from [appsql-4\test].fintest.dbo.GLF_CHART_ACC_USF" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables"
+      DTS:CreationName="STOCK:FOREACHLOOP"
+      DTS:Description="Extract data from source and import into destination"
+      DTS:DTSID="{06C952E5-1BAB-4369-B1F2-FDEB9F255577}"
+      DTS:ExecutableType="STOCK:FOREACHLOOP"
+      DTS:LocaleID="-1"
+      DTS:MaxErrorCount="0"
+      DTS:ObjectName="Foreach Loop Container - Extract data from source tables and import into destination tables">
+      <DTS:ForEachEnumerator
+        DTS:CreationName="Microsoft.ForEachADOEnumerator"
+        DTS:DTSID="{FDD4ED59-DBB6-4118-B5D7-96CF8332D302}"
+        DTS:ObjectName="{FDD4ED59-DBB6-4118-B5D7-96CF8332D302}">
+        <DTS:ObjectData>
+          <FEEADO
+            EnumType="EnumerateRowsInFirstTable"
+            VarName="User::SourcetableLists" />
+        </DTS:ObjectData>
+      </DTS:ForEachEnumerator>
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{9A79AA08-AF26-41E7-9930-249607A1F378}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EST - Extract and insert new data from source to dest"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{8249BA0F-BE50-432B-B1C9-D084BC77B2DD}"
+              DTS:EventID="262283"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{59F63741-A992-4328-B2EB-211791EC7947}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{3C17DD28-E6E5-477E-8636-207ECFA39E06}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,''&#xA;,1    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() ,&#xA;1,&#xA;'Start insert new records'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,1    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="1"
+                        SQLTask:DtsVariableName="User::DestTableName"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="2"
+                        SQLTask:DtsVariableName="User::DestTableName"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="3"
+                        SQLTask:DtsVariableName="User::DestTableName"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
+              SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='INSERT INTO  ' + ? + ' SELECT * FROM  '+?&#xA;--special process for suburb table becasue it has nvarchar columns&#xA;&#xA;IF ?&lt;&gt;'extract_comcare.suburb'&#xA;&#xA;     EXEC (@SQL)&#xA;&#xA;ELSE&#xA;   insert into extract_comcare.Suburb&#xA;   SELECT *&#xA;   FROM OPENQUERY([appsql-3\comcareprod],'SELECT * FROM comcareprod.dbo.Suburb');&#xA;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::DestTableName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::SourceTableName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="2"
+                SQLTask:DtsVariableName="User::DestTableName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{304C60C5-47ED-46E9-B944-12A789CE0792}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EST - Truncate destination tables"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{FBBD77E3-3420-4D0E-97FA-A6FC5EFCF0EF}"
+              DTS:EventID="262283"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{09BE29D7-E626-4A49-879D-6288322A1BEA}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">0</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{6A05A325-7653-406E-9B5C-1A97A62C4420}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#x9;&#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,''&#xA;,1&#x9;   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT &#x9;&#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() ,&#xA;1&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#x9;&#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,1&#x9;   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="1"
+                        SQLTask:DtsVariableName="User::DestTableName"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="2"
+                        SQLTask:DtsVariableName="User::DestTableName"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="3"
+                        SQLTask:DtsVariableName="User::DestTableName"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
+              SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='TRUNCATE TABLE  ' + ?&#xA;EXEC (@SQL)&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::DestTableName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Write Job Finish info to ETL_PROCESS_FACT"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{747706CA-DA60-427C-B33E-FDF9B647D3F9}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EST - Write Job Finish info to ETL_PROCESS_FACT"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
+              SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT &#x9;&#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;1,&#xA;'Finish extract source tables for ComCare'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::DestTableName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Write Job Start info to ETL_PROCESS_FACT"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{CDF29929-ED36-4B49-92B6-68D8A6D98605}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EST - Write Job Start info to ETL_PROCESS_FACT"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
+              SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT &#x9;&#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;1,&#xA;'Start to extract source table for ComCare'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::DestTableName"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{2C386D71-A983-40D2-9B62-FA9117F60FF2}"
+          DTS:From="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{59E1BF55-2B84-4DA6-8871-37FBBEE32975}"
+          DTS:From="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Write Job Start info to ETL_PROCESS_FACT"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{E5A15AE5-9DC3-45AB-97D9-CC8944396EF3}"
+          DTS:From="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Write Job Finish info to ETL_PROCESS_FACT" />
+      </DTS:PrecedenceConstraints>
+      <DTS:EventHandlers>
+        <DTS:EventHandler
+          DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.EventHandlers[OnError]"
+          DTS:CreationName="OnError"
+          DTS:DTSID="{52BC37A9-EDEE-467D-AB84-E2A1B060A2A8}"
+          DTS:EventID="244"
+          DTS:EventName="OnError"
+          DTS:LocaleID="-1">
+          <DTS:Variables>
+            <DTS:Variable
+              DTS:CreationName=""
+              DTS:Description="The propagate property of the event"
+              DTS:DTSID="{11DB45F8-FAB1-43F9-91F2-BB01F6FDE767}"
+              DTS:IncludeInDebugDump="6789"
+              DTS:Namespace="System"
+              DTS:ObjectName="Propagate">
+              <DTS:VariableValue
+                DTS:DataType="11">0</DTS:VariableValue>
+            </DTS:Variable>
+          </DTS:Variables>
+          <DTS:Executables />
+        </DTS:EventHandler>
+      </DTS:EventHandlers>
+      <DTS:ForEachVariableMappings>
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{3FFFE74D-9A49-4AC0-8A5F-FEABEEE20FD5}"
+          DTS:ObjectName="{3FFFE74D-9A49-4AC0-8A5F-FEABEEE20FD5}"
+          DTS:ValueIndex="0"
+          DTS:VariableName="User::SourceTableName" />
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{E2AEE245-F67C-4E61-B991-8D33CD4346AE}"
+          DTS:ObjectName="{E2AEE245-F67C-4E61-B991-8D33CD4346AE}"
+          DTS:ValueIndex="1"
+          DTS:VariableName="User::DestTableName" />
+      </DTS:ForEachVariableMappings>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{9D01F8E1-2824-4F6E-A4DD-0529E9064F99}"
+      DTS:From="Package\EST - Get all extract source tables in DWHB for extraction  for ComCare"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Foreach Loop Container - Extract data from source tables and import into destination tables" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{7EAD3E3E-64B6-41D3-A048-A17DFBC8BD4E}"
+      DTS:From="Package\Foreach Loop Container - Extract data from source tables and import into destination tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Extract T1 data" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{E0BB3AA5-E8FC-4575-B874-F15680410D47}"
+      DTS:EventID="7536754"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{D51D2BDA-9FA2-4C61-BDBB-D87F6E8E07D6}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">0</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables />
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssge="clr-namespace:Microsoft.SqlServer.Graph.Extended;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+        <NodeLayout
+          Size="1068,42"
+          Id="Package\EST - Get all extract source tables in DWHB for extraction  for ComCare"
+          TopLeft="132.25,122" />
+        <NodeLayout
+          Size="1065,42"
+          Id="Package\Extract T1 data"
+          TopLeft="125,664" />
+        <NodeLayout
+          Size="924,42"
+          Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest"
+          TopLeft="34.59375,173" />
+        <NodeLayout
+          Size="924,42"
+          Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables"
+          TopLeft="34.59375,104" />
+        <NodeLayout
+          Size="924,42"
+          Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Write Job Finish info to ETL_PROCESS_FACT"
+          TopLeft="34.59375,241" />
+        <NodeLayout
+          Size="924,42"
+          Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Write Job Start info to ETL_PROCESS_FACT"
+          TopLeft="34.59375,28" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.PrecedenceConstraints[Constraint]"
+          TopLeft="496.59375,146">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,27"
+              Start="0,0"
+              End="0,19.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.PrecedenceConstraints[Constraint 1]"
+          TopLeft="496.59375,70">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34"
+              Start="0,0"
+              End="0,26.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.PrecedenceConstraints[Constraint 2]"
+          TopLeft="496.59375,215">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,26"
+              Start="0,0"
+              End="0,18.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="1074,351"
+          Size="1074,394"
+          Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables"
+          TopLeft="122.65625,209" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="662.953125,164">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45"
+              Start="0,0"
+              End="0,37.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="658.578125,603">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,61"
+              Start="0,0"
+              End="0,53.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,53.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <AnnotationLayout
+          Text="Package name:  Extract source data and import into DWHB.extract.tables for ComCare&#xA;Purpose: Extract source data and import into DWHB.extract.tables&#xA;Develpment history:&#xA;              21/03/2017 Created by JS&#xA;"
+          ParentId="Package"
+          Size="634,121"
+          Id="acb232ed-908b-442e-b718-ec53962ea9a5"
+          TopLeft="133,16">
+          <AnnotationLayout.FontInfo>
+            <mssge:FontInfo
+              Family="Tahoma"
+              Size="15.75"
+              Color="#FF008000">
+              <mssge:FontInfo.TextDecorations>
+                <av:TextDecorationCollection />
+              </mssge:FontInfo.TextDecorations>
+            </mssge:FontInfo>
+          </AnnotationLayout.FontInfo>
+        </AnnotationLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <DtsEventHandler
+    design-time-name="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="383,140" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="419,161" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

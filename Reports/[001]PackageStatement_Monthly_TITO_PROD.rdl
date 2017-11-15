@@ -5,7 +5,7 @@
     <DataSource Name="DWH">
       <ConnectionProperties>
         <DataProvider>SQL</DataProvider>
-        <ConnectString>Data Source=devsql-1\whouse;Initial Catalog=DWHB</ConnectString>
+        <ConnectString>Data Source=az-sqlbi01;Initial Catalog=DWHF_COMCARE</ConnectString>
         <IntegratedSecurity>true</IntegratedSecurity>
       </ConnectionProperties>
       <rd:SecurityType>Integrated</rd:SecurityType>
@@ -35,12 +35,12 @@ when   convert(varchar(7), d2.full_date, 126) = convert(varchar(7), convert(date
 else f1.transaction_source +' '+  convert(varchar,DATEADD(m, DATEDIFF(m, 0, d2.full_date), 0) ,103) +' to '+  convert(varchar,DATEADD(DAY, -(DAY(DATEADD(MONTH, 1, d2.full_date))),DATEADD(MONTH, 1, d2.full_date)),103)	
 --f1.transaction_source +' '+ convert(varchar, min(d2.full_date),103)+' to '+    convert(varchar, max(d2.full_date),103)
 end	 as comment
-from conform_comcare.customer_transactions_fact		 as f1
-inner join 	 conform_comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
-inner join conform_comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
-inner join conform_comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
-where f1.transaction_type_key in (  select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source='Base Subsidy')
+from comcare.customer_transactions_fact		 as f1
+inner join 	 comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
+inner join comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
+inner join comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
+where f1.transaction_type_key in (  select transaction_type_key from comcare.transaction_type_dim	   where transaction_source='Base Subsidy')
 and d3.client_id=@clientId
 and convert(date,d2.full_date)&gt;=convert(date,@StartDate)
 and convert(date,d2.full_date)&lt;=convert(date,@EndDate)
@@ -49,8 +49,8 @@ and f1.source_system&lt;&gt;'CIM'
 and f1.customer_transaction_key	 not in 
 (
 select f1.customer_transaction_key 
-from conform_comcare.customer_transactions_fact	  as f1
-inner join conform_comcare.date_dim as d1 on f1.date_key=d1.date_key and d1.year='2016' and d1.month_no =4 and f1.source_system='ComCare'
+from comcare.customer_transactions_fact	  as f1
+inner join comcare.date_dim as d1 on f1.date_key=d1.date_key and d1.year='2016' and d1.month_no =4 and f1.source_system='ComCare'
 )
 group by convert(varchar(7), d2.full_date, 126) ,
 case 
@@ -101,12 +101,12 @@ when   convert(varchar(7), d2.full_date, 126) = convert(varchar(7), convert(date
 else f1.transaction_source +' '+  convert(varchar,DATEADD(m, DATEDIFF(m, 0, d2.full_date), 0) ,103) +' to '+  convert(varchar,DATEADD(DAY, -(DAY(DATEADD(MONTH, 1, d2.full_date))),DATEADD(MONTH, 1, d2.full_date)),103)	
 --f1.transaction_source +' '+ convert(varchar, min(d2.full_date),103)+' to '+    convert(varchar, max(d2.full_date),103)
 end	 as comment
-from conform_comcare.customer_transactions_fact		 as f1
-inner join 	 conform_comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
-inner join conform_comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
-inner join conform_comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
-where f1.transaction_type_key in (  select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source='Financial Hardship')
+from comcare.customer_transactions_fact		 as f1
+inner join 	 comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
+inner join comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
+inner join comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
+where f1.transaction_type_key in (  select transaction_type_key from comcare.transaction_type_dim	   where transaction_source='Financial Hardship')
 and d3.client_id=@clientId
 and convert(date,d2.full_date)&gt;=convert(date,@StartDate)
 and convert(date,d2.full_date)&lt;=convert(date,@EndDate)
@@ -161,12 +161,12 @@ else f1.transaction_source +' '+  convert(varchar,DATEADD(m, DATEDIFF(m, 0, d2.f
 --f1.transaction_source +' '+ convert(varchar, min(d2.full_date),103)+' to '+    convert(varchar, max(d2.full_date),103)
 end	 as comment
 
-from conform_comcare.customer_transactions_fact		 as f1
-inner join 	 conform_comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
-inner join conform_comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
-inner join conform_comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
-where f1.transaction_type_key in (  select transaction_type_key from conform_comcare.transaction_type_dim	    where transaction_source in ('Income Tested','New Income Tested'))
+from comcare.customer_transactions_fact		 as f1
+inner join 	 comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
+inner join comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
+inner join comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
+where f1.transaction_type_key in (  select transaction_type_key from comcare.transaction_type_dim	    where transaction_source in ('Income Tested','New Income Tested'))
 and d3.client_id=@clientId
 and convert(date,d2.full_date)&gt;=convert(date,@StartDate)
 and convert(date,d2.full_date)&lt;=convert(date,@EndDate)
@@ -222,12 +222,12 @@ else f1.transaction_source +' '+  convert(varchar,DATEADD(m, DATEDIFF(m, 0, d2.f
 end	 as comment
 
 
-from conform_comcare.customer_transactions_fact		 as f1
-inner join 	 conform_comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
-inner join conform_comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
-inner join conform_comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
-where f1.transaction_type_key in (  select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source='Dementia and Cognition and Vet' )
+from comcare.customer_transactions_fact		 as f1
+inner join 	 comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
+inner join comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
+inner join comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
+where f1.transaction_type_key in (  select transaction_type_key from comcare.transaction_type_dim	   where transaction_source='Dementia and Cognition and Vet' )
 and d3.client_id=@clientId
 and convert(date,d2.full_date)&gt;=convert(date,@StartDate)
 and convert(date,d2.full_date)&lt;=convert(date,@EndDate)
@@ -263,11 +263,11 @@ order by convert(varchar(7), d2.full_date, 126) asc</CommandText>
       <Query>
         <DataSourceName>DWH</DataSourceName>
         <CommandText>select distinct         d3.client_id as clientId
-from conform_comcare.customer_transactions_fact		 as f1
-inner join 	 conform_comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
-inner join conform_comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
-inner join conform_comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'</CommandText>
+from comcare.customer_transactions_fact		 as f1
+inner join 	 comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
+inner join comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
+inner join comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'</CommandText>
       </Query>
       <Fields>
         <Field Name="clientId">
@@ -292,7 +292,7 @@ end as 	 address,
 residential_city+' '+rtrim(ltrim(f1.State_Abbreviation))+' '+residential_post_code as suburbstatepost,
 isnull(amount_transferred_in,0.00) as amount_transferred_in ,
 isnull(amount_transferred_in_client,0.00) as amount_transferred_in_client 
-from conform_comcare.customer_dim	 as d1
+from comcare.customer_dim	 as d1
 inner join extract_comcare.State   as f1 on d1.residential_state =f1.Description
 where current_row_indicator='Y'
 and client_id =@clientId
@@ -301,9 +301,9 @@ and client_id =@clientId
  ---pick up right debtor information based on  FB_Client_Contract_Billed_To.effective_to_date
 
 if 	(len(( select  t3.person_id 	   		
- from  extract_comcare.FB_Client_Contract_Billing as t1		
-  inner join  extract_comcare.FB_Client_Contract_Billed_To as t2   on t1.Client_CB_ID=t2.Client_CB_ID
-  inner join  extract_comcare.FB_Client_CB_Split as t3 on 	t3.Client_Contract_Billed_To_ID = t2.Client_Contract_Billed_To_ID
+ from  dwhb.extract_comcare.FB_Client_Contract_Billing as t1		
+  inner join  dwhb.extract_comcare.FB_Client_Contract_Billed_To as t2   on t1.Client_CB_ID=t2.Client_CB_ID
+  inner join  dwhb.extract_comcare.FB_Client_CB_Split as t3 on 	t3.Client_Contract_Billed_To_ID = t2.Client_Contract_Billed_To_ID
   where t1.	Funder_Contract_ID  in (3,4,5,6,7)
   and t1.Client_ID&lt;&gt;t3.Person_ID
   and (t2.Effective_To_Date&gt;=GETDATE() -30 or t2.Effective_To_Date is null )
@@ -318,8 +318,8 @@ when residential_address_line1 is null then isnull(residential_address_line2,'-'
 else   residential_address_line1+' '+isnull(residential_address_line2,'')
 end as 	 address,		   
 residential_city+' '+rtrim(ltrim(f1.State_Abbreviation))+' '+residential_post_code as suburbstatepost
-from conform_comcare.responsible_party_dim	 as d1
-inner join extract_comcare.State   as f1 on d1.residential_state =f1.Description
+from comcare.responsible_party_dim	 as d1
+inner join dwhb.extract_comcare.State   as f1 on d1.residential_state =f1.Description
 where current_row_indicator='Y'
 and client_id = (( select  t3.person_id 	   		
  from  extract_comcare.FB_Client_Contract_Billing as t1		
@@ -341,8 +341,8 @@ when residential_address_line1 is null then isnull(residential_address_line2,'-'
 else   residential_address_line1+' '+isnull(residential_address_line2,'')
 end as 	 address,		   
 residential_city+' '+rtrim(ltrim(f1.State_Abbreviation))+' '+residential_post_code as suburbstatepost
-from conform_comcare.customer_dim	 as d1
-inner join extract_comcare.State   as f1 on d1.residential_state =f1.Description
+from comcare.customer_dim	 as d1
+inner join dwhb.extract_comcare.State   as f1 on d1.residential_state =f1.Description
 where current_row_indicator='Y'
 and client_id =@clientId
 
@@ -401,9 +401,9 @@ program_street as address,
 program_suburb+' '+program_state+' '+program_postcode as postcode,
 telephone,
 fax
-from conform_comcare.program_dim 
+from comcare.program_dim 
 where current_row_indicator ='Y'
-and program_id_cc in (select program_id from extract_comcare.FC_Client_Contract where Program_ID in (3,4,5,6,7)	and client_id =@clientId)</CommandText>
+and program_id_cc in (select program_id from dwhb.extract_comcare.FC_Client_Contract where Program_ID in (3,4,5,6,7)	and client_id =@clientId)</CommandText>
       </Query>
       <Fields>
         <Field Name="program_key">
@@ -455,12 +455,12 @@ else f1.transaction_source +' '+  convert(varchar,DATEADD(m, DATEDIFF(m, 0, d2.f
 --f1.transaction_source +' '+ convert(varchar, min(d2.full_date),103)+' to '+    convert(varchar, max(d2.full_date),103)
 end	 as comment
 
-from conform_comcare.customer_transactions_fact		 as f1
-inner join 	 conform_comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
-inner join conform_comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
-inner join conform_comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
-where f1.transaction_type_key in (  select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source='Administration Fee')
+from comcare.customer_transactions_fact		 as f1
+inner join 	 comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
+inner join comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
+inner join comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
+where f1.transaction_type_key in (  select transaction_type_key from comcare.transaction_type_dim	   where transaction_source='Administration Fee')
 and d3.client_id=@clientId
 and convert(date,d2.full_date)&gt;=convert(date,@StartDate)
 and convert(date,d2.full_date)&lt;=convert(date,@EndDate)
@@ -515,12 +515,12 @@ else f1.transaction_source +' '+  convert(varchar,DATEADD(m, DATEDIFF(m, 0, d2.f
 --f1.transaction_source +' '+ convert(varchar, min(d2.full_date),103)+' to '+    convert(varchar, max(d2.full_date),103)
 end	 as comment
 
-from conform_comcare.customer_transactions_fact		 as f1
-inner join 	 conform_comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
-inner join conform_comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
-inner join conform_comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
-where f1.transaction_type_key in (  select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source  like 'Coordination Fee%')
+from comcare.customer_transactions_fact		 as f1
+inner join 	 comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
+inner join comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
+inner join comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
+where f1.transaction_type_key in (  select transaction_type_key from comcare.transaction_type_dim	   where transaction_source  like 'Coordination Fee%')
 and d3.client_id=@clientId
 and convert(date,d2.full_date)&gt;=convert(date,@StartDate)
 and convert(date,d2.full_date)&lt;=convert(date,@EndDate)
@@ -573,12 +573,12 @@ d2.full_date,
 d3.client_id ,
 d4.program_name	 ,
 f1.transaction_source
-from conform_comcare.customer_transactions_fact		 as f1
-inner join 	 conform_comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
-inner join conform_comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
-inner join conform_comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
-where ( f1.transaction_type_key  in ( select transaction_type_key from conform_comcare.transaction_type_dim	 where transaction_type_natural_key in (3,4)) )
+from comcare.customer_transactions_fact		 as f1
+inner join 	 comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
+inner join comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
+inner join comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
+where ( f1.transaction_type_key  in ( select transaction_type_key from comcare.transaction_type_dim	 where transaction_type_natural_key in (3,4)) )
 and d3.client_id=@clientId
 and convert(date,d2.full_date)&gt;=convert(date,@StartDate)
 and convert(date,d2.full_date)&lt;=convert(date,@EndDate)
@@ -639,12 +639,12 @@ d2.full_date,
 d3.client_id ,
 d4.program_name	 ,
 f1.transaction_source
-from conform_comcare.customer_transactions_fact		 as f1
-inner join 	 conform_comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
-inner join conform_comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
-inner join conform_comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
-where f1.transaction_type_key in (  select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source ='Payments Received')
+from comcare.customer_transactions_fact		 as f1
+inner join 	 comcare.transaction_type_dim as d1 on f1.transaction_type_key=d1.transaction_type_key	and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
+inner join comcare.customer_dim as d3 on f1.customer_key=d3.customer_key and d3.current_row_indicator='Y'
+inner join comcare.program_dim as d4 on f1.program_key=d4.program_key and d4.current_row_indicator='Y'
+where f1.transaction_type_key in (  select transaction_type_key from comcare.transaction_type_dim	   where transaction_source ='Payments Received')
 and d3.client_id=@clientId
 and convert(date,d2.full_date)&gt;=convert(date,@StartDate)
 and convert(date,d2.full_date)&lt;=convert(date,@EndDate)
@@ -705,11 +705,11 @@ order by d2.full_date asc</CommandText>
 
  --get commonwealth transer in and transfer out amount
 select isnull(sum(f1.amount),0.00)
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-in     (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_type_description='Balance Transfer Between Contracts' and transaction_source&lt;&gt;'Adjustment')
+in     (select transaction_type_key from comcare.transaction_type_dim	   where transaction_type_description='Balance Transfer Between Contracts' and transaction_source&lt;&gt;'Adjustment')
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&lt;convert(date,@StartDate)
 and f1.source_system&lt;&gt;'CIM'
@@ -725,11 +725,11 @@ and f1.source_system&lt;&gt;'CIM'
 
  --get  client transer in and transfer out amount
 select isnull(sum(f1.amount),0.00)
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
- in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_type_description='Balance Transfer Between Contracts - Client' and transaction_source&lt;&gt;'Adjustment')
+ in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_type_description='Balance Transfer Between Contracts - Client' and transaction_source&lt;&gt;'Adjustment')
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&lt;convert(date,@StartDate)
 and f1.source_system&lt;&gt;'CIM'
@@ -742,19 +742,19 @@ and f1.source_system&lt;&gt;'CIM'
  --Base Subsidy
 (
 select isnull(sum(f1.amount),0.00)
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-    in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source='Base Subsidy')
+    in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_source='Base Subsidy')
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&lt;convert(date,@StartDate)
 and f1.source_system&lt;&gt;'CIM'
 and f1.customer_transaction_key	 not in 
 (
 select f1.customer_transaction_key 
-from conform_comcare.customer_transactions_fact	  as f1
-inner join conform_comcare.date_dim as d1 on f1.date_key=d1.date_key and d1.year='2016' and d1.month_no =4 and f1.source_system='ComCare'
+from comcare.customer_transactions_fact	  as f1
+inner join comcare.date_dim as d1 on f1.date_key=d1.date_key and d1.year='2016' and d1.month_no =4 and f1.source_system='ComCare'
 )
 
 )
@@ -765,11 +765,11 @@ inner join conform_comcare.date_dim as d1 on f1.date_key=d1.date_key and d1.year
  --IncomeTested
 (
 select isnull(sum(f1.amount),0.00)
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-    in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source='Income Tested')
+    in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_source='Income Tested')
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&lt;convert(date,@StartDate)
 and f1.source_system&lt;&gt;'CIM') 
@@ -780,11 +780,11 @@ and f1.source_system&lt;&gt;'CIM')
  --Hardship_Supplements_Charged
 (
 select isnull(sum(f1.amount),0.00)
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-    in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source='Financial Hardship')
+    in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_source='Financial Hardship')
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&lt;convert(date,@StartDate)
 and f1.source_system&lt;&gt;'CIM') 
@@ -795,11 +795,11 @@ and f1.source_system&lt;&gt;'CIM')
     --Supplements_Received
 (
 select isnull(sum(f1.amount),0.00)
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-    in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source='Dementia and Cognition and Vet')
+    in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_source='Dementia and Cognition and Vet')
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&lt;convert(date,@StartDate)
 and f1.source_system&lt;&gt;'CIM')
@@ -810,11 +810,11 @@ and f1.source_system&lt;&gt;'CIM')
     --Payment_Received
 (
 select isnull(sum(f1.amount),0.00)
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-    in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source='Payments Received')
+    in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_source='Payments Received')
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&lt;convert(date,@StartDate)
 and f1.source_system&lt;&gt;'CIM')
@@ -825,11 +825,11 @@ and f1.source_system&lt;&gt;'CIM')
      --Administration_Fees
 (
 select isnull(sum(f1.amount),0.00)
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-    in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source='Administration Fee')
+    in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_source='Administration Fee')
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&lt;convert(date,@StartDate)
 and f1.source_system&lt;&gt;'CIM' )
@@ -840,11 +840,11 @@ and f1.source_system&lt;&gt;'CIM' )
      --Coordination_Fees
 (
 select isnull(sum(f1.amount),0.00)
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-    in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source  like 'Coordination Fee%')
+    in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_source  like 'Coordination Fee%')
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&lt;convert(date,@StartDate)
 and f1.source_system&lt;&gt;'CIM')
@@ -854,11 +854,11 @@ and f1.source_system&lt;&gt;'CIM')
       --Services_Received
 (
 select isnull(sum(f1.amount),0.00)
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-    in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_type_natural_key in (3,4))
+    in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_type_natural_key in (3,4))
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&lt;convert(date,@StartDate)
 and f1.source_system&lt;&gt;'CIM')
@@ -895,11 +895,11 @@ d1.preferred_name,
 d1.family_name,
 sum(isnull(f1.amount,0.00)) as amount_transferred_in,  ------------from transer in and transfer out transaction
 sum(isnull(d1.amount_transferred_in_client,0.00)) as amount_transferred_in_client 	----------need to double check
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-    in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_type_description='Balance Transfer Between Contracts')
+    in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_type_description='Balance Transfer Between Contracts')
 and f1.source_system&lt;&gt;'CIM'
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&gt;=convert(date,@StartDate)
@@ -922,11 +922,11 @@ d1.preferred_name,
 d1.family_name,
 sum(isnull(case when f1.transaction_source not like '%Client%' then f1.amount else 0.00 end,0.00)) as amount_transferred_in,  ------------from Commonwealth transer in and transfer out transaction
 sum(isnull(case when f1.transaction_source like '%Client%' then f1.amount else 0.00 end,0.00)) as amount_transferred_in_client 	----------for Client transer in and transfer out transaction
-from  conform_comcare.customer_transactions_fact  as f1
-inner join conform_comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
-inner join conform_comcare.date_dim as d2 on f1.date_key=d2.date_key
+from  comcare.customer_transactions_fact  as f1
+inner join comcare.customer_dim as d1 on f1.customer_key=d1.customer_key and d1.current_row_indicator='Y'
+inner join comcare.date_dim as d2 on f1.date_key=d2.date_key
 where f1.transaction_type_key	 
-    in  (select transaction_type_key from conform_comcare.transaction_type_dim	   where transaction_source like '%Transfer%' and transaction_type_description like 'Balance Transfer%')
+    in  (select transaction_type_key from comcare.transaction_type_dim	   where transaction_source like '%Transfer%' and transaction_type_description like 'Balance Transfer%')
 and f1.source_system&lt;&gt;'CIM'
 and d1.client_id=@clientId
 and	convert(date,d2.full_date)&gt;=convert(date,@StartDate)
@@ -935,8 +935,7 @@ group by  d1.client_id ,
 d1.title,
 d1.given_name,
 d1.preferred_name,
-d1.family_name
-</CommandText>
+d1.family_name</CommandText>
       </Query>
       <Fields>
         <Field Name="client_id">
