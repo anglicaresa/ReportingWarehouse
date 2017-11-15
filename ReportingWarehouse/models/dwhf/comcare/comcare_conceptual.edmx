@@ -5,6 +5,145 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="homecare.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHF_COMCARE.comcare.customer_dim' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="customer_dim">
+          <Key>
+            <PropertyRef Name="customer_key" />
+          </Key>
+          <Property Name="customer_key" Type="int" Nullable="false" />
+          <Property Name="client_id" Type="int" />
+          <Property Name="title" Type="varchar" MaxLength="6" />
+          <Property Name="given_name" Type="varchar" MaxLength="50" />
+          <Property Name="preferred_name" Type="varchar" MaxLength="50" />
+          <Property Name="family_name" Type="varchar" MaxLength="50" />
+          <Property Name="date_of_birth" Type="date" />
+          <Property Name="gender" Type="varchar" MaxLength="1" />
+          <Property Name="residential_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="residential_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="residential_city" Type="varchar" MaxLength="50" />
+          <Property Name="residential_state" Type="varchar" MaxLength="50" />
+          <Property Name="residential_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="business_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="business_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="business_city" Type="varchar" MaxLength="50" />
+          <Property Name="business_state" Type="varchar" MaxLength="50" />
+          <Property Name="business_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="mailing_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="mailing_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="mailing_city" Type="varchar" MaxLength="50" />
+          <Property Name="mailing_state" Type="varchar" MaxLength="50" />
+          <Property Name="mailing_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="billing_address_line1" Type="varchar" MaxLength="50" />
+          <Property Name="billing_address_line2" Type="varchar" MaxLength="70" />
+          <Property Name="billing_city" Type="varchar" MaxLength="50" />
+          <Property Name="billing_state" Type="varchar" MaxLength="50" />
+          <Property Name="billing_post_code" Type="varchar" MaxLength="10" />
+          <Property Name="amount_transferred_in" Type="numeric" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out" Type="numeric" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_in_client" Type="numeric" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out_client" Type="numeric" Precision="28" Scale="5" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+          <Property Name="cim_id_number" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHF_COMCARE.comcare.customer_transactions_fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="customer_transactions_fact">
+          <Key>
+            <PropertyRef Name="customer_transaction_key" />
+            <PropertyRef Name="customer_key" />
+            <PropertyRef Name="date_key" />
+            <PropertyRef Name="transaction_type_key" />
+            <PropertyRef Name="program_key" />
+            <PropertyRef Name="responsible_party_key" />
+          </Key>
+          <Property Name="customer_transaction_key" Type="int" Nullable="false" />
+          <Property Name="customer_key" Type="int" Nullable="false" />
+          <Property Name="date_key" Type="int" Nullable="false" />
+          <Property Name="transaction_type_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="responsible_party_key" Type="int" Nullable="false" />
+          <Property Name="amount" Type="numeric" Precision="28" Scale="5" />
+          <Property Name="balance" Type="numeric" Precision="28" Scale="5" />
+          <Property Name="transaction_source" Type="varchar" MaxLength="255" />
+          <Property Name="description" Type="varchar" MaxLength="255" />
+          <Property Name="comments" Type="varchar" MaxLength="255" />
+          <Property Name="source_system" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="date_dim">
+          <Key>
+            <PropertyRef Name="date_key" />
+          </Key>
+          <Property Name="date_key" Type="int" Nullable="false" />
+          <Property Name="full_date" Type="datetime" />
+          <Property Name="display_date" Type="varchar" MaxLength="10" />
+          <Property Name="year" Type="int" />
+          <Property Name="quarter" Type="int" />
+          <Property Name="quarter_name" Type="varchar" MaxLength="9" />
+          <Property Name="month_no" Type="int" />
+          <Property Name="month_name" Type="varchar" MaxLength="9" />
+          <Property Name="day_of_month" Type="int" />
+          <Property Name="day_of_week" Type="int" />
+          <Property Name="day_name" Type="varchar" MaxLength="9" />
+          <Property Name="is_public_holiday" Type="varchar" MaxLength="3" />
+          <Property Name="public_holiday_name" Type="varchar" MaxLength="50" />
+          <Property Name="financial_year" Type="varchar" MaxLength="11" />
+          <Property Name="fbt_range" Type="varchar" MaxLength="11" />
+          <Property Name="pay_period_end" Type="varchar" MaxLength="3" />
+          <Property Name="financial_month_no" Type="int" />
+          <Property Name="max_temperature" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="min_temperature" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="rainfall" Type="decimal" Precision="5" Scale="2" />
+          <Property Name="max_wind_speed" Type="decimal" Precision="5" Scale="2" />
+        </EntityType>
+        <EntityType Name="employee_payment_summary_fact">
+          <Key>
+            <PropertyRef Name="employee_payment_key" />
+          </Key>
+          <Property Name="employee_payment_key" Type="int" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="position_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="employee_id" Type="int" Nullable="false" />
+          <Property Name="employee_name" Type="varchar" MaxLength="50" />
+          <Property Name="pay_period_date_key" Type="int" Nullable="false" />
+          <Property Name="period_amount" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="count" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHF_COMCARE.comcare.program_dim' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="program_dim">
+          <Key>
+            <PropertyRef Name="program_key" />
+            <PropertyRef Name="program_code" />
+            <PropertyRef Name="program_street" />
+            <PropertyRef Name="program_suburb" />
+            <PropertyRef Name="program_postcode" />
+          </Key>
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="program_name" Type="varchar" MaxLength="50" />
+          <Property Name="program_code" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="program_street" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="program_suburb" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="program_postcode" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+          <Property Name="program_state" Type="varchar" MaxLength="50" />
+          <Property Name="telephone" Type="varchar" MaxLength="20" />
+          <Property Name="fax" Type="varchar" MaxLength="20" />
+          <Property Name="program_id_cc" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHF_COMCARE.comcare.responsible_party_dim' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="responsible_party_dim">
           <Key>
             <PropertyRef Name="responsible_party_key" />
@@ -37,10 +176,10 @@
           <Property Name="billing_city" Type="varchar" MaxLength="50" />
           <Property Name="billing_state" Type="varchar" MaxLength="50" />
           <Property Name="billing_post_code" Type="varchar" MaxLength="10" />
-          <Property Name="amount_transferred_in" Type="decimal" Precision="28" Scale="5" />
-          <Property Name="amount_transferred_out" Type="decimal" Precision="28" Scale="5" />
-          <Property Name="amount_transferred_in_client" Type="decimal" Precision="28" Scale="5" />
-          <Property Name="amount_transferred_out_client" Type="decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_in" Type="numeric" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out" Type="numeric" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_in_client" Type="numeric" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out_client" Type="numeric" Precision="28" Scale="5" />
           <Property Name="effective_from_date" Type="date" />
           <Property Name="effective_to_date" Type="date" />
           <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
@@ -49,87 +188,309 @@
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHF_COMCARE.comcare.transaction_type_dim' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="transaction_type_dim">
+          <Key>
+            <PropertyRef Name="transaction_type_key" />
+          </Key>
+          <Property Name="transaction_type_key" Type="int" Nullable="false" />
+          <Property Name="transaction_type_natural_key" Type="int" />
+          <Property Name="transaction_type_description" Type="varchar" MaxLength="50" />
+          <Property Name="transaction_source" Type="varchar" MaxLength="50" />
+          <Property Name="effective_from_date" Type="date" />
+          <Property Name="effective_to_date" Type="date" />
+          <Property Name="category_code" Type="varchar" MaxLength="6" />
+          <Property Name="change_reason_code" Type="varchar" MaxLength="5" />
+          <Property Name="change_reason_description" Type="varchar" MaxLength="50" />
+          <Property Name="row_effective_date" Type="datetime" />
+          <Property Name="row_expiration_date" Type="datetime" />
+          <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
+        </EntityType>
         <EntityContainer Name="homecareStoreContainer">
-          <EntitySet Name="responsible_party_dim" EntityType="Self.responsible_party_dim" Schema="comcare" store:Type="Tables" />
+          <EntitySet Name="date_dim" EntityType="Self.date_dim" Schema="comcare" store:Type="Tables" />
+          <EntitySet Name="employee_payment_summary_fact" EntityType="Self.employee_payment_summary_fact" Schema="comcare" store:Type="Tables" />
+          <EntitySet Name="customer_dim" EntityType="Self.customer_dim" store:Type="Tables" store:Schema="comcare">
+            <DefiningQuery>SELECT 
+    [customer_dim].[customer_key] AS [customer_key], 
+    [customer_dim].[client_id] AS [client_id], 
+    [customer_dim].[title] AS [title], 
+    [customer_dim].[given_name] AS [given_name], 
+    [customer_dim].[preferred_name] AS [preferred_name], 
+    [customer_dim].[family_name] AS [family_name], 
+    [customer_dim].[date_of_birth] AS [date_of_birth], 
+    [customer_dim].[gender] AS [gender], 
+    [customer_dim].[residential_address_line1] AS [residential_address_line1], 
+    [customer_dim].[residential_address_line2] AS [residential_address_line2], 
+    [customer_dim].[residential_city] AS [residential_city], 
+    [customer_dim].[residential_state] AS [residential_state], 
+    [customer_dim].[residential_post_code] AS [residential_post_code], 
+    [customer_dim].[business_address_line1] AS [business_address_line1], 
+    [customer_dim].[business_address_line2] AS [business_address_line2], 
+    [customer_dim].[business_city] AS [business_city], 
+    [customer_dim].[business_state] AS [business_state], 
+    [customer_dim].[business_post_code] AS [business_post_code], 
+    [customer_dim].[mailing_address_line1] AS [mailing_address_line1], 
+    [customer_dim].[mailing_address_line2] AS [mailing_address_line2], 
+    [customer_dim].[mailing_city] AS [mailing_city], 
+    [customer_dim].[mailing_state] AS [mailing_state], 
+    [customer_dim].[mailing_post_code] AS [mailing_post_code], 
+    [customer_dim].[billing_address_line1] AS [billing_address_line1], 
+    [customer_dim].[billing_address_line2] AS [billing_address_line2], 
+    [customer_dim].[billing_city] AS [billing_city], 
+    [customer_dim].[billing_state] AS [billing_state], 
+    [customer_dim].[billing_post_code] AS [billing_post_code], 
+    [customer_dim].[amount_transferred_in] AS [amount_transferred_in], 
+    [customer_dim].[amount_transferred_out] AS [amount_transferred_out], 
+    [customer_dim].[amount_transferred_in_client] AS [amount_transferred_in_client], 
+    [customer_dim].[amount_transferred_out_client] AS [amount_transferred_out_client], 
+    [customer_dim].[change_reason_code] AS [change_reason_code], 
+    [customer_dim].[change_reason_description] AS [change_reason_description], 
+    [customer_dim].[row_effective_date] AS [row_effective_date], 
+    [customer_dim].[row_expiration_date] AS [row_expiration_date], 
+    [customer_dim].[current_row_indicator] AS [current_row_indicator], 
+    [customer_dim].[cim_id_number] AS [cim_id_number]
+    FROM [comcare].[customer_dim] AS [customer_dim]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="customer_transactions_fact" EntityType="Self.customer_transactions_fact" store:Type="Tables" store:Schema="comcare">
+            <DefiningQuery>SELECT 
+    [customer_transactions_fact].[customer_transaction_key] AS [customer_transaction_key], 
+    [customer_transactions_fact].[customer_key] AS [customer_key], 
+    [customer_transactions_fact].[date_key] AS [date_key], 
+    [customer_transactions_fact].[transaction_type_key] AS [transaction_type_key], 
+    [customer_transactions_fact].[program_key] AS [program_key], 
+    [customer_transactions_fact].[responsible_party_key] AS [responsible_party_key], 
+    [customer_transactions_fact].[amount] AS [amount], 
+    [customer_transactions_fact].[balance] AS [balance], 
+    [customer_transactions_fact].[transaction_source] AS [transaction_source], 
+    [customer_transactions_fact].[description] AS [description], 
+    [customer_transactions_fact].[comments] AS [comments], 
+    [customer_transactions_fact].[source_system] AS [source_system]
+    FROM [comcare].[customer_transactions_fact] AS [customer_transactions_fact]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="program_dim" EntityType="Self.program_dim" store:Type="Tables" store:Schema="comcare">
+            <DefiningQuery>SELECT 
+    [program_dim].[program_key] AS [program_key], 
+    [program_dim].[program_name] AS [program_name], 
+    [program_dim].[program_code] AS [program_code], 
+    [program_dim].[program_street] AS [program_street], 
+    [program_dim].[program_suburb] AS [program_suburb], 
+    [program_dim].[program_postcode] AS [program_postcode], 
+    [program_dim].[change_reason_code] AS [change_reason_code], 
+    [program_dim].[change_reason_description] AS [change_reason_description], 
+    [program_dim].[row_effective_date] AS [row_effective_date], 
+    [program_dim].[row_expiration_date] AS [row_expiration_date], 
+    [program_dim].[current_row_indicator] AS [current_row_indicator], 
+    [program_dim].[program_state] AS [program_state], 
+    [program_dim].[telephone] AS [telephone], 
+    [program_dim].[fax] AS [fax], 
+    [program_dim].[program_id_cc] AS [program_id_cc]
+    FROM [comcare].[program_dim] AS [program_dim]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="responsible_party_dim" EntityType="Self.responsible_party_dim" store:Type="Tables" store:Schema="comcare">
+            <DefiningQuery>SELECT 
+    [responsible_party_dim].[responsible_party_key] AS [responsible_party_key], 
+    [responsible_party_dim].[client_id] AS [client_id], 
+    [responsible_party_dim].[title] AS [title], 
+    [responsible_party_dim].[given_name] AS [given_name], 
+    [responsible_party_dim].[preferred_name] AS [preferred_name], 
+    [responsible_party_dim].[family_name] AS [family_name], 
+    [responsible_party_dim].[date_of_birth] AS [date_of_birth], 
+    [responsible_party_dim].[gender] AS [gender], 
+    [responsible_party_dim].[residential_address_line1] AS [residential_address_line1], 
+    [responsible_party_dim].[residential_address_line2] AS [residential_address_line2], 
+    [responsible_party_dim].[residential_city] AS [residential_city], 
+    [responsible_party_dim].[residential_state] AS [residential_state], 
+    [responsible_party_dim].[residential_post_code] AS [residential_post_code], 
+    [responsible_party_dim].[business_address_line1] AS [business_address_line1], 
+    [responsible_party_dim].[business_address_line2] AS [business_address_line2], 
+    [responsible_party_dim].[business_city] AS [business_city], 
+    [responsible_party_dim].[business_state] AS [business_state], 
+    [responsible_party_dim].[business_post_code] AS [business_post_code], 
+    [responsible_party_dim].[mailing_address_line1] AS [mailing_address_line1], 
+    [responsible_party_dim].[mailing_address_line2] AS [mailing_address_line2], 
+    [responsible_party_dim].[mailing_city] AS [mailing_city], 
+    [responsible_party_dim].[mailing_state] AS [mailing_state], 
+    [responsible_party_dim].[mailing_post_code] AS [mailing_post_code], 
+    [responsible_party_dim].[billing_address_line1] AS [billing_address_line1], 
+    [responsible_party_dim].[billing_address_line2] AS [billing_address_line2], 
+    [responsible_party_dim].[billing_city] AS [billing_city], 
+    [responsible_party_dim].[billing_state] AS [billing_state], 
+    [responsible_party_dim].[billing_post_code] AS [billing_post_code], 
+    [responsible_party_dim].[amount_transferred_in] AS [amount_transferred_in], 
+    [responsible_party_dim].[amount_transferred_out] AS [amount_transferred_out], 
+    [responsible_party_dim].[amount_transferred_in_client] AS [amount_transferred_in_client], 
+    [responsible_party_dim].[amount_transferred_out_client] AS [amount_transferred_out_client], 
+    [responsible_party_dim].[effective_from_date] AS [effective_from_date], 
+    [responsible_party_dim].[effective_to_date] AS [effective_to_date], 
+    [responsible_party_dim].[change_reason_code] AS [change_reason_code], 
+    [responsible_party_dim].[change_reason_description] AS [change_reason_description], 
+    [responsible_party_dim].[row_effective_date] AS [row_effective_date], 
+    [responsible_party_dim].[row_expiration_date] AS [row_expiration_date], 
+    [responsible_party_dim].[current_row_indicator] AS [current_row_indicator]
+    FROM [comcare].[responsible_party_dim] AS [responsible_party_dim]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="transaction_type_dim" EntityType="Self.transaction_type_dim" store:Type="Tables" store:Schema="comcare">
+            <DefiningQuery>SELECT 
+    [transaction_type_dim].[transaction_type_key] AS [transaction_type_key], 
+    [transaction_type_dim].[transaction_type_natural_key] AS [transaction_type_natural_key], 
+    [transaction_type_dim].[transaction_type_description] AS [transaction_type_description], 
+    [transaction_type_dim].[transaction_source] AS [transaction_source], 
+    [transaction_type_dim].[effective_from_date] AS [effective_from_date], 
+    [transaction_type_dim].[effective_to_date] AS [effective_to_date], 
+    [transaction_type_dim].[category_code] AS [category_code], 
+    [transaction_type_dim].[change_reason_code] AS [change_reason_code], 
+    [transaction_type_dim].[change_reason_description] AS [change_reason_description], 
+    [transaction_type_dim].[row_effective_date] AS [row_effective_date], 
+    [transaction_type_dim].[row_expiration_date] AS [row_expiration_date], 
+    [transaction_type_dim].[current_row_indicator] AS [current_row_indicator]
+    FROM [comcare].[transaction_type_dim] AS [transaction_type_dim]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="homecare" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
         <EntityContainer Name="homecareContainer" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="customers" EntityType="homecare.customer" />
-          <EntitySet Name="customer_transactions1" EntityType="homecare.customer_transactions" />
-          <AssociationSet Name="customerCustomer_transactions" Association="homecare.customerCustomer_transactions">
-            <End Role="customer" EntitySet="customers" />
-            <End Role="Customer_transactions" EntitySet="customer_transactions1" />
-          </AssociationSet>
-          <EntitySet Name="transaction_type" EntityType="homecare.transaction_type" />
-          <EntitySet Name="programs" EntityType="homecare.program" />
-          <AssociationSet Name="transaction_typecustomer_transactions" Association="homecare.transaction_typecustomer_transactions">
-            <End Role="transaction_type" EntitySet="transaction_type" />
-            <End Role="customer_transactions" EntitySet="customer_transactions1" />
-          </AssociationSet>
-          <AssociationSet Name="programcustomer_transactions" Association="homecare.programcustomer_transactions">
-            <End Role="program" EntitySet="programs" />
-            <End Role="customer_transactions" EntitySet="customer_transactions1" />
-          </AssociationSet>
-          <EntitySet Name="dates" EntityType="homecare.date" />
-          <AssociationSet Name="datecustomer_transactions" Association="homecare.datecustomer_transactions">
-            <End Role="date" EntitySet="dates" />
-            <End Role="customer_transactions" EntitySet="customer_transactions1" />
-          </AssociationSet>
+          <EntitySet Name="date_dim" EntityType="homecare.date_dim" />
+          <EntitySet Name="employee_payment_summary_fact" EntityType="homecare.employee_payment_summary_fact" />
+          <EntitySet Name="customer_dim" EntityType="homecare.customer_dim" />
+          <EntitySet Name="customer_transactions_fact" EntityType="homecare.customer_transactions_fact" />
+          <EntitySet Name="program_dim" EntityType="homecare.program_dim" />
           <EntitySet Name="responsible_party_dim" EntityType="homecare.responsible_party_dim" />
-          <AssociationSet Name="responsible_party_dimcustomer_transactions" Association="homecare.responsible_party_dimcustomer_transactions">
-            <End Role="responsible_party_dim" EntitySet="responsible_party_dim" />
-            <End Role="customer_transactions" EntitySet="customer_transactions1" />
-          </AssociationSet>
+          <EntitySet Name="transaction_type_dim" EntityType="homecare.transaction_type_dim" />
         </EntityContainer>
-        <EntityType Name="customer">
-          <NavigationProperty Name="Customer_transactions" Relationship="homecare.customerCustomer_transactions" FromRole="customer" ToRole="Customer_transactions" />
-        </EntityType>
-        <EntityType Name="customer_transactions">
+        <EntityType Name="date_dim">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="date_key" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="customer" Relationship="homecare.customerCustomer_transactions" FromRole="Customer_transactions" ToRole="customer" />
-          <NavigationProperty Name="responsible_party_dim" Relationship="homecare.responsible_party_dimcustomer_transactions" FromRole="customer_transactions" ToRole="responsible_party_dim" />
-          <Property Name="responsible_party_dim_responsible_party_key" Type="Int32" Nullable="false" />
+          <Property Name="date_key" Type="Int32" Nullable="false" />
+          <Property Name="full_date" Type="DateTime" Precision="3" />
+          <Property Name="display_date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="year" Type="Int32" />
+          <Property Name="quarter" Type="Int32" />
+          <Property Name="quarter_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="month_no" Type="Int32" />
+          <Property Name="month_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="day_of_month" Type="Int32" />
+          <Property Name="day_of_week" Type="Int32" />
+          <Property Name="day_name" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="is_public_holiday" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="public_holiday_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="financial_year" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="fbt_range" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="pay_period_end" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="financial_month_no" Type="Int32" />
+          <Property Name="max_temperature" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="min_temperature" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="rainfall" Type="Decimal" Precision="5" Scale="2" />
+          <Property Name="max_wind_speed" Type="Decimal" Precision="5" Scale="2" />
         </EntityType>
-        <Association Name="customerCustomer_transactions">
-          <End Type="homecare.customer" Role="customer" Multiplicity="1" />
-          <End Type="homecare.customer_transactions" Role="Customer_transactions" Multiplicity="*" />
-        </Association>
-        <EntityType Name="transaction_type">
+        <EntityType Name="employee_payment_summary_fact">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="employee_payment_key" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="employee_payment_key" Type="Int32" Nullable="false" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="position_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_id" Type="Int32" Nullable="false" />
+          <Property Name="employee_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="pay_period_date_key" Type="Int32" Nullable="false" />
+          <Property Name="period_amount" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="count" Type="Int32" />
         </EntityType>
-        <EntityType Name="program">
+        <EntityType Name="customer_dim">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="customer_key" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_key" Type="Int32" Nullable="false" />
+          <Property Name="client_id" Type="Int32" />
+          <Property Name="title" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="given_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="preferred_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="family_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="date_of_birth" Type="DateTime" Precision="0" />
+          <Property Name="gender" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="residential_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="residential_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="residential_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="residential_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="residential_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="business_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="business_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="business_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="business_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="business_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="mailing_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="billing_address_line1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_address_line2" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Name="billing_city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="billing_post_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="amount_transferred_in" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_in_client" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="amount_transferred_out_client" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="cim_id_number" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
-        <Association Name="transaction_typecustomer_transactions">
-          <End Type="homecare.transaction_type" Role="transaction_type" Multiplicity="1" />
-          <End Type="homecare.customer_transactions" Role="customer_transactions" Multiplicity="*" />
-        </Association>
-        <Association Name="programcustomer_transactions">
-          <End Type="homecare.program" Role="program" Multiplicity="1" />
-          <End Type="homecare.customer_transactions" Role="customer_transactions" Multiplicity="*" />
-        </Association>
-        <EntityType Name="date">
+        <EntityType Name="customer_transactions_fact">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="customer_transaction_key" />
+            <PropertyRef Name="customer_key" />
+            <PropertyRef Name="date_key" />
+            <PropertyRef Name="transaction_type_key" />
+            <PropertyRef Name="program_key" />
+            <PropertyRef Name="responsible_party_key" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="customer_transaction_key" Type="Int32" Nullable="false" />
+          <Property Name="customer_key" Type="Int32" Nullable="false" />
+          <Property Name="date_key" Type="Int32" Nullable="false" />
+          <Property Name="transaction_type_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="responsible_party_key" Type="Int32" Nullable="false" />
+          <Property Name="amount" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="balance" Type="Decimal" Precision="28" Scale="5" />
+          <Property Name="transaction_source" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="comments" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="source_system" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
-        <Association Name="datecustomer_transactions">
-          <End Type="homecare.date" Role="date" Multiplicity="1" />
-          <End Type="homecare.customer_transactions" Role="customer_transactions" Multiplicity="*" />
-        </Association>
+        <EntityType Name="program_dim">
+          <Key>
+            <PropertyRef Name="program_key" />
+            <PropertyRef Name="program_code" />
+            <PropertyRef Name="program_street" />
+            <PropertyRef Name="program_suburb" />
+            <PropertyRef Name="program_postcode" />
+          </Key>
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="program_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="program_code" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="program_street" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="program_suburb" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="program_postcode" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="program_state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="telephone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="fax" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="program_id_cc" Type="Int32" />
+        </EntityType>
         <EntityType Name="responsible_party_dim">
           <Key>
             <PropertyRef Name="responsible_party_key" />
@@ -173,21 +534,25 @@
           <Property Name="row_effective_date" Type="DateTime" Precision="3" />
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="customer_transactions" Relationship="homecare.responsible_party_dimcustomer_transactions" FromRole="responsible_party_dim" ToRole="customer_transactions" />
         </EntityType>
-        <Association Name="responsible_party_dimcustomer_transactions">
-          <End Type="homecare.responsible_party_dim" Role="responsible_party_dim" Multiplicity="1" />
-          <End Type="homecare.customer_transactions" Role="customer_transactions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="responsible_party_dim">
-              <PropertyRef Name="responsible_party_key" />
-            </Principal>
-            <Dependent Role="customer_transactions">
-              <PropertyRef Name="responsible_party_dim_responsible_party_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-      </Schema>
+        <EntityType Name="transaction_type_dim">
+          <Key>
+            <PropertyRef Name="transaction_type_key" />
+          </Key>
+          <Property Name="transaction_type_key" Type="Int32" Nullable="false" />
+          <Property Name="transaction_type_natural_key" Type="Int32" />
+          <Property Name="transaction_type_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="transaction_source" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="effective_from_date" Type="DateTime" Precision="0" />
+          <Property Name="effective_to_date" Type="DateTime" Precision="0" />
+          <Property Name="category_code" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -195,6 +560,133 @@
         <Alias Key="Model" Value="homecare" />
         <Alias Key="Target" Value="homecare.Store" />
         <EntityContainerMapping CdmEntityContainer="homecareContainer" StorageEntityContainer="homecareStoreContainer">
+          <EntitySetMapping Name="date_dim">
+            <EntityTypeMapping TypeName="homecare.date_dim">
+              <MappingFragment StoreEntitySet="date_dim">
+                <ScalarProperty Name="max_wind_speed" ColumnName="max_wind_speed" />
+                <ScalarProperty Name="rainfall" ColumnName="rainfall" />
+                <ScalarProperty Name="min_temperature" ColumnName="min_temperature" />
+                <ScalarProperty Name="max_temperature" ColumnName="max_temperature" />
+                <ScalarProperty Name="financial_month_no" ColumnName="financial_month_no" />
+                <ScalarProperty Name="pay_period_end" ColumnName="pay_period_end" />
+                <ScalarProperty Name="fbt_range" ColumnName="fbt_range" />
+                <ScalarProperty Name="financial_year" ColumnName="financial_year" />
+                <ScalarProperty Name="public_holiday_name" ColumnName="public_holiday_name" />
+                <ScalarProperty Name="is_public_holiday" ColumnName="is_public_holiday" />
+                <ScalarProperty Name="day_name" ColumnName="day_name" />
+                <ScalarProperty Name="day_of_week" ColumnName="day_of_week" />
+                <ScalarProperty Name="day_of_month" ColumnName="day_of_month" />
+                <ScalarProperty Name="month_name" ColumnName="month_name" />
+                <ScalarProperty Name="month_no" ColumnName="month_no" />
+                <ScalarProperty Name="quarter_name" ColumnName="quarter_name" />
+                <ScalarProperty Name="quarter" ColumnName="quarter" />
+                <ScalarProperty Name="year" ColumnName="year" />
+                <ScalarProperty Name="display_date" ColumnName="display_date" />
+                <ScalarProperty Name="full_date" ColumnName="full_date" />
+                <ScalarProperty Name="date_key" ColumnName="date_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employee_payment_summary_fact">
+            <EntityTypeMapping TypeName="homecare.employee_payment_summary_fact">
+              <MappingFragment StoreEntitySet="employee_payment_summary_fact">
+                <ScalarProperty Name="count" ColumnName="count" />
+                <ScalarProperty Name="period_amount" ColumnName="period_amount" />
+                <ScalarProperty Name="pay_period_date_key" ColumnName="pay_period_date_key" />
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="employee_id" ColumnName="employee_id" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="position_key" ColumnName="position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="employee_payment_key" ColumnName="employee_payment_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customer_dim">
+            <EntityTypeMapping TypeName="homecare.customer_dim">
+              <MappingFragment StoreEntitySet="customer_dim">
+                <ScalarProperty Name="cim_id_number" ColumnName="cim_id_number" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="amount_transferred_out_client" ColumnName="amount_transferred_out_client" />
+                <ScalarProperty Name="amount_transferred_in_client" ColumnName="amount_transferred_in_client" />
+                <ScalarProperty Name="amount_transferred_out" ColumnName="amount_transferred_out" />
+                <ScalarProperty Name="amount_transferred_in" ColumnName="amount_transferred_in" />
+                <ScalarProperty Name="billing_post_code" ColumnName="billing_post_code" />
+                <ScalarProperty Name="billing_state" ColumnName="billing_state" />
+                <ScalarProperty Name="billing_city" ColumnName="billing_city" />
+                <ScalarProperty Name="billing_address_line2" ColumnName="billing_address_line2" />
+                <ScalarProperty Name="billing_address_line1" ColumnName="billing_address_line1" />
+                <ScalarProperty Name="mailing_post_code" ColumnName="mailing_post_code" />
+                <ScalarProperty Name="mailing_state" ColumnName="mailing_state" />
+                <ScalarProperty Name="mailing_city" ColumnName="mailing_city" />
+                <ScalarProperty Name="mailing_address_line2" ColumnName="mailing_address_line2" />
+                <ScalarProperty Name="mailing_address_line1" ColumnName="mailing_address_line1" />
+                <ScalarProperty Name="business_post_code" ColumnName="business_post_code" />
+                <ScalarProperty Name="business_state" ColumnName="business_state" />
+                <ScalarProperty Name="business_city" ColumnName="business_city" />
+                <ScalarProperty Name="business_address_line2" ColumnName="business_address_line2" />
+                <ScalarProperty Name="business_address_line1" ColumnName="business_address_line1" />
+                <ScalarProperty Name="residential_post_code" ColumnName="residential_post_code" />
+                <ScalarProperty Name="residential_state" ColumnName="residential_state" />
+                <ScalarProperty Name="residential_city" ColumnName="residential_city" />
+                <ScalarProperty Name="residential_address_line2" ColumnName="residential_address_line2" />
+                <ScalarProperty Name="residential_address_line1" ColumnName="residential_address_line1" />
+                <ScalarProperty Name="gender" ColumnName="gender" />
+                <ScalarProperty Name="date_of_birth" ColumnName="date_of_birth" />
+                <ScalarProperty Name="family_name" ColumnName="family_name" />
+                <ScalarProperty Name="preferred_name" ColumnName="preferred_name" />
+                <ScalarProperty Name="given_name" ColumnName="given_name" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="customer_key" ColumnName="customer_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="customer_transactions_fact">
+            <EntityTypeMapping TypeName="homecare.customer_transactions_fact">
+              <MappingFragment StoreEntitySet="customer_transactions_fact">
+                <ScalarProperty Name="source_system" ColumnName="source_system" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="transaction_source" ColumnName="transaction_source" />
+                <ScalarProperty Name="balance" ColumnName="balance" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="responsible_party_key" ColumnName="responsible_party_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="transaction_type_key" ColumnName="transaction_type_key" />
+                <ScalarProperty Name="date_key" ColumnName="date_key" />
+                <ScalarProperty Name="customer_key" ColumnName="customer_key" />
+                <ScalarProperty Name="customer_transaction_key" ColumnName="customer_transaction_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="program_dim">
+            <EntityTypeMapping TypeName="homecare.program_dim">
+              <MappingFragment StoreEntitySet="program_dim">
+                <ScalarProperty Name="program_id_cc" ColumnName="program_id_cc" />
+                <ScalarProperty Name="fax" ColumnName="fax" />
+                <ScalarProperty Name="telephone" ColumnName="telephone" />
+                <ScalarProperty Name="program_state" ColumnName="program_state" />
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="program_postcode" ColumnName="program_postcode" />
+                <ScalarProperty Name="program_suburb" ColumnName="program_suburb" />
+                <ScalarProperty Name="program_street" ColumnName="program_street" />
+                <ScalarProperty Name="program_code" ColumnName="program_code" />
+                <ScalarProperty Name="program_name" ColumnName="program_name" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="responsible_party_dim">
             <EntityTypeMapping TypeName="homecare.responsible_party_dim">
               <MappingFragment StoreEntitySet="responsible_party_dim">
@@ -237,6 +729,24 @@
                 <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="client_id" ColumnName="client_id" />
                 <ScalarProperty Name="responsible_party_key" ColumnName="responsible_party_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transaction_type_dim">
+            <EntityTypeMapping TypeName="homecare.transaction_type_dim">
+              <MappingFragment StoreEntitySet="transaction_type_dim">
+                <ScalarProperty Name="current_row_indicator" ColumnName="current_row_indicator" />
+                <ScalarProperty Name="row_expiration_date" ColumnName="row_expiration_date" />
+                <ScalarProperty Name="row_effective_date" ColumnName="row_effective_date" />
+                <ScalarProperty Name="change_reason_description" ColumnName="change_reason_description" />
+                <ScalarProperty Name="change_reason_code" ColumnName="change_reason_code" />
+                <ScalarProperty Name="category_code" ColumnName="category_code" />
+                <ScalarProperty Name="effective_to_date" ColumnName="effective_to_date" />
+                <ScalarProperty Name="effective_from_date" ColumnName="effective_from_date" />
+                <ScalarProperty Name="transaction_source" ColumnName="transaction_source" />
+                <ScalarProperty Name="transaction_type_description" ColumnName="transaction_type_description" />
+                <ScalarProperty Name="transaction_type_natural_key" ColumnName="transaction_type_natural_key" />
+                <ScalarProperty Name="transaction_type_key" ColumnName="transaction_type_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
