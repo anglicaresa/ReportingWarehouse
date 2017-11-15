@@ -12,8 +12,8 @@
   DTS:ObjectName="Extract_ComCare - Prod"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="132"
-  DTS:VersionGUID="{82DC167A-2670-47F4-A4EB-BCA36951DCD6}">
+  DTS:VersionBuild="144"
+  DTS:VersionGUID="{91A45710-C3B8-40BA-9D14-F676E9F34BC9}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -91,7 +91,7 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
-          SQLTask:SqlStatementSource="/*&#xA;select    &#xA; (SELECT ' ['+t2.server+'].'+T2.[DATABASE]+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='comcare' )      ---- need to filter source tables just for ComCare&#xA; ORDER BY T1.job_key ASC&#xA;*/&#xA;&#xA;&#xA;--use dblink to comcareprod&#xA;&#xA;select    &#xA; (SELECT '[appsql-3\comcareprod].'+T2.[DATABASE]+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='comcare' )      ---- need to filter source tables just for ComCare&#xA; ORDER BY T1.job_key ASC&#xA;&#xA;&#xA;&#xA;&#xA;--use dblink to comcaredev for v6.7&#xA;/*&#xA;select    &#xA; (SELECT '[devsql-1\dev].'+'ComCareDev'+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='comcare' )      ---- need to filter source tables just for ComCare&#xA; ORDER BY T1.job_key ASC&#xA;*/&#xA;&#xA;&#xA;&#xA;"
+          SQLTask:SqlStatementSource="&#xA;&#xA;--use dblink to comcareprod&#xA;&#xA;select    &#xA; (SELECT '[appsql-3\comcareprod].'+T2.[DATABASE]+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='comcare' )      ---- need to filter source tables just for ComCare&#xA; ORDER BY T1.job_key ASC&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;/*&#xA;--use dblink to comcaredev for v6.7&#xA;&#xA;select    &#xA; (SELECT '[devsql-1\dev].'+'ComCareDev'+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='comcare' )      ---- need to filter source tables just for ComCare&#xA; ORDER BY T1.job_key ASC&#xA;*/&#xA;&#xA;&#xA;&#xA;&#xA;"
           SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ResultBinding
             SQLTask:ResultName="0"
@@ -119,7 +119,7 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{1132A13D-3E4C-469D-9382-D4292ED59B02}"
-          SQLTask:SqlStatementSource="truncate table extract.GLF_LDG_ACC_TRANS&#xA;insert into extract.GLF_LDG_ACC_TRANS&#xA;select * from [appsql-4\test].fintest.dbo.GLF_LDG_ACC_TRANS&#xA;where ldg_name in ('R1') or narr1 like '%Opening Balance from CIM%'&#xA;&#xA;--try to get history payment using :  ldg_name ='CNLDG' and narr2 like '%Receipt%'&#xA;&#xA;--New payment formats for Home care package will use: only pick up the receipts in the format 'PKGRECCC'&#xA;--select * from extract.GLF_LDG_ACC_TRANS&#x9;  where accnbri ='22073'  and doc_type ='PKGRECCC'  in T1 Dev.&#xA;&#xA;&#xA;truncate table extract.GLF_CHART_ACCT&#xA;insert into extract.GLF_CHART_ACCT&#xA;select * from [appsql-4\test].fintest.dbo.GLF_CHART_ACCT&#xA;&#xA;truncate table extract.GLF_CHART_ACC_USF&#xA;insert into extract.GLF_CHART_ACC_USF&#xA;select * from [appsql-4\test].fintest.dbo.GLF_CHART_ACC_USF" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="truncate table extract.GLF_LDG_ACC_TRANS&#xA;insert into extract.GLF_LDG_ACC_TRANS&#xA;select * from [appsql-4\test].fintest.dbo.GLF_LDG_ACC_TRANS  with (nolock)&#xA;where ldg_name in ('R1') or narr1 like '%Opening Balance from CIM%'&#xA;&#xA;&#xA;&#xA;truncate table extract.GLF_CHART_ACCT&#xA;insert into extract.GLF_CHART_ACCT&#xA;select * from [appsql-4\test].fintest.dbo.GLF_CHART_ACCT with (nolock)&#xA;&#xA;truncate table extract.GLF_CHART_ACC_USF&#xA;insert into extract.GLF_CHART_ACC_USF&#xA;select * from [appsql-4\test].fintest.dbo.GLF_CHART_ACC_USF  with (nolock)" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -165,7 +165,7 @@
                 <DTS:Variable
                   DTS:CreationName=""
                   DTS:Description="The propagate property of the event"
-                  DTS:DTSID="{59F63741-A992-4328-B2EB-211791EC7947}"
+                  DTS:DTSID="{1FDDF1B1-ABB4-40C3-87D3-F18B939EB600}"
                   DTS:IncludeInDebugDump="6789"
                   DTS:Namespace="System"
                   DTS:ObjectName="Propagate">
@@ -495,15 +495,15 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssge="clr-namespace:Microsoft.SqlServer.Graph.Extended;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssge="clr-namespace:Microsoft.SqlServer.Graph.Extended;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
         <NodeLayout
-          Size="1068,42"
+          Size="1072,42"
           Id="Package\EST - Get all extract source tables in DWHB for extraction  for ComCare"
-          TopLeft="132.25,122" />
+          TopLeft="132.25,180" />
         <NodeLayout
           Size="1065,42"
           Id="Package\Extract T1 data"
-          TopLeft="125,664" />
+          TopLeft="125,722" />
         <NodeLayout
           Size="924,42"
           Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest"
@@ -525,7 +525,7 @@
           TopLeft="496.59375,146">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,27"
               Start="0,0"
               End="0,19.5">
@@ -547,7 +547,7 @@
           TopLeft="496.59375,70">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,34"
               Start="0,0"
               End="0,26.5">
@@ -569,7 +569,7 @@
           TopLeft="496.59375,215">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -592,21 +592,33 @@
           PanelSize="1074,351"
           Size="1074,394"
           Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables"
-          TopLeft="122.65625,209" />
+          TopLeft="122.65625,267" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="662.953125,164">
+          TopLeft="668.25,222">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,45"
+              StartConnector="{x:Null}"
+              EndConnector="-8.59375,45"
               Start="0,0"
-              End="0,37.5">
+              End="-8.59375,37.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,37.5" />
+                    End="0,18.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,18.5"
+                    Point2="0,22.5"
+                    Point3="-4,22.5" />
+                  <mssgle:LineSegment
+                    End="-4.59375,22.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-4.59375,22.5"
+                    Point2="-8.59375,22.5"
+                    Point3="-8.59375,26.5" />
+                  <mssgle:LineSegment
+                    End="-8.59375,37.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -617,10 +629,10 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="658.578125,603">
+          TopLeft="658.578125,661">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,61"
               Start="0,0"
               End="0,53.5">
@@ -638,9 +650,9 @@
           </EdgeLayout.Labels>
         </EdgeLayout>
         <AnnotationLayout
-          Text="Package name:  Extract source data and import into DWHB.extract.tables for ComCare&#xA;Purpose: Extract source data and import into DWHB.extract.tables&#xA;Develpment history:&#xA;              21/03/2017 Created by JS&#xA;"
+          Text="Package name:  Extract source data and import into DWHB.extract.tables for ComCare&#xA;Purpose: Extract source data and import into DWHB.extract.tables&#xA;Develpment history:&#xA;              21/03/2017 Created by JS&#xD;&#xA;              15/11/2017 Changed to prod by JS    &#xD;&#xA;&#xA;"
           ParentId="Package"
-          Size="634,121"
+          Size="634,159"
           Id="acb232ed-908b-442e-b718-ec53962ea9a5"
           TopLeft="133,16">
           <AnnotationLayout.FontInfo>
@@ -648,6 +660,24 @@
               Family="Tahoma"
               Size="15.75"
               Color="#FF008000">
+              <mssge:FontInfo.TextDecorations>
+                <av:TextDecorationCollection />
+              </mssge:FontInfo.TextDecorations>
+            </mssge:FontInfo>
+          </AnnotationLayout.FontInfo>
+        </AnnotationLayout>
+        <AnnotationLayout
+          Text="Note: &#xD;&#xA;TechONe extract part still link to FinTest"
+          ParentId="Package"
+          Size="316,91"
+          Id="e85668ce-9971-4996-b6e7-5ef8de69b322"
+          TopLeft="844,13">
+          <AnnotationLayout.FontInfo>
+            <mssge:FontInfo
+              Family="Tahoma"
+              Size="18"
+              Color="#FFFF0000"
+              Weight="Bold">
               <mssge:FontInfo.TextDecorations>
                 <av:TextDecorationCollection />
               </mssge:FontInfo.TextDecorations>
