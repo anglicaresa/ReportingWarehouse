@@ -12,49 +12,19 @@
   DTS:ObjectName="Delivery - Prod"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="104"
-  DTS:VersionGUID="{26CDFE9E-38AE-45C3-8CD8-01C2A52C1D37}">
+  DTS:VersionBuild="108"
+  DTS:VersionGUID="{E2367F89-9791-4E54-8EBD-CEB0C3FE118A}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
     <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[devsql-1\whouse.DWHB.asadwh]"
+      DTS:refId="Package.ConnectionManagers[az-sqlbi01.DWHB]"
       DTS:CreationName="OLEDB"
-      DTS:DTSID="{A0E22015-DC72-49E5-A78C-1D0A0FDB12D5}"
-      DTS:ObjectName="devsql-1\whouse.DWHB.asadwh">
+      DTS:DTSID="{D5B36BE3-825D-42E4-904B-C69DBD8DD925}"
+      DTS:ObjectName="az-sqlbi01.DWHB">
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[devsql-1\whouse.DWHF.asadwh]"
-      DTS:CreationName="OLEDB"
-      DTS:DTSID="{EB719967-6BD7-495D-9854-3971D6562B63}"
-      DTS:ObjectName="devsql-1\whouse.DWHF.asadwh">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHF;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[DWHB]"
-      DTS:CreationName="ADO.NET:SQL"
-      DTS:DTSID="{E1B39E6B-1726-421E-992D-23A17E050EC4}"
-      DTS:ObjectName="DWHB">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHB;Integrated Security=True;Connect Timeout=30;Application Name=SSIS-Delivery-{E1B39E6B-1726-421E-992D-23A17E050EC4}DWHB;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[DWHF]"
-      DTS:CreationName="ADO.NET:SQL"
-      DTS:DTSID="{28FE5DBE-9A81-4BA7-97AB-201029593498}"
-      DTS:ObjectName="DWHF">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHF;Integrated Security=True;Connect Timeout=30;Application Name=SSIS-Delivery-{28FE5DBE-9A81-4BA7-97AB-201029593498}DWHF;" />
+          DTS:ConnectionString="Data Source=az-sqlbi01;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -111,7 +81,7 @@
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
-          SQLTask:Connection="{A0E22015-DC72-49E5-A78C-1D0A0FDB12D5}"
+          SQLTask:Connection="{D5B36BE3-825D-42E4-904B-C69DBD8DD925}"
           SQLTask:SqlStatementSource="   select    &#xA; (SELECT T2.[database]+'.'+T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; 'dwhf_finance.'+(SELECT T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; from  dwhb.management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;AND t1.package_key = (SELECT package_key FROM dwhb.management.package_dim WHERE package_name = 'DELIVERY' )&#xA;and  (SELECT T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.destination_table_key) like 'finance%'  &#xA; ORDER BY T1.[priority]  asc&#xA;"
           SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ResultBinding
@@ -132,7 +102,7 @@
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
-          SQLTask:Connection="{A0E22015-DC72-49E5-A78C-1D0A0FDB12D5}"
+          SQLTask:Connection="{D5B36BE3-825D-42E4-904B-C69DBD8DD925}"
           SQLTask:SqlStatementSource="   select    &#xA; (SELECT T2.[database]+'.'+T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; 'dwhf_finance.'+(SELECT T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; from  dwhb.management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;AND t1.package_key = (SELECT package_key FROM dwhb.management.package_dim WHERE package_name = 'DELIVERY' )&#xA;and  (SELECT T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.destination_table_key) like 'finance%' &#xA; ORDER BY T1.[priority]  desc&#xA;"
           SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ResultBinding
@@ -177,7 +147,7 @@
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{A0E22015-DC72-49E5-A78C-1D0A0FDB12D5}"
+              SQLTask:Connection="{D5B36BE3-825D-42E4-904B-C69DBD8DD925}"
               SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;3,&#xA;'Insert records finish'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
@@ -201,7 +171,7 @@
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{A0E22015-DC72-49E5-A78C-1D0A0FDB12D5}"
+              SQLTask:Connection="{D5B36BE3-825D-42E4-904B-C69DBD8DD925}"
               SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;3,&#xA;'Insert records start'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
@@ -225,7 +195,7 @@
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{EB719967-6BD7-495D-9854-3971D6562B63}"
+              SQLTask:Connection="{D5B36BE3-825D-42E4-904B-C69DBD8DD925}"
               SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='INSERT INTO  ' + ? + ' SELECT * FROM  '+?&#xA;EXEC (@SQL)&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
@@ -310,7 +280,7 @@
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{A0E22015-DC72-49E5-A78C-1D0A0FDB12D5}"
+              SQLTask:Connection="{D5B36BE3-825D-42E4-904B-C69DBD8DD925}"
               SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;3,&#xA;'Delete records finish'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
@@ -333,7 +303,7 @@
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{A0E22015-DC72-49E5-A78C-1D0A0FDB12D5}"
+              SQLTask:Connection="{D5B36BE3-825D-42E4-904B-C69DBD8DD925}"
               SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT &#x9;&#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;3,&#xA;'Delete records start'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
@@ -356,7 +326,7 @@
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{EB719967-6BD7-495D-9854-3971D6562B63}"
+              SQLTask:Connection="{D5B36BE3-825D-42E4-904B-C69DBD8DD925}"
               SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='DELETE FROM ' + ?&#xA;EXEC (@SQL)&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
