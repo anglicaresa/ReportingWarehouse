@@ -12,8 +12,8 @@
   DTS:ObjectName="Extract_RiskMan - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="138"
-  DTS:VersionGUID="{0A476196-7119-4927-9192-57BA4179B4F0}">
+  DTS:VersionBuild="140"
+  DTS:VersionGUID="{E92316EE-48A6-457B-B5B4-D76BF4CEF5F7}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -91,7 +91,7 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{3D5C79B8-078F-4F3F-BE9E-011B5B0D320D}"
-          SQLTask:SqlStatementSource="--use dblink to TED.Rishman&#xA;&#xA;select    &#xA; (SELECT '[TED].'+T2.[DATABASE]+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='riskman' )      ---- need to filter source tables just for Riskman&#xA; ORDER BY T1.job_key ASC&#xA;&#xA;&#xA;&#xA;"
+          SQLTask:SqlStatementSource="--use dblink to TED.Rishman&#xA;/*&#xA;select    &#xA; (SELECT '[TED].'+T2.[DATABASE]+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='riskman' )      ---- need to filter source tables just for Riskman&#xA; ORDER BY T1.job_key ASC&#xA;*/&#xA;&#xA;&#xA;--from riskmantest database&#xA;&#xA;&#xA;select    &#xA; (SELECT '[TED].'+'RISKMANTEST'+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='riskman' )      ---- need to filter source tables just for Riskman&#xA; ORDER BY T1.job_key ASC&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;"
           SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ResultBinding
             SQLTask:ResultName="0"
@@ -203,7 +203,7 @@
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
               SQLTask:Connection="{3D5C79B8-078F-4F3F-BE9E-011B5B0D320D}"
-              SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='INSERT INTO  ' + ? + ' SELECT * FROM  '+?&#xA;EXEC (@SQL)&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='INSERT INTO  ' + ? + ' SELECT * FROM  '+? +'  WITH (NOLOCK)'&#xA;EXEC (@SQL)&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
                 SQLTask:DtsVariableName="User::DestTableName"
@@ -464,7 +464,7 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssge="clr-namespace:Microsoft.SqlServer.Graph.Extended;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssge="clr-namespace:Microsoft.SqlServer.Graph.Extended;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
         <NodeLayout
           Size="1068,42"
           Id="Package\EST - Get all extract source tables in DWHB for extraction  for Riskman"
@@ -490,7 +490,7 @@
           TopLeft="496.59375,146">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,27"
               Start="0,0"
               End="0,19.5">
@@ -512,7 +512,7 @@
           TopLeft="496.59375,70">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,34"
               Start="0,0"
               End="0,26.5">
@@ -534,7 +534,7 @@
           TopLeft="496.59375,215">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -563,7 +563,7 @@
           TopLeft="662.953125,164">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
