@@ -12,8 +12,8 @@
   DTS:ObjectName="Extract_Kypera - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="136"
-  DTS:VersionGUID="{DE9933C7-D846-4A08-898C-4F8AC4FA1F80}">
+  DTS:VersionBuild="149"
+  DTS:VersionGUID="{23DA03BE-5B5F-4B0B-BC05-EE121838277B}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -29,15 +29,6 @@
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
   <DTS:Variables>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{A8ED004C-DE2E-458A-A413-C29CE2180B31}"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="dblinkedserver">
-      <DTS:VariableValue
-        DTS:DataType="8">[APPSQL-4\prod].</DTS:VariableValue>
-    </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
       DTS:DTSID="{3B476219-D11A-4655-BEED-4AE3CDFB2E83}"
@@ -96,12 +87,6 @@
           <SQLTask:ResultBinding
             SQLTask:ResultName="0"
             SQLTask:DtsVariableName="User::SourcetableLists" />
-          <SQLTask:ParameterBinding
-            SQLTask:ParameterName="0"
-            SQLTask:DtsVariableName="User::dblinkedserver"
-            SQLTask:ParameterDirection="Input"
-            SQLTask:DataType="130"
-            SQLTask:ParameterSize="-1" />
         </SQLTask:SqlTaskData>
       </DTS:ObjectData>
     </DTS:Executable>
@@ -203,7 +188,7 @@
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
               SQLTask:Connection="{55025194-2D97-4CF7-AFC0-6BE0B03D9D1C}"
-              SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='INSERT INTO  ' + ? + ' SELECT * FROM  '+?&#xA;--special process for suburb table becasue it has nvarchar columns&#xA;&#xA;IF ?&lt;&gt;'extract_comcare.suburb'&#xA;&#xA;     EXEC (@SQL)&#xA;&#xA;ELSE&#xA;   insert into extract_comcare.Suburb&#xA;   SELECT *&#xA;   FROM OPENQUERY([appsql-3\comcareprod],'SELECT * FROM comcareprod.dbo.Suburb');&#xA;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='INSERT INTO  ' + ? + ' SELECT * FROM  '+? +' with (nolock)'&#xA;EXEC (@SQL)&#xA;&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
                 SQLTask:DtsVariableName="User::DestTableName"
@@ -213,12 +198,6 @@
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="1"
                 SQLTask:DtsVariableName="User::SourceTableName"
-                SQLTask:ParameterDirection="Input"
-                SQLTask:DataType="130"
-                SQLTask:ParameterSize="-1" />
-              <SQLTask:ParameterBinding
-                SQLTask:ParameterName="2"
-                SQLTask:DtsVariableName="User::DestTableName"
                 SQLTask:ParameterDirection="Input"
                 SQLTask:DataType="130"
                 SQLTask:ParameterSize="-1" />
@@ -413,14 +392,14 @@
       <DTS:ForEachVariableMappings>
         <DTS:ForEachVariableMapping
           DTS:CreationName=""
-          DTS:DTSID="{EBE2397C-7121-414F-8C51-A40567973118}"
-          DTS:ObjectName="{EBE2397C-7121-414F-8C51-A40567973118}"
+          DTS:DTSID="{D93AC14A-0AF5-4E4B-9116-167FA1CB46CD}"
+          DTS:ObjectName="{D93AC14A-0AF5-4E4B-9116-167FA1CB46CD}"
           DTS:ValueIndex="0"
           DTS:VariableName="User::SourceTableName" />
         <DTS:ForEachVariableMapping
           DTS:CreationName=""
-          DTS:DTSID="{326F82D9-80BE-4786-9C11-4A8E69C1A6E4}"
-          DTS:ObjectName="{326F82D9-80BE-4786-9C11-4A8E69C1A6E4}"
+          DTS:DTSID="{35D6F672-6B2F-42FF-8DB0-32E80C130115}"
+          DTS:ObjectName="{35D6F672-6B2F-42FF-8DB0-32E80C130115}"
           DTS:ValueIndex="1"
           DTS:VariableName="User::DestTableName" />
       </DTS:ForEachVariableMappings>
