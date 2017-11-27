@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="713"
-  DTS:VersionGUID="{DCAEBFAB-64A2-4D13-94E1-A8CD3C580958}">
+  DTS:VersionBuild="721"
+  DTS:VersionGUID="{03F0592B-E05E-4581-96CD-0C976F54B193}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/2/2017 11:14:22 AM</DTS:VariableValue>
+        DTS:DataType="7">11/27/2017 2:36:07 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/2/2017 11:14:22 AM</DTS:VariableValue>
+        DTS:DataType="7">11/27/2017 2:36:07 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/2/2017 11:14:22 AM</DTS:VariableValue>
+        DTS:DataType="7">11/27/2017 2:36:07 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -768,6 +768,7 @@
           DTS:refId="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT"
           DTS:CreationName="STOCK:SEQUENCE"
           DTS:Description="Sequence Container"
+          DTS:Disabled="True"
           DTS:DTSID="{65ce6689-b1e8-403f-9cd1-6694bbe03fd3}"
           DTS:ExecutableType="STOCK:SEQUENCE"
           DTS:LocaleID="-1"
@@ -992,7 +993,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
-                  SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                                     Purpose: ETL for children_disability_billed_hours&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Developer: Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Version: V1.0 3/10/2017 Created by Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Note:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   1.Question: some service activity_duration &lt;&gt; Schedule_duration, but we charge as  Schedule_duration  ...DC Day Activities&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;      eg. select * from @provider_client_service_CD where client_id ='10076349' order by activity_date asc &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   2.Question: providers include: timesheet employee and auto pay ??&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;use dwhb &#xA;&#xA;---------provider_service for children disability --------------------------------------------------------------------------------------------------------------------&#xA;  declare @provider_client_service_CD TABLE&#xA;   ([provider_id] [int] NULL,&#xA;&#x9;[client_id] [int] NULL,&#xA;&#x9;[activity_date] [datetime] NULL,&#xA;&#x9;[task_type_code] [varchar](8) NULL,&#xA;&#x9;[activity_start_time] [datetimeoffset](7) NULL,&#xA;&#x9;[activity_end_time] [datetimeoffset](7) NULL,&#xA;&#x9;[units_of_service] [numeric](10, 2) NULL,&#xA;&#x9;[activity_duration] [smallint] NULL,&#xA;&#x9;[travel_duration] [smallint] NULL,&#xA;&#x9;[schedule_duration] [smallint] NULL,&#xA;&#x9;[authorisation_date] [datetimeoffset](7) NULL,&#xA;&#x9;[classn_shift_centre] [varchar](50) NULL,&#xA;&#x9;[date_extract_for_payroll] [datetimeoffset](7) NULL,&#xA;&#x9;[date_upload_to_comcare] [datetime] NULL,&#xA;&#x9;[provider_contract_type_code] [tinyint]  NULL,&#xA;&#x9;est_visit_charge [numeric](10, 2) NULL,&#xA;&#x9; billing_funding_prog_code varchar(10), -- from client billed hours&#xA;&#x9; billing_funding_prog_code_desc varchar(100),&#x9; -- from client billed hours&#xA;     billing_rate decimal(28,5),-- from client billed hours&#xA;&#x9; billing_unit decimal(28,5),-- from client billed hours&#xA;&#x9; billing_amount decimal(28,5),-- from client billed hours&#xA;&#x9; billing_visit_date date,-- from client billed hours&#xA;&#x9; billing_comments varchar(500),-- from client billed hours,&#xA;&#x9; billing_period varchar(50),&#xA;&#x9; direct_balance_flag varchar(2),&#xA;&#x9; second_balance_flag varchar(2),&#xA;&#x9; final_balance_flag varchar(2)&#xA;&#xA;   &#xA;   );&#xA;   &#xA;&#xA;   insert into @provider_client_service_CD&#xA;   select t1.provider_id,&#xA;       t1.client_id,&#xA;&#x9;   t1.activity_date,&#xA;&#x9;   t1.task_type_code,&#xA;&#x9;   t1.activity_start_time,&#xA;&#x9;   t1.activity_end_time,&#xA;&#x9;   t1.units_of_service,&#xA;&#x9;   t1.activity_duration,&#xA;&#x9;   t1.travel_duration,&#xA;&#x9;   t1.[schedule_duration],&#xA;&#x9;   t1.authorisation_date,&#xA;&#x9;   t1.classn_shift_centre,&#xA;&#x9;   t1.date_extract_for_payroll,&#xA;&#x9;   t1.date_upload_to_comcare,&#xA;&#x9;   t3.provider_contract_type_code,&#xA;&#x9;   ISNULL(t1.est_visit_charge,0.0),&#xA;&#x9;   NULL,&#xA;&#x9;   NULL,&#xA;&#x9;   0,&#xA;&#x9;   0,&#xA;&#x9;   0,&#xA;&#x9;   NULL&#x9;,&#xA;&#x9;   NULL,&#xA;&#x9;   NULL,&#xA;&#x9;   NULL,&#xA;&#x9;   NULL,&#xA;&#x9;   NULL&#xA;from [appsql-3\comcareprod].comcareprod.dbo.activity_work_table as t1&#xA;inner join [appsql-3\comcareprod].comcareprod.dbo.provider as t2 on t1.provider_id = t2.provider_id &#xA;inner join [appsql-3\comcareprod].comcareprod.dbo.provider_contract  as t3 on t2.provider_id = t3.provider_id and t3.organisation_id =7&#xA;where t1.authorisation_date is not null and t1.date_upload_to_comcare is not null&#xA;and t1.client_id is not NULL&#xA;&#xA;--find manually input actual service records which have no activity_work_table record&#xA;--actual_service where date_upload_from_AWT is NULL &#xA;  insert into @provider_client_service_CD&#xA;  select       t1.provider_id,&#xA;&#x9;&#x9;       t1.client_id,&#xA;&#x9;&#x9;&#x9;   t1.visit_date,&#xA;&#x9;&#x9;&#x9;   t1.task_type_code,&#xA;&#x9;&#x9;&#x9;   t1.visit_time,&#xA;&#x9;&#x9;&#x9;   null,&#xA;&#x9;&#x9;&#x9;   t1.visit_duration,&#xA;&#x9;&#x9;&#x9;   t1.visit_duration,&#xA;&#x9;&#x9;&#x9;   t1.travel_duration,&#xA;&#x9;&#x9;&#x9;   t1.[scheduled_duration],&#xA;&#x9;&#x9;&#x9;   null,&#xA;&#x9;&#x9;&#x9;   null,&#xA;&#x9;&#x9;&#x9;   null,&#xA;&#x9;&#x9;&#x9;   null,&#xA;&#x9;&#x9;&#x9;   t5.provider_contract_type_code,&#xA;&#x9;&#x9;&#x9;   ISNULL(value_costed,0.0),&#xA;&#x9;&#x9;&#x9;    NULL,&#xA;&#x9;&#x9;&#x9;   NULL,&#xA;&#x9;&#x9;&#x9;   0,&#xA;&#x9;&#x9;&#x9;   0,&#xA;&#x9;&#x9;&#x9;   0,&#xA;&#x9;&#x9;&#x9;   NULL&#x9;,&#xA;&#x9;&#x9;&#x9;   NULL,&#xA;&#x9;&#x9;&#x9;   NULL,&#xA;&#x9;&#x9;&#x9;   NULL,&#xA;&#x9;&#x9;&#x9;   NULL,&#xA;&#x9;&#x9;&#x9;   NULL&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;from [appsql-3\comcareprod].comcareprod.dbo.actual_service as t1&#xA;&#x9;&#x9;&#x9;left join [appsql-3\comcareprod].comcareprod.dbo.FB_Client_Contract_Billing t2 on t1.client_id=t2.client_id&#xA; &#x9;left join [appsql-3\comcareprod].comcareprod.dbo.FC_Funder_Contract t3 on t2.Funder_Contract_ID=t3.Funder_Contract_ID&#xA;&#x9;inner join [appsql-3\comcareprod].comcareprod.dbo.provider as t4 on t1.provider_id = t4.provider_id &#xA;    inner join [appsql-3\comcareprod].comcareprod.dbo.provider_contract  as t5 on t4.provider_id = t5.provider_id and t5.organisation_id =7&#xA;&#x9;where t3.Funder_Contract_ID in (25,26,27,28,29,31)&#xA;&#x9;and t3.Funding_Care_Model_ID=6&#xA;&#x9;and t1.date_upload_from_AWT is NULL &#xA;--&#x9;and t1.billed_date is null&#xA;&#xA;----------------------client billed hours---------------------------------------------------------------------------------&#xA;  declare @client_billed_service_CD TABLE&#xA;   (&#xA;    funding_prog_code varchar(10),&#xA;&#x9;funding_prog_code_desc varchar(100),&#x9; &#xA;    client_id int,&#xA;&#x9;provider_id int,&#xA;&#x9;rate decimal(28,5),&#xA;&#x9;unit decimal(28,5),&#xA;&#x9;amount decimal(28,5),&#xA;&#x9;visit_date date,&#xA;&#x9;comments varchar(500),&#xA;&#x9;period varchar(30)&#xA;   );&#xA;&#xA;insert into @client_billed_service_CD&#xA; select &#xA;    t3.funder_contract_id,&#xA;&#x9;t3.Description,&#xA;&#x9;t2.client_id,&#xA;&#x9;t1.provider_id,&#xA;&#x9;ISNULL(t1.Rate_Used,0),&#xA;&#x9;ISNULL(t1.Units,0),&#xA;&#x9;ISNULL(t1.amount,0),&#xA;&#x9;t1.Visit_Date,&#xA;&#x9;--05/12/2016 to 18/12/2016&#xA;&#x9;t1.comments,&#xA;&#x9;convert(varchar,t1.Billing_Period_From,103) +' to '+convert(varchar,t1.Billing_Period_To,103) &#xA;&#x9;from [appsql-3\comcareprod].comcareprod.dbo.FB_Client_CB_Transaction as t1&#xA;&#x9;left join [appsql-3\comcareprod].comcareprod.dbo.FB_Client_Contract_Billing t2 on t1.Client_CB_ID=t2.Client_CB_ID&#xA;&#x9;left join [appsql-3\comcareprod].comcareprod.dbo.FC_Funder_Contract t3 on t2.Funder_Contract_ID=t3.Funder_Contract_ID&#xA;&#x9;left join [appsql-3\comcareprod].comcareprod.dbo.person as t4 on t1.Person_ID=t4.Person_ID&#xA;&#x9;where t1.Fee_Hold_Reason_Code IS NULL&#xA;&#x9;and t3.Funder_Contract_ID in (25,26,27,28,29,31)&#xA;&#x9;and t3.Funding_Care_Model_ID=6&#xA;&#xA;-------------------------join two tables-------------------------------------------------------------------------------&#xA; update t1&#xA; set &#xA;      t1.billing_funding_prog_code= t2.funding_prog_code,&#xA;&#x9; t1.billing_funding_prog_code_desc = t2.funding_prog_code_desc,&#xA;     t1.billing_rate =t2.rate,&#xA;&#x9; t1.billing_unit =t2.unit,&#xA;&#x9; t1.billing_amount =t2.amount,&#xA;&#x9; t1.billing_visit_date =t2.visit_date,&#xA;&#x9; t1.billing_comments = t2.comments,&#xA;&#x9; t1.billing_period=t2.period&#xA;&#xA; from  @provider_client_service_CD as t1&#xA; inner join  @client_billed_service_CD as t2&#xA; on t1.client_id= t2.client_id&#xA; and t1.provider_id = t2.provider_id  &#xA; and t1.activity_date = t2.visit_date&#xA;&#xA; --some transcation's provider will be changed. and cannot map so use charged_cost to mapp&#xA;  update t1&#xA; set &#xA;      t1.billing_funding_prog_code= t2.funding_prog_code,&#xA;&#x9; t1.billing_funding_prog_code_desc = t2.funding_prog_code_desc,&#xA;     t1.billing_rate =t2.rate,&#xA;&#x9; t1.billing_unit =t2.unit,&#xA;&#x9; t1.billing_amount =t2.amount,&#xA;&#x9; t1.billing_visit_date =t2.visit_date,&#xA;&#x9; t1.billing_comments = t2.comments,&#xA;&#x9; t1.billing_period=t2.period&#xA;&#xA; from  @provider_client_service_CD as t1&#xA; inner join  @client_billed_service_CD as t2&#xA; on t1.client_id= t2.client_id&#xA;-- and t1.provider_id = t2.provider_id  &#xA; and t1.activity_date = t2.visit_date&#xA; and t1.est_visit_charge=t2.amount&#xA; where t1.billing_funding_prog_code is NULL and t1.billing_funding_prog_code_desc is NULL and t1.billing_comments is NULL&#xA;&#xA;&#xA;&#xA; --process adjustment billing : no provider&#xA; --added by JS at 12/10/2017&#xA; insert into @provider_client_service_CD&#xA; select &#xA; NULL,&#xA; client_id,&#xA; visit_date,&#xA; NULL,&#xA;  NULL,&#xA; NULL,&#xA;  NULL,&#xA; NULL,&#xA;  NULL,&#xA; NULL,&#xA;  NULL,&#xA; NULL,&#xA;  NULL,&#xA; NULL,&#xA;  NULL,&#xA;  0.0,&#xA; funding_prog_code,&#xA; funding_prog_code_desc,&#xA; rate,&#xA; unit,&#xA; amount,&#xA; visit_date,&#xA; comments,&#xA; period,&#xA; NULL,&#xA; NULL,&#xA; NULL&#xA; from @client_billed_service_CD &#xA; WHERE provider_id is NULL&#xA;&#xA; -------------------------------update balance flag---------------------------------------------------------------------&#xA;&#x9; --use activity_duration&#xA;&#x9; update @provider_client_service_CD&#xA;&#x9; set direct_balance_flag ='Y'&#xA;&#x9; where convert(decimal(10,2),activity_duration) /60.00 =billing_unit;&#xA;&#xA;&#x9; --use shedule duration&#xA;&#x9;  update @provider_client_service_CD&#xA;&#x9; set second_balance_flag ='Y'&#xA;&#x9; where direct_balance_flag is NULL&#xA;&#x9; and convert(decimal(10,2),schedule_duration) /60.00 =billing_unit;&#xA;&#xA;&#x9; --update final_balance_flag&#xA;&#x9;  update @provider_client_service_CD&#xA;&#x9; set final_balance_flag ='Y'&#xA;&#x9; where direct_balance_flag='Y' or second_balance_flag='Y'&#xA;&#xA;&#x9; -------------------- quick update by js at 12/10/2017---------------------------&#xA;&#x9;   update @provider_client_service_CD&#xA;&#x9; set final_balance_flag ='Y'&#xA;&#x9; where billing_unit&lt;&gt;0 and activity_duration&lt;&gt;0&#xA;&#x9; --------------------------------------------------------------------------------&#xA;&#xA;&#xA;&#xA;&#x9;  update @provider_client_service_CD&#xA;&#x9; set final_balance_flag ='N'&#xA;&#x9; where final_balance_flag is NULL&#xA;&#xA;&#xA;&#xA;&#x9; ---adjustment transaction&#xA;&#x9;   update @provider_client_service_CD&#xA;&#x9; set final_balance_flag ='AD'&#xA;&#x9; where provider_id is NULL&#xA;&#xA;&#xA;--- populate fact table&#xA;&#xA;-- create table RECONCILE_UNBILLEDSERVICE_FACT&#xA;--(&#xA;--notbilled_key&#x9;&#x9;int&#x9;identity(1,1) not null,&#xA;--provider_id&#x9;&#x9;int&#x9;,&#xA;--provider_name&#x9;varchar(50),&#xA;--provider_contract_type&#x9;&#x9;varchar(10),&#xA;--client_id&#x9;&#x9;int&#x9;,&#xA;--client_name&#x9; varchar(50),&#xA;--service_date_key&#x9;int&#x9;,&#xA;--service_type_code&#x9;&#x9;varchar(50),&#xA;--service_name&#x9;&#x9;varchar(50),&#xA;--service_start_time&#x9;&#x9;time,&#x9;&#xA;--service_end_time&#x9;&#x9;time,&#x9;&#xA;--service_duration&#x9;decimal(6,2),&#xA;--travel_duration&#x9;decimal(6,2),&#xA;--schedule_duration&#x9;decimal(6,2),&#xA;--billing_funding_prog&#x9;&#x9;varchar(50),&#xA;--billing_rate&#x9;decimal(10,5),&#xA;--billing_unit&#x9;&#x9;decimal(10,5),&#xA;--billing_amount&#x9;&#x9;decimal(10,5),&#xA;--billing_visit_date_key&#x9;&#x9;int&#x9;,&#xA;--billing_comments&#x9;&#x9;varchar(500),&#xA;--billing_period&#x9;&#x9;varchar(50),&#xA;--unbilled_flag&#x9;&#x9;varchar(2),&#xA;--)&#xA;&#xA;&#xA;truncate table conform_finance.RECONCILE_UNBILLEDSERVICE_FACT;&#xA;&#xA;insert into conform_finance.RECONCILE_UNBILLEDSERVICE_FACT&#xA;select &#xA;provider_id,&#xA;null,&#xA;case provider_contract_type_code&#xA;when '1' then 'payroll'&#xA;when '2' then 'autopay'&#xA;when '3'  then 'contract'&#xA;else  NULL&#xA;end,&#xA;&#xA;client_id,&#xA;null,&#xA;&#xA;d1.date_key,&#xA;t1.task_type_code,&#xA;null,&#xA;&#xA;convert(time,t1.activity_start_time),&#xA;convert(time,t1.activity_end_time),&#xA;&#xA;isnull(convert(decimal(10,4),t1.activity_duration) / 60.0000,0.0000),&#xA;isnull(convert(decimal(10,4),t1.travel_duration) / 60.0000,0.0000),&#xA;isnull(convert(decimal(10,4),t1.schedule_duration) / 60.0000,0.0000),&#xA;&#xA;t1.billing_funding_prog_code_desc,&#xA;t1.billing_rate,&#xA;t1.billing_unit,&#xA;t1.billing_amount,&#xA;t1.billing_visit_date,&#xA;t1.billing_comments,&#xA;t1.billing_period,&#xA;&#xA;case t1.final_balance_flag&#xA;when 'Y' then 'N'&#xA;When 'N' then 'Y'&#xA;else t1.final_balance_flag&#xA;end,&#xA;t1.est_visit_charge&#xA;&#xA;from @provider_client_service_CD as t1&#xA;left join conform_finance.date_dim as d1  on t1.activity_date=d1.full_date&#xA;&#xA;&#xA;--update names&#xA;--provider&#xA;update t1&#xA;set t1.provider_name =t2.given_names +' '+t2.Last_name&#xA;from conform_finance.RECONCILE_UNBILLEDSERVICE_FACT as t1&#xA;inner join [appsql-3\comcareprod].comcareprod.dbo.person  as t2&#xA;on t1.provider_id = t2.person_id &#xA;&#xA;&#xA;update t1&#xA;set t1.client_name =t2.given_names +' '+t2.Last_name&#xA;from conform_finance.RECONCILE_UNBILLEDSERVICE_FACT as t1&#xA;inner join [appsql-3\comcareprod].comcareprod.dbo.person  as t2&#xA;on t1.client_id = t2.person_id &#xA;&#xA;&#xA;--update service_name&#xA;update t1&#xA;set t1.service_name =t2.description&#xA;from conform_finance.RECONCILE_UNBILLEDSERVICE_FACT as t1&#xA;inner join [appsql-3\comcareprod].comcareprod.dbo.task_type   as t2&#xA;on t1.service_type_code = t2.task_type_code &#xA;&#xA;&#xA;--update final flag&#xA;update conform_finance.RECONCILE_UNBILLEDSERVICE_FACT&#xA;set unbilled_flag='N'&#xA;where unbilled_flag='Y'&#xA;and billing_unit&lt;&gt;0 and (service_duration+travel_duration+schedule_duration)&lt;&gt;0&#xA;&#xA;&#xA;&#xA;------------------------do some checks for adjustment billing added by JS at 2/11/2017-----------------------------------------------------------&#xA;------------------------if they have an adjustment billing whin same period, client is same and amount is same. Put the unbilled flag from Y to N&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;-------------------------------------------------------------------------------------------------------------------------------------------------&#xA;&#xA;&#xA;---delivery to front &#xA;truncate table dwhf_finance.finance.RECONCILE_UNBILLEDSERVICE_FACT;&#xA;insert into dwhf_finance.finance.RECONCILE_UNBILLEDSERVICE_FACT&#xA;select * from conform_finance.RECONCILE_UNBILLEDSERVICE_FACT;&#xA;&#xA; -------------------------------------get temp table---------------------------------------------------------------------&#xA; --select * from  conform_finance.RECONCILE_UNBILLEDSERVICE_FACT where client_id ='10076349'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                                     Purpose: ETL for children_disability_billed_hours&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Developer: Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Version: V1.0 3/10/2017 Created by Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Note:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   1.Question: some service activity_duration &lt;&gt; Schedule_duration, but we charge as  Schedule_duration  ...DC Day Activities&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;      eg. select * from @provider_client_service_CD where client_id ='10076349' order by activity_date asc &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   2.Question: providers include: timesheet employee and auto pay ??&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;use dwhb &#xA;&#xA;---------provider_service for children disability --------------------------------------------------------------------------------------------------------------------&#xA;  declare @provider_client_service_CD TABLE&#xA;   ([provider_id] [int] NULL,&#xA;&#x9;[client_id] [int] NULL,&#xA;&#x9;[activity_date] [datetime] NULL,&#xA;&#x9;[task_type_code] [varchar](8) NULL,&#xA;&#x9;[activity_start_time] [datetimeoffset](7) NULL,&#xA;&#x9;[activity_end_time] [datetimeoffset](7) NULL,&#xA;&#x9;[units_of_service] [numeric](10, 2) NULL,&#xA;&#x9;[activity_duration] [smallint] NULL,&#xA;&#x9;[travel_duration] [smallint] NULL,&#xA;&#x9;[schedule_duration] [smallint] NULL,&#xA;&#x9;[authorisation_date] [datetimeoffset](7) NULL,&#xA;&#x9;[classn_shift_centre] [varchar](50) NULL,&#xA;&#x9;[date_extract_for_payroll] [datetimeoffset](7) NULL,&#xA;&#x9;[date_upload_to_comcare] [datetime] NULL,&#xA;&#x9;[provider_contract_type_code] [tinyint]  NULL,&#xA;&#x9;est_visit_charge [numeric](10, 2) NULL,&#xA;&#x9; billing_funding_prog_code varchar(10), -- from client billed hours&#xA;&#x9; billing_funding_prog_code_desc varchar(100),&#x9; -- from client billed hours&#xA;     billing_rate decimal(28,5),-- from client billed hours&#xA;&#x9; billing_unit decimal(28,5),-- from client billed hours&#xA;&#x9; billing_amount decimal(28,5),-- from client billed hours&#xA;&#x9; billing_visit_date date,-- from client billed hours&#xA;&#x9; billing_comments varchar(500),-- from client billed hours,&#xA;&#x9; billing_period varchar(50),&#xA;&#x9; direct_balance_flag varchar(2),&#xA;&#x9; second_balance_flag varchar(2),&#xA;&#x9; final_balance_flag varchar(2)&#xA;&#xA;   &#xA;   );&#xA;   &#xA;&#xA;   insert into @provider_client_service_CD&#xA;   select t1.provider_id,&#xA;       t1.client_id,&#xA;&#x9;   t1.activity_date,&#xA;&#x9;   t1.task_type_code,&#xA;&#x9;   t1.activity_start_time,&#xA;&#x9;   t1.activity_end_time,&#xA;&#x9;   t1.units_of_service,&#xA;&#x9;   t1.activity_duration,&#xA;&#x9;   t1.travel_duration,&#xA;&#x9;   t1.[schedule_duration],&#xA;&#x9;   t1.authorisation_date,&#xA;&#x9;   t1.classn_shift_centre,&#xA;&#x9;   t1.date_extract_for_payroll,&#xA;&#x9;   t1.date_upload_to_comcare,&#xA;&#x9;   t3.provider_contract_type_code,&#xA;&#x9;   ISNULL(t1.est_visit_charge,0.0),&#xA;&#x9;   NULL,&#xA;&#x9;   NULL,&#xA;&#x9;   0,&#xA;&#x9;   0,&#xA;&#x9;   0,&#xA;&#x9;   NULL&#x9;,&#xA;&#x9;   NULL,&#xA;&#x9;   NULL,&#xA;&#x9;   NULL,&#xA;&#x9;   NULL,&#xA;&#x9;   NULL&#xA;from extract_comcare.activity_work_table as t1&#xA;inner join extract_comcare.provider as t2 on t1.provider_id = t2.provider_id &#xA;inner join extract_comcare.provider_contract  as t3 on t2.provider_id = t3.provider_id and t3.organisation_id =7&#xA;where t1.authorisation_date is not null and t1.date_upload_to_comcare is not null&#xA;and t1.client_id is not NULL&#xA;&#xA;--find manually input actual service records which have no activity_work_table record&#xA;--actual_service where date_upload_from_AWT is NULL &#xA;  insert into @provider_client_service_CD&#xA;  select       t1.provider_id,&#xA;&#x9;&#x9;       t1.client_id,&#xA;&#x9;&#x9;&#x9;   t1.visit_date,&#xA;&#x9;&#x9;&#x9;   t1.task_type_code,&#xA;&#x9;&#x9;&#x9;   t1.visit_time,&#xA;&#x9;&#x9;&#x9;   null,&#xA;&#x9;&#x9;&#x9;   t1.visit_duration,&#xA;&#x9;&#x9;&#x9;   t1.visit_duration,&#xA;&#x9;&#x9;&#x9;   t1.travel_duration,&#xA;&#x9;&#x9;&#x9;   t1.[scheduled_duration],&#xA;&#x9;&#x9;&#x9;   null,&#xA;&#x9;&#x9;&#x9;   null,&#xA;&#x9;&#x9;&#x9;   null,&#xA;&#x9;&#x9;&#x9;   null,&#xA;&#x9;&#x9;&#x9;   t5.provider_contract_type_code,&#xA;&#x9;&#x9;&#x9;   ISNULL(value_costed,0.0),&#xA;&#x9;&#x9;&#x9;    NULL,&#xA;&#x9;&#x9;&#x9;   NULL,&#xA;&#x9;&#x9;&#x9;   0,&#xA;&#x9;&#x9;&#x9;   0,&#xA;&#x9;&#x9;&#x9;   0,&#xA;&#x9;&#x9;&#x9;   NULL&#x9;,&#xA;&#x9;&#x9;&#x9;   NULL,&#xA;&#x9;&#x9;&#x9;   NULL,&#xA;&#x9;&#x9;&#x9;   NULL,&#xA;&#x9;&#x9;&#x9;   NULL,&#xA;&#x9;&#x9;&#x9;   NULL&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;from extract_comcare.actual_service as t1&#xA;&#x9;&#x9;&#x9;left join extract_comcare.FB_Client_Contract_Billing t2 on t1.client_id=t2.client_id&#xA; &#x9;left join extract_comcare.FC_Funder_Contract t3 on t2.Funder_Contract_ID=t3.Funder_Contract_ID&#xA;&#x9;inner join extract_comcare.provider as t4 on t1.provider_id = t4.provider_id &#xA;    inner join extract_comcare.provider_contract  as t5 on t4.provider_id = t5.provider_id and t5.organisation_id =7&#xA;&#x9;where t3.Funder_Contract_ID in (25,26,27,28,29,31)&#xA;&#x9;and t3.Funding_Care_Model_ID=6&#xA;&#x9;and t1.date_upload_from_AWT is NULL &#xA;--&#x9;and t1.billed_date is null&#xA;&#xA;----------------------client billed hours---------------------------------------------------------------------------------&#xA;  declare @client_billed_service_CD TABLE&#xA;   (&#xA;    funding_prog_code varchar(10),&#xA;&#x9;funding_prog_code_desc varchar(100),&#x9; &#xA;    client_id int,&#xA;&#x9;provider_id int,&#xA;&#x9;rate decimal(28,5),&#xA;&#x9;unit decimal(28,5),&#xA;&#x9;amount decimal(28,5),&#xA;&#x9;visit_date date,&#xA;&#x9;comments varchar(500),&#xA;&#x9;period varchar(30)&#xA;   );&#xA;&#xA;insert into @client_billed_service_CD&#xA; select &#xA;    t3.funder_contract_id,&#xA;&#x9;t3.Description,&#xA;&#x9;t2.client_id,&#xA;&#x9;t1.provider_id,&#xA;&#x9;ISNULL(t1.Rate_Used,0),&#xA;&#x9;ISNULL(t1.Units,0),&#xA;&#x9;ISNULL(t1.amount,0),&#xA;&#x9;t1.Visit_Date,&#xA;&#x9;--05/12/2016 to 18/12/2016&#xA;&#x9;t1.comments,&#xA;&#x9;convert(varchar,t1.Billing_Period_From,103) +' to '+convert(varchar,t1.Billing_Period_To,103) &#xA;&#x9;from extract_comcare.FB_Client_CB_Transaction as t1&#xA;&#x9;left join extract_comcare.FB_Client_Contract_Billing t2 on t1.Client_CB_ID=t2.Client_CB_ID&#xA;&#x9;left join extract_comcare.FC_Funder_Contract t3 on t2.Funder_Contract_ID=t3.Funder_Contract_ID&#xA;&#x9;left join extract_comcare.person as t4 on t1.Person_ID=t4.Person_ID&#xA;&#x9;where t1.Fee_Hold_Reason_Code IS NULL&#xA;&#x9;and t3.Funder_Contract_ID in (25,26,27,28,29,31)&#xA;&#x9;and t3.Funding_Care_Model_ID=6&#xA;&#xA;-------------------------join two tables-------------------------------------------------------------------------------&#xA; update t1&#xA; set &#xA;      t1.billing_funding_prog_code= t2.funding_prog_code,&#xA;&#x9; t1.billing_funding_prog_code_desc = t2.funding_prog_code_desc,&#xA;     t1.billing_rate =t2.rate,&#xA;&#x9; t1.billing_unit =t2.unit,&#xA;&#x9; t1.billing_amount =t2.amount,&#xA;&#x9; t1.billing_visit_date =t2.visit_date,&#xA;&#x9; t1.billing_comments = t2.comments,&#xA;&#x9; t1.billing_period=t2.period&#xA;&#xA; from  @provider_client_service_CD as t1&#xA; inner join  @client_billed_service_CD as t2&#xA; on t1.client_id= t2.client_id&#xA; and t1.provider_id = t2.provider_id  &#xA; and t1.activity_date = t2.visit_date&#xA;&#xA; --some transcation's provider will be changed. and cannot map so use charged_cost to mapp&#xA;  update t1&#xA; set &#xA;      t1.billing_funding_prog_code= t2.funding_prog_code,&#xA;&#x9; t1.billing_funding_prog_code_desc = t2.funding_prog_code_desc,&#xA;     t1.billing_rate =t2.rate,&#xA;&#x9; t1.billing_unit =t2.unit,&#xA;&#x9; t1.billing_amount =t2.amount,&#xA;&#x9; t1.billing_visit_date =t2.visit_date,&#xA;&#x9; t1.billing_comments = t2.comments,&#xA;&#x9; t1.billing_period=t2.period&#xA;&#xA; from  @provider_client_service_CD as t1&#xA; inner join  @client_billed_service_CD as t2&#xA; on t1.client_id= t2.client_id&#xA;-- and t1.provider_id = t2.provider_id  &#xA; and t1.activity_date = t2.visit_date&#xA; and t1.est_visit_charge=t2.amount&#xA; where t1.billing_funding_prog_code is NULL and t1.billing_funding_prog_code_desc is NULL and t1.billing_comments is NULL&#xA;&#xA;&#xA;&#xA; --process adjustment billing : no provider&#xA; --added by JS at 12/10/2017&#xA; insert into @provider_client_service_CD&#xA; select &#xA; NULL,&#xA; client_id,&#xA; visit_date,&#xA; NULL,&#xA;  NULL,&#xA; NULL,&#xA;  NULL,&#xA; NULL,&#xA;  NULL,&#xA; NULL,&#xA;  NULL,&#xA; NULL,&#xA;  NULL,&#xA; NULL,&#xA;  NULL,&#xA;  0.0,&#xA; funding_prog_code,&#xA; funding_prog_code_desc,&#xA; rate,&#xA; unit,&#xA; amount,&#xA; visit_date,&#xA; comments,&#xA; period,&#xA; NULL,&#xA; NULL,&#xA; NULL&#xA; from @client_billed_service_CD &#xA; WHERE provider_id is NULL&#xA;&#xA; -------------------------------update balance flag---------------------------------------------------------------------&#xA;&#x9; --use activity_duration&#xA;&#x9; update @provider_client_service_CD&#xA;&#x9; set direct_balance_flag ='Y'&#xA;&#x9; where convert(decimal(10,2),activity_duration) /60.00 =billing_unit;&#xA;&#xA;&#x9; --use shedule duration&#xA;&#x9;  update @provider_client_service_CD&#xA;&#x9; set second_balance_flag ='Y'&#xA;&#x9; where direct_balance_flag is NULL&#xA;&#x9; and convert(decimal(10,2),schedule_duration) /60.00 =billing_unit;&#xA;&#xA;&#x9; --update final_balance_flag&#xA;&#x9;  update @provider_client_service_CD&#xA;&#x9; set final_balance_flag ='Y'&#xA;&#x9; where direct_balance_flag='Y' or second_balance_flag='Y'&#xA;&#xA;&#x9; -------------------- quick update by js at 12/10/2017---------------------------&#xA;&#x9;   update @provider_client_service_CD&#xA;&#x9; set final_balance_flag ='Y'&#xA;&#x9; where billing_unit&lt;&gt;0 and activity_duration&lt;&gt;0&#xA;&#x9; --------------------------------------------------------------------------------&#xA;&#xA;&#xA;&#xA;&#x9;  update @provider_client_service_CD&#xA;&#x9; set final_balance_flag ='N'&#xA;&#x9; where final_balance_flag is NULL&#xA;&#xA;&#xA;&#xA;&#x9; ---adjustment transaction&#xA;&#x9;   update @provider_client_service_CD&#xA;&#x9; set final_balance_flag ='AD'&#xA;&#x9; where provider_id is NULL&#xA;&#xA;&#xA;--- populate fact table&#xA;&#xA;-- create table RECONCILE_UNBILLEDSERVICE_FACT&#xA;--(&#xA;--notbilled_key&#x9;&#x9;int&#x9;identity(1,1) not null,&#xA;--provider_id&#x9;&#x9;int&#x9;,&#xA;--provider_name&#x9;varchar(50),&#xA;--provider_contract_type&#x9;&#x9;varchar(10),&#xA;--client_id&#x9;&#x9;int&#x9;,&#xA;--client_name&#x9; varchar(50),&#xA;--service_date_key&#x9;int&#x9;,&#xA;--service_type_code&#x9;&#x9;varchar(50),&#xA;--service_name&#x9;&#x9;varchar(50),&#xA;--service_start_time&#x9;&#x9;time,&#x9;&#xA;--service_end_time&#x9;&#x9;time,&#x9;&#xA;--service_duration&#x9;decimal(6,2),&#xA;--travel_duration&#x9;decimal(6,2),&#xA;--schedule_duration&#x9;decimal(6,2),&#xA;--billing_funding_prog&#x9;&#x9;varchar(50),&#xA;--billing_rate&#x9;decimal(10,5),&#xA;--billing_unit&#x9;&#x9;decimal(10,5),&#xA;--billing_amount&#x9;&#x9;decimal(10,5),&#xA;--billing_visit_date_key&#x9;&#x9;int&#x9;,&#xA;--billing_comments&#x9;&#x9;varchar(500),&#xA;--billing_period&#x9;&#x9;varchar(50),&#xA;--unbilled_flag&#x9;&#x9;varchar(2),&#xA;--)&#xA;&#xA;&#xA;truncate table conform_finance.RECONCILE_UNBILLEDSERVICE_FACT;&#xA;&#xA;insert into conform_finance.RECONCILE_UNBILLEDSERVICE_FACT&#xA;select &#xA;provider_id,&#xA;null,&#xA;case provider_contract_type_code&#xA;when '1' then 'payroll'&#xA;when '2' then 'autopay'&#xA;when '3'  then 'contract'&#xA;else  NULL&#xA;end,&#xA;&#xA;client_id,&#xA;null,&#xA;&#xA;d1.date_key,&#xA;t1.task_type_code,&#xA;null,&#xA;&#xA;convert(time,t1.activity_start_time),&#xA;convert(time,t1.activity_end_time),&#xA;&#xA;isnull(convert(decimal(10,4),t1.activity_duration) / 60.0000,0.0000),&#xA;isnull(convert(decimal(10,4),t1.travel_duration) / 60.0000,0.0000),&#xA;isnull(convert(decimal(10,4),t1.schedule_duration) / 60.0000,0.0000),&#xA;&#xA;t1.billing_funding_prog_code_desc,&#xA;t1.billing_rate,&#xA;t1.billing_unit,&#xA;t1.billing_amount,&#xA;t1.billing_visit_date,&#xA;t1.billing_comments,&#xA;t1.billing_period,&#xA;&#xA;case t1.final_balance_flag&#xA;when 'Y' then 'N'&#xA;When 'N' then 'Y'&#xA;else t1.final_balance_flag&#xA;end,&#xA;t1.est_visit_charge&#xA;&#xA;from @provider_client_service_CD as t1&#xA;left join conform_finance.date_dim as d1  on t1.activity_date=d1.full_date&#xA;&#xA;&#xA;--update names&#xA;--provider&#xA;update t1&#xA;set t1.provider_name =t2.given_names +' '+t2.Last_name&#xA;from conform_finance.RECONCILE_UNBILLEDSERVICE_FACT as t1&#xA;inner join extract_comcare.person  as t2&#xA;on t1.provider_id = t2.person_id &#xA;&#xA;&#xA;update t1&#xA;set t1.client_name =t2.given_names +' '+t2.Last_name&#xA;from conform_finance.RECONCILE_UNBILLEDSERVICE_FACT as t1&#xA;inner join extract_comcare.person  as t2&#xA;on t1.client_id = t2.person_id &#xA;&#xA;&#xA;--update service_name&#xA;update t1&#xA;set t1.service_name =t2.description&#xA;from conform_finance.RECONCILE_UNBILLEDSERVICE_FACT as t1&#xA;inner join extract_comcare.task_type   as t2&#xA;on t1.service_type_code = t2.task_type_code &#xA;&#xA;&#xA;--update final flag&#xA;update conform_finance.RECONCILE_UNBILLEDSERVICE_FACT&#xA;set unbilled_flag='N'&#xA;where unbilled_flag='Y'&#xA;and billing_unit&lt;&gt;0 and (service_duration+travel_duration+schedule_duration)&lt;&gt;0&#xA;&#xA;&#xA;&#xA;------------------------do some checks for adjustment billing added by JS at 2/11/2017-----------------------------------------------------------&#xA;------------------------if they have an adjustment billing whin same period, client is same and amount is same. Put the unbilled flag from Y to N&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;-------------------------------------------------------------------------------------------------------------------------------------------------&#xA;&#xA;&#xA;---delivery to front &#xA;truncate table dwhf_finance.finance.RECONCILE_UNBILLEDSERVICE_FACT;&#xA;insert into dwhf_finance.finance.RECONCILE_UNBILLEDSERVICE_FACT&#xA;select * from conform_finance.RECONCILE_UNBILLEDSERVICE_FACT;&#xA;&#xA; -------------------------------------get temp table---------------------------------------------------------------------&#xA; --select * from  conform_finance.RECONCILE_UNBILLEDSERVICE_FACT where client_id ='10076349'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
             <DTS:Executable
@@ -1008,7 +1009,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
-                  SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                                     Purpose: ETL for reconcile_invocie_fact&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Developer: Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Version: V1.0 04/09/2017 Created by Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Note:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;      1. Start with Children Disability program first.&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  2. need new extract comcare tables:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   Actual_Service_Charge_Item&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   FC_Contract_Area_Product&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   Funding_Program&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  3. changed from comcare.FB_Client_CB_Transaction tables because some items missing in service charge table,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;      e.g: Additional Charges (Austin Turner)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;    from [devsql-1\dev].comcaredev.dbo.FB_Client_CB_Transaction as t1&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;left join [devsql-1\dev].comcaredev.dbo.FB_Client_Contract_Billing t2 on t1.Client_CB_ID=t2.Client_CB_ID&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;left join [devsql-1\dev].comcaredev.dbo.FC_Funder_Contract t3 on t2.Funder_Contract_ID=t3.Funder_Contract_ID&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;left join [devsql-1\dev].comcaredev.dbo.person as t4 on t1.Person_ID=t4.Person_ID&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  4. Change T1 source from R1 to %ACT to get invoice details by JS at 25/09/2017.&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  5. Added cost centre inforamtion by JS at 28/09/2017&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;   use dwhb;&#xA;&#xA;&#xA;   --invocie temp table&#xA;    declare @client_invocie TABLE&#xA;   (accnbri varchar(32),&#xA;    pdatei datetime,&#xA;&#x9;amt1 numeric(14,2),&#xA;&#x9;narr1 varchar(40),&#xA;&#x9;narr2 varchar(40),&#xA;&#x9;narr3 varchar(40),&#xA;&#x9;user_fld1 varchar(40),&#xA;&#x9;period_start_date date,&#xA;&#x9;period_end_date date,&#xA;&#x9;cc_service_duration decimal(28,5),&#xA;&#x9;cc_service_cost  decimal(28,5),&#xA;&#x9;balance_flag varchar(1),&#xA;&#x9;glcode varchar(15),&#xA;&#x9;doc_ref1 varchar(20)&#xA;   &#xA;   );&#xA; --  insert into  @client_invocie&#xA; --  (accnbri,pdatei,amt1,narr1,narr2,narr3,user_fld1,cc_service_duration,cc_service_cost)&#xA; --  select accnbri,pdatei,amt1,narr1,narr2,narr3,USER_FLD1,0,0&#xA;&#x9;--from extract.GLF_LDG_ACC_TRANS&#xA;&#x9;--where ldg_name ='R1'&#xA;&#x9;--and doc_type in ('ARINV','ARINVCCDS')&#xA;&#x9;----and NARR1='10069826'&#xA;&#x9;--and len(NARR1)=8&#xA;&#x9;--and USER_FLD1 in ('DSIS','DSDA','DSOR','DSCC','DSOATS') -- children disability program category&#xA;&#xA;&#x9;&#xA;&#x9;--------------------------------------------------------------------------------------------------&#xA;&#x9;---changed by JS at 25/09/2017: t1 source from R1 to %ACT to get invoice details.&#xA;&#x9;--step1: get invocice details including GL_Codes and DOC_REF1 (link to AR. R1)&#xA;&#x9;insert into  @client_invocie&#xA;&#x9;(accnbri,pdatei,amt1,narr1,narr2,narr3,user_fld1,cc_service_duration,cc_service_cost,glcode,doc_ref1)&#xA;&#x9;select '',DOC_DATEI1,amt1*(-1),narr1,narr2,narr3,USER_FLD1,0,0,accnbri,DOC_REF1&#xA;&#x9;from extract.GLF_LDG_ACC_TRANS&#xA;&#x9;where ldg_name like '%ACT' and len(ACCNBRI)=15 and  len(doc_ref1)&gt;0&#xA;&#x9;and doc_type in ('ARINV','ARINVCCDS')&#xA;&#x9;and len(NARR1)=8&#xA;     -- -- children disability program category&#xA;&#x9;and  (USER_FLD1 in ('DSIS','DSDA','DSOR','DSCC','DSOATS')  or (accnbri like '%3611%') )-- get 3611 - Metro NDIS Case Co-ord because no USDR_FLD1 for this) &#xA;&#xA;&#x9;&#xA;&#x9;--step2: get AR debtor id&#xA;&#x9;update t1&#xA;&#x9;set  t1.accnbri= t2.ACCNBRI&#xA;&#x9;from  @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9;(&#xA;&#x9;&#x9; select distinct accnbri,DOC_REF1&#xA;&#x9;&#x9;from extract.GLF_LDG_ACC_TRANS&#xA;&#x9;&#x9;where ldg_name ='R1'&#xA;&#x9;&#x9;and doc_type in ('ARINV','ARINVCCDS')&#xA;&#x9;&#x9;and len(NARR1)=8&#xA;&#x9;--&#x9;and USER_FLD1 in ('DSIS','DSDA','DSOR','DSCC','DSOATS') -- children disability program category&#xA;&#x9;&#x9;&#xA;&#x9;) as t2 &#x9;on t1.doc_ref1=t2.DOC_REF1 COLLATE DATABASE_DEFAULT&#xA;&#xA;&#xA;&#x9;--------------------------------------------------------------------------------------------------&#xA;&#x9;print 'finish @client_invocie get data';&#xA;&#xA;&#x9;--update p_start_date and p_end_date&#xA;&#x9;update  @client_invocie&#xA;&#x9;set period_start_date = convert(date,left(narr3,10),103),&#xA;&#x9;    period_end_date= convert(date,right(narr3,10),103)&#xA;&#x9;where len(narr3)=24&#xA;&#xA;&#x9;----process comcare data from Actual_Service_Charge_Item&#xA;&#x9;-- declare @client_actual_service TABLE&#xA; --  (&#xA; --   funding_prog_code varchar(10),&#xA;&#x9;--funding_prog_code_desc varchar(100),&#x9; &#xA; --   client_id int,&#xA;&#x9;--rate decimal(28,5),&#xA;&#x9;--unit decimal(28,5),&#xA;&#x9;--amount decimal(28,5),&#xA;&#x9;--visit_date date,&#xA;&#x9;--period varchar(30)&#xA; --  );&#xA;&#xA;&#xA; --&#x9; insert into  @client_actual_service&#xA;&#x9;-- select t3.Funding_Prog_Code,t3.Description , &#xA; --    t1.client_id,t1.rate,t1.unit,t1.amount,t1.Visit_Date,null&#xA; --    from extract_comcare.Actual_Service_Charge_Item as t1&#xA; --    inner join extract_comcare.FC_Contract_Area_Product  as t2 on t1.FC_Product_ID=t2.FC_Product_ID&#xA; --    inner join extract_comcare.Funding_Program as t3 on t2.Funding_Prog_Code=t3.Funding_Prog_Code and t3.funding_prog_code in (115,116,117,118,119,120,121,122,123)&#xA; --  --  where t1.client_id ='10069826' &#xA;&#xA;&#xA;&#xA;&#x9;----update period based on invocie period: start_date and end_date&#xA;&#x9;--update t1&#xA;&#x9;--set t1.period=t2.narr3&#xA;&#x9;--from @client_actual_service as t1&#xA;&#x9;--join @client_invocie as t2&#xA;&#x9;--on t1.client_id=t2.narr1&#xA;&#x9;--and t1.visit_date between t2.period_start_date and t2.period_end_date&#xA;&#x9;&#xA;&#x9;--changed by Jerry Shen at 20/09/2017&#xA;&#x9;--from transaction table instead of Actual_Service_Charge_Item&#xA;    declare @client_actual_service TABLE&#xA;   (&#xA;    funding_prog_code varchar(10),&#xA;&#x9;funding_prog_code_desc varchar(100),&#x9; &#xA;    client_id int,&#xA;&#x9;rate decimal(28,5),&#xA;&#x9;unit decimal(28,5),&#xA;&#x9;amount decimal(28,5),&#xA;&#x9;visit_date date,&#xA;&#x9;period varchar(30)&#xA;   );&#xA;&#xA;   insert into  @client_actual_service&#xA;   select &#xA;    t3.funder_contract_id,&#xA;&#x9;t3.Description,&#xA;&#x9;t2.client_id,&#xA;&#x9;ISNULL(t1.Rate_Used,0),&#xA;&#x9;ISNULL(t1.Units,0),&#xA;&#x9;ISNULL(t1.amount,0),&#xA;&#x9;convert(date,t1.Visit_Date),&#xA;&#x9;--05/12/2016 to 18/12/2016&#xA;&#x9;convert(varchar,t1.Billing_Period_From,103) +' to '+convert(varchar,t1.Billing_Period_To,103) &#xA;&#x9;from [appsql-3\comcareprod].comcareprod.dbo.FB_Client_CB_Transaction as t1&#xA;&#x9;left join [appsql-3\comcareprod].comcareprod.dbo.FB_Client_Contract_Billing t2 on t1.Client_CB_ID=t2.Client_CB_ID&#xA;&#x9;left join [appsql-3\comcareprod].comcareprod.dbo.FC_Funder_Contract t3 on t2.Funder_Contract_ID=t3.Funder_Contract_ID&#xA;&#x9;left join [appsql-3\comcareprod].comcareprod.dbo.person as t4 on t1.Person_ID=t4.Person_ID&#xA;&#x9;where t1.Fee_Hold_Reason_Code IS NULL&#xA;&#x9;and t3.Funder_Contract_ID in (25,26,27,28,29,31)&#xA;&#x9;and t3.Funding_Care_Model_ID=6&#xA;&#xA;&#xA;&#x9;&#x9;--------------------------------------------------------------------------------------------------&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--join two tables&#xA;&#xA;&#x9;/*-------------------------------------------------&#xA;&#x9;DC Individualised Services,      DSIS       25&#xA;&#x9;DC Day Activities               ,DSDA                26&#xA;&#x9;DC Overnight Respite,            DSOR              27&#xA;&#x9;DC Case Coordination Mt Gambier,  DSCC        28&#xA;&#x9;DC OATS,                          DSOATS                             29&#xA;&#x9;Case Coordination NDIS                     31&#xA;&#x9;----------------------------------------------------*/&#xA;&#xA;&#xA;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSOATS' and T2.funding_prog_code='29';&#xA;&#xA;&#xA;&#xA;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSIS' and T2.funding_prog_code in ('25');&#xA;&#xA;&#xA;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSDA' and T2.funding_prog_code in ('26');&#xA;&#xA;&#xA;&#x9;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSOR' and T2.funding_prog_code in ('27');&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSCC' and T2.funding_prog_code in ('28');&#xA;&#xA;&#x9;&#xA;&#x9;&#x9;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;&#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and len(t1.user_fld1)=0 and T2.funding_prog_code in ('31');&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--update balance flag&#xA;&#x9;update @client_invocie&#xA;&#x9;set balance_flag= (case when amt1 = cc_service_cost then 'Y' else 'N' end);&#xA;&#xA;&#xA;&#xA;&#x9;--populate fact temp table&#xA;&#x9;declare @tmp_RECONCILE_INVOICE_FACT Table&#xA;&#x9;(reconcile_invocie_key&#x9; [int] IDENTITY(1,1) NOT NULL,&#xA;&#x9;account_key int,&#xA;&#x9;Accnbri&#x9;int,&#xA;&#x9;Client_id&#x9;&#x9;int,&#xA;&#x9;Portfolio_key&#x9;int,&#xA;&#x9;Service_key&#x9;int,&#xA;&#x9;Program_key int,&#xA;&#x9;ComCare_service_type varchar(20),&#xA;&#x9;Invocie_date datetime,&#xA;&#x9;Invocie_date_key&#x9;&#x9;int,&#xA;&#x9;Invocie_Amount decimal(14,2),&#xA;&#x9;Invoice_Period&#x9;varchar(40),&#xA;    Period_start_date date,&#xA;&#x9;Period_start_date_key int,&#xA;&#x9;Period_end_date date,&#xA;&#x9;period_end_date_key int,&#xA;&#x9;Invoice_Description&#x9;&#x9;varchar(40),&#xA;&#x9;ComCare_serviced_hours decimal(28,5),&#xA;&#x9;ComCare_service_charges&#x9;decimal(28,5),&#xA;&#x9;Balance_flag&#x9;&#x9;varchar(1),&#xA;&#x9;glcode varchar(15),&#xA;&#x9;costing varchar(4),&#xA;&#x9;costing_desc varchar(50));&#xA;&#xA;&#x9;insert into  @tmp_RECONCILE_INVOICE_FACT&#xA;&#x9;select &#xA;&#x9;       (select account_key from conform_finance.account_dim where current_row_indicator='Y' and account_name ='No Account'), -- defualt no account key&#xA;&#x9;       t1.accnbri,&#xA;&#x9;       t1.narr1,&#xA;&#x9;&#x9;   (select portfolio_key from conform_finance.portfolio_dim where portfolio_name='Community Services' and current_row_indicator='Y'),&#xA;&#x9;&#x9;   (select service_stream_key from conform_finance.service_stream_dim where service_stream_name ='Community Inclusion' and current_row_indicator='Y'),&#xA;&#x9;&#x9;   (select program_key from conform_finance.program_dim where program_name ='Children''s Disability Services' and current_row_indicator='Y'),&#xA;&#x9;&#x9;   t1.user_fld1,&#xA;&#x9;&#x9;   t1.pdatei,&#xA;&#x9;&#x9;   t2.date_key,&#xA;&#x9;&#x9;   t1.amt1,&#xA;&#x9;&#x9;   t1.narr3,&#xA;&#x9;&#x9;   t1.Period_start_date,&#xA;&#x9;&#x9;   (select date_key from conform_finance.date_dim where display_date='01/01/1800'),&#xA;&#x9;&#x9;   t1.Period_end_date,&#xA;&#x9;&#x9;   (select date_key from conform_finance.date_dim where display_date='01/01/1800'),&#xA;&#x9;&#x9;   t1.narr2,&#xA;&#x9;&#x9;   t1.cc_service_duration,&#xA;&#x9;&#x9;   t1.cc_service_cost,&#xA;&#x9;&#x9;   t1.balance_flag,&#xA;&#x9;&#x9;   t1.glcode,&#xA;&#x9;&#x9;   substring(t1.glcode,3,4),&#xA;&#x9;&#x9;   ''&#xA;&#x9;from  @client_invocie as t1&#xA;&#x9;inner join conform_finance.date_dim as t2&#xA;&#x9;on t1.pdatei=t2.full_date&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--account key&#xA;&#xA;&#x9;update t1&#xA;&#x9;set t1.account_key=t2.account_key&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT as t1&#xA;&#x9;inner join [conform_finance].[account_dim] as t2&#xA;&#x9;on t1.Accnbri=t2.account_number and t2.current_row_indicator='Y'&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--update period start_date and end_date_key&#xA;    update t1&#xA;&#x9;set t1.Period_start_date_key=t2.date_key&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT as t1&#xA;&#x9;inner join [conform_finance].[date_dim] as t2&#xA;&#x9;on convert(date,t1.Period_start_date)=convert(date,t2.full_date);&#xA;&#xA;&#x9;    update t1&#xA;&#x9;set t1.period_end_date_key=t2.date_key&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT as t1&#xA;&#x9;inner join [conform_finance].[date_dim] as t2&#xA;&#x9;on convert(date,t1.Period_end_date)=convert(date,t2.full_date);&#xA;&#xA;&#x9;--update costing description&#xA;&#x9;--notes: &#xA;&#x9;-- Children's disability: 3225 / 3235 / 3609&#xA;&#x9;-- Autism ELC: 3607 / 3608 / 3611&#xA;&#x9;update @tmp_RECONCILE_INVOICE_FACT &#xA;&#x9;set costing_desc =&#xA;&#x9;  case costing&#xA;&#x9;  when '3225' then '3225 - Children''s Accomodation Support'&#xA;&#x9;  when '3235' then '3235 - Children''s Community Day Activities'&#xA;&#x9;  when '3609' then '3609 - Children''s in home care'&#xA;&#x9;  when '3607' then  '3607 - OATS'&#xA;&#x9;  when '3608' then   '3608 - MT Gambier NDIS Case Co-ord'&#xA;&#x9;  when '3611' then   '3611 - Metro NDIS Case Co-ord'&#xA;&#x9;  else 'No Costing'&#xA;&#x9;  end;&#xA;&#xA;&#xA;&#xA;&#x9;--put data into fact table from temp table&#xA;&#xA;&#x9;truncate table  [conform_finance].[RECONCILE_INVOICE_FACT];&#xA;&#x9;insert into  [conform_finance].[RECONCILE_INVOICE_FACT]&#xA;&#x9;select&#xA;&#x9;[account_key],&#xA;&#x9;[Accnbri],&#xA;&#x9;[Client_id] ,&#xA;&#x9;[Portfolio_key] ,&#xA;&#x9;[Service_key],&#xA;&#x9;[Program_key] ,&#xA;&#x9;[ComCare_service_type],&#xA;&#x9;[Invocie_date_key],&#xA;&#x9;[Invocie_Amount] ,&#xA;&#x9;[Invoice_Period] ,&#xA;&#x9;Period_start_date_key,&#xA;&#x9;period_end_date_key,&#xA;&#x9;[Invoice_Description] ,&#xA;&#x9;[ComCare_serviced_hours],&#xA;&#x9;[ComCare_service_charges] ,&#xA;&#x9;[Balance_flag],&#xA; &#x9;glcode,&#xA;&#x9;costing,&#xA;&#x9;costing_desc&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT&#xA;&#xA;&#xA;&#xA;&#x9;--delivery to front&#xA;&#x9;truncate table  dwhf_finance.finance.[RECONCILE_INVOICE_FACT];&#xA;&#x9;insert into  dwhf_finance.finance.[RECONCILE_INVOICE_FACT]&#xA;&#x9;select &#xA;&#x9;[reconcile_invocie_key],&#xA;&#x9;[account_key],&#xA;&#x9;[Accnbri],&#xA;&#x9;[Client_id] ,&#xA;&#x9;[Portfolio_key] ,&#xA;&#x9;[Service_key],&#xA;&#x9;[Program_key] ,&#xA;&#x9;[ComCare_service_type],&#xA;&#x9;[Invocie_date_key],&#xA;&#x9;[Invocie_Amount] ,&#xA;&#x9;[Invoice_Period] ,&#xA;&#x9;Invoice_Period_start_date_key,&#xA;&#x9;Invoice_period_end_date_key,&#xA;&#x9;[Invoice_Description] ,&#xA;&#x9;[ComCare_serviced_hours],&#xA;&#x9;[ComCare_service_charges] ,&#xA;&#x9;[Balance_flag],&#xA;&#x9;glcode,&#xA;&#x9;costing,&#xA;&#x9;cost_centre&#xA;&#x9;from [conform_finance].[RECONCILE_INVOICE_FACT];&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                                     Purpose: ETL for reconcile_invocie_fact&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Developer: Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Version: V1.0 04/09/2017 Created by Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Note:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;      1. Start with Children Disability program first.&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  2. need new extract comcare tables:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   Actual_Service_Charge_Item&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   FC_Contract_Area_Product&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   Funding_Program&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  3. changed from comcare.FB_Client_CB_Transaction tables because some items missing in service charge table,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;      e.g: Additional Charges (Austin Turner)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;    from [devsql-1\dev].comcaredev.dbo.FB_Client_CB_Transaction as t1&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;left join [devsql-1\dev].comcaredev.dbo.FB_Client_Contract_Billing t2 on t1.Client_CB_ID=t2.Client_CB_ID&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;left join [devsql-1\dev].comcaredev.dbo.FC_Funder_Contract t3 on t2.Funder_Contract_ID=t3.Funder_Contract_ID&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;left join [devsql-1\dev].comcaredev.dbo.person as t4 on t1.Person_ID=t4.Person_ID&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  4. Change T1 source from R1 to %ACT to get invoice details by JS at 25/09/2017.&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  5. Added cost centre inforamtion by JS at 28/09/2017&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;   use dwhb;&#xA;&#xA;&#xA;   --invocie temp table&#xA;    declare @client_invocie TABLE&#xA;   (accnbri varchar(32),&#xA;    pdatei datetime,&#xA;&#x9;amt1 numeric(14,2),&#xA;&#x9;narr1 varchar(40),&#xA;&#x9;narr2 varchar(40),&#xA;&#x9;narr3 varchar(40),&#xA;&#x9;user_fld1 varchar(40),&#xA;&#x9;period_start_date date,&#xA;&#x9;period_end_date date,&#xA;&#x9;cc_service_duration decimal(28,5),&#xA;&#x9;cc_service_cost  decimal(28,5),&#xA;&#x9;balance_flag varchar(1),&#xA;&#x9;glcode varchar(15),&#xA;&#x9;doc_ref1 varchar(20)&#xA;   &#xA;   );&#xA; --  insert into  @client_invocie&#xA; --  (accnbri,pdatei,amt1,narr1,narr2,narr3,user_fld1,cc_service_duration,cc_service_cost)&#xA; --  select accnbri,pdatei,amt1,narr1,narr2,narr3,USER_FLD1,0,0&#xA;&#x9;--from extract.GLF_LDG_ACC_TRANS&#xA;&#x9;--where ldg_name ='R1'&#xA;&#x9;--and doc_type in ('ARINV','ARINVCCDS')&#xA;&#x9;----and NARR1='10069826'&#xA;&#x9;--and len(NARR1)=8&#xA;&#x9;--and USER_FLD1 in ('DSIS','DSDA','DSOR','DSCC','DSOATS') -- children disability program category&#xA;&#xA;&#x9;&#xA;&#x9;--------------------------------------------------------------------------------------------------&#xA;&#x9;---changed by JS at 25/09/2017: t1 source from R1 to %ACT to get invoice details.&#xA;&#x9;--step1: get invocice details including GL_Codes and DOC_REF1 (link to AR. R1)&#xA;&#x9;insert into  @client_invocie&#xA;&#x9;(accnbri,pdatei,amt1,narr1,narr2,narr3,user_fld1,cc_service_duration,cc_service_cost,glcode,doc_ref1)&#xA;&#x9;select '',DOC_DATEI1,amt1*(-1),narr1,narr2,narr3,USER_FLD1,0,0,accnbri,DOC_REF1&#xA;&#x9;from extract.GLF_LDG_ACC_TRANS&#xA;&#x9;where ldg_name like '%ACT' and len(ACCNBRI)=15 and  len(doc_ref1)&gt;0&#xA;&#x9;and doc_type in ('ARINV','ARINVCCDS')&#xA;&#x9;and len(NARR1)=8&#xA;     -- -- children disability program category&#xA;&#x9;and  (USER_FLD1 in ('DSIS','DSDA','DSOR','DSCC','DSOATS')  or (accnbri like '%3611%') )-- get 3611 - Metro NDIS Case Co-ord because no USDR_FLD1 for this) &#xA;&#xA;&#x9;&#xA;&#x9;--step2: get AR debtor id&#xA;&#x9;update t1&#xA;&#x9;set  t1.accnbri= t2.ACCNBRI&#xA;&#x9;from  @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9;(&#xA;&#x9;&#x9; select distinct accnbri,DOC_REF1&#xA;&#x9;&#x9;from extract.GLF_LDG_ACC_TRANS&#xA;&#x9;&#x9;where ldg_name ='R1'&#xA;&#x9;&#x9;and doc_type in ('ARINV','ARINVCCDS')&#xA;&#x9;&#x9;and len(NARR1)=8&#xA;&#x9;--&#x9;and USER_FLD1 in ('DSIS','DSDA','DSOR','DSCC','DSOATS') -- children disability program category&#xA;&#x9;&#x9;&#xA;&#x9;) as t2 &#x9;on t1.doc_ref1=t2.DOC_REF1 COLLATE DATABASE_DEFAULT&#xA;&#xA;&#xA;&#x9;--------------------------------------------------------------------------------------------------&#xA;&#x9;print 'finish @client_invocie get data';&#xA;&#xA;&#x9;--update p_start_date and p_end_date&#xA;&#x9;update  @client_invocie&#xA;&#x9;set period_start_date = convert(date,left(narr3,10),103),&#xA;&#x9;    period_end_date= convert(date,right(narr3,10),103)&#xA;&#x9;where len(narr3)=24&#xA;&#xA;&#x9;----process comcare data from Actual_Service_Charge_Item&#xA;&#x9;-- declare @client_actual_service TABLE&#xA; --  (&#xA; --   funding_prog_code varchar(10),&#xA;&#x9;--funding_prog_code_desc varchar(100),&#x9; &#xA; --   client_id int,&#xA;&#x9;--rate decimal(28,5),&#xA;&#x9;--unit decimal(28,5),&#xA;&#x9;--amount decimal(28,5),&#xA;&#x9;--visit_date date,&#xA;&#x9;--period varchar(30)&#xA; --  );&#xA;&#xA;&#xA; --&#x9; insert into  @client_actual_service&#xA;&#x9;-- select t3.Funding_Prog_Code,t3.Description , &#xA; --    t1.client_id,t1.rate,t1.unit,t1.amount,t1.Visit_Date,null&#xA; --    from extract_comcare.Actual_Service_Charge_Item as t1&#xA; --    inner join extract_comcare.FC_Contract_Area_Product  as t2 on t1.FC_Product_ID=t2.FC_Product_ID&#xA; --    inner join extract_comcare.Funding_Program as t3 on t2.Funding_Prog_Code=t3.Funding_Prog_Code and t3.funding_prog_code in (115,116,117,118,119,120,121,122,123)&#xA; --  --  where t1.client_id ='10069826' &#xA;&#xA;&#xA;&#xA;&#x9;----update period based on invocie period: start_date and end_date&#xA;&#x9;--update t1&#xA;&#x9;--set t1.period=t2.narr3&#xA;&#x9;--from @client_actual_service as t1&#xA;&#x9;--join @client_invocie as t2&#xA;&#x9;--on t1.client_id=t2.narr1&#xA;&#x9;--and t1.visit_date between t2.period_start_date and t2.period_end_date&#xA;&#x9;&#xA;&#x9;--changed by Jerry Shen at 20/09/2017&#xA;&#x9;--from transaction table instead of Actual_Service_Charge_Item&#xA;    declare @client_actual_service TABLE&#xA;   (&#xA;    funding_prog_code varchar(10),&#xA;&#x9;funding_prog_code_desc varchar(100),&#x9; &#xA;    client_id int,&#xA;&#x9;rate decimal(28,5),&#xA;&#x9;unit decimal(28,5),&#xA;&#x9;amount decimal(28,5),&#xA;&#x9;visit_date date,&#xA;&#x9;period varchar(30)&#xA;   );&#xA;&#xA;   insert into  @client_actual_service&#xA;   select &#xA;    t3.funder_contract_id,&#xA;&#x9;t3.Description,&#xA;&#x9;t2.client_id,&#xA;&#x9;ISNULL(t1.Rate_Used,0),&#xA;&#x9;ISNULL(t1.Units,0),&#xA;&#x9;ISNULL(t1.amount,0),&#xA;&#x9;convert(date,t1.Visit_Date),&#xA;&#x9;--05/12/2016 to 18/12/2016&#xA;&#x9;convert(varchar,t1.Billing_Period_From,103) +' to '+convert(varchar,t1.Billing_Period_To,103) &#xA;&#x9;from extract_comcare.FB_Client_CB_Transaction as t1&#xA;&#x9;left join extract_comcare.FB_Client_Contract_Billing t2 on t1.Client_CB_ID=t2.Client_CB_ID&#xA;&#x9;left join extract_comcare.FC_Funder_Contract t3 on t2.Funder_Contract_ID=t3.Funder_Contract_ID&#xA;&#x9;left join extract_comcare.person as t4 on t1.Person_ID=t4.Person_ID&#xA;&#x9;where t1.Fee_Hold_Reason_Code IS NULL&#xA;&#x9;and t3.Funder_Contract_ID in (25,26,27,28,29,31)&#xA;&#x9;and t3.Funding_Care_Model_ID=6&#xA;&#xA;&#xA;&#x9;&#x9;--------------------------------------------------------------------------------------------------&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--join two tables&#xA;&#xA;&#x9;/*-------------------------------------------------&#xA;&#x9;DC Individualised Services,      DSIS       25&#xA;&#x9;DC Day Activities               ,DSDA                26&#xA;&#x9;DC Overnight Respite,            DSOR              27&#xA;&#x9;DC Case Coordination Mt Gambier,  DSCC        28&#xA;&#x9;DC OATS,                          DSOATS                             29&#xA;&#x9;Case Coordination NDIS                     31&#xA;&#x9;----------------------------------------------------*/&#xA;&#xA;&#xA;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSOATS' and T2.funding_prog_code='29';&#xA;&#xA;&#xA;&#xA;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSIS' and T2.funding_prog_code in ('25');&#xA;&#xA;&#xA;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSDA' and T2.funding_prog_code in ('26');&#xA;&#xA;&#xA;&#x9;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSOR' and T2.funding_prog_code in ('27');&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSCC' and T2.funding_prog_code in ('28');&#xA;&#xA;&#x9;&#xA;&#x9;&#x9;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;&#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and len(t1.user_fld1)=0 and T2.funding_prog_code in ('31');&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--update balance flag&#xA;&#x9;update @client_invocie&#xA;&#x9;set balance_flag= (case when amt1 = cc_service_cost then 'Y' else 'N' end);&#xA;&#xA;&#xA;&#xA;&#x9;--populate fact temp table&#xA;&#x9;declare @tmp_RECONCILE_INVOICE_FACT Table&#xA;&#x9;(reconcile_invocie_key&#x9; [int] IDENTITY(1,1) NOT NULL,&#xA;&#x9;account_key int,&#xA;&#x9;Accnbri&#x9;int,&#xA;&#x9;Client_id&#x9;&#x9;int,&#xA;&#x9;Portfolio_key&#x9;int,&#xA;&#x9;Service_key&#x9;int,&#xA;&#x9;Program_key int,&#xA;&#x9;ComCare_service_type varchar(20),&#xA;&#x9;Invocie_date datetime,&#xA;&#x9;Invocie_date_key&#x9;&#x9;int,&#xA;&#x9;Invocie_Amount decimal(14,2),&#xA;&#x9;Invoice_Period&#x9;varchar(40),&#xA;    Period_start_date date,&#xA;&#x9;Period_start_date_key int,&#xA;&#x9;Period_end_date date,&#xA;&#x9;period_end_date_key int,&#xA;&#x9;Invoice_Description&#x9;&#x9;varchar(40),&#xA;&#x9;ComCare_serviced_hours decimal(28,5),&#xA;&#x9;ComCare_service_charges&#x9;decimal(28,5),&#xA;&#x9;Balance_flag&#x9;&#x9;varchar(1),&#xA;&#x9;glcode varchar(15),&#xA;&#x9;costing varchar(4),&#xA;&#x9;costing_desc varchar(50));&#xA;&#xA;&#x9;insert into  @tmp_RECONCILE_INVOICE_FACT&#xA;&#x9;select &#xA;&#x9;       (select account_key from conform_finance.account_dim where current_row_indicator='Y' and account_name ='No Account'), -- defualt no account key&#xA;&#x9;       t1.accnbri,&#xA;&#x9;       t1.narr1,&#xA;&#x9;&#x9;   (select portfolio_key from conform_finance.portfolio_dim where portfolio_name='Community Services' and current_row_indicator='Y'),&#xA;&#x9;&#x9;   (select service_stream_key from conform_finance.service_stream_dim where service_stream_name ='Community Inclusion' and current_row_indicator='Y'),&#xA;&#x9;&#x9;   (select program_key from conform_finance.program_dim where program_name ='Children''s Disability Services' and current_row_indicator='Y'),&#xA;&#x9;&#x9;   t1.user_fld1,&#xA;&#x9;&#x9;   t1.pdatei,&#xA;&#x9;&#x9;   t2.date_key,&#xA;&#x9;&#x9;   t1.amt1,&#xA;&#x9;&#x9;   t1.narr3,&#xA;&#x9;&#x9;   t1.Period_start_date,&#xA;&#x9;&#x9;   (select date_key from conform_finance.date_dim where display_date='01/01/1800'),&#xA;&#x9;&#x9;   t1.Period_end_date,&#xA;&#x9;&#x9;   (select date_key from conform_finance.date_dim where display_date='01/01/1800'),&#xA;&#x9;&#x9;   t1.narr2,&#xA;&#x9;&#x9;   t1.cc_service_duration,&#xA;&#x9;&#x9;   t1.cc_service_cost,&#xA;&#x9;&#x9;   t1.balance_flag,&#xA;&#x9;&#x9;   t1.glcode,&#xA;&#x9;&#x9;   substring(t1.glcode,3,4),&#xA;&#x9;&#x9;   ''&#xA;&#x9;from  @client_invocie as t1&#xA;&#x9;inner join conform_finance.date_dim as t2&#xA;&#x9;on t1.pdatei=t2.full_date&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--account key&#xA;&#xA;&#x9;update t1&#xA;&#x9;set t1.account_key=t2.account_key&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT as t1&#xA;&#x9;inner join [conform_finance].[account_dim] as t2&#xA;&#x9;on t1.Accnbri=t2.account_number and t2.current_row_indicator='Y'&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--update period start_date and end_date_key&#xA;    update t1&#xA;&#x9;set t1.Period_start_date_key=t2.date_key&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT as t1&#xA;&#x9;inner join [conform_finance].[date_dim] as t2&#xA;&#x9;on convert(date,t1.Period_start_date)=convert(date,t2.full_date);&#xA;&#xA;&#x9;    update t1&#xA;&#x9;set t1.period_end_date_key=t2.date_key&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT as t1&#xA;&#x9;inner join [conform_finance].[date_dim] as t2&#xA;&#x9;on convert(date,t1.Period_end_date)=convert(date,t2.full_date);&#xA;&#xA;&#x9;--update costing description&#xA;&#x9;--notes: &#xA;&#x9;-- Children's disability: 3225 / 3235 / 3609&#xA;&#x9;-- Autism ELC: 3607 / 3608 / 3611&#xA;&#x9;update @tmp_RECONCILE_INVOICE_FACT &#xA;&#x9;set costing_desc =&#xA;&#x9;  case costing&#xA;&#x9;  when '3225' then '3225 - Children''s Accomodation Support'&#xA;&#x9;  when '3235' then '3235 - Children''s Community Day Activities'&#xA;&#x9;  when '3609' then '3609 - Children''s in home care'&#xA;&#x9;  when '3607' then  '3607 - OATS'&#xA;&#x9;  when '3608' then   '3608 - MT Gambier NDIS Case Co-ord'&#xA;&#x9;  when '3611' then   '3611 - Metro NDIS Case Co-ord'&#xA;&#x9;  else 'No Costing'&#xA;&#x9;  end;&#xA;&#xA;&#xA;&#xA;&#x9;--put data into fact table from temp table&#xA;&#xA;&#x9;truncate table  [conform_finance].[RECONCILE_INVOICE_FACT];&#xA;&#x9;insert into  [conform_finance].[RECONCILE_INVOICE_FACT]&#xA;&#x9;select&#xA;&#x9;[account_key],&#xA;&#x9;[Accnbri],&#xA;&#x9;[Client_id] ,&#xA;&#x9;[Portfolio_key] ,&#xA;&#x9;[Service_key],&#xA;&#x9;[Program_key] ,&#xA;&#x9;[ComCare_service_type],&#xA;&#x9;[Invocie_date_key],&#xA;&#x9;[Invocie_Amount] ,&#xA;&#x9;[Invoice_Period] ,&#xA;&#x9;Period_start_date_key,&#xA;&#x9;period_end_date_key,&#xA;&#x9;[Invoice_Description] ,&#xA;&#x9;[ComCare_serviced_hours],&#xA;&#x9;[ComCare_service_charges] ,&#xA;&#x9;[Balance_flag],&#xA; &#x9;glcode,&#xA;&#x9;costing,&#xA;&#x9;costing_desc&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT&#xA;&#xA;&#xA;&#xA;&#x9;--delivery to front&#xA;&#x9;truncate table  dwhf_finance.finance.[RECONCILE_INVOICE_FACT];&#xA;&#x9;insert into  dwhf_finance.finance.[RECONCILE_INVOICE_FACT]&#xA;&#x9;select &#xA;&#x9;[reconcile_invocie_key],&#xA;&#x9;[account_key],&#xA;&#x9;[Accnbri],&#xA;&#x9;[Client_id] ,&#xA;&#x9;[Portfolio_key] ,&#xA;&#x9;[Service_key],&#xA;&#x9;[Program_key] ,&#xA;&#x9;[ComCare_service_type],&#xA;&#x9;[Invocie_date_key],&#xA;&#x9;[Invocie_Amount] ,&#xA;&#x9;[Invoice_Period] ,&#xA;&#x9;Invoice_Period_start_date_key,&#xA;&#x9;Invoice_period_end_date_key,&#xA;&#x9;[Invoice_Description] ,&#xA;&#x9;[ComCare_serviced_hours],&#xA;&#x9;[ComCare_service_charges] ,&#xA;&#x9;[Balance_flag],&#xA;&#x9;glcode,&#xA;&#x9;costing,&#xA;&#x9;cost_centre&#xA;&#x9;from [conform_finance].[RECONCILE_INVOICE_FACT];&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
             <DTS:Executable
@@ -1202,37 +1203,37 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\EST - Write Job Finish info"
-          TopLeft="35.15,273" />
+          TopLeft="5.5,311.5" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\EST - Write Job Start info"
-          TopLeft="35.15,28" />
+          TopLeft="5.5,5.5" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\Get new records and update columns"
-          TopLeft="35.15,191" />
+          TopLeft="5.5,209.5" />
         <NodeLayout
-          Size="212,42"
+          Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\Truncate table"
-          TopLeft="39.15,101" />
+          TopLeft="10.5,107.5" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT.PrecedenceConstraints[Constraint]"
-          TopLeft="145.65,70">
+          TopLeft="119,47.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,31"
+              StartConnector="{x:Null}"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,23.5">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,23.5" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1243,18 +1244,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT.PrecedenceConstraints[Constraint 1]"
-          TopLeft="145.65,143">
+          TopLeft="119,149.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,48"
+              StartConnector="{x:Null}"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,40.5">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,40.5" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1265,18 +1266,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT.PrecedenceConstraints[Constraint 2]"
-          TopLeft="146.15,233">
+          TopLeft="116.5,251.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,40"
+              StartConnector="{x:Null}"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,32.5">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,32.5" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1288,10 +1289,10 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="345,370"
-          Size="345,413"
+          PanelSize="233,599"
+          Size="233,642"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT"
-          TopLeft="5.5,5.49999999999989" />
+          TopLeft="8.5,26.4999999999999" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\EST - Write Job Finish info"
@@ -1313,7 +1314,7 @@
           TopLeft="165.65,70">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,31"
               Start="0,0"
               End="0,23.5">
@@ -1335,7 +1336,7 @@
           TopLeft="165.65,143">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,48"
               Start="0,0"
               End="0,40.5">
@@ -1357,7 +1358,7 @@
           TopLeft="163.65,233">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,40"
               Start="0,0"
               End="0,32.5">
@@ -1377,40 +1378,40 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="345,370"
-          Size="345,413"
+          PanelSize="325,582"
+          Size="325,625"
           Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT"
-          TopLeft="1626.5,5.49999999999989" />
+          TopLeft="1192.5,40.4999999999999" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Finish info"
-          TopLeft="35.15,273" />
+          TopLeft="5.5,311.5" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Start info"
-          TopLeft="35.15,28" />
+          TopLeft="5.5,5.5" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Get new records and update columns"
-          TopLeft="35.15,191" />
+          TopLeft="5.5,209.5" />
         <NodeLayout
           Size="212,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Truncate table"
-          TopLeft="39.15,101" />
+          TopLeft="10.5,107.5" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint]"
-          TopLeft="145.65,70">
+          TopLeft="116.5,47.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,31"
+              StartConnector="{x:Null}"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,23.5">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,23.5" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1421,18 +1422,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 1]"
-          TopLeft="145.65,143">
+          TopLeft="116.5,149.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,48"
+              StartConnector="{x:Null}"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,40.5">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,40.5" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1443,18 +1444,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 2]"
-          TopLeft="146.15,233">
+          TopLeft="116.5,251.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,40"
+              StartConnector="{x:Null}"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,32.5">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,32.5" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1466,10 +1467,10 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="345,370"
-          Size="345,413"
+          PanelSize="233,598"
+          Size="233,641"
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT"
-          TopLeft="411.5,5.49999999999989" />
+          TopLeft="265.5,29.4999999999999" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\EST - Write Job Finish info"
@@ -1487,7 +1488,7 @@
           TopLeft="163.65,70">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,121"
               Start="0,0"
               End="0,113.5">
@@ -1509,7 +1510,7 @@
           TopLeft="163.65,233">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,40"
               Start="0,0"
               End="0,32.5">
@@ -1529,40 +1530,40 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="345,370"
-          Size="345,413"
+          PanelSize="345,579"
+          Size="345,622"
           Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact"
-          TopLeft="2031.5,5.49999999999989" />
+          TopLeft="1553.5,45.4999999999999" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT\EST - Write Job Finish info"
-          TopLeft="31.15,388" />
+          TopLeft="5.50000000000006,311.5" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT\EST - Write Job Start info"
-          TopLeft="35.15,28" />
+          TopLeft="5.5,5.5" />
         <NodeLayout
           Size="248,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT\LSL_fact"
-          TopLeft="45.15,193" />
+          TopLeft="10,209.5" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT\Truncate table"
-          TopLeft="39.15,101" />
+          TopLeft="5.50000000000003,107.5" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT.PrecedenceConstraints[Constraint]"
-          TopLeft="165.65,70">
+          TopLeft="134,47.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,31"
+              StartConnector="{x:Null}"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,23.5">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,23.5" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1573,18 +1574,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT.PrecedenceConstraints[Constraint 1]"
-          TopLeft="168.4,143">
+          TopLeft="134,149.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,50"
+              StartConnector="{x:Null}"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,42.5">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,42.5" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1595,30 +1596,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT.PrecedenceConstraints[Constraint 2]"
-          TopLeft="169.15,235">
+          TopLeft="134,251.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="-9.49999999999997,153"
+              StartConnector="{x:Null}"
+              EndConnector="0,60"
               Start="0,0"
-              End="-9.49999999999997,145.5">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,72.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,72.5"
-                    Point2="0,76.5"
-                    Point3="-4,76.5" />
-                  <mssgle:LineSegment
-                    End="-5.49999999999997,76.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-5.49999999999997,76.5"
-                    Point2="-9.49999999999997,76.5"
-                    Point3="-9.49999999999997,80.5" />
-                  <mssgle:LineSegment
-                    End="-9.49999999999997,145.5" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1630,40 +1619,40 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="345,485"
-          Size="345,528"
+          PanelSize="268,596"
+          Size="268,639"
           Id="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT"
-          TopLeft="816.5,5.49999999999989" />
+          TopLeft="524.5,29.4999999999999" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\EST - Write Job Finish info"
-          TopLeft="45.75,443" />
+          TopLeft="35.5833333333334,443" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\EST - Write Job Start info"
-          TopLeft="35.7500000000001,28" />
+          TopLeft="35.5833333333334,28" />
         <NodeLayout
-          Size="234,42"
+          Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\reconcicle_billedpercentage_fact"
-          TopLeft="24.75,354" />
+          TopLeft="35.5833333333334,354" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\reconcicle_unbilledservice_fact"
-          TopLeft="35.7500000000001,289" />
+          TopLeft="35.5833333333334,289" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\Reconcile_invoice_fact"
-          TopLeft="35.7500000000001,191" />
+          TopLeft="35.5833333333334,191" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\Truncate table"
-          TopLeft="35.7500000000001,101" />
+          TopLeft="35.5833333333334,101" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint]"
-          TopLeft="164.25,70">
+          TopLeft="164.083333333333,70">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,31"
               Start="0,0"
               End="0,23.5">
@@ -1682,10 +1671,10 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint 1]"
-          TopLeft="164.25,143">
+          TopLeft="164.083333333333,143">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,48"
               Start="0,0"
               End="0,40.5">
@@ -1704,10 +1693,10 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint 2]"
-          TopLeft="164.25,233">
+          TopLeft="164.083333333333,233">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,56"
               Start="0,0"
               End="0,48.5">
@@ -1726,30 +1715,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint 3]"
-          TopLeft="164.25,331">
+          TopLeft="164.083333333333,331">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="-22.5000000000001,23"
+              StartConnector="{x:Null}"
+              EndConnector="0,23"
               Start="0,0"
-              End="-22.5000000000001,15.5">
+              End="0,15.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,7.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,7.5"
-                    Point2="0,11.5"
-                    Point3="-4,11.5" />
-                  <mssgle:LineSegment
-                    End="-18.5000000000001,11.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-18.5000000000001,11.5"
-                    Point2="-22.5000000000001,11.5"
-                    Point3="-22.5000000000001,15.5" />
-                  <mssgle:LineSegment
-                    End="-22.5000000000001,15.5" />
+                    End="0,15.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1760,30 +1737,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint 4]"
-          TopLeft="141.75,396">
+          TopLeft="164.083333333333,396">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="32.5,47"
+              StartConnector="{x:Null}"
+              EndConnector="0,47"
               Start="0,0"
-              End="32.5,39.5">
+              End="0,39.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,19.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,19.5"
-                    Point2="0,23.5"
-                    Point3="4,23.5" />
-                  <mssgle:LineSegment
-                    End="28.5,23.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="28.5,23.5"
-                    Point2="32.5,23.5"
-                    Point3="32.5,27.5" />
-                  <mssgle:LineSegment
-                    End="32.5,39.5" />
+                    End="0,39.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1795,171 +1760,135 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="345,610"
-          Size="345,653"
+          PanelSize="326,588"
+          Size="326,631"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT"
-          TopLeft="1221.5,5.49999999999989" />
+          TopLeft="817.5,35.4999999999999" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint]"
-          TopLeft="350.5,212">
+          TopLeft="241.5,348.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="61,0"
+              StartConnector="{x:Null}"
+              EndConnector="24,0"
               Start="0,0"
-              End="53.5,0">
+              End="16.5,0">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="53.5,0" />
+                    End="16.5,0" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="1.445546875,5,50.60890625,11.609375"
+              BoundingBox="-17.054453125,5,50.60890625,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 1]"
-          TopLeft="756.5,212">
+          TopLeft="498.5,349.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="60,57.5"
+              StartConnector="{x:Null}"
+              EndConnector="26,0"
               Start="0,0"
-              End="52.5,57.5">
+              End="18.5,0">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="26,0" />
-                  <mssgle:CubicBezierSegment
-                    Point1="26,0"
-                    Point2="30,0"
-                    Point3="30,4" />
-                  <mssgle:LineSegment
-                    End="30,53.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="30,53.5"
-                    Point2="30,57.5"
-                    Point3="34,57.5" />
-                  <mssgle:LineSegment
-                    End="52.5,57.5" />
+                    End="18.5,0" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="4.695546875,-17.609375,50.60890625,11.609375"
+              BoundingBox="-16.054453125,5,50.60890625,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 2]"
-          TopLeft="1161.5,269.5">
+          TopLeft="792.5,350">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="60,62.5"
+              StartConnector="{x:Null}"
+              EndConnector="25,0"
               Start="0,0"
-              End="52.5,62.5">
+              End="17.5,0">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="26,0" />
-                  <mssgle:CubicBezierSegment
-                    Point1="26,0"
-                    Point2="30,0"
-                    Point3="30,4" />
-                  <mssgle:LineSegment
-                    End="30,58.5" />
-                  <mssgle:CubicBezierSegment
-                    Point1="30,58.5"
-                    Point2="30,62.5"
-                    Point3="34,62.5" />
-                  <mssgle:LineSegment
-                    End="52.5,62.5" />
+                    End="17.5,0" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="4.695546875,-17.609375,50.60890625,11.609375"
+              BoundingBox="-16.554453125,5,50.60890625,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
-          TopLeft="1566.5,332">
+          TopLeft="1143.5,352">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="60,-120"
+              StartConnector="{x:Null}"
+              EndConnector="49,0"
               Start="0,0"
-              End="52.5,-120">
+              End="41.5,0">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="26,0" />
-                  <mssgle:CubicBezierSegment
-                    Point1="26,0"
-                    Point2="30,0"
-                    Point3="30,-4" />
-                  <mssgle:LineSegment
-                    End="30,-116" />
-                  <mssgle:CubicBezierSegment
-                    Point1="30,-116"
-                    Point2="30,-120"
-                    Point3="34,-120" />
-                  <mssgle:LineSegment
-                    End="52.5,-120" />
+                    End="41.5,0" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="4.695546875,1,50.60890625,11.609375"
+              BoundingBox="-4.554453125,5,50.60890625,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 4]"
-          TopLeft="1971.5,212">
+          TopLeft="1517.5,354.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="60,0"
+              StartConnector="{x:Null}"
+              EndConnector="36,0"
               Start="0,0"
-              End="52.5,0">
+              End="28.5,0">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="52.5,0" />
+                    End="28.5,0" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="0.945546874999998,5,50.60890625,11.609375"
+              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="2382,734"
-          Size="2382,777"
+          PanelSize="2320,740"
+          Size="2320,783"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="31.833333333333,1.99999999999818" />
       </GraphLayout>
