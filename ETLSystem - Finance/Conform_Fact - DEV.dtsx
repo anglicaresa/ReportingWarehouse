@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="721"
-  DTS:VersionGUID="{03F0592B-E05E-4581-96CD-0C976F54B193}">
+  DTS:VersionBuild="729"
+  DTS:VersionGUID="{BC2A968E-FC48-4F17-8400-B1B9F21529C6}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/27/2017 2:36:07 PM</DTS:VariableValue>
+        DTS:DataType="7">11/27/2017 2:58:51 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/27/2017 2:36:07 PM</DTS:VariableValue>
+        DTS:DataType="7">11/27/2017 2:58:51 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/27/2017 2:36:07 PM</DTS:VariableValue>
+        DTS:DataType="7">11/27/2017 2:58:51 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -545,40 +545,15 @@
                   SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                                     Purpose: calculate finance KPIS&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Developer: Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Version: V1.0 07/08/2017 Created by Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Note:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;    1. put Recommended values in table &#x9;conform_finance.finance_variable_dim&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;2. need to think about @v_date: if date is 20, then run data for previous month.&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;3. for 2017/06: &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   3.1 using all values from Kerry's report because of manual adjutment&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   3.2 for Profit and Loss Statement: Interest cover - Surpluse using value 9284.21516&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;4. need to be very careful when at the end of financial year &#xA;&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;use dwhb;&#xA;&#xA;&#xA;&#xA;--------------------------------------------------Part1: define variable&#x9; ----------------------------------------------------------------------------------------&#xA;--kpi_report_date&#xA;if ((select right(convert(varchar,convert(date,getdate())),2)) ='20')&#xA;begin&#xA;--get first day of previous month.&#xA;declare @v_date datetime =(SELECT DATEADD(mm, DATEDIFF(mm, 0, GETDATE()) - 1, 0));&#xA;--financial_month_no&#xA;declare @v_fymont_no int = (select financial_month_no from conform_finance.date_dim where full_date =@v_date) &#xA;--financial_month_no_last&#xA;declare @v_fymont_last_no varchar(50);&#xA;&#xA;&#xA;--because 2017/06 data is manual changed we have to change the value instead from database&#xA;--fixed value for 201706&#xA;declare @surplus_201706 decimal(10,4);&#xA;set @surplus_201706=(select variable_value from conform_finance.finance_variable_dim where report_name ='KPI_Fact' and variable_name ='surplus_201706' and validate_flag='Y' );&#xA;&#xA;declare @interestondebt_201706 decimal(10,4);&#xA;set @interestondebt_201706=(select variable_value from conform_finance.finance_variable_dim where report_name ='KPI_Fact' and variable_name ='interestondebt_201706' and validate_flag='Y' );&#xA;&#xA;  &#xA;&#xA;&#x9;   &#xA;&#x9;     &#xA;--entity no&#xA;declare @endity varchar(20) ='10';&#xA;--ledger_name for actual&#xA;declare @ldger_name_actual varchar(20);&#xA;  set  @ldger_name_actual =   right((select financial_year from conform_finance.date_dim where full_date =@v_date),2)+'GL_ACT';&#x9; &#xA;declare @ldger_name_actual_last varchar(20)= right((select financial_year from conform_finance.date_dim where full_date =DATEADD(YEAR, -1, @v_date)),2)+'GL_ACT';&#x9; ;&#x9;  ------------------calculate profit and loss becaue of 12 month rolling.&#xA;--ledger_name for budget&#xA;declare @ldger_name_budget varchar(20)= right((select financial_year from conform_finance.date_dim where full_date =@v_date),2)+'GL_BUD';&#x9; &#xA;--Recommended values&#xA;declare @RV_BDE decimal(6,4)   ; --Balancesheet Debt to Equity&#xA;set @RV_BDE=(select variable_value from conform_finance.finance_variable_dim where report_name ='KPI_Fact' and variable_name ='BalancesheetDebttoEquity' and validate_flag='Y' );&#xA;declare @RV_PLSIC decimal(6,4) ;  --Profit and Loss Statement: Interest cover&#xA;set @RV_PLSIC=(select variable_value from conform_finance.finance_variable_dim where report_name ='KPI_Fact' and variable_name ='ProfitandLossStatementInterestcover' and validate_flag='Y' );&#xA;declare @RV_EBITDA decimal(6,4) ;  --EBITDA : Turnover&#xA;set @RV_EBITDA=(select variable_value from conform_finance.finance_variable_dim where report_name ='KPI_Fact' and variable_name ='EBITDATurnover' and validate_flag='Y' );&#xA;declare @RV_CRAFRB decimal(6,4) ; --Balance sheet: Current Ratio adjusted for Resident Bonds &#x9;&#xA;set @RV_CRAFRB=(select variable_value from conform_finance.finance_variable_dim where report_name ='KPI_Fact' and variable_name ='BalancesheetCurrentRatioadjustedforResident Bonds' and validate_flag='Y' );&#xA;declare @RV_EBITDA_BUDGET decimal(6,4) ;  --EBITDA : Budget&#xA;set @RV_EBITDA_BUDGET=(select variable_value from conform_finance.finance_variable_dim where report_name ='KPI_Fact' and variable_name ='EBITDABudge' and validate_flag='Y' );&#xA;&#xA;&#xA;&#xA;--delete existing data for same period&#xA;delete from  [conform_finance].kpi_fact&#xA;where date_key = (select date_key from conform_finance.date_dim where full_date =@v_date);&#xA;&#xA;------------Part2: start to populate KPI data for this period&#xA;--------------------------------------KPI1.Balancesheet Debt to Equity ------------------------------------------------------------------------------------&#xA;&#xA; insert into   [conform_finance].kpi_fact&#xA; select &#xA; 'Balancesheet Debt to Equity',&#xA;(select date_key from conform_finance.date_dim where full_date =@v_date),&#xA;'Debt',&#x9;&#x9;&#xA;(select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='NCL'&#xA;and Account_Sub_Group='NCLFACIL'),&#xA;'Equity',&#xA;(&#xA;--reserversL&#xA;select&#xA;(&#xA;select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='EQU'&#xA;)&#xA;-&#xA;(select sum( convert(decimal(20,2),amount))/1000 * (-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period &lt;=@v_fymont_no&#xA;and Account_Sub_Group ='EQRE'&#xA;)&#xA;+  &#xA;&#xA;--Retained Surplus &#xA;(&#xA;select &#xA;&#xA;(select sum( convert(decimal(20,2),amount))/1000 *(-1)  from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period &lt;=@v_fymont_no&#xA;and Account_Sub_Group ='EQRE'&#xA;and account_group ='EQU'&#xA;)&#xA;+&#xA;(&#xA;select sum( convert(decimal(20,2),isnull(amount,0)))/1000*(-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period &lt;=@v_fymont_no&#xA;and right(account_type,1) in (4,6)&#xA;&#xA;)&#xA;&#xA;)&#xA;),&#xA;null,&#xA;null,&#xA;null,&#xA;null,&#xA;'Result',&#xA;0.00,&#xA;null,&#xA;null,&#xA;'Recommended Maximum',&#xA;@RV_BDE,&#xA;null,&#xA;null;&#xA;&#xA;--update result&#xA;update &#x9;[conform_finance].kpi_fact&#xA;set kpi_result_1_value =kpi_indicator_1_value / kpi_indicator_2_value&#xA;where kpi_name ='Balancesheet Debt to Equity'&#xA;and date_key =(select date_key from conform_finance.date_dim where full_date =@v_date) ;&#xA;&#xA;--------------------------------------KPI2.Balance sheet: Current Ratio adjusted for Resident Bonds--------------------------------------------&#xA;insert into   [conform_finance].kpi_fact&#xA; select &#xA; 'Balance sheet: Current Ratio adjusted for Resident Bonds',&#xA;(select date_key from conform_finance.date_dim where full_date =@v_date),&#xA;'Current Assets',&#x9;&#x9;&#xA;(select sum( convert(decimal(20,2),amount))/1000 from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='CA'),&#xA;'Current Liabilities',&#xA;(select sum( convert(decimal(20,2),amount))/1000*(-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period &lt;=@v_fymont_no&#xA;and account_group in ('CL')),&#xA;'Resident Bonds',&#xA;(select sum( convert(decimal(20,2),amount))/1000 from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period &lt;=@v_fymont_no&#xA;and account_group ='CA' and Account_Sub_Group in ('CABOND','CAACBOND')),&#xA;null,&#xA;null,&#xA;'Result',&#xA;0.00,&#xA;null,&#xA;null,&#xA;'Recommended Minimum',&#xA;@RV_CRAFRB,&#xA;null,&#xA;null;&#xA;&#xA;--update result&#xA;update &#x9;[conform_finance].kpi_fact&#xA;set kpi_result_1_value =kpi_indicator_1_value / kpi_indicator_2_value&#xA;where kpi_name ='Balance sheet: Current Ratio adjusted for Resident Bonds'&#xA;and date_key =(select date_key from conform_finance.date_dim where full_date =@v_date) ;&#xA;&#xA;&#xA;-----------------------------------KPI3:EBITDA : Budget----------------------------------------------------------------------------------------&#xA; insert into   [conform_finance].kpi_fact&#xA; select &#xA; 'EBITDA : Budget',&#xA; (select date_key from conform_finance.date_dim where full_date =@v_date),&#xA;'EBITDA Actual ',&#xA;(&#xA;select &#xA;&#xA;(&#xA;&#xA; select sum( convert(decimal(16,2),amount))/1000  from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period &lt;=@v_fymont_no&#xA;and Management_Report_L2  in ('DEPEXP','INTEXP')&#xA;and account_type in (4,6)&#xA;)&#xA;&#xA;+&#xA;(&#xA; select sum( convert(decimal(16,2),amount))/1000 *(-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period &lt;=@v_fymont_no&#xA;and Management_Report_L2  in&#xA;(&#xA;'GOVFUND',&#xA;'RESCLFEE',&#xA;'ACACCINC',&#xA;'RENTRECD',&#xA;'OTHINC',&#xA;'LUNXFUND',&#xA;'SWGIF',&#xA;'SWGCST',&#xA;'SWGHK',&#xA;'SWGCTRNG',&#xA;'ONCOSTS',&#x9;&#xA;'CLNTEXP',&#xA;'FOODBEV',&#xA;'HKPNGEXP',&#xA;'MEDEXP',&#xA;'PURTRST',&#x9;&#xA;'OTHOCEXP',&#xA;'REPMNTRP', &#xA;'ADOFFEXP',&#xA;'FUNDEXP',&#xA;'OTHSTEXP',&#xA;'PRFINEXP',&#xA;'TRVMVH' ,&#xA;'DEPEXP',&#xA;'DISPFA',&#xA;'INTEXP',&#xA;'OHDRECH',&#xA; 'RETENINC',&#xA;'CAPINC',&#xA;'INVINC'   ,&#xA;'NA'&#xA;&#xA;)&#xA;and account_type in (4,6)&#xA;&#xA;&#xA;)  )&#xA;&#xA;,&#xA;'EBITDA Budget',&#xA;&#xA;(&#xA;select &#xA;&#xA;(&#xA;&#xA; select sum( convert(decimal(16,2),amount))/1000  from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_budget&#xA;and period &lt;=@v_fymont_no&#xA;and Management_Report_L2  in ('DEPEXP','INTEXP')&#xA;and account_type in (4,6)&#xA;)&#xA;&#xA;+&#xA;(&#xA; select sum( convert(decimal(16,2),amount))/1000 *(-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_budget&#xA;and period &lt;=@v_fymont_no&#xA;and Management_Report_L2  in&#xA;(&#xA;'GOVFUND',&#xA;'RESCLFEE',&#xA;'ACACCINC',&#xA;'RENTRECD',&#xA;'OTHINC',&#xA;'LUNXFUND',&#xA;'SWGIF',&#xA;'SWGCST',&#xA;'SWGHK',&#xA;'SWGCTRNG',&#xA;'ONCOSTS',&#x9;&#xA;'CLNTEXP',&#xA;'FOODBEV',&#xA;'HKPNGEXP',&#xA;'MEDEXP',&#xA;'PURTRST',&#x9;&#xA;'OTHOCEXP',&#xA;'REPMNTRP', &#xA;'ADOFFEXP',&#xA;'FUNDEXP',&#xA;'OTHSTEXP',&#xA;'PRFINEXP',&#xA;'TRVMVH' ,&#xA;'DEPEXP',&#xA;'DISPFA',&#xA;'INTEXP',&#xA;'OHDRECH',&#xA; 'RETENINC',&#xA;'CAPINC',&#xA;'INVINC'   ,&#xA;'NA'&#xA;&#xA;)&#xA;and account_type in (4,6)&#xA;&#xA;&#xA;)  )&#xA; ,&#xA;null,&#xA;null,&#xA;null,&#xA;null,&#xA;'Result',&#xA;0.00,&#xA;null,&#xA;null,&#xA;'Recommended Minimum',&#xA;@RV_EBITDA_BUDGET,&#xA;null,&#xA;null;&#xA;&#xA;----------------------------------------KPI4: EBITDA : Turnover-------------------------------------------------------------------------------&#xA; insert into   [conform_finance].kpi_fact&#xA; select &#xA; 'EBITDA : Turnover',&#xA; (select date_key from conform_finance.date_dim where full_date =@v_date),&#xA;'EBITDA',&#xA; (&#xA;select &#xA;&#xA;(&#xA;&#xA; select sum( convert(decimal(16,2),amount))/1000  from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period =@v_fymont_no&#xA;and Management_Report_L2  in ('DEPEXP','INTEXP')&#xA;and account_type in (4,6)&#xA;)&#xA;&#xA;+&#xA;(&#xA; select sum( convert(decimal(16,2),amount))/1000 *(-1) from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period =@v_fymont_no&#xA;and Management_Report_L2  in&#xA;(&#xA;'GOVFUND',&#xA;'RESCLFEE',&#xA;'ACACCINC',&#xA;'RENTRECD',&#xA;'OTHINC',&#xA;'LUNXFUND',&#xA;'SWGIF',&#xA;'SWGCST',&#xA;'SWGHK',&#xA;'SWGCTRNG',&#xA;'ONCOSTS',&#x9;&#xA;'CLNTEXP',&#xA;'FOODBEV',&#xA;'HKPNGEXP',&#xA;'MEDEXP',&#xA;'PURTRST',&#x9;&#xA;'OTHOCEXP',&#xA;'REPMNTRP', &#xA;'ADOFFEXP',&#xA;'FUNDEXP',&#xA;'OTHSTEXP',&#xA;'PRFINEXP',&#xA;'TRVMVH' ,&#xA;'DEPEXP',&#xA;'DISPFA',&#xA;'INTEXP',&#xA;'OHDRECH',&#xA; 'RETENINC',&#xA;'CAPINC',&#xA;'INVINC'   ,&#xA;'NA'&#xA;&#xA;)&#xA;and account_type in (4,6)&#xA;&#xA;&#xA;)  &#xA;&#xA;)  ,&#xA;'Turnover',&#xA;&#xA;(&#xA;&#xA; select sum( convert(decimal(16,2),amount))/1000*(-1)  from &#x9;  extract.GLF_Period_Balance_forKPI&#xA;where Entity in (@endity)  and  ledger_name =@ldger_name_actual&#xA;and period =@v_fymont_no&#xA;and Management_Report_L2  in ('GOVFUND','RESCLFEE','ACACCINC','RENTRECD','OTHINC','LUNXFUND')&#xA;and account_type in (4,6)&#xA;) &#xA;,&#xA;null,&#xA;null,&#xA;null,&#xA;null,&#xA;'Result',&#xA;0.00,&#xA;null,&#xA;null,&#xA;'Recommended Minimum',&#xA;@RV_EBITDA,&#xA;null,&#xA;null;&#xA;&#xA;&#xA;--update result&#xA;update &#x9;[conform_finance].kpi_fact&#xA;set kpi_result_1_value =kpi_indicator_1_value / kpi_indicator_2_value&#xA;where kpi_name ='EBITDA : Turnover'&#xA;and date_key =(select date_key from conform_finance.date_dim where full_date =@v_date) ;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;--------------------------------------KPI5.Profit and Loss Statement: Interest cover ------------------------------------------------------------------------------------&#xA;&#xA; insert into   [conform_finance].kpi_fact&#xA; select &#xA; 'Profit and Loss Statement: Interest cover',&#xA;(select date_key from conform_finance.date_dim where full_date =@v_date),&#xA;'Surplus',&#x9;&#xA;(&#x9;&#xA;select&#xA;(&#xA;select sum( convert(decimal(20,2),amount)/1000)*(-1) &#xA;from  extract.GLF_Period_Balance_forKPI&#xA;where ledger_name  =@ldger_name_actual&#xA;and Entity  in (@endity) &#xA;and Period&lt;=@v_fymont_no&#xA;and Account_Type in (4,6)&#xA;)&#xA;&#xA;+&#xA;(&#xA;&#xA;select isnull(sum( convert(decimal(20,2),amount)/1000)*(-1) ,0.00) &#xA;from  extract.GLF_Period_Balance_forKPI&#xA;where ledger_name =@ldger_name_actual_last&#xA;and Entity  in (@endity) &#xA;--and Period in (@v_fymont_last_no)&#xA;--and Period in (11,10,9,8,7,6,5,4,3,2)&#xA;and period &gt;= (@v_fymont_no+1) &#xA;and period&lt; 12&#xA;and Account_Type in (4,6)&#xA;)&#xA;+&#xA;(&#xA;case @v_fymont_no&#xA;when 12 then 0&#xA;else (select  @surplus_201706)&#xA;end)&#xA;),&#x9;  &#xA;'Interest on Debt',&#xA;(select &#x9;&#xA;(select sum( convert(decimal(20,2),amount)/1000) &#xA;from  extract.GLF_Period_Balance_forKPI&#xA;where ledger_name  =@ldger_name_actual&#x9;&#xA;and Entity  in (@endity) &#xA;and Period&lt;=@v_fymont_no&#xA;and right(account_number,5)  in('60640','60650','60655','60656','60657')&#xA;)&#xA;+&#xA;(&#xA;&#xA;select isnull(sum( convert(decimal(20,2),amount)/1000) ,0.00)&#xA;from  extract.GLF_Period_Balance_forKPI&#xA;where ledger_name =@ldger_name_actual_last&#x9;&#xA;and Entity  in (@endity) &#xA;--and Period in (@v_fymont_last_no)&#xA;--and Period in (11,10,9,8,7,6,5,4,3,2)&#xA;and period &gt;= (@v_fymont_no+1) &#xA;and period&lt; 12&#xA;and right(account_number,5)  in('60640','60650','60655','60656','60657')&#xA;)&#xA;+&#xA;(&#xA;case @v_fymont_no&#xA;when 12 then 0&#xA;else (select  @interestondebt_201706)&#xA;end)&#xA; ),&#x9; &#xA;null,&#xA;null,&#xA;null,&#xA;null,&#xA;'Result',&#xA;0.00,&#xA;null,&#xA;null,&#xA;'Recommended Minimum',&#xA;@RV_PLSIC,&#xA;null,&#xA;null;&#xA;&#xA;--update result&#xA;update &#x9;[conform_finance].kpi_fact&#xA;set kpi_result_1_value =kpi_indicator_1_value / kpi_indicator_2_value&#xA;where kpi_name ='Profit and Loss Statement: Interest cover'&#xA;and date_key =(select date_key from conform_finance.date_dim where full_date =@v_date) ;&#xA;&#xA;&#xA;&#xA;&#xA;--------------------------------insert NULL values for the following month added by JS at 20/10/2017-----------------------------&#xA;--KPI: EBITDA : Budget / EBITDA : Turnover / Profit and Loss Statement: Interest cover&#xA;declare @exit_max_month int;&#xA;declare @exit_financial_year varchar(10);&#xA;&#xA;set @exit_max_month =&#xA;  (select max(d1.financial_month_no)&#xA;   from conform_finance.date_dim as d1&#xA;   inner join conform_finance.kpi_fact as f1&#xA;    on d1.date_key = f1.date_key&#xA;&#x9;and f1.kpi_name in ('Profit and Loss Statement: Interest cover')&#xA;&#x9;and f1.date_key = (select max(date_key) from conform_finance.kpi_fact where kpi_name in ('Profit and Loss Statement: Interest cover') )&#xA;&#x9;);&#xA;&#xA;set @exit_max_month=@exit_max_month+1;&#xA;&#xA;set @exit_financial_year= (select distinct d1.financial_year&#xA;   from conform_finance.date_dim as d1&#xA;   inner join conform_finance.kpi_fact as f1&#xA;    on d1.date_key = f1.date_key&#xA;&#x9;and f1.kpi_name in ('Profit and Loss Statement: Interest cover')&#xA;&#x9;and f1.date_key = (select max(date_key) from conform_finance.kpi_fact where kpi_name in ('Profit and Loss Statement: Interest cover'))&#xA;&#x9;);&#xA;&#xA;--print @exit_max_month&#xA;--print @exit_financial_year&#xA;&#xA;WHILE @exit_max_month &lt;=12 &#xA;BEGIN&#xA;&#xA; ----------------KPI: EBITDA : Budget-----------------------------------------------------&#xA;   delete from conform_finance.kpi_fact&#xA;   where kpi_name ='EBITDA : Budget'&#xA;   and date_key = (select max(date_key) from conform_finance.date_dim where financial_month_no=@exit_max_month and financial_year=@exit_financial_year);&#xA;&#xA;   insert into conform_finance.kpi_fact&#xA;   (kpi_name,&#xA;   date_key,&#xA;   kpi_indicator_1_name,&#xA;   kpi_indicator_2_name,&#xA;   kpi_result_1_name,&#xA;   kpi_recom_1_name,&#xA;   kpi_recom_1_value)&#xA;   select &#xA;   'EBITDA : Budget',&#xA;    max(date_key),&#xA;&#x9;'EBITDA Actual ',&#xA;&#x9;'EBITDA Budget',&#xA;&#x9;'Result',&#xA;&#x9;'Recommended Minimum',&#xA;&#x9;0.00&#xA;   from conform_finance.date_dim&#xA;   where financial_month_no=@exit_max_month&#xA;   and  financial_year=@exit_financial_year;&#xA;&#xA; --   ----------------KPI: EBITDA : Turnover-----------------------------------------------------&#xA;   delete from conform_finance.kpi_fact&#xA;   where kpi_name ='EBITDA : Turnover'&#xA;   and date_key = (select max(date_key) from conform_finance.date_dim where financial_month_no=@exit_max_month  and  financial_year=@exit_financial_year);&#xA;&#xA;   insert into conform_finance.kpi_fact&#xA;   (kpi_name,&#xA;   date_key,&#xA;    kpi_indicator_1_name,&#xA;   kpi_indicator_2_name,&#xA;   kpi_result_1_name,&#xA;   kpi_recom_1_name,&#xA;   kpi_recom_1_value)&#xA;   select &#xA;   'EBITDA : Turnover',&#xA;    max(date_key),&#xA;&#x9;'EBITDA',&#xA;&#x9;'Turnover',&#xA;&#x9;'Result',&#xA;&#x9;'Recommended Minimum',&#xA;&#x9;0.03&#xA;   from conform_finance.date_dim&#xA;   where financial_month_no=@exit_max_month&#xA;   and  financial_year=@exit_financial_year;&#xA; &#xA;&#xA; -- ----------------KPI: EBITDA : Turnover-----------------------------------------------------&#xA;   delete from conform_finance.kpi_fact&#xA;   where kpi_name ='Profit and Loss Statement: Interest cover'&#xA;   and date_key = (select max(date_key) from conform_finance.date_dim where financial_month_no=@exit_max_month and  financial_year=@exit_financial_year);&#xA;&#xA;   insert into conform_finance.kpi_fact&#xA;   (kpi_name,&#xA;   date_key,&#xA;   kpi_indicator_1_name,&#xA;   kpi_indicator_2_name,&#xA;   kpi_result_1_name,&#xA;   kpi_recom_1_name,&#xA;   kpi_recom_1_value)&#xA;   select &#xA;   'Profit and Loss Statement: Interest cover',&#xA;    max(date_key),&#xA;&#x9;'Surplus',&#xA;&#x9;'Interest on Debt',&#xA;&#x9;'Result',&#xA;&#x9;'Recommended Minimum',&#xA;&#x9;3.00&#xA;   from conform_finance.date_dim&#xA;   where financial_month_no=@exit_max_month&#xA;   and  financial_year=@exit_financial_year;&#xA;&#xA; --- continue for other months&#xA; SET @exit_max_month=@exit_max_month+1&#xA;&#xA;&#xA;END&#xA;&#xA;&#xA;&#xA; -------------------------------insert into dwhf_finance kpi_fact table-------------------------------------------------------------------------&#xA; truncate table  dwhf_finance.finance.kpi_fact;&#xA; insert into  dwhf_finance.finance.kpi_fact&#xA; select * &#xA; from [conform_finance].kpi_fact;&#xA;&#xA;end;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
-            <DTS:Executable
-              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Truncate table"
-              DTS:CreationName="Microsoft.ExecuteSQLTask"
-              DTS:Description="Execute SQL Task"
-              DTS:Disabled="True"
-              DTS:DTSID="{7d09bfa1-0b7d-4f74-b014-4b95c9eaceb3}"
-              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-              DTS:LocaleID="-1"
-              DTS:ObjectName="Truncate table"
-              DTS:ThreadHint="0">
-              <DTS:Variables />
-              <DTS:ObjectData>
-                <SQLTask:SqlTaskData
-                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
-                  SQLTask:SqlStatementSource=" truncate table  dwhf_finance.finance.kpi_fact;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-              </DTS:ObjectData>
-            </DTS:Executable>
           </DTS:Executables>
           <DTS:PrecedenceConstraints>
             <DTS:PrecedenceConstraint
               DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint]"
               DTS:CreationName=""
-              DTS:DTSID="{5b841b50-2c25-4bc2-81f6-55210c8d323b}"
+              DTS:DTSID="{679CAA4A-6321-4DB8-8065-6C5EC8F7F0A4}"
               DTS:From="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Start info"
               DTS:LogicalAnd="True"
               DTS:ObjectName="Constraint"
-              DTS:To="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Truncate table" />
-            <DTS:PrecedenceConstraint
-              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 1]"
-              DTS:CreationName=""
-              DTS:DTSID="{b79325f8-ebd4-4f8e-8654-bdd26f570288}"
-              DTS:From="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Truncate table"
-              DTS:LogicalAnd="True"
-              DTS:ObjectName="Constraint 1"
               DTS:To="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Get new records and update columns" />
             <DTS:PrecedenceConstraint
               DTS:refId="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 2]"
@@ -1012,40 +987,15 @@
                   SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                                     Purpose: ETL for reconcile_invocie_fact&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Developer: Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Version: V1.0 04/09/2017 Created by Jerry Shen&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; Note:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;      1. Start with Children Disability program first.&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  2. need new extract comcare tables:&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   Actual_Service_Charge_Item&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   FC_Contract_Area_Product&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   Funding_Program&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  3. changed from comcare.FB_Client_CB_Transaction tables because some items missing in service charge table,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;      e.g: Additional Charges (Austin Turner)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;    from [devsql-1\dev].comcaredev.dbo.FB_Client_CB_Transaction as t1&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;left join [devsql-1\dev].comcaredev.dbo.FB_Client_Contract_Billing t2 on t1.Client_CB_ID=t2.Client_CB_ID&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;left join [devsql-1\dev].comcaredev.dbo.FC_Funder_Contract t3 on t2.Funder_Contract_ID=t3.Funder_Contract_ID&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;left join [devsql-1\dev].comcaredev.dbo.person as t4 on t1.Person_ID=t4.Person_ID&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  4. Change T1 source from R1 to %ACT to get invoice details by JS at 25/09/2017.&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;  5. Added cost centre inforamtion by JS at 28/09/2017&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;   use dwhb;&#xA;&#xA;&#xA;   --invocie temp table&#xA;    declare @client_invocie TABLE&#xA;   (accnbri varchar(32),&#xA;    pdatei datetime,&#xA;&#x9;amt1 numeric(14,2),&#xA;&#x9;narr1 varchar(40),&#xA;&#x9;narr2 varchar(40),&#xA;&#x9;narr3 varchar(40),&#xA;&#x9;user_fld1 varchar(40),&#xA;&#x9;period_start_date date,&#xA;&#x9;period_end_date date,&#xA;&#x9;cc_service_duration decimal(28,5),&#xA;&#x9;cc_service_cost  decimal(28,5),&#xA;&#x9;balance_flag varchar(1),&#xA;&#x9;glcode varchar(15),&#xA;&#x9;doc_ref1 varchar(20)&#xA;   &#xA;   );&#xA; --  insert into  @client_invocie&#xA; --  (accnbri,pdatei,amt1,narr1,narr2,narr3,user_fld1,cc_service_duration,cc_service_cost)&#xA; --  select accnbri,pdatei,amt1,narr1,narr2,narr3,USER_FLD1,0,0&#xA;&#x9;--from extract.GLF_LDG_ACC_TRANS&#xA;&#x9;--where ldg_name ='R1'&#xA;&#x9;--and doc_type in ('ARINV','ARINVCCDS')&#xA;&#x9;----and NARR1='10069826'&#xA;&#x9;--and len(NARR1)=8&#xA;&#x9;--and USER_FLD1 in ('DSIS','DSDA','DSOR','DSCC','DSOATS') -- children disability program category&#xA;&#xA;&#x9;&#xA;&#x9;--------------------------------------------------------------------------------------------------&#xA;&#x9;---changed by JS at 25/09/2017: t1 source from R1 to %ACT to get invoice details.&#xA;&#x9;--step1: get invocice details including GL_Codes and DOC_REF1 (link to AR. R1)&#xA;&#x9;insert into  @client_invocie&#xA;&#x9;(accnbri,pdatei,amt1,narr1,narr2,narr3,user_fld1,cc_service_duration,cc_service_cost,glcode,doc_ref1)&#xA;&#x9;select '',DOC_DATEI1,amt1*(-1),narr1,narr2,narr3,USER_FLD1,0,0,accnbri,DOC_REF1&#xA;&#x9;from extract.GLF_LDG_ACC_TRANS&#xA;&#x9;where ldg_name like '%ACT' and len(ACCNBRI)=15 and  len(doc_ref1)&gt;0&#xA;&#x9;and doc_type in ('ARINV','ARINVCCDS')&#xA;&#x9;and len(NARR1)=8&#xA;     -- -- children disability program category&#xA;&#x9;and  (USER_FLD1 in ('DSIS','DSDA','DSOR','DSCC','DSOATS')  or (accnbri like '%3611%') )-- get 3611 - Metro NDIS Case Co-ord because no USDR_FLD1 for this) &#xA;&#xA;&#x9;&#xA;&#x9;--step2: get AR debtor id&#xA;&#x9;update t1&#xA;&#x9;set  t1.accnbri= t2.ACCNBRI&#xA;&#x9;from  @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9;(&#xA;&#x9;&#x9; select distinct accnbri,DOC_REF1&#xA;&#x9;&#x9;from extract.GLF_LDG_ACC_TRANS&#xA;&#x9;&#x9;where ldg_name ='R1'&#xA;&#x9;&#x9;and doc_type in ('ARINV','ARINVCCDS')&#xA;&#x9;&#x9;and len(NARR1)=8&#xA;&#x9;--&#x9;and USER_FLD1 in ('DSIS','DSDA','DSOR','DSCC','DSOATS') -- children disability program category&#xA;&#x9;&#x9;&#xA;&#x9;) as t2 &#x9;on t1.doc_ref1=t2.DOC_REF1 COLLATE DATABASE_DEFAULT&#xA;&#xA;&#xA;&#x9;--------------------------------------------------------------------------------------------------&#xA;&#x9;print 'finish @client_invocie get data';&#xA;&#xA;&#x9;--update p_start_date and p_end_date&#xA;&#x9;update  @client_invocie&#xA;&#x9;set period_start_date = convert(date,left(narr3,10),103),&#xA;&#x9;    period_end_date= convert(date,right(narr3,10),103)&#xA;&#x9;where len(narr3)=24&#xA;&#xA;&#x9;----process comcare data from Actual_Service_Charge_Item&#xA;&#x9;-- declare @client_actual_service TABLE&#xA; --  (&#xA; --   funding_prog_code varchar(10),&#xA;&#x9;--funding_prog_code_desc varchar(100),&#x9; &#xA; --   client_id int,&#xA;&#x9;--rate decimal(28,5),&#xA;&#x9;--unit decimal(28,5),&#xA;&#x9;--amount decimal(28,5),&#xA;&#x9;--visit_date date,&#xA;&#x9;--period varchar(30)&#xA; --  );&#xA;&#xA;&#xA; --&#x9; insert into  @client_actual_service&#xA;&#x9;-- select t3.Funding_Prog_Code,t3.Description , &#xA; --    t1.client_id,t1.rate,t1.unit,t1.amount,t1.Visit_Date,null&#xA; --    from extract_comcare.Actual_Service_Charge_Item as t1&#xA; --    inner join extract_comcare.FC_Contract_Area_Product  as t2 on t1.FC_Product_ID=t2.FC_Product_ID&#xA; --    inner join extract_comcare.Funding_Program as t3 on t2.Funding_Prog_Code=t3.Funding_Prog_Code and t3.funding_prog_code in (115,116,117,118,119,120,121,122,123)&#xA; --  --  where t1.client_id ='10069826' &#xA;&#xA;&#xA;&#xA;&#x9;----update period based on invocie period: start_date and end_date&#xA;&#x9;--update t1&#xA;&#x9;--set t1.period=t2.narr3&#xA;&#x9;--from @client_actual_service as t1&#xA;&#x9;--join @client_invocie as t2&#xA;&#x9;--on t1.client_id=t2.narr1&#xA;&#x9;--and t1.visit_date between t2.period_start_date and t2.period_end_date&#xA;&#x9;&#xA;&#x9;--changed by Jerry Shen at 20/09/2017&#xA;&#x9;--from transaction table instead of Actual_Service_Charge_Item&#xA;    declare @client_actual_service TABLE&#xA;   (&#xA;    funding_prog_code varchar(10),&#xA;&#x9;funding_prog_code_desc varchar(100),&#x9; &#xA;    client_id int,&#xA;&#x9;rate decimal(28,5),&#xA;&#x9;unit decimal(28,5),&#xA;&#x9;amount decimal(28,5),&#xA;&#x9;visit_date date,&#xA;&#x9;period varchar(30)&#xA;   );&#xA;&#xA;   insert into  @client_actual_service&#xA;   select &#xA;    t3.funder_contract_id,&#xA;&#x9;t3.Description,&#xA;&#x9;t2.client_id,&#xA;&#x9;ISNULL(t1.Rate_Used,0),&#xA;&#x9;ISNULL(t1.Units,0),&#xA;&#x9;ISNULL(t1.amount,0),&#xA;&#x9;convert(date,t1.Visit_Date),&#xA;&#x9;--05/12/2016 to 18/12/2016&#xA;&#x9;convert(varchar,t1.Billing_Period_From,103) +' to '+convert(varchar,t1.Billing_Period_To,103) &#xA;&#x9;from extract_comcare.FB_Client_CB_Transaction as t1&#xA;&#x9;left join extract_comcare.FB_Client_Contract_Billing t2 on t1.Client_CB_ID=t2.Client_CB_ID&#xA;&#x9;left join extract_comcare.FC_Funder_Contract t3 on t2.Funder_Contract_ID=t3.Funder_Contract_ID&#xA;&#x9;left join extract_comcare.person as t4 on t1.Person_ID=t4.Person_ID&#xA;&#x9;where t1.Fee_Hold_Reason_Code IS NULL&#xA;&#x9;and t3.Funder_Contract_ID in (25,26,27,28,29,31)&#xA;&#x9;and t3.Funding_Care_Model_ID=6&#xA;&#xA;&#xA;&#x9;&#x9;--------------------------------------------------------------------------------------------------&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--join two tables&#xA;&#xA;&#x9;/*-------------------------------------------------&#xA;&#x9;DC Individualised Services,      DSIS       25&#xA;&#x9;DC Day Activities               ,DSDA                26&#xA;&#x9;DC Overnight Respite,            DSOR              27&#xA;&#x9;DC Case Coordination Mt Gambier,  DSCC        28&#xA;&#x9;DC OATS,                          DSOATS                             29&#xA;&#x9;Case Coordination NDIS                     31&#xA;&#x9;----------------------------------------------------*/&#xA;&#xA;&#xA;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSOATS' and T2.funding_prog_code='29';&#xA;&#xA;&#xA;&#xA;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSIS' and T2.funding_prog_code in ('25');&#xA;&#xA;&#xA;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSDA' and T2.funding_prog_code in ('26');&#xA;&#xA;&#xA;&#x9;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSOR' and T2.funding_prog_code in ('27');&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;  &#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and t1.user_fld1='DSCC' and T2.funding_prog_code in ('28');&#xA;&#xA;&#x9;&#xA;&#x9;&#x9;&#x9;&#x9;update t1&#xA;&#x9;set t1.cc_service_duration = t2.visit_duration,&#xA;&#x9;    t1.cc_service_cost =  t2.value_costed&#xA;&#x9;from @client_invocie as t1&#xA;&#x9;inner join &#xA;&#x9; (select client_id,period,funding_prog_code,unit as visit_duration, amount as value_costed&#xA;&#x9;   from @client_actual_service&#x9;&#xA;&#x9; ) as t2&#xA;&#xA;&#x9;on t1.narr1=t2.client_id&#xA;&#x9;and t1.narr3=t2.period&#xA;&#x9;and t1.amt1=t2.value_costed&#xA;&#x9;and len(t1.user_fld1)=0 and T2.funding_prog_code in ('31');&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--update balance flag&#xA;&#x9;update @client_invocie&#xA;&#x9;set balance_flag= (case when amt1 = cc_service_cost then 'Y' else 'N' end);&#xA;&#xA;&#xA;&#xA;&#x9;--populate fact temp table&#xA;&#x9;declare @tmp_RECONCILE_INVOICE_FACT Table&#xA;&#x9;(reconcile_invocie_key&#x9; [int] IDENTITY(1,1) NOT NULL,&#xA;&#x9;account_key int,&#xA;&#x9;Accnbri&#x9;int,&#xA;&#x9;Client_id&#x9;&#x9;int,&#xA;&#x9;Portfolio_key&#x9;int,&#xA;&#x9;Service_key&#x9;int,&#xA;&#x9;Program_key int,&#xA;&#x9;ComCare_service_type varchar(20),&#xA;&#x9;Invocie_date datetime,&#xA;&#x9;Invocie_date_key&#x9;&#x9;int,&#xA;&#x9;Invocie_Amount decimal(14,2),&#xA;&#x9;Invoice_Period&#x9;varchar(40),&#xA;    Period_start_date date,&#xA;&#x9;Period_start_date_key int,&#xA;&#x9;Period_end_date date,&#xA;&#x9;period_end_date_key int,&#xA;&#x9;Invoice_Description&#x9;&#x9;varchar(40),&#xA;&#x9;ComCare_serviced_hours decimal(28,5),&#xA;&#x9;ComCare_service_charges&#x9;decimal(28,5),&#xA;&#x9;Balance_flag&#x9;&#x9;varchar(1),&#xA;&#x9;glcode varchar(15),&#xA;&#x9;costing varchar(4),&#xA;&#x9;costing_desc varchar(50));&#xA;&#xA;&#x9;insert into  @tmp_RECONCILE_INVOICE_FACT&#xA;&#x9;select &#xA;&#x9;       (select account_key from conform_finance.account_dim where current_row_indicator='Y' and account_name ='No Account'), -- defualt no account key&#xA;&#x9;       t1.accnbri,&#xA;&#x9;       t1.narr1,&#xA;&#x9;&#x9;   (select portfolio_key from conform_finance.portfolio_dim where portfolio_name='Community Services' and current_row_indicator='Y'),&#xA;&#x9;&#x9;   (select service_stream_key from conform_finance.service_stream_dim where service_stream_name ='Community Inclusion' and current_row_indicator='Y'),&#xA;&#x9;&#x9;   (select program_key from conform_finance.program_dim where program_name ='Children''s Disability Services' and current_row_indicator='Y'),&#xA;&#x9;&#x9;   t1.user_fld1,&#xA;&#x9;&#x9;   t1.pdatei,&#xA;&#x9;&#x9;   t2.date_key,&#xA;&#x9;&#x9;   t1.amt1,&#xA;&#x9;&#x9;   t1.narr3,&#xA;&#x9;&#x9;   t1.Period_start_date,&#xA;&#x9;&#x9;   (select date_key from conform_finance.date_dim where display_date='01/01/1800'),&#xA;&#x9;&#x9;   t1.Period_end_date,&#xA;&#x9;&#x9;   (select date_key from conform_finance.date_dim where display_date='01/01/1800'),&#xA;&#x9;&#x9;   t1.narr2,&#xA;&#x9;&#x9;   t1.cc_service_duration,&#xA;&#x9;&#x9;   t1.cc_service_cost,&#xA;&#x9;&#x9;   t1.balance_flag,&#xA;&#x9;&#x9;   t1.glcode,&#xA;&#x9;&#x9;   substring(t1.glcode,3,4),&#xA;&#x9;&#x9;   ''&#xA;&#x9;from  @client_invocie as t1&#xA;&#x9;inner join conform_finance.date_dim as t2&#xA;&#x9;on t1.pdatei=t2.full_date&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--account key&#xA;&#xA;&#x9;update t1&#xA;&#x9;set t1.account_key=t2.account_key&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT as t1&#xA;&#x9;inner join [conform_finance].[account_dim] as t2&#xA;&#x9;on t1.Accnbri=t2.account_number and t2.current_row_indicator='Y'&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;--update period start_date and end_date_key&#xA;    update t1&#xA;&#x9;set t1.Period_start_date_key=t2.date_key&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT as t1&#xA;&#x9;inner join [conform_finance].[date_dim] as t2&#xA;&#x9;on convert(date,t1.Period_start_date)=convert(date,t2.full_date);&#xA;&#xA;&#x9;    update t1&#xA;&#x9;set t1.period_end_date_key=t2.date_key&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT as t1&#xA;&#x9;inner join [conform_finance].[date_dim] as t2&#xA;&#x9;on convert(date,t1.Period_end_date)=convert(date,t2.full_date);&#xA;&#xA;&#x9;--update costing description&#xA;&#x9;--notes: &#xA;&#x9;-- Children's disability: 3225 / 3235 / 3609&#xA;&#x9;-- Autism ELC: 3607 / 3608 / 3611&#xA;&#x9;update @tmp_RECONCILE_INVOICE_FACT &#xA;&#x9;set costing_desc =&#xA;&#x9;  case costing&#xA;&#x9;  when '3225' then '3225 - Children''s Accomodation Support'&#xA;&#x9;  when '3235' then '3235 - Children''s Community Day Activities'&#xA;&#x9;  when '3609' then '3609 - Children''s in home care'&#xA;&#x9;  when '3607' then  '3607 - OATS'&#xA;&#x9;  when '3608' then   '3608 - MT Gambier NDIS Case Co-ord'&#xA;&#x9;  when '3611' then   '3611 - Metro NDIS Case Co-ord'&#xA;&#x9;  else 'No Costing'&#xA;&#x9;  end;&#xA;&#xA;&#xA;&#xA;&#x9;--put data into fact table from temp table&#xA;&#xA;&#x9;truncate table  [conform_finance].[RECONCILE_INVOICE_FACT];&#xA;&#x9;insert into  [conform_finance].[RECONCILE_INVOICE_FACT]&#xA;&#x9;select&#xA;&#x9;[account_key],&#xA;&#x9;[Accnbri],&#xA;&#x9;[Client_id] ,&#xA;&#x9;[Portfolio_key] ,&#xA;&#x9;[Service_key],&#xA;&#x9;[Program_key] ,&#xA;&#x9;[ComCare_service_type],&#xA;&#x9;[Invocie_date_key],&#xA;&#x9;[Invocie_Amount] ,&#xA;&#x9;[Invoice_Period] ,&#xA;&#x9;Period_start_date_key,&#xA;&#x9;period_end_date_key,&#xA;&#x9;[Invoice_Description] ,&#xA;&#x9;[ComCare_serviced_hours],&#xA;&#x9;[ComCare_service_charges] ,&#xA;&#x9;[Balance_flag],&#xA; &#x9;glcode,&#xA;&#x9;costing,&#xA;&#x9;costing_desc&#xA;&#x9;from @tmp_RECONCILE_INVOICE_FACT&#xA;&#xA;&#xA;&#xA;&#x9;--delivery to front&#xA;&#x9;truncate table  dwhf_finance.finance.[RECONCILE_INVOICE_FACT];&#xA;&#x9;insert into  dwhf_finance.finance.[RECONCILE_INVOICE_FACT]&#xA;&#x9;select &#xA;&#x9;[reconcile_invocie_key],&#xA;&#x9;[account_key],&#xA;&#x9;[Accnbri],&#xA;&#x9;[Client_id] ,&#xA;&#x9;[Portfolio_key] ,&#xA;&#x9;[Service_key],&#xA;&#x9;[Program_key] ,&#xA;&#x9;[ComCare_service_type],&#xA;&#x9;[Invocie_date_key],&#xA;&#x9;[Invocie_Amount] ,&#xA;&#x9;[Invoice_Period] ,&#xA;&#x9;Invoice_Period_start_date_key,&#xA;&#x9;Invoice_period_end_date_key,&#xA;&#x9;[Invoice_Description] ,&#xA;&#x9;[ComCare_serviced_hours],&#xA;&#x9;[ComCare_service_charges] ,&#xA;&#x9;[Balance_flag],&#xA;&#x9;glcode,&#xA;&#x9;costing,&#xA;&#x9;cost_centre&#xA;&#x9;from [conform_finance].[RECONCILE_INVOICE_FACT];&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
-            <DTS:Executable
-              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\Truncate table"
-              DTS:CreationName="Microsoft.ExecuteSQLTask"
-              DTS:Description="Execute SQL Task"
-              DTS:Disabled="True"
-              DTS:DTSID="{3c779048-49d8-487d-9fbd-23b4f6210614}"
-              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-              DTS:LocaleID="-1"
-              DTS:ObjectName="Truncate table"
-              DTS:ThreadHint="0">
-              <DTS:Variables />
-              <DTS:ObjectData>
-                <SQLTask:SqlTaskData
-                  SQLTask:Connection="{6B844CC6-0F5A-4327-899C-E5FE6584670F}"
-                  SQLTask:SqlStatementSource=" truncate table  dwhf_finance.finance.kpi_fact;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-              </DTS:ObjectData>
-            </DTS:Executable>
           </DTS:Executables>
           <DTS:PrecedenceConstraints>
             <DTS:PrecedenceConstraint
               DTS:refId="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint]"
               DTS:CreationName=""
-              DTS:DTSID="{9176b408-420d-4b8d-8197-0fdd89cdecd8}"
+              DTS:DTSID="{96C6881E-E456-41A1-8B68-F99499FEFFFD}"
               DTS:From="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\EST - Write Job Start info"
               DTS:LogicalAnd="True"
               DTS:ObjectName="Constraint"
-              DTS:To="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\Truncate table" />
-            <DTS:PrecedenceConstraint
-              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint 1]"
-              DTS:CreationName=""
-              DTS:DTSID="{808fce77-6c33-405e-adb5-ca57c20a7b42}"
-              DTS:From="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\Truncate table"
-              DTS:LogicalAnd="True"
-              DTS:ObjectName="Constraint 1"
               DTS:To="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\Reconcile_invoice_fact" />
             <DTS:PrecedenceConstraint
               DTS:refId="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint 2]"
@@ -1203,11 +1153,11 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph" xmlns:mssge="clr-namespace:Microsoft.SqlServer.Graph.Extended;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\EST - Write Job Finish info"
-          TopLeft="5.5,311.5" />
+          TopLeft="5.50000000000003,311.5" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\EST - Write Job Start info"
@@ -1215,14 +1165,14 @@
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\Get new records and update columns"
-          TopLeft="5.5,209.5" />
+          TopLeft="5.50000000000003,209.5" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\Truncate table"
-          TopLeft="10.5,107.5" />
+          TopLeft="5.50000000000001,107.5" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT.PrecedenceConstraints[Constraint]"
-          TopLeft="119,47.5">
+          TopLeft="116.5,47.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
@@ -1244,7 +1194,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT.PrecedenceConstraints[Constraint 1]"
-          TopLeft="119,149.5">
+          TopLeft="116.5,149.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
@@ -1289,10 +1239,10 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="233,599"
-          Size="233,642"
+          PanelSize="233,602"
+          Size="233,646"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT"
-          TopLeft="8.5,26.4999999999999" />
+          TopLeft="8.5,116.5" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT\EST - Write Job Finish info"
@@ -1381,11 +1331,11 @@
           PanelSize="325,582"
           Size="325,625"
           Id="Package\Sequence Container - Fact Tables\SD1 - EXPENSE_FACT"
-          TopLeft="1192.5,40.4999999999999" />
+          TopLeft="1192.5,130.5" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Finish info"
-          TopLeft="5.5,311.5" />
+          TopLeft="5.5,213.5" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\EST - Write Job Start info"
@@ -1393,69 +1343,43 @@
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Get new records and update columns"
-          TopLeft="5.5,209.5" />
-        <NodeLayout
-          Size="212,42"
-          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT\Truncate table"
-          TopLeft="10.5,107.5" />
+          TopLeft="5.5,117.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 2]"
+          TopLeft="116.5,159.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="0,54"
+              Start="0,0"
+              End="0,46.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,46.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint]"
           TopLeft="116.5,47.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
-              EndConnector="0,60"
+              EndConnector="0,70"
               Start="0,0"
-              End="0,52.5">
+              End="0,62.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,52.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 1]"
-          TopLeft="116.5,149.5">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{x:Null}"
-              EndConnector="0,60"
-              Start="0,0"
-              End="0,52.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,52.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT.PrecedenceConstraints[Constraint 2]"
-          TopLeft="116.5,251.5">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{x:Null}"
-              EndConnector="0,60"
-              Start="0,0"
-              End="0,52.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,52.5" />
+                    End="0,62.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1470,7 +1394,7 @@
           PanelSize="233,598"
           Size="233,641"
           Id="Package\Sequence Container - Fact Tables\SD1 - KPI_FACT"
-          TopLeft="265.5,29.4999999999999" />
+          TopLeft="265.5,119.5" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\EST - Write Job Finish info"
@@ -1482,21 +1406,21 @@
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact\Get new records and update columns"
-          TopLeft="35.15,191" />
+          TopLeft="35.1500000000001,149" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact.PrecedenceConstraints[Constraint]"
           TopLeft="163.65,70">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
-              EndConnector="0,121"
+              EndConnector="0,79"
               Start="0,0"
-              End="0,113.5">
+              End="0,71.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,113.5" />
+                    End="0,71.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1507,18 +1431,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact.PrecedenceConstraints[Constraint 2]"
-          TopLeft="163.65,233">
+          TopLeft="163.65,191">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
-              EndConnector="0,40"
+              EndConnector="0,82"
               Start="0,0"
-              End="0,32.5">
+              End="0,74.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,32.5" />
+                    End="0,74.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1533,7 +1457,7 @@
           PanelSize="345,579"
           Size="345,622"
           Id="Package\Sequence Container - Fact Tables\SD1 - Kypera_Tenancy_Balance_Fact"
-          TopLeft="1553.5,45.4999999999999" />
+          TopLeft="1553.5,135.5" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT\EST - Write Job Finish info"
@@ -1622,11 +1546,11 @@
           PanelSize="268,596"
           Size="268,639"
           Id="Package\Sequence Container - Fact Tables\SD1 - LSL_FACT"
-          TopLeft="524.5,29.4999999999999" />
+          TopLeft="524.5,119.5" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\EST - Write Job Finish info"
-          TopLeft="35.5833333333334,443" />
+          TopLeft="35.5833333333334,385" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\EST - Write Job Start info"
@@ -1634,77 +1558,29 @@
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\reconcicle_billedpercentage_fact"
-          TopLeft="35.5833333333334,354" />
+          TopLeft="35.5833333333334,288" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\reconcicle_unbilledservice_fact"
-          TopLeft="35.5833333333334,289" />
+          TopLeft="35.5833333333334,195" />
         <NodeLayout
           Size="257,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\Reconcile_invoice_fact"
-          TopLeft="35.5833333333334,191" />
-        <NodeLayout
-          Size="257,42"
-          Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT\Truncate table"
-          TopLeft="35.5833333333334,101" />
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint]"
-          TopLeft="164.083333333333,70">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{x:Null}"
-              EndConnector="0,31"
-              Start="0,0"
-              End="0,23.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,23.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint 1]"
-          TopLeft="164.083333333333,143">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{x:Null}"
-              EndConnector="0,48"
-              Start="0,0"
-              End="0,40.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,40.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
+          TopLeft="35.5833333333334,99" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint 2]"
-          TopLeft="164.083333333333,233">
+          TopLeft="164.083333333333,141">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
-              EndConnector="0,56"
+              EndConnector="0,54"
               Start="0,0"
-              End="0,48.5">
+              End="0,46.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,48.5" />
+                    End="0,46.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1715,18 +1591,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint 3]"
-          TopLeft="164.083333333333,331">
+          TopLeft="164.083333333333,237">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
-              EndConnector="0,23"
+              EndConnector="0,51"
               Start="0,0"
-              End="0,15.5">
+              End="0,43.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,15.5" />
+                    End="0,43.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1737,18 +1613,40 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint 4]"
-          TopLeft="164.083333333333,396">
+          TopLeft="164.083333333333,330">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
-              EndConnector="0,47"
+              EndConnector="0,55"
               Start="0,0"
-              End="0,39.5">
+              End="0,47.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,39.5" />
+                    End="0,47.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT.PrecedenceConstraints[Constraint]"
+          TopLeft="164.083333333333,70">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="0,29"
+              Start="0,0"
+              End="0,21.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,21.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1763,10 +1661,10 @@
           PanelSize="326,588"
           Size="326,631"
           Id="Package\Sequence Container - Fact Tables\SD1 - RECONCILE_INVOICE_FACT"
-          TopLeft="817.5,35.4999999999999" />
+          TopLeft="817.5,125.5" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint]"
-          TopLeft="241.5,348.75">
+          TopLeft="241.5,439.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
@@ -1790,7 +1688,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 1]"
-          TopLeft="498.5,349.5">
+          TopLeft="498.5,439.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
@@ -1814,7 +1712,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 2]"
-          TopLeft="792.5,350">
+          TopLeft="792.5,440">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
@@ -1838,7 +1736,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
-          TopLeft="1143.5,352">
+          TopLeft="1143.5,442">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
@@ -1862,7 +1760,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 4]"
-          TopLeft="1517.5,354.75">
+          TopLeft="1517.5,444.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{x:Null}"
@@ -1880,17 +1778,34 @@
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
+              BoundingBox="-11.054453125,5,50.60890625,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <AnnotationLayout
+          Text="Function:  ETL to generate Finance Data Mart Fact Tables&#xD;&#xA;Notes:&#xD;&#xA;1.KPI_Fact: not run everyday / run data at 20 every month"
+          ParentId="Package\Sequence Container - Fact Tables"
+          Size="668,83"
+          Id="c0954a75-0b3e-434c-97b4-2e9ef211d5fc"
+          TopLeft="233,27">
+          <AnnotationLayout.FontInfo>
+            <mssge:FontInfo
+              Family="Tahoma"
+              Size="15.75"
+              Color="#FF000000">
+              <mssge:FontInfo.TextDecorations>
+                <av:TextDecorationCollection />
+              </mssge:FontInfo.TextDecorations>
+            </mssge:FontInfo>
+          </AnnotationLayout.FontInfo>
+        </AnnotationLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="2320,740"
-          Size="2320,783"
+          PanelSize="2320,929"
+          Size="2320,972"
           Id="Package\Sequence Container - Fact Tables"
-          TopLeft="31.833333333333,1.99999999999818" />
+          TopLeft="61.833333333333,35.9999999999982" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
