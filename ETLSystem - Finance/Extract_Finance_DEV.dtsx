@@ -12,8 +12,8 @@
   DTS:ObjectName="Extract_Finance_DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="100"
-  DTS:VersionGUID="{F197A308-944E-471C-B9C9-53F00194449B}">
+  DTS:VersionBuild="103"
+  DTS:VersionGUID="{907C55C9-BA49-4117-8AFB-8EB5768E85C9}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -34,7 +34,7 @@
       DTS:ObjectName="TechOneDatabase">
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=appsql-4\test;Initial Catalog=fintest;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+          DTS:ConnectionString="Data Source=appsql-4\prod;Initial Catalog=finprod;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -46,7 +46,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="Comcare_dblink">
       <DTS:VariableValue
-        DTS:DataType="8">[devsql-1\dev].comcaredev.</DTS:VariableValue>
+        DTS:DataType="8">[appsql-3\comcareprod].comcareprod.</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -65,7 +65,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="Kypera_dblink">
       <DTS:VariableValue
-        DTS:DataType="8">[appsql-3].kh_test.</DTS:VariableValue>
+        DTS:DataType="8">[appsql-3].anglicare.</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="Techone_dblink">
       <DTS:VariableValue
-        DTS:DataType="8">[appsql-4\test].fintest.</DTS:VariableValue>
+        DTS:DataType="8">[appsql-4\prod].finprod.</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
@@ -1999,7 +1999,7 @@ where  ( ldg_name in ('R1','CNLDG') ) or (  ldg_name like '%ACT' and len(ACCNBRI
           </AnnotationLayout.FontInfo>
         </AnnotationLayout>
         <AnnotationLayout
-          Text="Todo:&#xD;&#xA;&#xD;&#xA;if just pick up limited columsn for GLF_LDG_ACC_TRANS table (not all columns), looks even using FULL LOAD method&#xD;&#xA;still very quick.&#xD;&#xA;&#xD;&#xA;If not very qucik: need to use below methods:  &#xA;1. Get full extraction forGLF_LDG_ACC_TRANS -- JUST RUN ONCE and  Disable it &#xA;2. Change to extract incrementally(just get yesterday's data)"
+          Text="Todo:&#xA;&#xA;if just pick up limited columsn for GLF_LDG_ACC_TRANS table (not all columns), looks even using FULL LOAD method&#xA;still very quick.&#xA;&#xA;If not very qucik: need to use below methods:  &#xA;1. Get full extraction forGLF_LDG_ACC_TRANS -- JUST RUN ONCE and  Disable it &#xA;2. Change to extract incrementally(just get yesterday's data)"
           ParentId="Package"
           FontInfo="{x:Null}"
           Size="373,186"
@@ -2047,6 +2047,19 @@ where  ( ldg_name in ('R1','CNLDG') ) or (  ldg_name like '%ACT' and len(ACCNBRI
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
+    design-time-name="Package\Extract TechOne Finance Soure Tables\GLF_LDG_ACC_TRANS -- BIG TABLE and Special Process\GLF_LDG_ACC_TRANS -  INCREMENTAL Load Daily\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
     design-time-name="Package\Extract TechOne Finance Soure Tables\GLF_LDG_ACC_TRANS -- BIG TABLE and Special Process\GLF_LDG_ACC_TRANS -  INCREMENTAL Load Daily\OLE DB Source">
     <Properties>
       <Property>
@@ -2093,19 +2106,6 @@ where  ( ldg_name in ('R1','CNLDG') ) or (  ldg_name like '%ACT' and len(ACCNBRI
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\Extract TechOne Finance Soure Tables\GLF_LDG_ACC_TRANS -- BIG TABLE and Special Process\GLF_LDG_ACC_TRANS - FULL Load JUST ONCE\OLE DB Source">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
     design-time-name="Package\Extract TechOne Finance Soure Tables\GLF_LDG_ACC_TRANS -- BIG TABLE and Special Process\GLF_LDG_ACC_TRANS - FULL Load JUST ONCE\OLE DB Destination">
     <Properties>
       <Property>
@@ -2119,7 +2119,7 @@ where  ( ldg_name in ('R1','CNLDG') ) or (  ldg_name like '%ACT' and len(ACCNBRI
     </Properties>
   </PipelineComponentMetadata>
   <PipelineComponentMetadata
-    design-time-name="Package\Extract TechOne Finance Soure Tables\GLF_LDG_ACC_TRANS -- BIG TABLE and Special Process\GLF_LDG_ACC_TRANS -  INCREMENTAL Load Daily\OLE DB Destination">
+    design-time-name="Package\Extract TechOne Finance Soure Tables\GLF_LDG_ACC_TRANS -- BIG TABLE and Special Process\GLF_LDG_ACC_TRANS - FULL Load JUST ONCE\OLE DB Source">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>

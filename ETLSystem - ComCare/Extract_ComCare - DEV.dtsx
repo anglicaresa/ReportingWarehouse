@@ -12,8 +12,8 @@
   DTS:ObjectName="Extract_ComCare - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="166"
-  DTS:VersionGUID="{64E48F8B-0728-427E-8945-12AA3AD9F1E8}">
+  DTS:VersionBuild="167"
+  DTS:VersionGUID="{576D35D9-4E6C-474D-BCB3-F24FE4A588E7}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -91,7 +91,7 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{BD2DD660-5799-45D5-8419-30DCE5852199}"
-          SQLTask:SqlStatementSource="&#xA;--use dblink to comcaretrain&#xA;&#xA;select    &#xA; (SELECT '[appsql-3\train].'+'ComCareTrain'+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='comcare' )      ---- need to filter source tables just for ComCare&#xA;and  (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key) &lt;&gt;'extract_comcare.Suburb'&#xA;&#xA; ORDER BY T1.job_key ASC&#xA;&#xA;&#xA;"
+          SQLTask:SqlStatementSource="&#xA;--use dblink to comcaretrain&#xA;&#xA;select    &#xA; (SELECT '[appsql-3\comcareprod].'+'ComCareProd'+'.'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='comcare' )      ---- need to filter source tables just for ComCare&#xA;and  (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key) &lt;&gt;'extract_comcare.Suburb'&#xA;&#xA; ORDER BY T1.job_key ASC&#xA;&#xA;&#xA;"
           SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ResultBinding
             SQLTask:ResultName="0"
@@ -137,7 +137,7 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{BD2DD660-5799-45D5-8419-30DCE5852199}"
-          SQLTask:SqlStatementSource="use dwhb&#xA;&#xA;truncate table extract_comcare.Suburb;&#xA;&#xA;&#xA;insert into extract_comcare.Suburb&#xA;    SELECT *&#xA;    FROM OPENQUERY([appsql-3\train],'SELECT * FROM comcaretrain.dbo.Suburb');" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="use dwhb&#xA;&#xA;truncate table extract_comcare.Suburb;&#xA;&#xA;&#xA;insert into extract_comcare.Suburb&#xA;    SELECT *&#xA;    FROM OPENQUERY([appsql-3\comcareprod],'SELECT * FROM comcareprod.dbo.Suburb');" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -435,6 +435,10 @@
           Id="Package\Extract T1 data"
           TopLeft="125,709" />
         <NodeLayout
+          Size="1068,42"
+          Id="Package\extract_comcare -Suburb"
+          TopLeft="129,644" />
+        <NodeLayout
           Size="924,42"
           Id="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest"
           TopLeft="34.59375,173" />
@@ -545,27 +549,6 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <AnnotationLayout
-          Text="Package name:  Extract source data and import into DWHB.extract.tables for ComCare&#xA;Purpose: Extract source data and import into DWHB.extract.tables&#xA;Develpment history:&#xA;              21/03/2017 Created by JS&#xA;"
-          ParentId="Package"
-          Size="634,121"
-          Id="acb232ed-908b-442e-b718-ec53962ea9a5"
-          TopLeft="133,16">
-          <AnnotationLayout.FontInfo>
-            <mssge:FontInfo
-              Family="Tahoma"
-              Size="15.75"
-              Color="#FF008000">
-              <mssge:FontInfo.TextDecorations>
-                <av:TextDecorationCollection />
-              </mssge:FontInfo.TextDecorations>
-            </mssge:FontInfo>
-          </AnnotationLayout.FontInfo>
-        </AnnotationLayout>
-        <NodeLayout
-          Size="1068,42"
-          Id="Package\extract_comcare -Suburb"
-          TopLeft="129,644" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
           TopLeft="661.328125,603">
@@ -588,6 +571,23 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <AnnotationLayout
+          Text="Package name:  Extract source data and import into DWHB.extract.tables for ComCare&#xA;Purpose: Extract source data and import into DWHB.extract.tables&#xA;Develpment history:&#xA;              21/03/2017 Created by JS&#xA;"
+          ParentId="Package"
+          Size="634,121"
+          Id="acb232ed-908b-442e-b718-ec53962ea9a5"
+          TopLeft="133,16">
+          <AnnotationLayout.FontInfo>
+            <mssge:FontInfo
+              Family="Tahoma"
+              Size="15.75"
+              Color="#FF008000">
+              <mssge:FontInfo.TextDecorations>
+                <av:TextDecorationCollection />
+              </mssge:FontInfo.TextDecorations>
+            </mssge:FontInfo>
+          </AnnotationLayout.FontInfo>
+        </AnnotationLayout>
       </GraphLayout>
     </LayoutInfo>
   </Package>
