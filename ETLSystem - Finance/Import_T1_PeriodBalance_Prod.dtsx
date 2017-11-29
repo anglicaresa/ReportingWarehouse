@@ -12,8 +12,8 @@
   DTS:ObjectName="Import_T1_PeriodBalance_Prod"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="19"
-  DTS:VersionGUID="{55C46EE1-36C1-488E-AFF2-54AF77AAF326}">
+  DTS:VersionBuild="20"
+  DTS:VersionGUID="{A9E30B46-8FD2-45F7-B203-A4985AE1C596}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -278,6 +278,23 @@
   </DTS:ConnectionManagers>
   <DTS:Variables />
   <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\delete data to avoid duplicate"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{F8CDA45D-275E-4058-B983-AE78DBF8FC5B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="delete data to avoid duplicate"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{FF4E427F-DA5D-40E3-9D2F-64DCDB87D707}"
+          SQLTask:SqlStatementSource="declare @v_date datetime =convert(varchar,convert(date,getdate()-1))+' 00:00:00.000';;&#xA;declare @ldger_name_actual varchar(20) = right((select financial_year from conform_finance.date_dim where full_date =@v_date),2)+'GL_ACT';&#x9; &#xA;declare @ldger_name_budget varchar(20)= right((select financial_year from conform_finance.date_dim where full_date =@v_date),2)+'GL_BUD';&#x9;&#xA;delete from extract.GLF_Period_Balance_forKPI where ledger_name in ( @ldger_name_budget, @ldger_name_actual);&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\Import Finance - Period Balance"
       DTS:CreationName="Microsoft.Pipeline"
@@ -1632,23 +1649,6 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\Truncate table period_balance"
-      DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Execute SQL Task"
-      DTS:DTSID="{F8CDA45D-275E-4058-B983-AE78DBF8FC5B}"
-      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-      DTS:LocaleID="-1"
-      DTS:ObjectName="Truncate table period_balance"
-      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
-      <DTS:Variables />
-      <DTS:ObjectData>
-        <SQLTask:SqlTaskData
-          SQLTask:Connection="{FF4E427F-DA5D-40E3-9D2F-64DCDB87D707}"
-          SQLTask:SqlStatementSource="declare @v_date datetime =convert(varchar,convert(date,getdate()-1))+' 00:00:00.000';;&#xA;declare @ldger_name_actual varchar(20) = right((select financial_year from conform_finance.date_dim where full_date =@v_date),2)+'GL_ACT';&#x9; &#xA;declare @ldger_name_budget varchar(20)= right((select financial_year from conform_finance.date_dim where full_date =@v_date),2)+'GL_BUD';&#x9;&#xA;delete from extract.GLF_Period_Balance_forKPI where ledger_name in ( @ldger_name_budget, @ldger_name_actual);&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-      </DTS:ObjectData>
-    </DTS:Executable>
-    <DTS:Executable
       DTS:refId="Package\Truncate table workcoder"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Execute SQL Task"
@@ -1672,7 +1672,7 @@
       DTS:refId="Package.PrecedenceConstraints[Constraint]"
       DTS:CreationName=""
       DTS:DTSID="{273E2EA3-1FDA-43F7-A23A-225EBFC19891}"
-      DTS:From="Package\Truncate table period_balance"
+      DTS:From="Package\delete data to avoid duplicate"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint"
       DTS:To="Package\Import Finance - Period Balance" />
@@ -1704,7 +1704,7 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="232,42"
           Id="Package\Import Finance - Period Balance"
@@ -1715,7 +1715,7 @@
           TopLeft="415,444" />
         <NodeLayout
           Size="232,42"
-          Id="Package\Truncate table period_balance"
+          Id="Package\delete data to avoid duplicate"
           TopLeft="413,110" />
         <NodeLayout
           Size="232,42"
@@ -1726,7 +1726,7 @@
           TopLeft="528,152">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="0,50.5">
@@ -1748,7 +1748,7 @@
           TopLeft="528.5,252">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1770,7 +1770,7 @@
           TopLeft="530.5,354">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,90"
               Start="0,0"
               End="0,82.5">
@@ -1788,9 +1788,9 @@
           </EdgeLayout.Labels>
         </EdgeLayout>
         <AnnotationLayout
-          Text="Notes:&#xD;&#xA;1. First need to run ETL in TechOne Appliation to export files&#xD;&#xA;&#xD;&#xA;2. Workcover is for LSL, so doesn't need anymore"
+          Text="Notes:&#xA;1. First need to run ETL in TechOne Appliation to export files&#xA;&#xA;2. Workcover is for LSL, so doesn't need anymore"
           ParentId="Package"
-          FontInfo="{assembly:Null}"
+          FontInfo="{x:Null}"
           Size="349,90"
           Id="1a9ab28d-37f7-4631-8bc3-a41199dccd9d"
           TopLeft="779,145" />
