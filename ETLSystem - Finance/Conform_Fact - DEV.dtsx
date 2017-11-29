@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="746"
-  DTS:VersionGUID="{77D1CCF5-0301-40FA-BC65-0CF9CF3CD334}">
+  DTS:VersionBuild="747"
+  DTS:VersionGUID="{556FC260-E19C-4E27-8CCD-BF9ABF371E76}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -92,7 +92,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/29/2017 11:48:00 AM</DTS:VariableValue>
+        DTS:DataType="7">11/29/2017 1:15:13 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -139,7 +139,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/29/2017 11:48:00 AM</DTS:VariableValue>
+        DTS:DataType="7">11/29/2017 1:15:13 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -150,7 +150,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/29/2017 11:48:00 AM</DTS:VariableValue>
+        DTS:DataType="7">11/29/2017 1:15:13 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -357,7 +357,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{BF90892F-2F5D-47CF-A2FA-4F3850A04535}"
-                  SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                            Purpose: ETL for expense_fact&#xA;Developer: Frank Wang&#xA;Version: V1.0 20/09/2017 Created by Frank Wang&#xA;Note:&#xA;Source table: extract.[expense_transaction]&#xA;Need to map key from conform to conform_finance as they use different primary key.&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;SET XACT_ABORT, NOCOUNT ON;&#xA;BEGIN TRANSACTION;&#xA;   use dwhb;&#xA;&#xA;&#xA;   -- temp table&#xA;    declare @t_expense TABLE&#xA;   (&#xA;&#x9;[Transaction_no] [varchar](10) NULL,&#xA;&#x9;[Transaction_date_key] [int] NULL,&#xA;&#x9;[Merchant_Name] [varchar](50) NULL,&#xA;&#x9;[Employee_Email] [varchar](50) NULL,&#xA;&#x9;[Employee_key] [int] NULL,&#xA;&#x9;[Portfolio_key] [int] NULL,&#xA;&#x9;[Service_stream_key] [int] NULL,&#xA;&#x9;[Program_key] [int] NULL,&#xA;&#x9;[Manager_key] [int] NULL,&#xA;&#x9;[Card_Infomation] [varchar](50) NULL,&#xA;&#x9;[Amount] [decimal](10, 2) NULL,&#xA;&#x9;[Net_Amount] [decimal](10, 2) NULL,&#xA;&#x9;[Tax_Amount] [decimal](10, 2) NULL,&#xA;&#x9;[GST] [varchar](10) NULL,&#xA;&#x9;[Description] [varchar](200) NULL,&#xA;&#x9;[Activity code] [varchar](50) NULL,&#xA;&#x9;[Expense_Type] [varchar](50) NULL,&#xA;&#x9;[Line_desription] [varchar](100) NULL,&#xA;&#x9;[Entity] [varchar](10) NULL,&#xA;&#x9;[Costing] [varchar](10) NULL,&#xA;&#x9;[Activity] [varchar](10) NULL,&#xA;&#x9;[Natural] [varchar](10) NULL,&#xA;&#x9;[Staus] [varchar](20) NULL   &#xA;   );&#xA;&#xA;   insert into  @t_expense&#xA;select &#xA;  TRY_CONVERT(varchar(10),et.Transaction_no) AS Transaction_no,&#xA;  dd.date_key as transaction_date_key,&#xA;  et.[Merchant Name],&#xA;  et.[card_holder_email],&#xA;  d.employee_key,&#xA;  f.portfolio_key,&#xA;  f.service_stream_key,&#xA;  f.program_key,&#xA; -- f.position_key,&#xA;  f.manager_key,&#xA;  et.Card_No,&#xA;  TRY_CONVERT([decimal](10, 2),et.amount) AS Amount,&#xA;  TRY_CONVERT([decimal](10, 2),et.Net_Amount) AS Net_Amount,&#xA;  TRY_CONVERT([decimal](10, 2),et.Tax_Amount) AS Tax_Amount,&#xA;  TRY_CONVERT(varchar(10),et.GST) AS GST,&#xA;  et.[Description],&#xA;  et.[Activity code],&#xA;  et.[Expense Type],&#xA;  et.[Line desription],&#xA;  TRY_CONVERT(varchar(10),et.Entity) AS Entity,&#xA;  TRY_CONVERT(varchar(10),et.Costing) AS Costing,&#xA;  TRY_CONVERT(varchar(10), et.Activity) AS Activity,&#xA;  TRY_CONVERT(varchar(10),et.Natural) AS Natural,&#xA;   'Uncoded' AS [Status]&#xA;  from extract.expense_transaction et inner join conform.employee_dim d &#xA;  on et.employee_Costing = d.id_number and d.current_row_indicator = 'Y'&#xA;  inner join  conform.employee_position_fact f on d.employee_key = f.employee_key&#xA;  left join conform_finance.date_dim dd on et.Transaction_Date = CONVERT(VARCHAR(8), dd.full_date, 112)&#xA;&#xA; --update status &#xA; -- If costing information is NULL then Uncoded else Waiting for approval&#xA; update  @t_expense&#xA; set Staus = 'Waiting for approval'&#xA; where len(ltrim(rtrim(costing)))&gt;0;&#xA;&#xA; --update keys:&#xA;--&#x9;[Program_key],&#xA;&#xA;WITH  t_program_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.program_key as fp_key, p.program_key as p_key &#xA;from conform_finance.program_dim fp inner join conform.program_dim p on fp.program_code = p.program_code&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.program_key = t_program_map.fp_key&#xA;FROM @t_expense AS t inner join t_program_map&#xA;on t.program_key = t_program_map.p_key;&#xA;&#xA; --update keys:&#xA;--[Portfolio_key],&#xA;WITH  t_portfolio_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.portfolio_key as fp_key, p.portfolio_key as p_key &#xA;from conform_finance.portfolio_dim fp inner join conform.portfolio_dim p on fp.portfolio_code = p.portfolio_code&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.portfolio_key = t_portfolio_map.fp_key&#xA;FROM @t_expense AS t inner join t_portfolio_map&#xA;on t.portfolio_key = t_portfolio_map.p_key;&#xA;&#xA; --update keys:&#xA;--[Service_stream_key],&#xA;WITH  t_Service_stream_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.Service_stream_key as fp_key, p.Service_stream_key as p_key &#xA;from conform_finance.Service_stream_dim fp inner join conform.Service_stream_dim p on fp.Service_stream_code = p.Service_stream_code&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.Service_stream_key = t_Service_stream_map.fp_key&#xA;FROM @t_expense AS t inner join t_Service_stream_map&#xA;on t.Service_stream_key = t_Service_stream_map.p_key;&#xA;&#xA; --update keys:&#xA;--[employee_key],&#xA;WITH  t_employee_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.employee_key as fp_key, p.employee_key as p_key &#xA;from conform_finance.employee_dim fp inner join conform.employee_dim p on fp.id_number = p.id_number&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.employee_key = t_employee_map.fp_key&#xA;FROM @t_expense AS t inner join t_employee_map&#xA;on t.employee_key = t_employee_map.p_key;&#xA;&#xA; --update keys:&#xA;--[manager_key],&#xA;WITH  t_employee_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.employee_key as fp_key, p.employee_key as p_key &#xA;from conform_finance.employee_dim fp inner join conform.employee_dim p on fp.id_number = p.id_number&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.manager_key = t_employee_map.fp_key&#xA;FROM @t_expense AS t inner join t_employee_map&#xA;on t.manager_key = t_employee_map.p_key;&#xA;&#xA;--Insert result to destination&#xA; insert into conform_finance.expense_fact&#xA; (&#xA;[Transaction_no],&#xA;&#x9;[Transaction_date_key],&#xA;&#x9;[Merchant_Name] ,&#xA;&#x9;[Employee_Email],&#xA;&#x9;[Employee_key],&#xA;&#x9;[Portfolio_key],&#xA;&#x9;[Service_stream_key],&#xA;&#x9;[Program_key],&#xA;&#x9;[Manager_key],&#xA;&#x9;[Card_Infomation] ,&#xA;&#x9;[Amount] ,&#xA;&#x9;[Net_Amount] ,&#xA;&#x9;[Tax_Amount] ,&#xA;&#x9;[GST] ,&#xA;&#x9;[Description],&#xA;&#x9;[Activity code] ,&#xA;&#x9;[Expense_Type] ,&#xA;&#x9;[Line_desription] ,&#xA;&#x9;[Entity],&#xA;&#x9;[Costing] ,&#xA;&#x9;[Activity] ,&#xA;&#x9;[Natural] ,&#xA;&#x9;[Staus] &#xA;     )&#xA;select &#xA;[Transaction_no],&#xA;&#x9;[Transaction_date_key],&#xA;&#x9;[Merchant_Name] ,&#xA;&#x9;[Employee_Email],&#xA;&#x9;[Employee_key],&#xA;&#x9;[Portfolio_key],&#xA;&#x9;[Service_stream_key],&#xA;&#x9;[Program_key],&#xA;&#x9;[Manager_key],&#xA;&#x9;[Card_Infomation] ,&#xA;&#x9;[Amount] ,&#xA;&#x9;[Net_Amount] ,&#xA;&#x9;[Tax_Amount] ,&#xA;&#x9;[GST] ,&#xA;&#x9;[Description],&#xA;&#x9;[Activity code] ,&#xA;&#x9;[Expense_Type] ,&#xA;&#x9;[Line_desription] ,&#xA;&#x9;[Entity],&#xA;&#x9;[Costing] ,&#xA;&#x9;[Activity] ,&#xA;&#x9;[Natural] ,&#xA;&#x9;[Staus] &#xA; from @t_expense;&#xA;&#xA; COMMIT TRANSACTION;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;                            Purpose: ETL for expense_fact&#xA;Developer: Frank Wang&#xA;Version: V1.0 20/09/2017 Created by Frank Wang&#xA;Note:&#xA;Source table: extract.[expense_transaction]&#xA;Need to map key from conform to conform_finance as they use different primary key.&#xA;---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;SET XACT_ABORT, NOCOUNT ON;&#xA;BEGIN TRANSACTION;&#xA;   use dwhb;&#xA;&#xA;&#xA;   -- temp table&#xA;    declare @t_expense TABLE&#xA;   (&#xA;&#x9;[Transaction_no] [varchar](10) NULL,&#xA;&#x9;[Transaction_date_key] [int] NULL,&#xA;&#x9;[Merchant_Name] [varchar](50) NULL,&#xA;&#x9;[Employee_Email] [varchar](50) NULL,&#xA;&#x9;[Employee_key] [int] NULL,&#xA;&#x9;[Portfolio_key] [int] NULL,&#xA;&#x9;[Service_stream_key] [int] NULL,&#xA;&#x9;[Program_key] [int] NULL,&#xA;&#x9;[Manager_key] [int] NULL,&#xA;&#x9;[Card_Infomation] [varchar](50) NULL,&#xA;&#x9;[Amount] [decimal](10, 2) NULL,&#xA;&#x9;[Net_Amount] [decimal](10, 2) NULL,&#xA;&#x9;[Tax_Amount] [decimal](10, 2) NULL,&#xA;&#x9;[GST] [varchar](10) NULL,&#xA;&#x9;[Description] [varchar](200) NULL,&#xA;&#x9;[Activity code] [varchar](50) NULL,&#xA;&#x9;[Expense_Type] [varchar](50) NULL,&#xA;&#x9;[Line_desription] [varchar](100) NULL,&#xA;&#x9;[Entity] [varchar](10) NULL,&#xA;&#x9;[Costing] [varchar](10) NULL,&#xA;&#x9;[Activity] [varchar](10) NULL,&#xA;&#x9;[Natural] [varchar](10) NULL,&#xA;&#x9;[Staus] [varchar](20) NULL   &#xA;   );&#xA;&#xA;   insert into  @t_expense&#xA;select &#xA;  TRY_CONVERT(varchar(10),et.Transaction_no) AS Transaction_no,&#xA;  dd.date_key as transaction_date_key,&#xA;  et.[Merchant Name],&#xA;  et.[card_holder_email],&#xA;  d.employee_key,&#xA;  f.portfolio_key,&#xA;  f.service_stream_key,&#xA;  f.program_key,&#xA; -- f.position_key,&#xA;  f.manager_key,&#xA;  et.Card_No,&#xA;  TRY_CONVERT([decimal](10, 2),et.amount) AS Amount,&#xA;  TRY_CONVERT([decimal](10, 2),et.Net_Amount) AS Net_Amount,&#xA;  TRY_CONVERT([decimal](10, 2),et.Tax_Amount) AS Tax_Amount,&#xA;  TRY_CONVERT(varchar(10),et.GST) AS GST,&#xA;  left(et.[Description],200),&#xA;  et.[Activity code],&#xA;  et.[Expense Type],&#xA;  et.[Line desription],&#xA;  TRY_CONVERT(varchar(10),et.Entity) AS Entity,&#xA;  TRY_CONVERT(varchar(10),et.Costing) AS Costing,&#xA;  TRY_CONVERT(varchar(10), et.Activity) AS Activity,&#xA;  TRY_CONVERT(varchar(10),et.Natural) AS Natural,&#xA;   'Uncoded' AS [Status]&#xA;  from extract.expense_transaction et inner join conform.employee_dim d &#xA;  on et.employee_Costing = d.id_number and d.current_row_indicator = 'Y'&#xA;  inner join  conform.employee_position_fact f on d.employee_key = f.employee_key&#xA;  left join conform_finance.date_dim dd on et.Transaction_Date = CONVERT(VARCHAR(8), dd.full_date, 112)&#xA;&#xA; --update status &#xA; -- If costing information is NULL then Uncoded else Waiting for approval&#xA; update  @t_expense&#xA; set Staus = 'Waiting for approval'&#xA; where len(ltrim(rtrim(costing)))&gt;0;&#xA;&#xA; --update keys:&#xA;--&#x9;[Program_key],&#xA;&#xA;WITH  t_program_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.program_key as fp_key, p.program_key as p_key &#xA;from conform_finance.program_dim fp inner join conform.program_dim p on fp.program_code = p.program_code&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.program_key = t_program_map.fp_key&#xA;FROM @t_expense AS t inner join t_program_map&#xA;on t.program_key = t_program_map.p_key;&#xA;&#xA; --update keys:&#xA;--[Portfolio_key],&#xA;WITH  t_portfolio_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.portfolio_key as fp_key, p.portfolio_key as p_key &#xA;from conform_finance.portfolio_dim fp inner join conform.portfolio_dim p on fp.portfolio_code = p.portfolio_code&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.portfolio_key = t_portfolio_map.fp_key&#xA;FROM @t_expense AS t inner join t_portfolio_map&#xA;on t.portfolio_key = t_portfolio_map.p_key;&#xA;&#xA; --update keys:&#xA;--[Service_stream_key],&#xA;WITH  t_Service_stream_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.Service_stream_key as fp_key, p.Service_stream_key as p_key &#xA;from conform_finance.Service_stream_dim fp inner join conform.Service_stream_dim p on fp.Service_stream_code = p.Service_stream_code&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.Service_stream_key = t_Service_stream_map.fp_key&#xA;FROM @t_expense AS t inner join t_Service_stream_map&#xA;on t.Service_stream_key = t_Service_stream_map.p_key;&#xA;&#xA; --update keys:&#xA;--[employee_key],&#xA;WITH  t_employee_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.employee_key as fp_key, p.employee_key as p_key &#xA;from conform_finance.employee_dim fp inner join conform.employee_dim p on fp.id_number = p.id_number&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.employee_key = t_employee_map.fp_key&#xA;FROM @t_expense AS t inner join t_employee_map&#xA;on t.employee_key = t_employee_map.p_key;&#xA;&#xA; --update keys:&#xA;--[manager_key],&#xA;WITH  t_employee_map (fp_key,p_key)&#xA;AS  &#xA;(select fp.employee_key as fp_key, p.employee_key as p_key &#xA;from conform_finance.employee_dim fp inner join conform.employee_dim p on fp.id_number = p.id_number&#xA;and fp.current_row_indicator = 'y' and p.current_row_indicator = 'y')&#xA;UPDATE t&#xA;SET t.manager_key = t_employee_map.fp_key&#xA;FROM @t_expense AS t inner join t_employee_map&#xA;on t.manager_key = t_employee_map.p_key;&#xA;&#xA;&#xA;--truncate fact table&#xA;truncate table conform_finance.expense_fact&#xA;&#xA;--Insert result to destination&#xA; insert into conform_finance.expense_fact&#xA; (&#xA;[Transaction_no],&#xA;&#x9;[Transaction_date_key],&#xA;&#x9;[Merchant_Name] ,&#xA;&#x9;[Employee_Email],&#xA;&#x9;[Employee_key],&#xA;&#x9;[Portfolio_key],&#xA;&#x9;[Service_stream_key],&#xA;&#x9;[Program_key],&#xA;&#x9;[Manager_key],&#xA;&#x9;[Card_Infomation] ,&#xA;&#x9;[Amount] ,&#xA;&#x9;[Net_Amount] ,&#xA;&#x9;[Tax_Amount] ,&#xA;&#x9;[GST] ,&#xA;&#x9;[Description],&#xA;&#x9;[Activity code] ,&#xA;&#x9;[Expense_Type] ,&#xA;&#x9;[Line_desription] ,&#xA;&#x9;[Entity],&#xA;&#x9;[Costing] ,&#xA;&#x9;[Activity] ,&#xA;&#x9;[Natural] ,&#xA;&#x9;[Staus] &#xA;     )&#xA;select &#xA;[Transaction_no],&#xA;&#x9;[Transaction_date_key],&#xA;&#x9;[Merchant_Name] ,&#xA;&#x9;[Employee_Email],&#xA;&#x9;[Employee_key],&#xA;&#x9;[Portfolio_key],&#xA;&#x9;[Service_stream_key],&#xA;&#x9;[Program_key],&#xA;&#x9;[Manager_key],&#xA;&#x9;[Card_Infomation] ,&#xA;&#x9;[Amount] ,&#xA;&#x9;[Net_Amount] ,&#xA;&#x9;[Tax_Amount] ,&#xA;&#x9;[GST] ,&#xA;&#x9;[Description],&#xA;&#x9;[Activity code] ,&#xA;&#x9;[Expense_Type] ,&#xA;&#x9;[Line_desription] ,&#xA;&#x9;[Entity],&#xA;&#x9;[Costing] ,&#xA;&#x9;[Activity] ,&#xA;&#x9;[Natural] ,&#xA;&#x9;[Staus] &#xA; from @t_expense;&#xA;&#xA; COMMIT TRANSACTION;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
             <DTS:Executable
@@ -999,7 +999,7 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph" xmlns:mssge="clr-namespace:Microsoft.SqlServer.Graph.Extended;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph" xmlns:mssge="clr-namespace:Microsoft.SqlServer.Graph.Extended;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - DEBTOR_FACT\EST - Write Job Finish info"
@@ -1021,7 +1021,7 @@
           TopLeft="116.5,47.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1043,7 +1043,7 @@
           TopLeft="116.5,149.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1065,7 +1065,7 @@
           TopLeft="116.5,251.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1110,7 +1110,7 @@
           TopLeft="165.65,70">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,31"
               Start="0,0"
               End="0,23.5">
@@ -1132,7 +1132,7 @@
           TopLeft="165.65,143">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,48"
               Start="0,0"
               End="0,40.5">
@@ -1154,7 +1154,7 @@
           TopLeft="163.65,233">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,40"
               Start="0,0"
               End="0,32.5">
@@ -1195,7 +1195,7 @@
           TopLeft="116.5,47.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,70"
               Start="0,0"
               End="0,62.5">
@@ -1217,7 +1217,7 @@
           TopLeft="116.5,159.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="0,46.5">
@@ -1258,7 +1258,7 @@
           TopLeft="163.65,70">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,79"
               Start="0,0"
               End="0,71.5">
@@ -1280,7 +1280,7 @@
           TopLeft="163.65,191">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,82"
               Start="0,0"
               End="0,74.5">
@@ -1325,7 +1325,7 @@
           TopLeft="134,47.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-54,60"
               Start="0,0"
               End="-54,52.5">
@@ -1359,7 +1359,7 @@
           TopLeft="80,149.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="54,60"
               Start="0,0"
               End="54,52.5">
@@ -1393,7 +1393,7 @@
           TopLeft="134,251.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1442,7 +1442,7 @@
           TopLeft="164.083333333333,70">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,29"
               Start="0,0"
               End="0,21.5">
@@ -1464,7 +1464,7 @@
           TopLeft="163.583333333333,141">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="0,46.5">
@@ -1486,7 +1486,7 @@
           TopLeft="163.583333333333,237">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,51"
               Start="0,0"
               End="0,43.5">
@@ -1508,7 +1508,7 @@
           TopLeft="164.083333333333,330">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,55"
               Start="0,0"
               End="0,47.5">
@@ -1537,7 +1537,7 @@
           TopLeft="241.5,439.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="24,0"
               Start="0,0"
               End="16.5,0">
@@ -1561,7 +1561,7 @@
           TopLeft="498.5,439.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="26,0"
               Start="0,0"
               End="18.5,0">
@@ -1585,7 +1585,7 @@
           TopLeft="792.5,440">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="25,0"
               Start="0,0"
               End="17.5,0">
@@ -1609,7 +1609,7 @@
           TopLeft="1143.5,442">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="49,0"
               Start="0,0"
               End="41.5,0">
@@ -1633,7 +1633,7 @@
           TopLeft="1517.5,444.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="36,0"
               Start="0,0"
               End="28.5,0">
