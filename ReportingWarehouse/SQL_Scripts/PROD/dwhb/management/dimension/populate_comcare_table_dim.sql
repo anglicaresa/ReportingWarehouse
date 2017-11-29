@@ -22,6 +22,33 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('fc_account_type', 'comcare', 'dbo'
 INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_contract_billed_to', 'comcare', 'dbo', 'xxxxxxx', 'xxxxxxx');
 INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_contract_billing', 'comcare', 'dbo', 'xxxxxxx', 'xxxxxxx');
 INSERT INTO [management].[TABLE_DIM] VALUES ('fb_client_cb_split', 'comcare', 'dbo', 'xxxxxxx', 'xxxxxxx');
+
+--added by Frank 27-11-2017
+INSERT INTO [management].[TABLE_DIM] VALUES ('FB_Client_CB_Transaction','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('FC_Funder_Contract','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('actual_service','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('FC_Funder_Contract','comcare','dbo','comcareprod','appsql-3');
+-- schema: extract_comcare
+INSERT INTO [management].[TABLE_DIM] VALUES ('FB_Client_CB_Transaction','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('FC_Funder_Contract','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('actual_service','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('FC_Funder_Contract','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+
+--FC_Funder_Contract
+
+DECLARE @t_table varchar(max)= 'FC_Funder_Contract';
+
+    insert into [management].[job_control] values 
+        ((select table_key from [management].[table_dim] where table_name = @t_table and [schema] = 'dbo' and [system] = 'comcare'),
+        'YES', 
+        (select table_key from [management].[table_dim] where table_name = @t_table and [schema] = 'extract_comcare' and [system] = 'dwh'), 
+        (select package_key from [management].[package_dim] where package_name = 'EXTRACT' and sub_system = 'Extract system'),1,'daily');
+
+
+
+--end added by Frank 27-11-2017
+
+
 --added by Frank 15-11-2017
 INSERT INTO [management].[TABLE_DIM] VALUES ('address','comcare','dbo','comcareprod','appsql-3');
 INSERT INTO [management].[TABLE_DIM] VALUES ('client','comcare','dbo','comcareprod','appsql-3');
