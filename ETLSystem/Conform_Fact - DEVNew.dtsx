@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEVNew"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="642"
-  DTS:VersionGUID="{FDAFC922-7DA1-494D-9717-013A21BAFF6A}">
+  DTS:VersionBuild="643"
+  DTS:VersionGUID="{FD0EF9AB-89C4-47F6-9CC5-D636BAFFE930}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/5/2017 1:20:47 PM</DTS:VariableValue>
+        DTS:DataType="7">12/6/2017 9:01:56 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/5/2017 1:20:47 PM</DTS:VariableValue>
+        DTS:DataType="7">12/6/2017 9:01:56 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/5/2017 1:20:47 PM</DTS:VariableValue>
+        DTS:DataType="7">12/6/2017 9:01:56 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -272,7 +272,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{476CD5C3-0FB5-46D0-B31E-A8381EC0659A}"
-                  SQLTask:SqlStatementSource="&#xA;declare @date_key int = (select top 1 date_key from conform.date_dim d where d.full_date = (cast(CONVERT(nvarchar(30), GETDATE(), 103) as datetime)))&#xA;delete from conform.all_employees_report_fact_history  where backup_date_key = @date_key;&#xA;&#xA;--insert data with date_key&#xA;insert into conform.all_employees_report_fact_history&#xA;      select &#xA;    epf.portfolio_key,&#xA;    epf.service_stream_key,&#xA;    epf.program_key,&#xA;    epf.position_key,&#xA;    epf.employee_key,&#xA;    ed.employee_type,&#xA;    ed.employee_class,&#xA;    epf.manager_key,&#xA;    epf.manager_position_key,&#xA;    th.date_key as commencement_date_key,&#xA;--    9999999 as termination_date_key,&#xA;--    th.date_key as effective_date_key,&#xA;--    9999999 as expire_date_key,&#xA;    1 as count,&#xA;    @date_key as backup_date_key&#xA;    from conform.employee_dim ed&#xA;&#x9; inner join conform.employee_position_fact epf&#xA;&#x9;  on ed.employee_key = epf.employee_key and ed.current_row_indicator = 'y' and epf.primary_position_flag = 'P'&#xA;&#x9;inner join (select min(d.date_key) as date_key,e.employee_key &#xA;&#x9;from conform.employee_temp e left join conform.date_dim d on try_cast( e.hired_date as datetime) = d.full_date&#xA;&#x9;group by e.employee_key) as th on ed.employee_key = th.employee_key;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="&#xA;declare @date_key int =( &#xA;    select top 1 date_key from conform.date_dim d &#xA;    where d.full_date = (cast(CONVERT(date, getdate()) as datetime))&#xA;);&#xA;&#xA;delete from conform.all_employees_report_fact_history  where backup_date_key = @date_key;&#xA;&#xA;--insert data with date_key&#xA;insert into conform.all_employees_report_fact_history&#xA;      select &#xA;    epf.portfolio_key,&#xA;    epf.service_stream_key,&#xA;    epf.program_key,&#xA;    epf.position_key,&#xA;    epf.employee_key,&#xA;    ed.employee_type,&#xA;    ed.employee_class,&#xA;    epf.manager_key,&#xA;    epf.manager_position_key,&#xA;    th.date_key as commencement_date_key,&#xA;--    9999999 as termination_date_key,&#xA;--    th.date_key as effective_date_key,&#xA;--    9999999 as expire_date_key,&#xA;    1 as count,&#xA;    @date_key as backup_date_key&#xA;    from conform.employee_dim ed&#xA;&#x9; inner join conform.employee_position_fact epf&#xA;&#x9;  on ed.employee_key = epf.employee_key and ed.current_row_indicator = 'y' and epf.primary_position_flag = 'P'&#xA;&#x9;inner join (select min(d.date_key) as date_key,e.employee_key &#xA;&#x9;from conform.employee_temp e left join conform.date_dim d on try_cast( e.hired_date as datetime) = d.full_date&#xA;&#x9;group by e.employee_key) as th on ed.employee_key = th.employee_key;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
             <DTS:Executable
@@ -14942,6 +14942,10 @@ where employee_key=? </property>
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history\insert current employees"
           TopLeft="51.6041666666666,304.757575757578" />
         <NodeLayout
+          Size="198,42"
+          Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history\insert employee history"
+          TopLeft="57.5714285714285,414.380952380956" />
+        <NodeLayout
           Size="197,42"
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history\update terminated date for terminated ones"
           TopLeft="53.2102272727274,116.454545454544" />
@@ -14990,32 +14994,6 @@ where employee_key=? </property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history.PrecedenceConstraints[Constraint 3]"
-          TopLeft="151.248106060606,252.09090909091">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,52.6666666666678"
-              Start="0,0"
-              End="0,45.1666666666678">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,45.1666666666678" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="198,42"
-          Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history\insert employee history"
-          TopLeft="57.5714285714285,414.380952380956" />
-        <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history.PrecedenceConstraints[Constraint 2]"
           TopLeft="153.587797619048,346.757575757578">
           <EdgeLayout.Curve>
@@ -15029,6 +15007,28 @@ where employee_key=? </property>
                   Capacity="5">
                   <mssgle:LineSegment
                     End="0,60.1233766233781" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history.PrecedenceConstraints[Constraint 3]"
+          TopLeft="151.248106060606,252.09090909091">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,52.6666666666678"
+              Start="0,0"
+              End="0,45.1666666666678">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,45.1666666666678" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
