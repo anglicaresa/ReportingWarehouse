@@ -1,4 +1,10 @@
 ﻿-- employee_payment_fact
+use dwhb;
+go
+
+DROP TABLE [conform].[employee_payment_fact];
+GO
+
 create table [conform].[employee_payment_fact] (
 	[employee_payment_key] int identity(1,1) not null,
 	[portfolio_key] int  not null,
@@ -19,6 +25,7 @@ create table [conform].[employee_payment_fact] (
 	[pay_component_ref] decimal(10,4) null,
 	[pay_period_type] varchar(10) null,
 	[posted_ind] varchar (1) null,
+    [document_type] VARCHAR (10) null,
 	[count] int
   
 );
