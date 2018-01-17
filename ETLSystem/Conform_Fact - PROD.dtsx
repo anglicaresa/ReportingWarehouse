@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - PROD"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="629"
-  DTS:VersionGUID="{726AF7BC-4C15-4C73-B2C2-F84339B1E3BE}">
+  DTS:VersionBuild="632"
+  DTS:VersionGUID="{9C451E04-622D-49DD-BAE8-0CCAA40F1EB1}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/8/2018 2:44:21 PM</DTS:VariableValue>
+        DTS:DataType="7">1/17/2018 11:57:33 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/8/2018 2:44:21 PM</DTS:VariableValue>
+        DTS:DataType="7">1/17/2018 11:57:33 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/8/2018 2:44:21 PM</DTS:VariableValue>
+        DTS:DataType="7">1/17/2018 11:57:33 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -14286,6 +14286,156 @@ where employee_key=? </property>
           </DTS:EventHandlers>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{283bd3e5-98cf-44eb-864b-e433e727d83a}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SD2 - LABOUR_TURNOVER_FACT --ReRun">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Delete data for Yesterday"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{f03c23b1-c6bc-4351-bf68-648d0b9baa8d}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Delete data for Yesterday"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{2A78DA3F-7CEE-4C44-A9F0-85606FA444B9}"
+                  SQLTask:SqlStatementSource="truncate table conform.labour_turnover_fact" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{4a0b1e98-98c2-4436-81fc-f662ea13588f}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{2A78DA3F-7CEE-4C44-A9F0-85606FA444B9}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.labour_turnover_fact'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{6db32e2a-b8de-408d-a282-87401fa72691}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{2A78DA3F-7CEE-4C44-A9F0-85606FA444B9}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.labour_turnover_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Get data for yesterday"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{d3782ce1-120e-4c02-bf10-ec91bb4ef6d0}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Get data for yesterday"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{2A78DA3F-7CEE-4C44-A9F0-85606FA444B9}"
+                  SQLTask:SqlStatementSource="/*&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA;select &#xA;t1.month_date_key,&#xA;t1.service_stream_key,&#xA;case when t2.permanent_ft_count=0 then 0.0000 else  convert(decimal(10,2),t1.permanent_ft_count)/convert(decimal(10,2),t2.permanent_ft_count) end as permanent_ft_turnover,&#xA;case when t2.permanent_pt_count=0 then 0.0000 else  convert(decimal(10,2),t1.permanent_pt_count)/convert(decimal(10,2),t2.permanent_pt_count) end as permanent_pt_turnover,&#xA;case when t2.contract_ft_count=0 then 0.0000 else  convert(decimal(10,2),t1.contract_ft_count)/convert(decimal(10,2),t2.contract_ft_count) end as contract_ft_turnover,&#xA;case when t2.contract_pt_count=0 then 0.0000 else convert(decimal(10,2),t1.contract_pt_count)/convert(decimal(10,2),t2.contract_pt_count)  end as contract_pt_turnover,&#xA;case when t2.casual_count=0 then 0.0000 else convert(decimal(10,2),t1.casual_count)/convert(decimal(10,2),t2.casual_count) end  as causual_turnover,&#xA;case when t2.total_count=0 then 0.0000 else convert(decimal(10,2),t1.total_count)/convert(decimal(10,2),t2.total_count) end as total_turnover&#xA;&#xA;from &#xA;(select &#xA;  d3.month_key as month_date_key,&#xA;  f1.service_stream_key,&#xA;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;  sum(case when total_count=1 then 1 else 0 end) as  total_count&#xA;  from conform.employee_termination_fact as f1 &#xA;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;  where d3.month_key is not null&#xA;  group by  d3.month_key,f1.service_stream_key&#xA; ) as t1&#xA;  inner join &#xA;  (&#xA;select &#xA;  f1.service_stream_key,&#xA;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;  sum(case when total_count=1 then 1 else 0 end) as  total_count&#xA;  from conform.employee_profile_fact as f1 &#xA;  group by service_stream_key) as t2&#xA;  on t1.service_stream_key=t2.service_stream_key&#xA;&#xA;&#xA;  update [conform].[labour_turnover_fact]&#xA;  set permanent_ft_turnover=0&#xA;  where permanent_ft_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set permanent_pt_turnover=0&#xA;  where permanent_pt_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set contract_ft_turnover=0&#xA;  where contract_ft_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set contract_pt_turnover=0&#xA;  where contract_pt_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set casual_turnover=0&#xA;  where casual_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set total_turnover=0&#xA;  where total_turnover is null&#xA;*/&#xA;&#xA;&#xA;-- insert service stream part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA; select &#xA;t1.month_date_key,&#xA;1,&#xA;t1.service_stream_key,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0&#xA;from &#xA; (select t0.month_date_key, d.service_stream_key from &#xA;   ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;    left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;    left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;    where d3.month_key is not null) as t0&#xA;  cross join conform.service_stream_dim d &#xA;where d.current_row_indicator = 'Y' and d.service_stream_code !=99999) as t1&#xA;&#xA;&#xA; -- insert portfolio part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA; select &#xA;t1.month_date_key,&#xA;portfolio_key,&#xA;1,0,0,0,0,0,0,  0,0,0,0,0,0, 0,0,0,0,0,0&#xA;from &#xA; (select t0.month_date_key, d.portfolio_key from &#xA;   ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;    left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;    left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;    where d3.month_key is not null) as t0&#xA;  cross join conform.portfolio_dim d &#xA;where d.current_row_indicator = 'Y' and d.portfolio_code !=99999) as t1;&#xA;&#xA;&#xA;&#xA;&#xA;--update service stream part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA; ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA; ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA; ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA; ltt.[casual_lost] =t1.casual_count,&#xA; ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact ltt inner join &#xA;   (select &#xA;     d3.month_key as month_date_key,&#xA;     f1.service_stream_key,&#xA;     sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;     sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;     sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;     from conform.employee_termination_fact as f1 &#xA;     left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;     left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;     where d3.month_key is not null&#xA;     group by  d3.month_key,f1.service_stream_key&#xA;    ) as t1&#xA;    on ltt.service_stream_key = t1.service_stream_key&#xA;    and ltt.month_date_key = t1.month_date_key&#xA;    and ltt.portfolio_key = 1&#xA;    &#xA;--select * from CONFORM.labour_turnover_fact&#xA;&#xA;--update portfolio part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA; ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA; ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA; ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA; ltt.[casual_lost] =t1.casual_count,&#xA; ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact ltt inner join &#xA;   (select &#xA;     d3.month_key as month_date_key,&#xA;     f1.portfolio_key,&#xA;     sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;     sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;     sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;     from conform.employee_termination_fact as f1 &#xA;     left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;     left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;     where d3.month_key is not null&#xA;     --and f1.service_stream_key=1&#xA;     group by  d3.month_key,f1.portfolio_key&#xA;    ) as t1&#xA;    on ltt.portfolio_key = t1.portfolio_key&#xA;    and ltt.month_date_key = t1.month_date_key&#xA;    and ltt.service_stream_key = 1&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;declare @t_month int =  (select min(month_date_key) from CONFORM.labour_turnover_fact );&#xA;&#xA;--month's key&#xA;declare @month_key_t int = &#xA;(&#xA; select month_key from conform.month_dim d where d.year = year(getdate())&#xA; and d.month_number = month(getdate())&#xA;);&#xA;&#xA;&#xA;declare @t_date_key int;&#xA;&#xA;while @t_month &lt;= @month_key_t&#xA;begin &#xA;&#xA; set  @t_date_key =  &#xA;   (select d.date_key from &#xA;   conform.date_dim d inner join conform.month_dim m &#xA;   on d.year=m.year and d.month_no = m.month_number and d.day_of_month =1&#xA;   and m.month_key = @t_month);&#xA; --update service stream part&#xA; --all employee part&#xA; update ltt&#xA; set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;  ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;  ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;  ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;  ltt.[casual_total] =t2.casual_count,&#xA;  ltt.[total] =t2.total_count&#xA; from&#xA; CONFORM.labour_turnover_fact ltt inner join &#xA;      (&#xA;     select &#xA;     t2.service_stream_key,&#xA;     sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;     sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;     sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;     from conform.all_employees_report_fact t2&#xA;     where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;     and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;     group by service_stream_key&#xA;    ) as t2&#xA;     on ltt.service_stream_key = t2.service_stream_key&#xA;     and ltt.month_date_key = @t_month&#xA;     and ltt.portfolio_key = 1;&#xA;&#xA; --update portfolio part&#xA; --all employee part&#xA; update ltt&#xA; set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;  ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;  ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;  ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;  ltt.[casual_total] =t2.casual_count,&#xA;  ltt.[total] =t2.total_count&#xA; from&#xA; CONFORM.labour_turnover_fact ltt inner join &#xA;      (&#xA;      select &#xA;      t2.portfolio_key,&#xA;      sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;      sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;      sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;      sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;      sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;      sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;      from conform.all_employees_report_fact t2&#xA;      where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;      and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;      --and t2.service_stream_key = 1&#xA;      group by portfolio_key&#xA;      ) as t2&#xA;     on ltt.portfolio_key = t2.portfolio_key&#xA;     and ltt.month_date_key = @t_month&#xA;     and ltt.service_stream_key = 1;     &#xA; set @t_month = @t_month +1;    &#xA;end;&#xA;--select * from CONFORM.labour_turnover_fact&#xA;    &#xA;&#xA;     &#xA;--select * from CONFORM.labour_turnover_fact     &#xA;--update report part   &#xA;update ltt&#xA;set &#xA;   permanent_ft_turnover = case when ltt.permanent_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_ft_lost)/convert(decimal(10,2),ltt.permanent_ft_total) end,&#xA;   &#xA;   permanent_pt_turnover = case when ltt.permanent_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_pt_lost)/convert(decimal(10,2),ltt.permanent_pt_total) end,&#xA;   &#xA;   contract_ft_turnover = case when ltt.contract_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_ft_lost)/convert(decimal(10,2),ltt.contract_ft_total) end,&#xA;   &#xA;   contract_pt_turnover = case when ltt.contract_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_pt_lost)/convert(decimal(10,2),ltt.contract_pt_total) end,&#xA;   &#xA;   casual_turnover = case when ltt.casual_total=0 then 0.0000 else  convert(decimal(10,2),ltt.casual_lost)/convert(decimal(10,2),ltt.casual_total) end,&#xA;   &#xA;   total_turnover = case when ltt.total=0 then 0.0000 else  convert(decimal(10,2),ltt.total_lost)/convert(decimal(10,2),ltt.total) end&#xA;&#xA;from CONFORM.labour_turnover_fact ltt&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{1f7bce91-ca21-42ee-9b83-ad57d347e376}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Delete data for Yesterday" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{a9a93a04-f8ce-4a20-b406-ab4c2c62ba0b}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Delete data for Yesterday"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Get data for yesterday" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{d9832c0c-8bd2-4f28-a4a0-8759656f1881}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Get data for yesterday"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{bf47ac75-295d-408b-b168-6c6486847de8}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{18b60e2e-4ee0-409e-b95b-bdca936edb83}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{afc9285f-69c4-4e4a-a770-8a103db7a250}"
+                  DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{2A78DA3F-7CEE-4C44-A9F0-85606FA444B9}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_leave_taken_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_leave_taken_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_leave_taken_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\Sequence Container - Fact Tables\SD2 - TIMESHEET_VALICATION_FACT"
           DTS:CreationName="STOCK:SEQUENCE"
           DTS:Description="Sequence Container"
@@ -14805,8 +14955,8 @@ where employee_key=? </property>
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 23]"
           DTS:CreationName=""
-          DTS:DTSID="{467969E4-990F-4E47-A44D-81CD05BD2566}"
-          DTS:From="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history"
+          DTS:DTSID="{BD2DD437-2B67-4E9A-91B7-F1B0DCD01AE4}"
+          DTS:From="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 23"
           DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_report_fact" />
@@ -14828,6 +14978,14 @@ where employee_key=? </property>
           DTS:ObjectName="Constraint 25"
           DTS:To="Package\Sequence Container - Fact Tables\non_primary_position_fact"
           DTS:Value="2" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 26]"
+          DTS:CreationName=""
+          DTS:DTSID="{E2E58F53-E410-4594-B5F5-B9EAD600B101}"
+          DTS:From="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 26"
+          DTS:To="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
           DTS:CreationName=""
@@ -14928,7 +15086,7 @@ where employee_key=? </property>
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="256" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="512" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history\Delete current employees"
@@ -15233,7 +15391,7 @@ where employee_key=? </property>
           PanelSize="345,360"
           Size="345,437"
           Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact"
-          TopLeft="27.0000000000001,11057.5" />
+          TopLeft="37.0000000000001,11453.5" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\EST - Write Job Finish info"
@@ -15296,7 +15454,7 @@ where employee_key=? </property>
           PanelSize="345,326"
           Size="345,403"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact"
-          TopLeft="27,10594.5" />
+          TopLeft="37,10990.5" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\non_primary_position_fact\EST - Write Job Finish info"
@@ -15359,7 +15517,7 @@ where employee_key=? </property>
           PanelSize="345,358"
           Size="345,435"
           Id="Package\Sequence Container - Fact Tables\non_primary_position_fact"
-          TopLeft="31.722222222222,11556.6111111111" />
+          TopLeft="41.722222222222,11952.6111111111" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\personalleave_usage_report_fact\EST - Write Job Finish info"
@@ -18241,30 +18399,8 @@ where employee_key=? </property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 23]"
-          TopLeft="200,10416.5">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,178"
-              Start="0,0"
-              End="0,170.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,170.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 24]"
-          TopLeft="199.5,10997.5">
+          TopLeft="209.5,11393.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18288,7 +18424,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 25]"
-          TopLeft="201.861111111111,11494.5">
+          TopLeft="211.861111111111,11890.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18478,11 +18614,156 @@ where employee_key=? </property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Delete data for Yesterday"
+          TopLeft="41.1875,69" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Finish info"
+          TopLeft="41.1875,209" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Start info"
+          TopLeft="41.1875,15" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Get data for yesterday"
+          TopLeft="41.1875,141" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint]"
+          TopLeft="41.1875,36">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,54"
+              Start="0,0"
+              End="-7.5,54">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-18.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-18.5,0"
+                    Point2="-22.5,0"
+                    Point3="-22.5,4" />
+                  <mssgle:LineSegment
+                    End="-22.5,50" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-22.5,50"
+                    Point2="-22.5,54"
+                    Point3="-18.5,54" />
+                  <mssgle:LineSegment
+                    End="-7.5,54" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 1]"
+          TopLeft="141.6875,111">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,30"
+              Start="0,0"
+              End="0,22.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 2]"
+          TopLeft="141.6875,183">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,26"
+              Start="0,0"
+              End="0,18.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="401,12047"
-          Size="401,12090"
+          PanelSize="345,272"
+          Size="345,315"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun"
+          TopLeft="29.4999999999998,10503.6111111111" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 26]"
+          TopLeft="201.25,10416.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,87.1111111111004"
+              Start="0,0"
+              End="0,79.6111111111004">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,79.6111111111004" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 23]"
+          TopLeft="205.75,10818.6111111111">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,171.8888888889"
+              Start="0,0"
+              End="0,164.3888888889">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,164.3888888889" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="688,12443"
+          Size="688,12486"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="171.833333333333,1.99999999999818" />
       </GraphLayout>
@@ -20655,6 +20936,18 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
