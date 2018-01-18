@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEVNew"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="647"
-  DTS:VersionGUID="{C44A5C17-3C8F-4EE1-A113-092F1583949D}">
+  DTS:VersionBuild="648"
+  DTS:VersionGUID="{EC99D943-F6B4-4079-B947-B7F1E4780766}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/17/2018 11:54:34 AM</DTS:VariableValue>
+        DTS:DataType="7">1/18/2018 1:57:39 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/17/2018 11:54:34 AM</DTS:VariableValue>
+        DTS:DataType="7">1/18/2018 1:57:39 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/17/2018 11:54:34 AM</DTS:VariableValue>
+        DTS:DataType="7">1/18/2018 1:57:39 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -14204,7 +14204,7 @@ where employee_key=? </property>
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{476CD5C3-0FB5-46D0-B31E-A8381EC0659A}"
-                  SQLTask:SqlStatementSource="/*&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA;select &#xA;t1.month_date_key,&#xA;t1.service_stream_key,&#xA;case when t2.permanent_ft_count=0 then 0.0000 else  convert(decimal(10,2),t1.permanent_ft_count)/convert(decimal(10,2),t2.permanent_ft_count) end as permanent_ft_turnover,&#xA;case when t2.permanent_pt_count=0 then 0.0000 else  convert(decimal(10,2),t1.permanent_pt_count)/convert(decimal(10,2),t2.permanent_pt_count) end as permanent_pt_turnover,&#xA;case when t2.contract_ft_count=0 then 0.0000 else  convert(decimal(10,2),t1.contract_ft_count)/convert(decimal(10,2),t2.contract_ft_count) end as contract_ft_turnover,&#xA;case when t2.contract_pt_count=0 then 0.0000 else convert(decimal(10,2),t1.contract_pt_count)/convert(decimal(10,2),t2.contract_pt_count)  end as contract_pt_turnover,&#xA;case when t2.casual_count=0 then 0.0000 else convert(decimal(10,2),t1.casual_count)/convert(decimal(10,2),t2.casual_count) end  as causual_turnover,&#xA;case when t2.total_count=0 then 0.0000 else convert(decimal(10,2),t1.total_count)/convert(decimal(10,2),t2.total_count) end as total_turnover&#xA;&#xA;from &#xA;(select &#xA;  d3.month_key as month_date_key,&#xA;  f1.service_stream_key,&#xA;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;  sum(case when total_count=1 then 1 else 0 end) as  total_count&#xA;  from conform.employee_termination_fact as f1 &#xA;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;  where d3.month_key is not null&#xA;  group by  d3.month_key,f1.service_stream_key&#xA; ) as t1&#xA;  inner join &#xA;  (&#xA;select &#xA;  f1.service_stream_key,&#xA;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;  sum(case when total_count=1 then 1 else 0 end) as  total_count&#xA;  from conform.employee_profile_fact as f1 &#xA;  group by service_stream_key) as t2&#xA;  on t1.service_stream_key=t2.service_stream_key&#xA;&#xA;&#xA;  update [conform].[labour_turnover_fact]&#xA;  set permanent_ft_turnover=0&#xA;  where permanent_ft_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set permanent_pt_turnover=0&#xA;  where permanent_pt_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set contract_ft_turnover=0&#xA;  where contract_ft_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set contract_pt_turnover=0&#xA;  where contract_pt_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set casual_turnover=0&#xA;  where casual_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set total_turnover=0&#xA;  where total_turnover is null&#xA;*/&#xA;&#xA;&#xA;-- insert service stream part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA; select &#xA;t1.month_date_key,&#xA;1,&#xA;t1.service_stream_key,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0&#xA;from &#xA;&#x9;(select t0.month_date_key, d.service_stream_key from &#xA;&#x9;&#x9; ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;  where d3.month_key is not null) as t0&#xA;&#x9; cross join conform.service_stream_dim d &#xA;where d.current_row_indicator = 'Y' and d.service_stream_code !=99999) as t1&#xA;&#xA;&#xA; -- insert portfolio part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA; select &#xA;t1.month_date_key,&#xA;portfolio_key,&#xA;1,0,0,0,0,0,0,  0,0,0,0,0,0, 0,0,0,0,0,0&#xA;from &#xA;&#x9;(select t0.month_date_key, d.portfolio_key from &#xA;&#x9;&#x9; ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;  where d3.month_key is not null) as t0&#xA;&#x9; cross join conform.portfolio_dim d &#xA;where d.current_row_indicator = 'Y' and d.portfolio_code !=99999) as t1;&#xA;&#xA;&#xA;&#xA;&#xA;--update service stream part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA;&#x9;ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA;&#x9;ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA;&#x9;ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA;&#x9;ltt.[casual_lost] =t1.casual_count,&#xA;&#x9;ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;(select &#xA;&#x9;&#x9;&#x9;  d3.month_key as month_date_key,&#xA;&#x9;&#x9;&#x9;  f1.service_stream_key,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;  sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;&#x9;&#x9;&#x9;  from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;&#x9;  where d3.month_key is not null&#xA;&#x9;&#x9;&#x9;  group by  d3.month_key,f1.service_stream_key&#xA;&#x9;&#x9;&#x9; ) as t1&#xA;&#x9;&#x9;&#x9; on ltt.service_stream_key = t1.service_stream_key&#xA;&#x9;&#x9;&#x9; and ltt.month_date_key = t1.month_date_key&#xA;&#x9;&#x9;&#x9; and ltt.portfolio_key = 1&#xA;&#x9;&#x9;&#x9; &#xA;--select * from CONFORM.labour_turnover_fact&#xA;&#xA;--update portfolio part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA;&#x9;ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA;&#x9;ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA;&#x9;ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA;&#x9;ltt.[casual_lost] =t1.casual_count,&#xA;&#x9;ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;(select &#xA;&#x9;&#x9;&#x9;  d3.month_key as month_date_key,&#xA;&#x9;&#x9;&#x9;  f1.portfolio_key,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;  sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;&#x9;&#x9;&#x9;  from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;&#x9;  where d3.month_key is not null&#xA;&#x9;&#x9;&#x9;  --and f1.service_stream_key=1&#xA;&#x9;&#x9;&#x9;  group by  d3.month_key,f1.portfolio_key&#xA;&#x9;&#x9;&#x9; ) as t1&#xA;&#x9;&#x9;&#x9; on ltt.portfolio_key = t1.portfolio_key&#xA;&#x9;&#x9;&#x9; and ltt.month_date_key = t1.month_date_key&#xA;&#x9;&#x9;&#x9; and ltt.service_stream_key = 1&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;declare @t_month int = &#x9;(select min(month_date_key) from CONFORM.labour_turnover_fact );&#xA;&#xA;--month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select month_key from conform.month_dim d where d.year = year(getdate())&#xA;&#x9;and d.month_number = month(getdate())&#xA;);&#xA;&#xA;&#xA;declare @t_date_key int;&#xA;&#xA;while @t_month &lt;= @month_key_t&#xA;begin &#xA;&#xA;&#x9;set  @t_date_key = &#x9;&#xA;&#x9;&#x9;&#x9;(select d.date_key from &#xA;&#x9;&#x9;&#x9;conform.date_dim d inner join conform.month_dim m &#xA;&#x9;&#x9;&#x9;on d.year=m.year and d.month_no = m.month_number and d.day_of_month =1&#xA;&#x9;&#x9;&#x9;and m.month_key = @t_month);&#xA;&#x9;--update service stream part&#xA;&#x9;--all employee part&#xA;&#x9;update ltt&#xA;&#x9;set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;&#x9;&#x9;ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;&#x9;&#x9;ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;&#x9;&#x9;ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;&#x9;&#x9;ltt.[casual_total] =t2.casual_count,&#xA;&#x9;&#x9;ltt.[total] =t2.total_count&#xA;&#x9;from&#xA;&#x9;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;&#x9;  (&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;select &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;t2.service_stream_key,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;from conform.all_employees_report_fact t2&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;group by service_stream_key&#xA;&#x9;&#x9;&#x9;&#x9;) as t2&#xA;&#x9;&#x9;&#x9;&#x9; on ltt.service_stream_key = t2.service_stream_key&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.month_date_key = @t_month&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.portfolio_key = 1;&#xA;&#xA;&#x9;--update portfolio part&#xA;&#x9;--all employee part&#xA;&#x9;update ltt&#xA;&#x9;set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;&#x9;&#x9;ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;&#x9;&#x9;ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;&#x9;&#x9;ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;&#x9;&#x9;ltt.[casual_total] =t2.casual_count,&#xA;&#x9;&#x9;ltt.[total] =t2.total_count&#xA;&#x9;from&#xA;&#x9;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;&#x9;  (&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;select &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;t2.portfolio_key,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;from conform.all_employees_report_fact t2&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;--and t2.service_stream_key = 1&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;group by portfolio_key&#xA;&#x9;&#x9;&#x9;&#x9;  ) as t2&#xA;&#x9;&#x9;&#x9;&#x9; on ltt.portfolio_key = t2.portfolio_key&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.month_date_key = @t_month&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.service_stream_key = 1;&#x9;&#x9;&#x9;  &#xA;&#x9;set @t_month = @t_month +1;&#x9;&#x9;&#x9; &#xA;end;&#xA;--select * from CONFORM.labour_turnover_fact&#xA;&#x9;&#x9;&#x9; &#xA;&#xA;&#x9;&#x9;&#x9;  &#xA;--select * from CONFORM.labour_turnover_fact&#x9;&#x9;&#x9;  &#xA;--update report part&#x9;&#x9;&#x9;&#xA;update ltt&#xA;set &#xA;&#x9;&#x9;&#x9;permanent_ft_turnover = case when ltt.permanent_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_ft_lost)/convert(decimal(10,2),ltt.permanent_ft_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;permanent_pt_turnover = case when ltt.permanent_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_pt_lost)/convert(decimal(10,2),ltt.permanent_pt_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;contract_ft_turnover = case when ltt.contract_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_ft_lost)/convert(decimal(10,2),ltt.contract_ft_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;contract_pt_turnover = case when ltt.contract_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_pt_lost)/convert(decimal(10,2),ltt.contract_pt_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;casual_turnover = case when ltt.casual_total=0 then 0.0000 else  convert(decimal(10,2),ltt.casual_lost)/convert(decimal(10,2),ltt.casual_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;total_turnover = case when ltt.total=0 then 0.0000 else  convert(decimal(10,2),ltt.total_lost)/convert(decimal(10,2),ltt.total) end&#xA;&#xA;from CONFORM.labour_turnover_fact ltt&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="/*&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA;select &#xA;t1.month_date_key,&#xA;t1.service_stream_key,&#xA;case when t2.permanent_ft_count=0 then 0.0000 else  convert(decimal(10,2),t1.permanent_ft_count)/convert(decimal(10,2),t2.permanent_ft_count) end as permanent_ft_turnover,&#xA;case when t2.permanent_pt_count=0 then 0.0000 else  convert(decimal(10,2),t1.permanent_pt_count)/convert(decimal(10,2),t2.permanent_pt_count) end as permanent_pt_turnover,&#xA;case when t2.contract_ft_count=0 then 0.0000 else  convert(decimal(10,2),t1.contract_ft_count)/convert(decimal(10,2),t2.contract_ft_count) end as contract_ft_turnover,&#xA;case when t2.contract_pt_count=0 then 0.0000 else convert(decimal(10,2),t1.contract_pt_count)/convert(decimal(10,2),t2.contract_pt_count)  end as contract_pt_turnover,&#xA;case when t2.casual_count=0 then 0.0000 else convert(decimal(10,2),t1.casual_count)/convert(decimal(10,2),t2.casual_count) end  as causual_turnover,&#xA;case when t2.total_count=0 then 0.0000 else convert(decimal(10,2),t1.total_count)/convert(decimal(10,2),t2.total_count) end as total_turnover&#xA;&#xA;from &#xA;(select &#xA;  d3.month_key as month_date_key,&#xA;  f1.service_stream_key,&#xA;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;  sum(case when total_count=1 then 1 else 0 end) as  total_count&#xA;  from conform.employee_termination_fact as f1 &#xA;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;  where d3.month_key is not null&#xA;  group by  d3.month_key,f1.service_stream_key&#xA; ) as t1&#xA;  inner join &#xA;  (&#xA;select &#xA;  f1.service_stream_key,&#xA;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;  sum(case when total_count=1 then 1 else 0 end) as  total_count&#xA;  from conform.employee_profile_fact as f1 &#xA;  group by service_stream_key) as t2&#xA;  on t1.service_stream_key=t2.service_stream_key&#xA;&#xA;&#xA;  update [conform].[labour_turnover_fact]&#xA;  set permanent_ft_turnover=0&#xA;  where permanent_ft_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set permanent_pt_turnover=0&#xA;  where permanent_pt_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set contract_ft_turnover=0&#xA;  where contract_ft_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set contract_pt_turnover=0&#xA;  where contract_pt_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set casual_turnover=0&#xA;  where casual_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set total_turnover=0&#xA;  where total_turnover is null&#xA;*/&#xA;&#xA;&#xA;-- insert service stream part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA; select &#xA;t1.month_date_key,&#xA;--no portfolio&#xA;(select top 1 portfolio_key from conform.portfolio_dim d where d.portfolio_code = '99999'),&#xA;t1.service_stream_key,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0&#xA;from &#xA;&#x9;(select t0.month_date_key, d.service_stream_key from &#xA;&#x9;&#x9; ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;  where d3.month_key is not null) as t0&#xA;&#x9; cross join conform.service_stream_dim d &#xA;where d.current_row_indicator = 'Y' and d.service_stream_code !=99999) as t1&#xA;&#xA;&#xA; -- insert portfolio part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA; select &#xA;t1.month_date_key,&#xA;portfolio_key,&#xA;--no service_stream&#xA;(select  top 1 service_stream_key from conform.service_stream_dim d where d.service_stream_code = '99999'),&#xA;0,0,0,0,0,0,  0,0,0,0,0,0, 0,0,0,0,0,0&#xA;from &#xA;&#x9;(select t0.month_date_key, d.portfolio_key from &#xA;&#x9;&#x9; ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;  where d3.month_key is not null) as t0&#xA;&#x9; cross join conform.portfolio_dim d &#xA;where d.current_row_indicator = 'Y' and d.portfolio_code !=99999) as t1;&#xA;&#xA;&#xA;&#xA;&#xA;--update service stream part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA;&#x9;ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA;&#x9;ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA;&#x9;ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA;&#x9;ltt.[casual_lost] =t1.casual_count,&#xA;&#x9;ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;(select &#xA;&#x9;&#x9;&#x9;  d3.month_key as month_date_key,&#xA;&#x9;&#x9;&#x9;  f1.service_stream_key,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;  sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;&#x9;&#x9;&#x9;  from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;&#x9;  where d3.month_key is not null&#xA;&#x9;&#x9;&#x9;  group by  d3.month_key,f1.service_stream_key&#xA;&#x9;&#x9;&#x9; ) as t1&#xA;&#x9;&#x9;&#x9; on ltt.service_stream_key = t1.service_stream_key&#xA;&#x9;&#x9;&#x9; and ltt.month_date_key = t1.month_date_key&#xA;&#x9;&#x9;&#x9; and ltt.portfolio_key = 1&#xA;&#x9;&#x9;&#x9; &#xA;--select * from CONFORM.labour_turnover_fact&#xA;&#xA;--update portfolio part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA;&#x9;ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA;&#x9;ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA;&#x9;ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA;&#x9;ltt.[casual_lost] =t1.casual_count,&#xA;&#x9;ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;(select &#xA;&#x9;&#x9;&#x9;  d3.month_key as month_date_key,&#xA;&#x9;&#x9;&#x9;  f1.portfolio_key,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;  sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;&#x9;&#x9;&#x9;  from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;&#x9;  where d3.month_key is not null&#xA;&#x9;&#x9;&#x9;  --and f1.service_stream_key=1&#xA;&#x9;&#x9;&#x9;  group by  d3.month_key,f1.portfolio_key&#xA;&#x9;&#x9;&#x9; ) as t1&#xA;&#x9;&#x9;&#x9; on ltt.portfolio_key = t1.portfolio_key&#xA;&#x9;&#x9;&#x9; and ltt.month_date_key = t1.month_date_key&#xA;&#x9;&#x9;&#x9; and ltt.service_stream_key = 1&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;declare @t_month int = &#x9;(select min(month_date_key) from CONFORM.labour_turnover_fact );&#xA;&#xA;--month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select month_key from conform.month_dim d where d.year = year(getdate())&#xA;&#x9;and d.month_number = month(getdate())&#xA;);&#xA;&#xA;&#xA;declare @t_date_key int;&#xA;&#xA;while @t_month &lt;= @month_key_t&#xA;begin &#xA;&#xA;&#x9;set  @t_date_key = &#x9;&#xA;&#x9;&#x9;&#x9;(select d.date_key from &#xA;&#x9;&#x9;&#x9;conform.date_dim d inner join conform.month_dim m &#xA;&#x9;&#x9;&#x9;on d.year=m.year and d.month_no = m.month_number and d.day_of_month =1&#xA;&#x9;&#x9;&#x9;and m.month_key = @t_month);&#xA;&#x9;--update service stream part&#xA;&#x9;--all employee part&#xA;&#x9;update ltt&#xA;&#x9;set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;&#x9;&#x9;ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;&#x9;&#x9;ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;&#x9;&#x9;ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;&#x9;&#x9;ltt.[casual_total] =t2.casual_count,&#xA;&#x9;&#x9;ltt.[total] =t2.total_count&#xA;&#x9;from&#xA;&#x9;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;&#x9;  (&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;select &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;t2.service_stream_key,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;from conform.all_employees_report_fact t2&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;group by service_stream_key&#xA;&#x9;&#x9;&#x9;&#x9;) as t2&#xA;&#x9;&#x9;&#x9;&#x9; on ltt.service_stream_key = t2.service_stream_key&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.month_date_key = @t_month&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.portfolio_key = 1;&#xA;&#xA;&#x9;--update portfolio part&#xA;&#x9;--all employee part&#xA;&#x9;update ltt&#xA;&#x9;set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;&#x9;&#x9;ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;&#x9;&#x9;ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;&#x9;&#x9;ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;&#x9;&#x9;ltt.[casual_total] =t2.casual_count,&#xA;&#x9;&#x9;ltt.[total] =t2.total_count&#xA;&#x9;from&#xA;&#x9;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;&#x9;  (&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;select &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;t2.portfolio_key,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;from conform.all_employees_report_fact t2&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;--and t2.service_stream_key = 1&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;group by portfolio_key&#xA;&#x9;&#x9;&#x9;&#x9;  ) as t2&#xA;&#x9;&#x9;&#x9;&#x9; on ltt.portfolio_key = t2.portfolio_key&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.month_date_key = @t_month&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.service_stream_key = 1;&#x9;&#x9;&#x9;  &#xA;&#x9;set @t_month = @t_month +1;&#x9;&#x9;&#x9; &#xA;end;&#xA;--select * from CONFORM.labour_turnover_fact&#xA;&#x9;&#x9;&#x9; &#xA;&#xA;&#x9;&#x9;&#x9;  &#xA;--select * from CONFORM.labour_turnover_fact&#x9;&#x9;&#x9;  &#xA;--update report part&#x9;&#x9;&#x9;&#xA;update ltt&#xA;set &#xA;&#x9;&#x9;&#x9;permanent_ft_turnover = case when ltt.permanent_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_ft_lost)/convert(decimal(10,2),ltt.permanent_ft_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;permanent_pt_turnover = case when ltt.permanent_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_pt_lost)/convert(decimal(10,2),ltt.permanent_pt_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;contract_ft_turnover = case when ltt.contract_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_ft_lost)/convert(decimal(10,2),ltt.contract_ft_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;contract_pt_turnover = case when ltt.contract_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_pt_lost)/convert(decimal(10,2),ltt.contract_pt_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;casual_turnover = case when ltt.casual_total=0 then 0.0000 else  convert(decimal(10,2),ltt.casual_lost)/convert(decimal(10,2),ltt.casual_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;total_turnover = case when ltt.total=0 then 0.0000 else  convert(decimal(10,2),ltt.total_lost)/convert(decimal(10,2),ltt.total) end&#xA;&#xA;from CONFORM.labour_turnover_fact ltt&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -14354,7 +14354,7 @@ where employee_key=? </property>
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{476CD5C3-0FB5-46D0-B31E-A8381EC0659A}"
-                  SQLTask:SqlStatementSource="/*&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA;select &#xA;t1.month_date_key,&#xA;t1.service_stream_key,&#xA;case when t2.permanent_ft_count=0 then 0.0000 else  convert(decimal(10,2),t1.permanent_ft_count)/convert(decimal(10,2),t2.permanent_ft_count) end as permanent_ft_turnover,&#xA;case when t2.permanent_pt_count=0 then 0.0000 else  convert(decimal(10,2),t1.permanent_pt_count)/convert(decimal(10,2),t2.permanent_pt_count) end as permanent_pt_turnover,&#xA;case when t2.contract_ft_count=0 then 0.0000 else  convert(decimal(10,2),t1.contract_ft_count)/convert(decimal(10,2),t2.contract_ft_count) end as contract_ft_turnover,&#xA;case when t2.contract_pt_count=0 then 0.0000 else convert(decimal(10,2),t1.contract_pt_count)/convert(decimal(10,2),t2.contract_pt_count)  end as contract_pt_turnover,&#xA;case when t2.casual_count=0 then 0.0000 else convert(decimal(10,2),t1.casual_count)/convert(decimal(10,2),t2.casual_count) end  as causual_turnover,&#xA;case when t2.total_count=0 then 0.0000 else convert(decimal(10,2),t1.total_count)/convert(decimal(10,2),t2.total_count) end as total_turnover&#xA;&#xA;from &#xA;(select &#xA;  d3.month_key as month_date_key,&#xA;  f1.service_stream_key,&#xA;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;  sum(case when total_count=1 then 1 else 0 end) as  total_count&#xA;  from conform.employee_termination_fact as f1 &#xA;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;  where d3.month_key is not null&#xA;  group by  d3.month_key,f1.service_stream_key&#xA; ) as t1&#xA;  inner join &#xA;  (&#xA;select &#xA;  f1.service_stream_key,&#xA;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;  sum(case when total_count=1 then 1 else 0 end) as  total_count&#xA;  from conform.employee_profile_fact as f1 &#xA;  group by service_stream_key) as t2&#xA;  on t1.service_stream_key=t2.service_stream_key&#xA;&#xA;&#xA;  update [conform].[labour_turnover_fact]&#xA;  set permanent_ft_turnover=0&#xA;  where permanent_ft_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set permanent_pt_turnover=0&#xA;  where permanent_pt_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set contract_ft_turnover=0&#xA;  where contract_ft_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set contract_pt_turnover=0&#xA;  where contract_pt_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set casual_turnover=0&#xA;  where casual_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set total_turnover=0&#xA;  where total_turnover is null&#xA;*/&#xA;&#xA;&#xA;-- insert service stream part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA; select &#xA;t1.month_date_key,&#xA;1,&#xA;t1.service_stream_key,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0&#xA;from &#xA; (select t0.month_date_key, d.service_stream_key from &#xA;   ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;    left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;    left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;    where d3.month_key is not null) as t0&#xA;  cross join conform.service_stream_dim d &#xA;where d.current_row_indicator = 'Y' and d.service_stream_code !=99999) as t1&#xA;&#xA;&#xA; -- insert portfolio part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA; select &#xA;t1.month_date_key,&#xA;portfolio_key,&#xA;1,0,0,0,0,0,0,  0,0,0,0,0,0, 0,0,0,0,0,0&#xA;from &#xA; (select t0.month_date_key, d.portfolio_key from &#xA;   ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;    left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;    left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;    where d3.month_key is not null) as t0&#xA;  cross join conform.portfolio_dim d &#xA;where d.current_row_indicator = 'Y' and d.portfolio_code !=99999) as t1;&#xA;&#xA;&#xA;&#xA;&#xA;--update service stream part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA; ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA; ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA; ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA; ltt.[casual_lost] =t1.casual_count,&#xA; ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact ltt inner join &#xA;   (select &#xA;     d3.month_key as month_date_key,&#xA;     f1.service_stream_key,&#xA;     sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;     sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;     sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;     from conform.employee_termination_fact as f1 &#xA;     left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;     left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;     where d3.month_key is not null&#xA;     group by  d3.month_key,f1.service_stream_key&#xA;    ) as t1&#xA;    on ltt.service_stream_key = t1.service_stream_key&#xA;    and ltt.month_date_key = t1.month_date_key&#xA;    and ltt.portfolio_key = 1&#xA;    &#xA;--select * from CONFORM.labour_turnover_fact&#xA;&#xA;--update portfolio part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA; ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA; ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA; ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA; ltt.[casual_lost] =t1.casual_count,&#xA; ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact ltt inner join &#xA;   (select &#xA;     d3.month_key as month_date_key,&#xA;     f1.portfolio_key,&#xA;     sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;     sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;     sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;     from conform.employee_termination_fact as f1 &#xA;     left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;     left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;     where d3.month_key is not null&#xA;     --and f1.service_stream_key=1&#xA;     group by  d3.month_key,f1.portfolio_key&#xA;    ) as t1&#xA;    on ltt.portfolio_key = t1.portfolio_key&#xA;    and ltt.month_date_key = t1.month_date_key&#xA;    and ltt.service_stream_key = 1&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;declare @t_month int =  (select min(month_date_key) from CONFORM.labour_turnover_fact );&#xA;&#xA;--month's key&#xA;declare @month_key_t int = &#xA;(&#xA; select month_key from conform.month_dim d where d.year = year(getdate())&#xA; and d.month_number = month(getdate())&#xA;);&#xA;&#xA;&#xA;declare @t_date_key int;&#xA;&#xA;while @t_month &lt;= @month_key_t&#xA;begin &#xA;&#xA; set  @t_date_key =  &#xA;   (select d.date_key from &#xA;   conform.date_dim d inner join conform.month_dim m &#xA;   on d.year=m.year and d.month_no = m.month_number and d.day_of_month =1&#xA;   and m.month_key = @t_month);&#xA; --update service stream part&#xA; --all employee part&#xA; update ltt&#xA; set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;  ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;  ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;  ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;  ltt.[casual_total] =t2.casual_count,&#xA;  ltt.[total] =t2.total_count&#xA; from&#xA; CONFORM.labour_turnover_fact ltt inner join &#xA;      (&#xA;     select &#xA;     t2.service_stream_key,&#xA;     sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;     sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;     sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;     from conform.all_employees_report_fact t2&#xA;     where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;     and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;     group by service_stream_key&#xA;    ) as t2&#xA;     on ltt.service_stream_key = t2.service_stream_key&#xA;     and ltt.month_date_key = @t_month&#xA;     and ltt.portfolio_key = 1;&#xA;&#xA; --update portfolio part&#xA; --all employee part&#xA; update ltt&#xA; set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;  ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;  ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;  ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;  ltt.[casual_total] =t2.casual_count,&#xA;  ltt.[total] =t2.total_count&#xA; from&#xA; CONFORM.labour_turnover_fact ltt inner join &#xA;      (&#xA;      select &#xA;      t2.portfolio_key,&#xA;      sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;      sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;      sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;      sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;      sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;      sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;      from conform.all_employees_report_fact t2&#xA;      where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;      and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;      --and t2.service_stream_key = 1&#xA;      group by portfolio_key&#xA;      ) as t2&#xA;     on ltt.portfolio_key = t2.portfolio_key&#xA;     and ltt.month_date_key = @t_month&#xA;     and ltt.service_stream_key = 1;     &#xA; set @t_month = @t_month +1;    &#xA;end;&#xA;--select * from CONFORM.labour_turnover_fact&#xA;    &#xA;&#xA;     &#xA;--select * from CONFORM.labour_turnover_fact     &#xA;--update report part   &#xA;update ltt&#xA;set &#xA;   permanent_ft_turnover = case when ltt.permanent_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_ft_lost)/convert(decimal(10,2),ltt.permanent_ft_total) end,&#xA;   &#xA;   permanent_pt_turnover = case when ltt.permanent_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_pt_lost)/convert(decimal(10,2),ltt.permanent_pt_total) end,&#xA;   &#xA;   contract_ft_turnover = case when ltt.contract_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_ft_lost)/convert(decimal(10,2),ltt.contract_ft_total) end,&#xA;   &#xA;   contract_pt_turnover = case when ltt.contract_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_pt_lost)/convert(decimal(10,2),ltt.contract_pt_total) end,&#xA;   &#xA;   casual_turnover = case when ltt.casual_total=0 then 0.0000 else  convert(decimal(10,2),ltt.casual_lost)/convert(decimal(10,2),ltt.casual_total) end,&#xA;   &#xA;   total_turnover = case when ltt.total=0 then 0.0000 else  convert(decimal(10,2),ltt.total_lost)/convert(decimal(10,2),ltt.total) end&#xA;&#xA;from CONFORM.labour_turnover_fact ltt&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="/*&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA;select &#xA;t1.month_date_key,&#xA;t1.service_stream_key,&#xA;case when t2.permanent_ft_count=0 then 0.0000 else  convert(decimal(10,2),t1.permanent_ft_count)/convert(decimal(10,2),t2.permanent_ft_count) end as permanent_ft_turnover,&#xA;case when t2.permanent_pt_count=0 then 0.0000 else  convert(decimal(10,2),t1.permanent_pt_count)/convert(decimal(10,2),t2.permanent_pt_count) end as permanent_pt_turnover,&#xA;case when t2.contract_ft_count=0 then 0.0000 else  convert(decimal(10,2),t1.contract_ft_count)/convert(decimal(10,2),t2.contract_ft_count) end as contract_ft_turnover,&#xA;case when t2.contract_pt_count=0 then 0.0000 else convert(decimal(10,2),t1.contract_pt_count)/convert(decimal(10,2),t2.contract_pt_count)  end as contract_pt_turnover,&#xA;case when t2.casual_count=0 then 0.0000 else convert(decimal(10,2),t1.casual_count)/convert(decimal(10,2),t2.casual_count) end  as causual_turnover,&#xA;case when t2.total_count=0 then 0.0000 else convert(decimal(10,2),t1.total_count)/convert(decimal(10,2),t2.total_count) end as total_turnover&#xA;&#xA;from &#xA;(select &#xA;  d3.month_key as month_date_key,&#xA;  f1.service_stream_key,&#xA;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;  sum(case when total_count=1 then 1 else 0 end) as  total_count&#xA;  from conform.employee_termination_fact as f1 &#xA;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;  where d3.month_key is not null&#xA;  group by  d3.month_key,f1.service_stream_key&#xA; ) as t1&#xA;  inner join &#xA;  (&#xA;select &#xA;  f1.service_stream_key,&#xA;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;  sum(case when total_count=1 then 1 else 0 end) as  total_count&#xA;  from conform.employee_profile_fact as f1 &#xA;  group by service_stream_key) as t2&#xA;  on t1.service_stream_key=t2.service_stream_key&#xA;&#xA;&#xA;  update [conform].[labour_turnover_fact]&#xA;  set permanent_ft_turnover=0&#xA;  where permanent_ft_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set permanent_pt_turnover=0&#xA;  where permanent_pt_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set contract_ft_turnover=0&#xA;  where contract_ft_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set contract_pt_turnover=0&#xA;  where contract_pt_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set casual_turnover=0&#xA;  where casual_turnover is null&#xA;&#xA;    update [conform].[labour_turnover_fact]&#xA;  set total_turnover=0&#xA;  where total_turnover is null&#xA;*/&#xA;&#xA;&#xA;-- insert service stream part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA; select &#xA;t1.month_date_key,&#xA;--no portfolio&#xA;(select top 1 portfolio_key from conform.portfolio_dim d where d.portfolio_code = '99999'),&#xA;t1.service_stream_key,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0&#xA;from &#xA;&#x9;(select t0.month_date_key, d.service_stream_key from &#xA;&#x9;&#x9; ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;  where d3.month_key is not null) as t0&#xA;&#x9; cross join conform.service_stream_dim d &#xA;where d.current_row_indicator = 'Y' and d.service_stream_code !=99999) as t1&#xA;&#xA;&#xA; -- insert portfolio part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact&#xA; select &#xA;t1.month_date_key,&#xA;portfolio_key,&#xA;--no service_stream&#xA;(select  top 1 service_stream_key from conform.service_stream_dim d where d.service_stream_code = '99999'),&#xA;0,0,0,0,0,0,  0,0,0,0,0,0, 0,0,0,0,0,0&#xA;from &#xA;&#x9;(select t0.month_date_key, d.portfolio_key from &#xA;&#x9;&#x9; ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;  where d3.month_key is not null) as t0&#xA;&#x9; cross join conform.portfolio_dim d &#xA;where d.current_row_indicator = 'Y' and d.portfolio_code !=99999) as t1;&#xA;&#xA;&#xA;&#xA;&#xA;--update service stream part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA;&#x9;ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA;&#x9;ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA;&#x9;ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA;&#x9;ltt.[casual_lost] =t1.casual_count,&#xA;&#x9;ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;(select &#xA;&#x9;&#x9;&#x9;  d3.month_key as month_date_key,&#xA;&#x9;&#x9;&#x9;  f1.service_stream_key,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;  sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;&#x9;&#x9;&#x9;  from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;&#x9;  where d3.month_key is not null&#xA;&#x9;&#x9;&#x9;  group by  d3.month_key,f1.service_stream_key&#xA;&#x9;&#x9;&#x9; ) as t1&#xA;&#x9;&#x9;&#x9; on ltt.service_stream_key = t1.service_stream_key&#xA;&#x9;&#x9;&#x9; and ltt.month_date_key = t1.month_date_key&#xA;&#x9;&#x9;&#x9; and ltt.portfolio_key = 1&#xA;&#x9;&#x9;&#x9; &#xA;--select * from CONFORM.labour_turnover_fact&#xA;&#xA;--update portfolio part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA;&#x9;ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA;&#x9;ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA;&#x9;ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA;&#x9;ltt.[casual_lost] =t1.casual_count,&#xA;&#x9;ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;(select &#xA;&#x9;&#x9;&#x9;  d3.month_key as month_date_key,&#xA;&#x9;&#x9;&#x9;  f1.portfolio_key,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;  sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;  sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;  sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;&#x9;&#x9;&#x9;  from conform.employee_termination_fact as f1 &#xA;&#x9;&#x9;&#x9;  left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;&#x9;&#x9;&#x9;  left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;&#x9;&#x9;&#x9;  where d3.month_key is not null&#xA;&#x9;&#x9;&#x9;  --and f1.service_stream_key=1&#xA;&#x9;&#x9;&#x9;  group by  d3.month_key,f1.portfolio_key&#xA;&#x9;&#x9;&#x9; ) as t1&#xA;&#x9;&#x9;&#x9; on ltt.portfolio_key = t1.portfolio_key&#xA;&#x9;&#x9;&#x9; and ltt.month_date_key = t1.month_date_key&#xA;&#x9;&#x9;&#x9; and ltt.service_stream_key = 1&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;declare @t_month int = &#x9;(select min(month_date_key) from CONFORM.labour_turnover_fact );&#xA;&#xA;--month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select month_key from conform.month_dim d where d.year = year(getdate())&#xA;&#x9;and d.month_number = month(getdate())&#xA;);&#xA;&#xA;&#xA;declare @t_date_key int;&#xA;&#xA;while @t_month &lt;= @month_key_t&#xA;begin &#xA;&#xA;&#x9;set  @t_date_key = &#x9;&#xA;&#x9;&#x9;&#x9;(select d.date_key from &#xA;&#x9;&#x9;&#x9;conform.date_dim d inner join conform.month_dim m &#xA;&#x9;&#x9;&#x9;on d.year=m.year and d.month_no = m.month_number and d.day_of_month =1&#xA;&#x9;&#x9;&#x9;and m.month_key = @t_month);&#xA;&#x9;--update service stream part&#xA;&#x9;--all employee part&#xA;&#x9;update ltt&#xA;&#x9;set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;&#x9;&#x9;ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;&#x9;&#x9;ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;&#x9;&#x9;ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;&#x9;&#x9;ltt.[casual_total] =t2.casual_count,&#xA;&#x9;&#x9;ltt.[total] =t2.total_count&#xA;&#x9;from&#xA;&#x9;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;&#x9;  (&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;select &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;t2.service_stream_key,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;from conform.all_employees_report_fact t2&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;group by service_stream_key&#xA;&#x9;&#x9;&#x9;&#x9;) as t2&#xA;&#x9;&#x9;&#x9;&#x9; on ltt.service_stream_key = t2.service_stream_key&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.month_date_key = @t_month&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.portfolio_key = 1;&#xA;&#xA;&#x9;--update portfolio part&#xA;&#x9;--all employee part&#xA;&#x9;update ltt&#xA;&#x9;set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;&#x9;&#x9;ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;&#x9;&#x9;ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;&#x9;&#x9;ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;&#x9;&#x9;ltt.[casual_total] =t2.casual_count,&#xA;&#x9;&#x9;ltt.[total] =t2.total_count&#xA;&#x9;from&#xA;&#x9;CONFORM.labour_turnover_fact ltt inner join &#xA;&#x9;&#x9;&#x9;&#x9;  (&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;select &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;t2.portfolio_key,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;from conform.all_employees_report_fact t2&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;--and t2.service_stream_key = 1&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;group by portfolio_key&#xA;&#x9;&#x9;&#x9;&#x9;  ) as t2&#xA;&#x9;&#x9;&#x9;&#x9; on ltt.portfolio_key = t2.portfolio_key&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.month_date_key = @t_month&#xA;&#x9;&#x9;&#x9;&#x9; and ltt.service_stream_key = 1;&#x9;&#x9;&#x9;  &#xA;&#x9;set @t_month = @t_month +1;&#x9;&#x9;&#x9; &#xA;end;&#xA;--select * from CONFORM.labour_turnover_fact&#xA;&#x9;&#x9;&#x9; &#xA;&#xA;&#x9;&#x9;&#x9;  &#xA;--select * from CONFORM.labour_turnover_fact&#x9;&#x9;&#x9;  &#xA;--update report part&#x9;&#x9;&#x9;&#xA;update ltt&#xA;set &#xA;&#x9;&#x9;&#x9;permanent_ft_turnover = case when ltt.permanent_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_ft_lost)/convert(decimal(10,2),ltt.permanent_ft_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;permanent_pt_turnover = case when ltt.permanent_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_pt_lost)/convert(decimal(10,2),ltt.permanent_pt_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;contract_ft_turnover = case when ltt.contract_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_ft_lost)/convert(decimal(10,2),ltt.contract_ft_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;contract_pt_turnover = case when ltt.contract_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_pt_lost)/convert(decimal(10,2),ltt.contract_pt_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;casual_turnover = case when ltt.casual_total=0 then 0.0000 else  convert(decimal(10,2),ltt.casual_lost)/convert(decimal(10,2),ltt.casual_total) end,&#xA;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;total_turnover = case when ltt.total=0 then 0.0000 else  convert(decimal(10,2),ltt.total_lost)/convert(decimal(10,2),ltt.total) end&#xA;&#xA;from CONFORM.labour_turnover_fact ltt&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -15082,7 +15082,7 @@ where employee_key=? </property>
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="512" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="512" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history\Delete current employees"
@@ -15112,7 +15112,7 @@ where employee_key=? </property>
           TopLeft="149.073863636364,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,59.4545454545441"
               Start="0,0"
               End="0,51.9545454545441">
@@ -15134,7 +15134,7 @@ where employee_key=? </property>
           TopLeft="151.801136363636,158.454545454544">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,51.6363636363659"
               Start="0,0"
               End="0,44.1363636363659">
@@ -15156,7 +15156,7 @@ where employee_key=? </property>
           TopLeft="153.587797619048,346.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,67.6233766233781"
               Start="0,0"
               End="0,60.1233766233781">
@@ -15178,7 +15178,7 @@ where employee_key=? </property>
           TopLeft="151.248106060606,252.09090909091">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,52.6666666666678"
               Start="0,0"
               End="0,45.1666666666678">
@@ -15200,7 +15200,7 @@ where employee_key=? </property>
           TopLeft="157.743641774892,456.380952380956">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,57.6147186147118"
               Start="0,0"
               End="0,50.1147186147118">
@@ -15245,7 +15245,7 @@ where employee_key=? </property>
           TopLeft="45.9375,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -15279,7 +15279,7 @@ where employee_key=? </property>
           TopLeft="146.4375,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -15301,7 +15301,7 @@ where employee_key=? </property>
           TopLeft="146.4375,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -15342,7 +15342,7 @@ where employee_key=? </property>
           TopLeft="144.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,72.7575757575778"
               Start="0,0"
               End="0,65.2575757575778">
@@ -15364,7 +15364,7 @@ where employee_key=? </property>
           TopLeft="137.831439393939,171.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,91.3333333333302"
               Start="0,0"
               End="0,83.8333333333302">
@@ -15405,7 +15405,7 @@ where employee_key=? </property>
           TopLeft="144.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,72.7575757575778"
               Start="0,0"
               End="0,65.2575757575778">
@@ -15427,7 +15427,7 @@ where employee_key=? </property>
           TopLeft="137.831439393939,171.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,91.3333333333302"
               Start="0,0"
               End="0,83.8333333333302">
@@ -15468,7 +15468,7 @@ where employee_key=? </property>
           TopLeft="144.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,72.7575757575778"
               Start="0,0"
               End="0,65.2575757575778">
@@ -15490,7 +15490,7 @@ where employee_key=? </property>
           TopLeft="137.831439393939,171.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,91.3333333333302"
               Start="0,0"
               End="0,83.8333333333302">
@@ -15531,7 +15531,7 @@ where employee_key=? </property>
           TopLeft="146.4375,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,84"
               Start="0,0"
               End="0,76.5">
@@ -15553,7 +15553,7 @@ where employee_key=? </property>
           TopLeft="146.4375,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -15598,7 +15598,7 @@ where employee_key=? </property>
           TopLeft="150.073863636364,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,59.4545454545441"
               Start="0,0"
               End="0,51.9545454545441">
@@ -15620,7 +15620,7 @@ where employee_key=? </property>
           TopLeft="152.801136363636,158.454545454544">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,51.6363636363658"
               Start="0,0"
               End="0,44.1363636363658">
@@ -15642,7 +15642,7 @@ where employee_key=? </property>
           TopLeft="151.892045454545,252.09090909091">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -15715,7 +15715,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,52.3333333333333"
               Start="0,0"
               End="-7.5,52.3333333333333">
@@ -15749,7 +15749,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,156.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,41.0833333333333"
               Start="0,0"
               End="-7.5,41.0833333333333">
@@ -15783,7 +15783,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,218.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,32.25"
               Start="0,0"
               End="0,24.75">
@@ -15805,7 +15805,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,416">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,56.3333333333333"
               Start="0,0"
               End="-7.5,56.3333333333333">
@@ -15839,7 +15839,7 @@ where employee_key=? </property>
           TopLeft="282.090909090909,478">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-6,78.5"
               Start="0,0"
               End="1.5,78.5">
@@ -15873,7 +15873,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,371">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,24"
               Start="0,0"
               End="0,16.5">
@@ -15895,7 +15895,7 @@ where employee_key=? </property>
           TopLeft="158.090909090909,594">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,27"
               Start="0,0"
               End="0,19.5">
@@ -15917,7 +15917,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,99.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,45.6666666666667"
               Start="0,0"
               End="-7.5,45.6666666666667">
@@ -15951,7 +15951,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,293">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,36"
               Start="0,0"
               End="0,28.5">
@@ -15973,7 +15973,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,663">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16026,7 +16026,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,28">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,53.3333333333333"
               Start="0,0"
               End="-7.5,53.3333333333333">
@@ -16060,7 +16060,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,149.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,41.4166666666667"
               Start="0,0"
               End="-7.5,41.4166666666667">
@@ -16094,7 +16094,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,202.416666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,42.9166666666667"
               Start="0,0"
               End="-7.5,42.9166666666667">
@@ -16128,7 +16128,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,256.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,48.3333333333333"
               Start="0,0"
               End="-7.5,48.3333333333333">
@@ -16162,7 +16162,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,92.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,45.6666666666667"
               Start="0,0"
               End="-7.5,45.6666666666667">
@@ -16223,7 +16223,7 @@ where employee_key=? </property>
           TopLeft="257.15,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-6,57"
               Start="0,0"
               End="1.5,57">
@@ -16257,7 +16257,7 @@ where employee_key=? </property>
           TopLeft="146.15,168">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,23"
               Start="0,0"
               End="0,15.5">
@@ -16279,7 +16279,7 @@ where employee_key=? </property>
           TopLeft="35.15,212">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="-7.5,60">
@@ -16313,7 +16313,7 @@ where employee_key=? </property>
           TopLeft="39.15,93">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-3.99999999999997,54"
               Start="0,0"
               End="-11.5,54">
@@ -16370,7 +16370,7 @@ where employee_key=? </property>
           TopLeft="34,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,52.3333333333333"
               Start="0,0"
               End="-7.5,52.3333333333333">
@@ -16404,7 +16404,7 @@ where employee_key=? </property>
           TopLeft="34,99.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,51.4166666666667"
               Start="0,0"
               End="-7.5,51.4166666666667">
@@ -16438,7 +16438,7 @@ where employee_key=? </property>
           TopLeft="34,162.416666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,52.5833333333333"
               Start="0,0"
               End="-7.5,52.5833333333333">
@@ -16472,7 +16472,7 @@ where employee_key=? </property>
           TopLeft="134.5,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,78.75"
               Start="0,0"
               End="0,71.25">
@@ -16517,7 +16517,7 @@ where employee_key=? </property>
           TopLeft="43.4375,37">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,53"
               Start="0,0"
               End="-7.5,53">
@@ -16551,7 +16551,7 @@ where employee_key=? </property>
           TopLeft="143.9375,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,34"
               Start="0,0"
               End="0,26.5">
@@ -16573,7 +16573,7 @@ where employee_key=? </property>
           TopLeft="43.4375,166">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,64"
               Start="0,0"
               End="-7.5,64">
@@ -16630,7 +16630,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -16664,7 +16664,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16686,7 +16686,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -16731,7 +16731,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -16765,7 +16765,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16787,7 +16787,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -16832,7 +16832,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -16866,7 +16866,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16888,7 +16888,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -16933,7 +16933,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -16967,7 +16967,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16989,7 +16989,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17034,7 +17034,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17068,7 +17068,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17090,7 +17090,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17135,7 +17135,7 @@ where employee_key=? </property>
           TopLeft="141.6875,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="45.5,33"
               Start="0,0"
               End="38,33">
@@ -17163,7 +17163,7 @@ where employee_key=? </property>
           TopLeft="114.1875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="27.5,30"
               Start="0,0"
               End="27.5,22.5">
@@ -17197,7 +17197,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17242,7 +17242,7 @@ where employee_key=? </property>
           TopLeft="45.9375,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17276,7 +17276,7 @@ where employee_key=? </property>
           TopLeft="146.4375,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17298,7 +17298,7 @@ where employee_key=? </property>
           TopLeft="146.4375,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17343,7 +17343,7 @@ where employee_key=? </property>
           TopLeft="28,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="19,54"
               Start="0,0"
               End="11.5,54">
@@ -17377,7 +17377,7 @@ where employee_key=? </property>
           TopLeft="144,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17399,7 +17399,7 @@ where employee_key=? </property>
           TopLeft="138.375,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17444,7 +17444,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17478,7 +17478,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17500,7 +17500,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17545,7 +17545,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17579,7 +17579,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17601,7 +17601,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17646,7 +17646,7 @@ where employee_key=? </property>
           TopLeft="150.642045454545,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,55"
               Start="0,0"
               End="0,47.5">
@@ -17668,7 +17668,7 @@ where employee_key=? </property>
           TopLeft="148.142045454545,154">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,78"
               Start="0,0"
               End="0,70.5">
@@ -17690,7 +17690,7 @@ where employee_key=? </property>
           TopLeft="149.801136363636,274">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,108.090909090908"
               Start="0,0"
               End="0,100.590909090908">
@@ -17727,7 +17727,7 @@ where employee_key=? </property>
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT\EST - Write Job Start info"
           TopLeft="41.1875,15" />
         <NodeLayout
-          Size="201,42"
+          Size="187,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT\Get data for yesterday"
           TopLeft="41.1875,141" />
         <EdgeLayout
@@ -17735,7 +17735,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17766,10 +17766,10 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT.PrecedenceConstraints[Constraint 1]"
-          TopLeft="141.6875,111">
+          TopLeft="138.1875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17788,10 +17788,10 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT.PrecedenceConstraints[Constraint 2]"
-          TopLeft="141.6875,183">
+          TopLeft="138.1875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17816,6 +17816,107 @@ where employee_key=? </property>
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT"
           TopLeft="27.9999999999993,4521.5" />
         <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Delete data for Yesterday"
+          TopLeft="41.1875,69" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Finish info"
+          TopLeft="41.1875,209" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Start info"
+          TopLeft="41.1875,15" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Get data for yesterday"
+          TopLeft="41.1875,141" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint]"
+          TopLeft="41.1875,36">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="0,54"
+              Start="0,0"
+              End="-7.5,54">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-18.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-18.5,0"
+                    Point2="-22.5,0"
+                    Point3="-22.5,4" />
+                  <mssgle:LineSegment
+                    End="-22.5,50" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-22.5,50"
+                    Point2="-22.5,54"
+                    Point3="-18.5,54" />
+                  <mssgle:LineSegment
+                    End="-7.5,54" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 1]"
+          TopLeft="141.6875,111">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="0,30"
+              Start="0,0"
+              End="0,22.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 2]"
+          TopLeft="141.6875,183">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="0,26"
+              Start="0,0"
+              End="0,18.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="345,306"
+          Size="345,349"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun"
+          TopLeft="30.3809523809528,11140.6785714286" />
+        <NodeLayout
           Size="233,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - TIMESHEET_VALICATION_FACT\Delete data"
           TopLeft="45.0965909090909,112" />
@@ -17836,7 +17937,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,55"
               Start="0,0"
               End="0,47.5">
@@ -17858,7 +17959,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,154">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,78"
               Start="0,0"
               End="0,70.5">
@@ -17880,7 +17981,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,274">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,108.090909090908"
               Start="0,0"
               End="0,100.590909090908">
@@ -17925,7 +18026,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17959,7 +18060,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17981,7 +18082,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18021,7 +18122,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,1286.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18045,7 +18146,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,1770.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18069,7 +18170,7 @@ where employee_key=? </property>
           TopLeft="200.5,4870.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18093,7 +18194,7 @@ where employee_key=? </property>
           TopLeft="200.5,5279.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18117,7 +18218,7 @@ where employee_key=? </property>
           TopLeft="200.5,5653.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18141,7 +18242,7 @@ where employee_key=? </property>
           TopLeft="200.5,6062.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18165,7 +18266,7 @@ where employee_key=? </property>
           TopLeft="200.5,6471.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18189,7 +18290,7 @@ where employee_key=? </property>
           TopLeft="200.5,6880.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18213,7 +18314,7 @@ where employee_key=? </property>
           TopLeft="200.5,7289.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18237,7 +18338,7 @@ where employee_key=? </property>
           TopLeft="200.5,7946.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18261,7 +18362,7 @@ where employee_key=? </property>
           TopLeft="200.5,8603.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18285,7 +18386,7 @@ where employee_key=? </property>
           TopLeft="200.5,8860.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18309,7 +18410,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,2117.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18333,7 +18434,7 @@ where employee_key=? </property>
           TopLeft="200.5,9269.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18357,7 +18458,7 @@ where employee_key=? </property>
           TopLeft="200.5,9678.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18381,7 +18482,7 @@ where employee_key=? </property>
           TopLeft="202.916666666667,10189.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,177.666666666702"
               Start="0,0"
               End="0,170.166666666702">
@@ -18401,11 +18502,33 @@ where employee_key=? </property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 23]"
+          TopLeft="206.52380952381,11489.6785714286">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="0,58.6547619047615"
+              Start="0,0"
+              End="0,51.1547619047615">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.1547619047615" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 24]"
           TopLeft="208.916666666666,11985.3333333333">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,66.3888888888669"
               Start="0,0"
               End="0,58.8888888888669">
@@ -18429,7 +18552,7 @@ where employee_key=? </property>
           TopLeft="211.166666666667,12486.7222222222">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,39.611111111135"
               Start="0,0"
               End="0,32.111111111135">
@@ -18449,11 +18572,33 @@ where employee_key=? </property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 26]"
+          TopLeft="204.107142857143,11055.1666666667">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="0,85.51190476187"
+              Start="0,0"
+              End="0,78.01190476187">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,78.01190476187" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
           TopLeft="200.499999999999,3682.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18477,7 +18622,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,2492.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18501,7 +18646,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,2869.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18525,7 +18670,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,3273.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18549,7 +18694,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,396.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18573,7 +18718,7 @@ where employee_key=? </property>
           TopLeft="200.5,4052.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18597,7 +18742,7 @@ where employee_key=? </property>
           TopLeft="200.5,4461.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18614,151 +18759,6 @@ where employee_key=? </property>
             <mssgm:EdgeLabel
               BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
               RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Delete data for Yesterday"
-          TopLeft="41.1875,69" />
-        <NodeLayout
-          Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Finish info"
-          TopLeft="41.1875,209" />
-        <NodeLayout
-          Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Start info"
-          TopLeft="41.1875,15" />
-        <NodeLayout
-          Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Get data for yesterday"
-          TopLeft="41.1875,141" />
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint]"
-          TopLeft="41.1875,36">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,54"
-              Start="0,0"
-              End="-7.5,54">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="-18.5,0" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-18.5,0"
-                    Point2="-22.5,0"
-                    Point3="-22.5,4" />
-                  <mssgle:LineSegment
-                    End="-22.5,50" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-22.5,50"
-                    Point2="-22.5,54"
-                    Point3="-18.5,54" />
-                  <mssgle:LineSegment
-                    End="-7.5,54" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 1]"
-          TopLeft="141.6875,111">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,30"
-              Start="0,0"
-              End="0,22.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,22.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 2]"
-          TopLeft="141.6875,183">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,26"
-              Start="0,0"
-              End="0,18.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,18.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="43"
-          IsExpanded="True"
-          PanelSize="345,306"
-          Size="345,349"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun"
-          TopLeft="30.3809523809528,11140.6785714286" />
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 26]"
-          TopLeft="204.107142857143,11055.1666666667">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,85.51190476187"
-              Start="0,0"
-              End="0,78.01190476187">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,78.01190476187" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 23]"
-          TopLeft="206.52380952381,11489.6785714286">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,58.6547619047615"
-              Start="0,0"
-              End="0,51.1547619047615">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,51.1547619047615" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <ContainerLayout
@@ -20907,6 +20907,18 @@ where employee_key=? </property>
     </LayoutInfo>
   </DtsEventHandler>
   <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
     design-time-name="Package\Sequence Container - Fact Tables\SD2 - TIMESHEET_VALICATION_FACT.EventHandlers[OnError]">
     <LayoutInfo>
       <GraphLayout
@@ -20938,18 +20950,6 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
-          TopLeft="448,222" />
-      </GraphLayout>
-    </LayoutInfo>
-  </DtsEventHandler>
-  <DtsEventHandler
-    design-time-name="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
-        <NodeLayout
-          Size="264,42"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
