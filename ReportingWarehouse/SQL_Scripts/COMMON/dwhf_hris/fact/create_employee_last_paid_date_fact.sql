@@ -1,4 +1,5 @@
-﻿-- employee_last_paid_date_fact
+﻿use DWHF;
+-- employee_last_paid_date_fact
 create table [hris].[employee_last_paid_date_fact] (
 	[employee_last_paid_key] int not null,
 	[portfolio_key] int  not null,

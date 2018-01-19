@@ -14,8 +14,8 @@ for @MART: Hris, Finance, Comcare data mart
 Please change to the correct name before running it.
 
 --
-DECLARE @ENV varchar(10) = 'Prod';
-DECLARE @MART VARCHAR(20) = 'Comcare';
+DECLARE @ENV varchar(10) = 'Dev';
+DECLARE @MART VARCHAR(20) = 'Hris';
 DECLARE @t_table varchar(max)= 'transaction_type_dim';
 
 --Step1: Insert into Table_Dim.
