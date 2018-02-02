@@ -9,9 +9,9 @@ go
   where t1.source_table_key = d1.table_key
   and t1.destination_table_key = d2.table_key
   and t1.package_key = d3.package_key
+  and d3.package_name = 'DELIVERY'
   --order by t1.job_key desc
   order by d1.[system], d1.[schema], t1.[priority], d1.table_name;
-
 
   use msdb
 
@@ -28,5 +28,3 @@ use dwhb;
 update  management.job_control 
 set priority = 1 where job_key = 226;
 
-
-select * from management.job_control t1 where t1.job_key = 226;

@@ -6,17 +6,25 @@ in order to be delivered by the system.
 Step1: Insert into Table_Dim.
 Step2:Insert into Job_Control.
 
+
+package_key	package_name	sub_system
+1	EXTRACT	Extract system
+2	EXTRACT	Change data capture system
+3	DELIVERY	Delivery system
+4	CONFORM	Conform system
+
 **/
 Currently support 
 @ENV :Prod and Dev ETL
 for @MART: Hris, Finance, Comcare data mart
 
 Please change to the correct name before running it.
-
+Please change priority number in insert job control statement
 --
+
 DECLARE @ENV varchar(10) = 'Dev';
 DECLARE @MART VARCHAR(20) = 'Hris';
-DECLARE @t_table varchar(max)= 'transaction_type_dim';
+DECLARE @t_table varchar(max)= 'employee_contracted_hours_report_fact';
 
 --Step1: Insert into Table_Dim.
 DECLARE @t_server varchar(max);
@@ -59,7 +67,7 @@ BEGIN
     ((select table_key from [management].[table_dim] where table_name = @t_table and [schema] = 'conform'),
     'YES',
     (select table_key from [management].[table_dim] where table_name =@t_table and [schema] = 'hris'),
-    (select package_key from [management].[package_dim] where package_name = 'DELIVERY' and sub_system = 'Delivery system'),2,'daily');
+    (select package_key from [management].[package_dim] where package_name = 'DELIVERY' and sub_system = 'Delivery system'),1,'daily');
 END
 
 IF @MART = 'Finance'
