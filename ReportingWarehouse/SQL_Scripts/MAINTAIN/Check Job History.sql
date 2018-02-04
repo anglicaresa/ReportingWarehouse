@@ -23,5 +23,8 @@ DWHB.management.etl_process_fact f
 INNER JOIN management.table_dim t on f.table_key = t.table_key
 INNER JOIN management.status_dim s on f.status_key = s.status_key
 INNER JOIN management.date_dim d on f.date_key = d.date_key
-and d.display_date = '13/10/2017'
-order by f.cdc_date_time desc
+order by f.cdc_date_time desc;
+
+
+use dwhb;
+select * from management.package_dim;

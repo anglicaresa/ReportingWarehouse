@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEVNew"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="653"
-  DTS:VersionGUID="{D5C817C4-DD61-4F1D-9A00-08B1D95A2A0A}">
+  DTS:VersionBuild="655"
+  DTS:VersionGUID="{7BD64A16-0FFB-46B5-936F-A3D115B52447}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/18/2018 3:46:59 PM</DTS:VariableValue>
+        DTS:DataType="7">2/2/2018 4:00:48 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/18/2018 3:46:59 PM</DTS:VariableValue>
+        DTS:DataType="7">2/2/2018 4:00:48 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/18/2018 3:46:59 PM</DTS:VariableValue>
+        DTS:DataType="7">2/2/2018 4:00:48 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -360,6 +360,131 @@
                   DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
                   DTS:Description="Execute SQL Task"
                   DTS:DTSID="{a4953848-a674-4ddb-9e62-3a2eea2632d8}"
+                  DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{3dbd2df2-54a9-4a2b-9eb9-ec13acb54507}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="employee_contracted_hours_report_fact">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{1b82f7d5-ce55-456c-bf1b-b6c786f9fb11}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{65D23E3D-55A8-4569-BE26-ED17AE35E2DB}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_contracted_hours_report_fact'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{288f9213-c321-420a-b190-03763d1761b1}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{65D23E3D-55A8-4569-BE26-ED17AE35E2DB}"
+                  SQLTask:SqlStatementSource="&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_contracted_hours_report_fact'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\insert pay period data"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{4e3570c0-f1c1-407e-9e75-0be8e48cc371}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="insert pay period data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{476CD5C3-0FB5-46D0-B31E-A8381EC0659A}"
+                  SQLTask:SqlStatementSource="/**&#xA;ETL for employee_contracted_hours_report_fact&#xA;&#xA;This is an accumulated table and will repeat update last pay period data until next pay period date.&#xA;&#xA;1.get the last pay period end date&#xA;2.remove data if exist in employee_contracted_hours_report_fact for that day&#xA;3.insert effective work pattern with 0 payment hours&#xA;4.update payment hours from payment fact table after filtering&#xA;**/&#xA;&#xA;--get max pay period end date key 24865&#xA;declare @t_pay_period_end_date_key int = &#xA;    (&#xA;        select max(date_key) from conform.date_dim d where d.pay_period_end = 'yes'&#xA;        and d.date_key &lt;&#xA;        (&#xA;            select date_key from conform.date_dim d where d.full_date = convert(datetime,CONVERT (date, GETDATE()))&#xA;        )&#xA;    );&#xA;--delete if exists data on the pay period end date&#xA;delete from conform.employee_contracted_hours_report_fact &#xA;where pay_period_date_key = @t_pay_period_end_date_key;&#xA;&#xA;--3.insert effective work pattern with 0 payment hours&#xA;&#xA;&#xA;&#xA;with last_work_pattern (employee_key,position_key,start_date_key)&#xA;as&#xA;( --get the max start date key&#xA;    select f.employee_key,f.position_key,max(f.roster_start_date_key) as start_date_key&#xA;    from conform.work_pattern_fact f&#xA;    group by f.employee_key,f.position_key&#xA;)&#xA;-- insert all effective work pattern&#xA;insert into conform.employee_contracted_hours_report_fact&#xA;select w.portfolio_key,w.service_stream_key,w.program_key,w.position_key,&#xA; w.employee_key,@t_pay_period_end_date_key,AVG(w.[hours])*14 as workpattern_hours,0&#xA;from conform.work_pattern_fact w INNER join last_work_pattern f &#xA;    on w.employee_key = f.employee_key &#xA;    and w.position_key = f.position_key &#xA;    and w.roster_start_date_key = f.start_date_key&#xA;    and w.roster_code &lt;&gt; '0'&#xA;    and w.service_stream_key in &#xA;    (-- Service Stream is Residential Aged Care&#xA;        select d.service_stream_key from conform.service_stream_dim d where d.service_stream_code = 10011&#xA;    )&#xA;group by w.portfolio_key,w.service_stream_key,w.program_key,w.position_key,w.position_key,w.employee_key;&#xA;&#xA;--4.update payment hours from payment fact table after filtering&#xA;&#xA;&#xA;with payment_hours (pay_period_date_key,employee_key,position_key,payment_hours)&#xA;as&#xA;( &#xA;    select p.pay_period_date_key,p.employee_key,p.position_key,sum(p.number_units) as payment_hours&#xA;    from conform.employee_payment_fact p &#xA;    inner join conform.employee_contracted_hours_report_fact cf &#xA;        on cf.pay_period_date_key = @t_pay_period_end_date_key&#xA;        and p.employee_key = cf.employee_key&#xA;        and p.position_key = cf.position_key&#xA;    where p.service_stream_key in &#xA;        (-- Service Stream is Residential Aged Care&#xA;            select d.service_stream_key from conform.service_stream_dim d where d.service_stream_code = 10011&#xA;        )&#xA;        -- document_type should be &quot;P&quot; means Payment    &#xA;        and p.document_type = 'P'&#xA;        and p.pay_component_ref in &#xA;        (&#xA;            '100','104','109','500','501','501.1','501.2','501.3','501.4','501.5','502','502.1','505','506',&#xA;            '507','507.1','508','508.1','509','509.1','509.2','509.3','509.4','509.5','509.6','510.1','511',&#xA;            '516','516.1','517','517.1','518','518.1','520','520.1','520.2','521','521.1','522','524'&#xA;        )&#xA;        and p.pay_period_date_key = @t_pay_period_end_date_key&#xA;    group by p.pay_period_date_key,p.employee_key,p.position_key&#xA;)&#xA;update cf&#xA;set cf.payment_hours = ph.payment_hours&#xA;from &#xA;conform.employee_contracted_hours_report_fact cf INNER JOIN payment_hours ph &#xA;on cf.employee_key = ph.employee_key&#xA;and cf.position_key = ph.position_key&#xA;and cf.pay_period_date_key = ph.pay_period_date_key;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{726fdae3-c3f9-4440-94aa-5c6d4a21a969}"
+              DTS:From="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\insert pay period data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{8a0f750c-2ac7-4f72-be96-54db7c65147e}"
+              DTS:From="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\insert pay period data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{f4232998-a2c3-4bcf-8444-9bf9effc2755}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{5f5def30-7aa7-4266-8d44-42a08ed60740}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{c541c0b6-42d0-4478-b79e-5be96fab451a}"
                   DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
                   DTS:LocaleID="-1"
                   DTS:ObjectName="Execute SQL Task - Catch Error Details">
@@ -14983,6 +15108,14 @@ where employee_key=? </property>
           DTS:ObjectName="Constraint 26"
           DTS:To="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun" />
         <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 27]"
+          DTS:CreationName=""
+          DTS:DTSID="{49FFCDB4-1D80-4A59-B9F0-9A2A1BBF2BF9}"
+          DTS:From="Package\Sequence Container - Fact Tables\non_primary_position_fact"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 27"
+          DTS:To="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact" />
+        <DTS:PrecedenceConstraint
           DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
           DTS:CreationName=""
           DTS:DTSID="{7C800557-D932-4586-B0C3-13E4DB5A61F6}"
@@ -15082,7 +15215,7 @@ where employee_key=? </property>
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="512" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="512" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history\Delete current employees"
@@ -15112,7 +15245,7 @@ where employee_key=? </property>
           TopLeft="149.073863636364,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,59.4545454545441"
               Start="0,0"
               End="0,51.9545454545441">
@@ -15134,7 +15267,7 @@ where employee_key=? </property>
           TopLeft="151.801136363636,158.454545454544">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,51.6363636363659"
               Start="0,0"
               End="0,44.1363636363659">
@@ -15156,7 +15289,7 @@ where employee_key=? </property>
           TopLeft="153.587797619048,346.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,67.6233766233781"
               Start="0,0"
               End="0,60.1233766233781">
@@ -15178,7 +15311,7 @@ where employee_key=? </property>
           TopLeft="151.248106060606,252.09090909091">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,52.6666666666678"
               Start="0,0"
               End="0,45.1666666666678">
@@ -15200,7 +15333,7 @@ where employee_key=? </property>
           TopLeft="157.743641774892,456.380952380956">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,57.6147186147118"
               Start="0,0"
               End="0,50.1147186147118">
@@ -15245,7 +15378,7 @@ where employee_key=? </property>
           TopLeft="45.9375,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -15279,7 +15412,7 @@ where employee_key=? </property>
           TopLeft="146.4375,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -15301,7 +15434,7 @@ where employee_key=? </property>
           TopLeft="146.4375,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -15342,7 +15475,7 @@ where employee_key=? </property>
           TopLeft="144.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,72.7575757575778"
               Start="0,0"
               End="0,65.2575757575778">
@@ -15364,7 +15497,7 @@ where employee_key=? </property>
           TopLeft="137.831439393939,171.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,91.3333333333302"
               Start="0,0"
               End="0,83.8333333333302">
@@ -15405,7 +15538,7 @@ where employee_key=? </property>
           TopLeft="144.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,72.7575757575778"
               Start="0,0"
               End="0,65.2575757575778">
@@ -15427,7 +15560,7 @@ where employee_key=? </property>
           TopLeft="137.831439393939,171.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,91.3333333333302"
               Start="0,0"
               End="0,83.8333333333302">
@@ -15468,7 +15601,7 @@ where employee_key=? </property>
           TopLeft="144.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,72.7575757575778"
               Start="0,0"
               End="0,65.2575757575778">
@@ -15490,7 +15623,7 @@ where employee_key=? </property>
           TopLeft="137.831439393939,171.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,91.3333333333302"
               Start="0,0"
               End="0,83.8333333333302">
@@ -15531,7 +15664,7 @@ where employee_key=? </property>
           TopLeft="146.4375,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,84"
               Start="0,0"
               End="0,76.5">
@@ -15553,7 +15686,7 @@ where employee_key=? </property>
           TopLeft="146.4375,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -15598,7 +15731,7 @@ where employee_key=? </property>
           TopLeft="150.073863636364,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,59.4545454545441"
               Start="0,0"
               End="0,51.9545454545441">
@@ -15620,7 +15753,7 @@ where employee_key=? </property>
           TopLeft="152.801136363636,158.454545454544">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,51.6363636363658"
               Start="0,0"
               End="0,44.1363636363658">
@@ -15642,7 +15775,7 @@ where employee_key=? </property>
           TopLeft="151.892045454545,252.09090909091">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -15715,7 +15848,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,52.3333333333333"
               Start="0,0"
               End="-7.5,52.3333333333333">
@@ -15749,7 +15882,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,156.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,41.0833333333333"
               Start="0,0"
               End="-7.5,41.0833333333333">
@@ -15783,7 +15916,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,218.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,32.25"
               Start="0,0"
               End="0,24.75">
@@ -15805,7 +15938,7 @@ where employee_key=? </property>
           TopLeft="282.090909090909,416">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-5,56.3333333333333"
               Start="0,0"
               End="2.5,56.3333333333333">
@@ -15839,7 +15972,7 @@ where employee_key=? </property>
           TopLeft="277.090909090909,483.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-1,72.8333333333333"
               Start="0,0"
               End="6.5,72.8333333333333">
@@ -15873,7 +16006,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,371">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,24"
               Start="0,0"
               End="0,16.5">
@@ -15895,7 +16028,7 @@ where employee_key=? </property>
           TopLeft="158.090909090909,594">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,27"
               Start="0,0"
               End="0,19.5">
@@ -15917,7 +16050,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,99.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45.6666666666667"
               Start="0,0"
               End="-7.5,45.6666666666667">
@@ -15951,7 +16084,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,293">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,36"
               Start="0,0"
               End="0,28.5">
@@ -15973,7 +16106,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,663">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16026,7 +16159,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,28">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,53.3333333333333"
               Start="0,0"
               End="-7.5,53.3333333333333">
@@ -16060,7 +16193,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,149.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,41.4166666666667"
               Start="0,0"
               End="-7.5,41.4166666666667">
@@ -16094,7 +16227,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,202.416666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,42.9166666666667"
               Start="0,0"
               End="-7.5,42.9166666666667">
@@ -16128,7 +16261,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,256.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,48.3333333333333"
               Start="0,0"
               End="-7.5,48.3333333333333">
@@ -16162,7 +16295,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,92.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45.6666666666667"
               Start="0,0"
               End="-7.5,45.6666666666667">
@@ -16223,7 +16356,7 @@ where employee_key=? </property>
           TopLeft="257.15,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-6,57"
               Start="0,0"
               End="1.5,57">
@@ -16257,7 +16390,7 @@ where employee_key=? </property>
           TopLeft="146.15,168">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,23"
               Start="0,0"
               End="0,15.5">
@@ -16279,7 +16412,7 @@ where employee_key=? </property>
           TopLeft="35.15,212">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="-7.5,60">
@@ -16313,7 +16446,7 @@ where employee_key=? </property>
           TopLeft="39.15,93">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-3.99999999999997,54"
               Start="0,0"
               End="-11.5,54">
@@ -16370,7 +16503,7 @@ where employee_key=? </property>
           TopLeft="34,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,52.3333333333333"
               Start="0,0"
               End="-7.5,52.3333333333333">
@@ -16404,7 +16537,7 @@ where employee_key=? </property>
           TopLeft="34,99.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,51.4166666666667"
               Start="0,0"
               End="-7.5,51.4166666666667">
@@ -16438,7 +16571,7 @@ where employee_key=? </property>
           TopLeft="34,162.416666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,52.5833333333333"
               Start="0,0"
               End="-7.5,52.5833333333333">
@@ -16472,7 +16605,7 @@ where employee_key=? </property>
           TopLeft="134.5,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,78.75"
               Start="0,0"
               End="0,71.25">
@@ -16517,7 +16650,7 @@ where employee_key=? </property>
           TopLeft="43.4375,37">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,53"
               Start="0,0"
               End="-7.5,53">
@@ -16551,7 +16684,7 @@ where employee_key=? </property>
           TopLeft="143.9375,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,34"
               Start="0,0"
               End="0,26.5">
@@ -16573,7 +16706,7 @@ where employee_key=? </property>
           TopLeft="43.4375,166">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,64"
               Start="0,0"
               End="-7.5,64">
@@ -16630,7 +16763,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -16664,7 +16797,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16686,7 +16819,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -16731,7 +16864,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -16765,7 +16898,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16787,7 +16920,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -16832,7 +16965,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -16866,7 +16999,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16888,7 +17021,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -16933,7 +17066,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -16967,7 +17100,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16989,7 +17122,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17034,7 +17167,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17068,7 +17201,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17090,7 +17223,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17135,7 +17268,7 @@ where employee_key=? </property>
           TopLeft="141.6875,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="45.5,33"
               Start="0,0"
               End="38,33">
@@ -17163,7 +17296,7 @@ where employee_key=? </property>
           TopLeft="114.1875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="27.5,30"
               Start="0,0"
               End="27.5,22.5">
@@ -17197,7 +17330,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17242,7 +17375,7 @@ where employee_key=? </property>
           TopLeft="45.9375,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17276,7 +17409,7 @@ where employee_key=? </property>
           TopLeft="146.4375,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17298,7 +17431,7 @@ where employee_key=? </property>
           TopLeft="146.4375,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17343,7 +17476,7 @@ where employee_key=? </property>
           TopLeft="28,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="19,54"
               Start="0,0"
               End="11.5,54">
@@ -17377,7 +17510,7 @@ where employee_key=? </property>
           TopLeft="144,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17399,7 +17532,7 @@ where employee_key=? </property>
           TopLeft="138.375,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17444,7 +17577,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17478,7 +17611,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17500,7 +17633,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17545,7 +17678,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17579,7 +17712,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17601,7 +17734,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17646,7 +17779,7 @@ where employee_key=? </property>
           TopLeft="150.642045454545,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,55"
               Start="0,0"
               End="0,47.5">
@@ -17668,7 +17801,7 @@ where employee_key=? </property>
           TopLeft="148.142045454545,154">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,78"
               Start="0,0"
               End="0,70.5">
@@ -17690,7 +17823,7 @@ where employee_key=? </property>
           TopLeft="149.801136363636,274">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,108.090909090908"
               Start="0,0"
               End="0,100.590909090908">
@@ -17735,7 +17868,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17769,7 +17902,7 @@ where employee_key=? </property>
           TopLeft="138.1875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17791,7 +17924,7 @@ where employee_key=? </property>
           TopLeft="138.1875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17836,7 +17969,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17870,7 +18003,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17892,7 +18025,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17937,7 +18070,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,55"
               Start="0,0"
               End="0,47.5">
@@ -17959,7 +18092,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,154">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,78"
               Start="0,0"
               End="0,70.5">
@@ -17981,7 +18114,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,274">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,108.090909090908"
               Start="0,0"
               End="0,100.590909090908">
@@ -18026,7 +18159,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -18060,7 +18193,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -18082,7 +18215,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18122,7 +18255,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,1286.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18146,7 +18279,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,1770.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18170,7 +18303,7 @@ where employee_key=? </property>
           TopLeft="200.5,4870.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18194,7 +18327,7 @@ where employee_key=? </property>
           TopLeft="200.5,5279.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18218,7 +18351,7 @@ where employee_key=? </property>
           TopLeft="200.5,5653.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18242,7 +18375,7 @@ where employee_key=? </property>
           TopLeft="200.5,6062.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18266,7 +18399,7 @@ where employee_key=? </property>
           TopLeft="200.5,6471.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18290,7 +18423,7 @@ where employee_key=? </property>
           TopLeft="200.5,6880.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18314,7 +18447,7 @@ where employee_key=? </property>
           TopLeft="200.5,7289.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18338,7 +18471,7 @@ where employee_key=? </property>
           TopLeft="200.5,7946.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18362,7 +18495,7 @@ where employee_key=? </property>
           TopLeft="200.5,8603.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18386,7 +18519,7 @@ where employee_key=? </property>
           TopLeft="200.5,8860.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18410,7 +18543,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,2117.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18434,7 +18567,7 @@ where employee_key=? </property>
           TopLeft="200.5,9269.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18458,7 +18591,7 @@ where employee_key=? </property>
           TopLeft="200.5,9678.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18482,7 +18615,7 @@ where employee_key=? </property>
           TopLeft="202.916666666667,10189.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,177.666666666702"
               Start="0,0"
               End="0,170.166666666702">
@@ -18506,7 +18639,7 @@ where employee_key=? </property>
           TopLeft="206.52380952381,11489.6785714286">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,58.6547619047615"
               Start="0,0"
               End="0,51.1547619047615">
@@ -18528,7 +18661,7 @@ where employee_key=? </property>
           TopLeft="208.916666666666,11985.3333333333">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,66.3888888888669"
               Start="0,0"
               End="0,58.8888888888669">
@@ -18552,7 +18685,7 @@ where employee_key=? </property>
           TopLeft="211.166666666667,12486.7222222222">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,39.611111111135"
               Start="0,0"
               End="0,32.111111111135">
@@ -18576,7 +18709,7 @@ where employee_key=? </property>
           TopLeft="204.107142857143,11055.1666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,85.51190476187"
               Start="0,0"
               End="0,78.01190476187">
@@ -18598,7 +18731,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,3682.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18622,7 +18755,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,2492.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18646,7 +18779,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,2869.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18670,7 +18803,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,3273.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18694,7 +18827,7 @@ where employee_key=? </property>
           TopLeft="200.499999999999,396.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18718,7 +18851,7 @@ where employee_key=? </property>
           TopLeft="200.5,4052.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18742,7 +18875,7 @@ where employee_key=? </property>
           TopLeft="200.5,4461.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18761,11 +18894,96 @@ where employee_key=? </property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="206,42"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Finish info"
+          TopLeft="31.0587121212121,263.090909090908" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Start info"
+          TopLeft="45.9375,15" />
+        <NodeLayout
+          Size="168,42"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\insert pay period data"
+          TopLeft="57.6041666666666,129.757575757578" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint]"
+          TopLeft="144.020833333333,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,72.7575757575778"
+              Start="0,0"
+              End="0,65.2575757575778">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,65.2575757575778" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="137.831439393939,171.757575757578">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,91.3333333333302"
+              Start="0,0"
+              End="0,83.8333333333302">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,83.8333333333302" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="77"
+          IsExpanded="True"
+          PanelSize="345,358"
+          Size="345,435"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact"
+          TopLeft="41.5,13012.8333333333" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 27]"
+          TopLeft="214.333333333333,12961.3333333333">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,51.5000000000327"
+              Start="0,0"
+              End="0,44.0000000000327">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,44.0000000000327" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="805,13455"
-          Size="805,13498"
+          PanelSize="805,13499"
+          Size="805,13542"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="31.833333333333,1.99999999999818" />
       </GraphLayout>
@@ -20950,6 +21168,18 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
