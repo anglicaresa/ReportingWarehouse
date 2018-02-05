@@ -14,15 +14,19 @@ package_key	package_name	sub_system
 4	CONFORM	Conform system
 
 **/
+/**
 Currently support 
 @ENV :Prod and Dev ETL
 for @MART: Hris, Finance, Comcare data mart
 
 Please change to the correct name before running it.
 Please change priority number in insert job control statement
---
 
-DECLARE @ENV varchar(10) = 'Dev';
+**/
+
+--DECLARE @ENV varchar(10) = 'Dev';
+DECLARE @ENV varchar(10) = 'Prod';
+
 DECLARE @MART VARCHAR(20) = 'Hris';
 DECLARE @t_table varchar(max)= 'employee_contracted_hours_report_fact';
 
@@ -35,7 +39,7 @@ IF @ENV = 'Dev'
     END
 
 
- IF @ENV = 'Prod'
+IF @ENV = 'Prod'
     BEGIN
         SET @t_server = 'AZ-SQLBI01';
     END
@@ -60,7 +64,7 @@ BEGIN
     INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'dwh', 'comcare', 'dwhf_comcare', @t_server);
 END
 
- --Step2:Insert into Job_Control.
+--Step2:Insert into Job_Control.
 IF @MART = 'Hris'
 BEGIN
     insert into [management].[job_control] values 

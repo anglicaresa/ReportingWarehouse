@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - PROD"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="632"
-  DTS:VersionGUID="{9C451E04-622D-49DD-BAE8-0CCAA40F1EB1}">
+  DTS:VersionBuild="633"
+  DTS:VersionGUID="{4FA31340-580A-4A47-9982-B252FCFC7F5D}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/17/2018 11:57:33 AM</DTS:VariableValue>
+        DTS:DataType="7">2/6/2018 9:27:44 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/17/2018 11:57:33 AM</DTS:VariableValue>
+        DTS:DataType="7">2/6/2018 9:27:44 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/17/2018 11:57:33 AM</DTS:VariableValue>
+        DTS:DataType="7">2/6/2018 9:27:44 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -367,6 +367,131 @@
                   <DTS:ObjectData>
                     <SQLTask:SqlTaskData
                       SQLTask:Connection="{2A78DA3F-7CEE-4C44-A9F0-85606FA444B9}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{188bc156-bd1f-4e5f-ac15-f4073c0f93ea}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="employee_contracted_hours_report_fact">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{763c6334-55c0-4baa-9eb8-2bac00731983}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{B5E46C99-99F6-4442-BC4D-22FCC2FD0263}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_contracted_hours_report_fact'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{250d4d8f-d891-44e1-b2c1-34dc95fe740b}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{B5E46C99-99F6-4442-BC4D-22FCC2FD0263}"
+                  SQLTask:SqlStatementSource="&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_contracted_hours_report_fact'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\insert pay period data"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{d09fb4df-4515-4bbe-8fd4-3a73791f8eb8}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="insert pay period data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{B5E46C99-99F6-4442-BC4D-22FCC2FD0263}"
+                  SQLTask:SqlStatementSource="/**&#xA;ETL for employee_contracted_hours_report_fact&#xA;&#xA;This is an accumulated table and will repeat update last pay period data until next pay period date.&#xA;&#xA;1.get the last pay period end date&#xA;2.remove data if exist in employee_contracted_hours_report_fact for that day&#xA;3.insert effective work pattern with 0 payment hours&#xA;4.update payment hours from payment fact table after filtering&#xA;**/&#xA;&#xA;--get max pay period end date key 24865&#xA;declare @t_pay_period_end_date_key int = &#xA;    (&#xA;        select max(date_key) from conform.date_dim d where d.pay_period_end = 'yes'&#xA;        and d.date_key &lt;&#xA;        (&#xA;            select date_key from conform.date_dim d where d.full_date = convert(datetime,CONVERT (date, GETDATE()))&#xA;        )&#xA;    );&#xA;--delete if exists data on the pay period end date&#xA;delete from conform.employee_contracted_hours_report_fact &#xA;where pay_period_date_key = @t_pay_period_end_date_key;&#xA;&#xA;--3.insert effective work pattern with 0 payment hours&#xA;&#xA;&#xA;&#xA;with last_work_pattern (employee_key,position_key,start_date_key)&#xA;as&#xA;( --get the max start date key&#xA;    select f.employee_key,f.position_key,max(f.roster_start_date_key) as start_date_key&#xA;    from conform.work_pattern_fact f&#xA;    group by f.employee_key,f.position_key&#xA;)&#xA;-- insert all effective work pattern&#xA;insert into conform.employee_contracted_hours_report_fact&#xA;select w.portfolio_key,w.service_stream_key,w.program_key,w.position_key,&#xA; w.employee_key,@t_pay_period_end_date_key,AVG(w.[hours])*14 as workpattern_hours,0&#xA;from conform.work_pattern_fact w INNER join last_work_pattern f &#xA;    on w.employee_key = f.employee_key &#xA;    and w.position_key = f.position_key &#xA;    and w.roster_start_date_key = f.start_date_key&#xA;    and w.roster_code &lt;&gt; '0'&#xA;    and w.service_stream_key in &#xA;    (-- Service Stream is Residential Aged Care&#xA;        select d.service_stream_key from conform.service_stream_dim d where d.service_stream_code = 10011&#xA;    )&#xA;group by w.portfolio_key,w.service_stream_key,w.program_key,w.position_key,w.position_key,w.employee_key;&#xA;&#xA;--4.update payment hours from payment fact table after filtering&#xA;&#xA;&#xA;with payment_hours (pay_period_date_key,employee_key,position_key,payment_hours)&#xA;as&#xA;( &#xA;    select p.pay_period_date_key,p.employee_key,p.position_key,sum(p.number_units) as payment_hours&#xA;    from conform.employee_payment_fact p &#xA;    inner join conform.employee_contracted_hours_report_fact cf &#xA;        on cf.pay_period_date_key = @t_pay_period_end_date_key&#xA;        and p.employee_key = cf.employee_key&#xA;        and p.position_key = cf.position_key&#xA;    where p.service_stream_key in &#xA;        (-- Service Stream is Residential Aged Care&#xA;            select d.service_stream_key from conform.service_stream_dim d where d.service_stream_code = 10011&#xA;        )&#xA;        -- document_type should be &quot;P&quot; means Payment    &#xA;        and p.document_type = 'P'&#xA;        and p.pay_component_ref in &#xA;        (&#xA;            '100','104','109','500','501','501.1','501.2','501.3','501.4','501.5','502','502.1','505','506',&#xA;            '507','507.1','508','508.1','509','509.1','509.2','509.3','509.4','509.5','509.6','510.1','511',&#xA;            '516','516.1','517','517.1','518','518.1','520','520.1','520.2','521','521.1','522','524'&#xA;        )&#xA;        and p.pay_period_date_key = @t_pay_period_end_date_key&#xA;    group by p.pay_period_date_key,p.employee_key,p.position_key&#xA;)&#xA;update cf&#xA;set cf.payment_hours = ph.payment_hours&#xA;from &#xA;conform.employee_contracted_hours_report_fact cf INNER JOIN payment_hours ph &#xA;on cf.employee_key = ph.employee_key&#xA;and cf.position_key = ph.position_key&#xA;and cf.pay_period_date_key = ph.pay_period_date_key;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{c5725bce-0faa-4c50-a8a0-4978a1f4aa84}"
+              DTS:From="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\insert pay period data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{250a4efb-0110-405c-92ec-a49c4714d13c}"
+              DTS:From="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\insert pay period data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{423a5345-36c2-41d2-843b-8c0332980ffe}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{221e8833-f1a8-4e1f-b215-88653278d41c}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{235a1dd6-8b05-4356-a509-7028486341e0}"
+                  DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
                       SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
                       <SQLTask:ParameterBinding
                         SQLTask:ParameterName="0"
@@ -14987,6 +15112,14 @@ where employee_key=? </property>
           DTS:ObjectName="Constraint 26"
           DTS:To="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun" />
         <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 27]"
+          DTS:CreationName=""
+          DTS:DTSID="{46CE9496-A673-4AFB-AB62-7469BCADC722}"
+          DTS:From="Package\Sequence Container - Fact Tables\non_primary_position_fact"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 27"
+          DTS:To="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact" />
+        <DTS:PrecedenceConstraint
           DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
           DTS:CreationName=""
           DTS:DTSID="{090CB461-2AAB-4B18-8B97-70BB438E5467}"
@@ -17814,6 +17947,107 @@ where employee_key=? </property>
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT"
           TopLeft="27.9999999999993,4568.5" />
         <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Delete data for Yesterday"
+          TopLeft="41.1875,69" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Finish info"
+          TopLeft="41.1875,209" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Start info"
+          TopLeft="41.1875,15" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Get data for yesterday"
+          TopLeft="41.1875,141" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint]"
+          TopLeft="41.1875,36">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,54"
+              Start="0,0"
+              End="-7.5,54">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-18.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-18.5,0"
+                    Point2="-22.5,0"
+                    Point3="-22.5,4" />
+                  <mssgle:LineSegment
+                    End="-22.5,50" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-22.5,50"
+                    Point2="-22.5,54"
+                    Point3="-18.5,54" />
+                  <mssgle:LineSegment
+                    End="-7.5,54" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 1]"
+          TopLeft="141.6875,111">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,30"
+              Start="0,0"
+              End="0,22.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 2]"
+          TopLeft="141.6875,183">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,26"
+              Start="0,0"
+              End="0,18.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="345,272"
+          Size="345,315"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun"
+          TopLeft="29.4999999999998,10503.6111111111" />
+        <NodeLayout
           Size="233,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - TIMESHEET_VALICATION_FACT\Delete data"
           TopLeft="45.0965909090909,88" />
@@ -18399,6 +18633,28 @@ where employee_key=? </property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 23]"
+          TopLeft="205.75,10818.6111111111">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,171.8888888889"
+              Start="0,0"
+              End="0,164.3888888889">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,164.3888888889" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 24]"
           TopLeft="209.5,11393.5">
           <EdgeLayout.Curve>
@@ -18444,6 +18700,28 @@ where employee_key=? </property>
             <mssgm:EdgeLabel
               BoundingBox="-25.304453125,21.5008680555557,50.60890625,11.609375"
               RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 26]"
+          TopLeft="201.25,10416.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,87.1111111111004"
+              Start="0,0"
+              End="0,79.6111111111004">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,79.6111111111004" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -18615,47 +18893,31 @@ where employee_key=? </property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <NodeLayout
-          Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Delete data for Yesterday"
-          TopLeft="41.1875,69" />
+          Size="206,42"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Finish info"
+          TopLeft="31.0587121212121,263.090909090908" />
         <NodeLayout
           Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Finish info"
-          TopLeft="41.1875,209" />
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Start info"
+          TopLeft="45.9375,15" />
         <NodeLayout
-          Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Start info"
-          TopLeft="41.1875,15" />
-        <NodeLayout
-          Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Get data for yesterday"
-          TopLeft="41.1875,141" />
+          Size="168,42"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\insert pay period data"
+          TopLeft="57.6041666666666,129.757575757578" />
         <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint]"
-          TopLeft="41.1875,36">
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint]"
+          TopLeft="144.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,54"
+              EndConnector="0,72.7575757575778"
               Start="0,0"
-              End="-7.5,54">
+              End="0,65.2575757575778">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="-18.5,0" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-18.5,0"
-                    Point2="-22.5,0"
-                    Point3="-22.5,4" />
-                  <mssgle:LineSegment
-                    End="-22.5,50" />
-                  <mssgle:CubicBezierSegment
-                    Point1="-22.5,50"
-                    Point2="-22.5,54"
-                    Point3="-18.5,54" />
-                  <mssgle:LineSegment
-                    End="-7.5,54" />
+                    End="0,65.2575757575778" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -18665,19 +18927,19 @@ where employee_key=? </property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 1]"
-          TopLeft="141.6875,111">
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="137.831439393939,171.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,30"
+              EndConnector="0,91.3333333333302"
               Start="0,0"
-              End="0,22.5">
+              End="0,83.8333333333302">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,22.5" />
+                    End="0,83.8333333333302" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -18686,20 +18948,27 @@ where employee_key=? </property>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="77"
+          IsExpanded="True"
+          PanelSize="345,358"
+          Size="345,435"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact"
+          TopLeft="39.5555555555554,12457.1666666667" />
         <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 2]"
-          TopLeft="141.6875,183">
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 27]"
+          TopLeft="213.138888888889,12387.6111111111">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,26"
+              EndConnector="0,69.5555555555657"
               Start="0,0"
-              End="0,18.5">
+              End="0,62.0555555555657">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,18.5" />
+                    End="0,62.0555555555657" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -18711,59 +18980,8 @@ where employee_key=? </property>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="345,272"
-          Size="345,315"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun"
-          TopLeft="29.4999999999998,10503.6111111111" />
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 26]"
-          TopLeft="201.25,10416.5">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,87.1111111111004"
-              Start="0,0"
-              End="0,79.6111111111004">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,79.6111111111004" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 23]"
-          TopLeft="205.75,10818.6111111111">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,171.8888888889"
-              Start="0,0"
-              End="0,164.3888888889">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,164.3888888889" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="43"
-          IsExpanded="True"
-          PanelSize="688,12443"
-          Size="688,12486"
+          PanelSize="797,12947"
+          Size="797,12990"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="171.833333333333,1.99999999999818" />
       </GraphLayout>
@@ -20905,6 +21123,18 @@ where employee_key=? </property>
     </LayoutInfo>
   </DtsEventHandler>
   <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
     design-time-name="Package\Sequence Container - Fact Tables\SD2 - TIMESHEET_VALICATION_FACT.EventHandlers[OnError]">
     <LayoutInfo>
       <GraphLayout
@@ -20941,13 +21171,13 @@ where employee_key=? </property>
     </LayoutInfo>
   </DtsEventHandler>
   <DtsEventHandler
-    design-time-name="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]">
+    design-time-name="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]">
     <LayoutInfo>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
         <NodeLayout
           Size="264,42"
-          Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
