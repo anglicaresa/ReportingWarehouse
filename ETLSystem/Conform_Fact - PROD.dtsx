@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - PROD"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="634"
-  DTS:VersionGUID="{66FF9EB1-9FF8-4838-A12E-8E6D85055F9C}">
+  DTS:VersionBuild="635"
+  DTS:VersionGUID="{7D0EC39E-E100-4457-9155-9C06CCF8993D}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">2/6/2018 9:34:17 AM</DTS:VariableValue>
+        DTS:DataType="7">2/6/2018 11:53:06 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">2/6/2018 9:34:17 AM</DTS:VariableValue>
+        DTS:DataType="7">2/6/2018 11:53:06 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">2/6/2018 9:34:17 AM</DTS:VariableValue>
+        DTS:DataType="7">2/6/2018 11:53:06 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -438,7 +438,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{B5E46C99-99F6-4442-BC4D-22FCC2FD0263}"
-                  SQLTask:SqlStatementSource="/**&#xA;ETL for employee_contracted_hours_report_fact&#xA;&#xA;This is an accumulated table and will repeat update last pay period data until next pay period date.&#xA;&#xA;1.get the last pay period end date&#xA;2.remove data if exist in employee_contracted_hours_report_fact for that day&#xA;3.insert effective work pattern with 0 payment hours&#xA;4.update payment hours from payment fact table after filtering&#xA;**/&#xA;&#xA;--get max pay period end date key 24865&#xA;declare @t_pay_period_end_date_key int = &#xA;    (&#xA;        select max(date_key) from conform.date_dim d where d.pay_period_end = 'yes'&#xA;        and d.date_key &lt;&#xA;        (&#xA;            select date_key from conform.date_dim d where d.full_date = convert(datetime,CONVERT (date, GETDATE()))&#xA;        )&#xA;    );&#xA;--delete if exists data on the pay period end date&#xA;delete from conform.employee_contracted_hours_report_fact &#xA;where pay_period_date_key = @t_pay_period_end_date_key;&#xA;&#xA;--3.insert effective work pattern with 0 payment hours&#xA;&#xA;&#xA;&#xA;with last_work_pattern (employee_key,position_key,start_date_key)&#xA;as&#xA;( --get the max start date key&#xA;    select f.employee_key,f.position_key,max(f.roster_start_date_key) as start_date_key&#xA;    from conform.work_pattern_fact f&#xA;    group by f.employee_key,f.position_key&#xA;)&#xA;-- insert all effective work pattern&#xA;insert into conform.employee_contracted_hours_report_fact&#xA;select w.portfolio_key,w.service_stream_key,w.program_key,w.position_key,&#xA; w.employee_key,@t_pay_period_end_date_key,AVG(w.[hours])*14 as workpattern_hours,0&#xA;from conform.work_pattern_fact w INNER join last_work_pattern f &#xA;    on w.employee_key = f.employee_key &#xA;    and w.position_key = f.position_key &#xA;    and w.roster_start_date_key = f.start_date_key&#xA;    and w.roster_code &lt;&gt; '0'&#xA;    and w.service_stream_key in &#xA;    (-- Service Stream is Residential Aged Care&#xA;        select d.service_stream_key from conform.service_stream_dim d where d.service_stream_code = 10011&#xA;    )&#xA;group by w.portfolio_key,w.service_stream_key,w.program_key,w.position_key,w.position_key,w.employee_key;&#xA;&#xA;--4.update payment hours from payment fact table after filtering&#xA;&#xA;&#xA;with payment_hours (pay_period_date_key,employee_key,position_key,payment_hours)&#xA;as&#xA;( &#xA;    select p.pay_period_date_key,p.employee_key,p.position_key,sum(p.number_units) as payment_hours&#xA;    from conform.employee_payment_fact p &#xA;    inner join conform.employee_contracted_hours_report_fact cf &#xA;        on cf.pay_period_date_key = @t_pay_period_end_date_key&#xA;        and p.employee_key = cf.employee_key&#xA;        and p.position_key = cf.position_key&#xA;    where p.service_stream_key in &#xA;        (-- Service Stream is Residential Aged Care&#xA;            select d.service_stream_key from conform.service_stream_dim d where d.service_stream_code = 10011&#xA;        )&#xA;        -- document_type should be &quot;P&quot; means Payment    &#xA;        and p.document_type = 'P'&#xA;        and p.pay_component_ref in &#xA;        (&#xA;            '100','104','109','500','501','501.1','501.2','501.3','501.4','501.5','502','502.1','505','506',&#xA;            '507','507.1','508','508.1','509','509.1','509.2','509.3','509.4','509.5','509.6','510.1','511',&#xA;            '516','516.1','517','517.1','518','518.1','520','520.1','520.2','521','521.1','522','524'&#xA;        )&#xA;        and p.pay_period_date_key = @t_pay_period_end_date_key&#xA;    group by p.pay_period_date_key,p.employee_key,p.position_key&#xA;)&#xA;update cf&#xA;set cf.payment_hours = ph.payment_hours&#xA;from &#xA;conform.employee_contracted_hours_report_fact cf INNER JOIN payment_hours ph &#xA;on cf.employee_key = ph.employee_key&#xA;and cf.position_key = ph.position_key&#xA;and cf.pay_period_date_key = ph.pay_period_date_key;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="/**&#xA;ETL for employee_contracted_hours_report_fact&#xA;&#xA;This is an accumulated table and will repeat update last pay period data until next pay period date.&#xA;&#xA;1.get the last pay period end date&#xA;2.remove data if exist in employee_contracted_hours_report_fact for that day&#xA;3.insert effective work pattern with 0 payment hours&#xA;4.update payment hours from payment fact table after filtering&#xA;**/&#xA;&#xA;--get max pay period end date key 24865&#xA;declare @t_pay_period_end_date_key int = &#xA;    (&#xA;        select max(date_key) from conform.date_dim d where d.pay_period_end = 'yes'&#xA;        and d.date_key &lt;&#xA;        (&#xA;            select date_key from conform.date_dim d where d.full_date = convert(datetime,CONVERT (date, GETDATE()))&#xA;        )&#xA;    );&#xA;--delete if exists data on the pay period end date&#xA;delete from conform.employee_contracted_hours_report_fact &#xA;where pay_period_date_key = @t_pay_period_end_date_key;&#xA;&#xA;--3.insert effective work pattern with 0 payment hours&#xA;&#xA;&#xA;&#xA;with last_work_pattern (employee_key,position_key,start_date_key)&#xA;as&#xA;( --get the max start date key&#xA;    select f.employee_key,f.position_key,max(f.roster_start_date_key) as start_date_key&#xA;    from conform.work_pattern_fact f&#xA;&#x9;--keep staff that terminated within the last pay period&#xA;&#x9;inner join conform.all_employees_report_fact d on f.employee_key = d.employee_key and d.expire_date_key &gt; (@t_pay_period_end_date_key - 14)&#xA;    group by f.employee_key,f.position_key&#xA;)&#xA;-- insert all effective work pattern&#xA;insert into conform.employee_contracted_hours_report_fact&#xA;select w.portfolio_key,w.service_stream_key,w.program_key,w.position_key,&#xA; w.employee_key,@t_pay_period_end_date_key,AVG(w.[hours])*14 as workpattern_hours,0&#xA;from conform.work_pattern_fact w INNER join last_work_pattern f &#xA;    on w.employee_key = f.employee_key &#xA;    and w.position_key = f.position_key &#xA;    and w.roster_start_date_key = f.start_date_key&#xA;    and w.roster_code &lt;&gt; '0'&#xA;    and w.service_stream_key in &#xA;    (-- Service Stream is Residential Aged Care&#xA;        select d.service_stream_key from conform.service_stream_dim d where d.service_stream_code = 10011&#xA;    )&#xA;group by w.portfolio_key,w.service_stream_key,w.program_key,w.position_key,w.position_key,w.employee_key;&#xA;&#xA;--4.update payment hours from payment fact table after filtering&#xA;&#xA;&#xA;with payment_hours (pay_period_date_key,employee_key,position_key,payment_hours)&#xA;as&#xA;( &#xA;    select p.pay_period_date_key,p.employee_key,p.position_key,sum(p.number_units) as payment_hours&#xA;    from conform.employee_payment_fact p &#xA;    inner join conform.employee_contracted_hours_report_fact cf &#xA;        on cf.pay_period_date_key = @t_pay_period_end_date_key&#xA;        and p.employee_key = cf.employee_key&#xA;        and p.position_key = cf.position_key&#xA;    where p.service_stream_key in &#xA;        (-- Service Stream is Residential Aged Care&#xA;            select d.service_stream_key from conform.service_stream_dim d where d.service_stream_code = 10011&#xA;        )&#xA;        -- document_type should be &quot;P&quot; means Payment    &#xA;        and p.document_type = 'P'&#xA;        and p.pay_component_ref in &#xA;        (&#xA;            '100','104','109','500','501','501.1','501.2','501.3','501.4','501.5','502','502.1','505','506',&#xA;            '507','507.1','508','508.1','509','509.1','509.2','509.3','509.4','509.5','509.6','510.1','511',&#xA;            '516','516.1','517','517.1','518','518.1','520','520.1','520.2','521','521.1','522','524'&#xA;        )&#xA;        and p.pay_period_date_key = @t_pay_period_end_date_key&#xA;    group by p.pay_period_date_key,p.employee_key,p.position_key&#xA;)&#xA;update cf&#xA;set cf.payment_hours = ph.payment_hours&#xA;from &#xA;conform.employee_contracted_hours_report_fact cf INNER JOIN payment_hours ph &#xA;on cf.employee_key = ph.employee_key&#xA;and cf.position_key = ph.position_key&#xA;and cf.pay_period_date_key = ph.pay_period_date_key;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -15362,6 +15362,69 @@ where employee_key=? </property>
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history"
           TopLeft="28,9740.5" />
         <NodeLayout
+          Size="206,42"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Finish info"
+          TopLeft="31.0587121212121,263.090909090908" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Start info"
+          TopLeft="45.9375,15" />
+        <NodeLayout
+          Size="168,42"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\insert pay period data"
+          TopLeft="57.6041666666666,129.757575757578" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint]"
+          TopLeft="144.020833333333,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,72.7575757575778"
+              Start="0,0"
+              End="0,65.2575757575778">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,65.2575757575778" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="137.831439393939,171.757575757578">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,91.3333333333302"
+              Start="0,0"
+              End="0,83.8333333333302">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,83.8333333333302" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="77"
+          IsExpanded="True"
+          PanelSize="345,358"
+          Size="345,435"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact"
+          TopLeft="44.7222222222219,12478.5" />
+        <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\employee_last_paid_date_fact\Delete data for Yesterday"
           TopLeft="45.9375,69" />
@@ -18725,6 +18788,28 @@ where employee_key=? </property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 27]"
+          TopLeft="215.722222222222,12387.6111111111">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,90.8888888888996"
+              Start="0,0"
+              End="0,83.3888888888996">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,83.3888888888996" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
           TopLeft="200.499999999999,3690.5">
           <EdgeLayout.Curve>
@@ -18892,91 +18977,6 @@ where employee_key=? </property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="206,42"
-          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Finish info"
-          TopLeft="31.0587121212121,263.090909090908" />
-        <NodeLayout
-          Size="201,42"
-          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Start info"
-          TopLeft="45.9375,15" />
-        <NodeLayout
-          Size="168,42"
-          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\insert pay period data"
-          TopLeft="57.6041666666666,129.757575757578" />
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint]"
-          TopLeft="144.020833333333,57">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,72.7575757575778"
-              Start="0,0"
-              End="0,65.2575757575778">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,65.2575757575778" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.PrecedenceConstraints[Constraint 2]"
-          TopLeft="137.831439393939,171.757575757578">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,91.3333333333302"
-              Start="0,0"
-              End="0,83.8333333333302">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,83.8333333333302" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="77"
-          IsExpanded="True"
-          PanelSize="345,358"
-          Size="345,435"
-          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact"
-          TopLeft="44.7222222222219,12478.5" />
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 27]"
-          TopLeft="215.722222222222,12387.6111111111">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,90.8888888888996"
-              Start="0,0"
-              End="0,83.3888888888996">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,83.3888888888996" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
@@ -18995,6 +18995,18 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
@@ -21166,18 +21178,6 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
-          TopLeft="448,222" />
-      </GraphLayout>
-    </LayoutInfo>
-  </DtsEventHandler>
-  <DtsEventHandler
-    design-time-name="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
-        <NodeLayout
-          Size="264,42"
-          Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
