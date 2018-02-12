@@ -14,6 +14,7 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('ben_ifr', 'riskman', 'dbo', 'Riskm
 INSERT INTO [management].[TABLE_DIM] VALUES ('incnotif_ifr', 'riskman', 'dbo', 'Riskman', 'ted');
 INSERT INTO [management].[TABLE_DIM] VALUES ('userprofile', 'riskman', 'dbo', 'Riskman', 'ted');
 INSERT INTO [management].[TABLE_DIM] VALUES ('vwsf_preventativecorrectiveaction', 'riskman', 'dbo', 'Riskman', 'ted');
+insert into management.table_dim values('tblContributingFactors_IFR','riskman','dbo','Riskman','ted')
 
 -- schema: replicated riskman tables
 INSERT INTO [management].[TABLE_DIM] VALUES ('angcare_ifr', 'dwh', 'extract_riskman', 'dwhb', 'devsql-1');
@@ -27,6 +28,7 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('ben_ifr', 'dwh', 'extract_riskman'
 INSERT INTO [management].[TABLE_DIM] VALUES ('incnotif_ifr', 'dwh', 'extract_riskman', 'dwhb', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('userprofile', 'dwh', 'extract_riskman', 'dwhb', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('vwsf_preventativecorrectiveaction', 'dwh', 'extract_riskman', 'dwhb', 'devsql-1');
+insert into management.table_dim values('tblContributingFactors_IFR','dwh','extract_riskman','dwhb','devsql-1')
 
 -- schema: conform_riskman
 INSERT INTO [management].[TABLE_DIM] VALUES ('action_dim', 'dwh', 'conform_riskman', 'dwhb', 'devsql-1');
@@ -41,6 +43,7 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('person_dim', 'dwh', 'conform_riskm
 INSERT INTO [management].[TABLE_DIM] VALUES ('portfolio_dim', 'dwh', 'conform_riskman', 'dwhb', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('program_dim', 'dwh', 'conform_riskman', 'dwhb', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('service_stream_dim', 'dwh', 'conform_riskman', 'dwhb', 'devsql-1');
+insert into management.table_dim values('ContributingFactors_fact','dwh','conform_riskman','dwhb','devsql-1')
 
 -- schema: riskman
 INSERT INTO [management].[TABLE_DIM] VALUES ('action_dim', 'dwh', 'riskman', 'dwhf_riskman', 'devsql-1');
@@ -55,3 +58,4 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('person_dim', 'dwh', 'riskman', 'dw
 INSERT INTO [management].[TABLE_DIM] VALUES ('portfolio_dim', 'dwh', 'riskman', 'dwhf_riskman', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('program_dim', 'dwh', 'riskman', 'dwhf_riskman', 'devsql-1');
 INSERT INTO [management].[TABLE_DIM] VALUES ('service_stream_dim', 'dwh', 'riskman', 'dwhf_riskman', 'devsql-1');
+insert into management.table_dim values('ContributingFactors_fact','dwh','riskman','dwhf_riskman','devsql-1')

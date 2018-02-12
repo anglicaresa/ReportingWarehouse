@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_RiskMan_Fact - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="626"
-  DTS:VersionGUID="{849F0868-FB20-4AF0-BC70-57BD1730538E}">
+  DTS:VersionBuild="627"
+  DTS:VersionGUID="{2242A92D-8FF4-4D6C-B14D-B19150EBC9A2}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -92,7 +92,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/29/2018 2:17:30 PM</DTS:VariableValue>
+        DTS:DataType="7">2/9/2018 11:10:09 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -139,7 +139,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/29/2018 2:17:30 PM</DTS:VariableValue>
+        DTS:DataType="7">2/9/2018 11:10:09 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -150,7 +150,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/29/2018 2:17:30 PM</DTS:VariableValue>
+        DTS:DataType="7">2/9/2018 11:10:09 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -173,6 +173,156 @@
       DTS:ObjectName="Sequence Container - Fact Tables">
       <DTS:Variables />
       <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\ContributingFactors_fact"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{5b891649-5e0d-4a16-992a-5bb2a27050ea}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="ContributingFactors_fact">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\ContributingFactors_fact\Delete Existing Data"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{ebc24018-95ea-491c-b945-7034e21f5acd}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Delete Existing Data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{5A883BE2-5337-4500-9122-FDA41FA62F37}"
+                  SQLTask:SqlStatementSource="--- need to change later just delete the data for yesterday&#xA;&#xA;truncate table  conform_riskman.ContributingFactors_fact" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\ContributingFactors_fact\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{35808405-0861-4f50-b838-1677797ad1aa}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{5A883BE2-5337-4500-9122-FDA41FA62F37}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_riskman.ContributingFactors_fact'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\ContributingFactors_fact\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{5a49adbb-2a45-4da1-a5d3-79f3aa1af510}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{5A883BE2-5337-4500-9122-FDA41FA62F37}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_riskman.ContributingFactors_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\ContributingFactors_fact\Populate new data"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{9ab3db0f-afed-43d8-befc-a093b2635c85}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Populate new data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{5A883BE2-5337-4500-9122-FDA41FA62F37}"
+                  SQLTask:SqlStatementSource=" insert into conform_riskman.ContributingFactors_fact(id,CFactorGroup,CFactor)&#xA; select a.id,a.CFactorGroup,a.CFactor&#xA; from extract_riskman.tblContributingFactors_IFR as a ;&#xA;&#xA; update t1&#xA; set t1.display_id=t2.DisplayID&#xA; from conform_riskman.ContributingFactors_fact as t1&#xA; inner join &#xA; ( select a.id,a.DisplayID&#xA; from extract_riskman.IncidentsForReview as a&#xA; inner join&#xA; (&#xA; select DisplayID,max(sequenceno) as sequenceno&#xA;  from extract_riskman.IncidentsForReview&#xA;  where SubModule='Incidents'&#xA;  group by DisplayID&#xA;  ) as b &#xA;  on  a.SubModule='Incidents' and a.DisplayID=b.DisplayID&#xA;  and a.SequenceNo=b.sequenceno&#xA;  ) as t2&#xA; on t1.id = t2.id &#xA;&#xA;&#xA;&#xA; delete from conform_riskman.ContributingFactors_fact where display_id is NULL ;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\ContributingFactors_fact.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{6440e8e3-dbbd-465c-9530-ddbb22f91259}"
+              DTS:From="Package\Sequence Container - Fact Tables\ContributingFactors_fact\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\ContributingFactors_fact\Delete Existing Data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\ContributingFactors_fact.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{f473625c-63a9-4779-964c-b5f089a0e392}"
+              DTS:From="Package\Sequence Container - Fact Tables\ContributingFactors_fact\Delete Existing Data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - Fact Tables\ContributingFactors_fact\Populate new data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\ContributingFactors_fact.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{1b9fc915-9f73-4bdd-9dce-17fbdfd63fa6}"
+              DTS:From="Package\Sequence Container - Fact Tables\ContributingFactors_fact\Populate new data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\ContributingFactors_fact\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\ContributingFactors_fact.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{78128fcc-a6e4-4d46-ab02-58bca4fb5ae8}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{4b128d8a-d830-460e-90bc-064d2e17d85b}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\ContributingFactors_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{a7ce893c-9047-4c98-a5a7-1cd8e9e61f65}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{5A883BE2-5337-4500-9122-FDA41FA62F37}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
         <DTS:Executable
           DTS:refId="Package\Sequence Container - Fact Tables\INCIDENT_ACTION_FACT"
           DTS:CreationName="STOCK:SEQUENCE"
@@ -962,6 +1112,15 @@
           DTS:ObjectName="Constraint 3"
           DTS:To="Package\Sequence Container - Fact Tables\SD1 INCIDENT_HISTORY_FACT"
           DTS:Value="2" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{65173488-4EEA-42FD-8A38-FFE51D5788EC}"
+          DTS:From="Package\Sequence Container - Fact Tables\SD1 INCIDENT_HISTORY_FACT"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\Sequence Container - Fact Tables\ContributingFactors_fact"
+          DTS:Value="2" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
   </DTS:Executables>
@@ -1518,11 +1677,124 @@
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="271,42"
+          Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact\Delete Existing Data"
+          TopLeft="31.75,91" />
+        <NodeLayout
+          Size="271,42"
+          Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact\EST - Write Job Finish info"
+          TopLeft="32.75,256" />
+        <NodeLayout
+          Size="271,42"
+          Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact\EST - Write Job Start info"
+          TopLeft="30.75,15" />
+        <NodeLayout
+          Size="269,42"
+          Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact\Populate new data"
+          TopLeft="29.75,156" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact.PrecedenceConstraints[Constraint]"
+          TopLeft="166.75,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34"
+              Start="0,0"
+              End="0,26.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact.PrecedenceConstraints[Constraint 1]"
+          TopLeft="165.75,133">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,23"
+              Start="0,0"
+              End="0,15.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="166.25,198">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58"
+              Start="0,0"
+              End="0,50.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,50.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="420,2161"
-          Size="420,2204"
+          PanelSize="409,329"
+          Size="409,372"
+          Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact"
+          TopLeft="5.50000000000006,2165.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 4]"
+          TopLeft="210,2105.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="420,2592"
+          Size="420,2636"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="34.5,1" />
       </GraphLayout>
@@ -1584,6 +1856,18 @@
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\SD1 INCIDENT_HISTORY_FACT.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\ContributingFactors_fact.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>

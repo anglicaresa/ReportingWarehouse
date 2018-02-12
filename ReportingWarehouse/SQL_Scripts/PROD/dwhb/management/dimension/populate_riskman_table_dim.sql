@@ -16,6 +16,7 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('incnotif_ifr', 'riskman', 'dbo', '
 INSERT INTO [management].[TABLE_DIM] VALUES ('userprofile', 'riskman', 'dbo', 'Riskman', 'ted');
 INSERT INTO [management].[TABLE_DIM] VALUES ('vwsf_preventativecorrectiveaction', 'riskman', 'dbo', 'Riskman', 'ted');
 insert into management.table_dim values('CAbuse_IFR','riskman','dbo','Riskman','ted');
+insert into management.table_dim values('tblContributingFactors_IFR','riskman','dbo','Riskman','ted')
 
 
 -- schema: replicated riskman tables
@@ -31,6 +32,7 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('incnotif_ifr', 'dwh', 'extract_ris
 INSERT INTO [management].[TABLE_DIM] VALUES ('userprofile', 'dwh', 'extract_riskman', 'dwhb', 'AZ-SQLBI01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('vwsf_preventativecorrectiveaction', 'dwh', 'extract_riskman', 'dwhb', 'AZ-SQLBI01');
 insert into management.table_dim values('CAbuse_IFR','dwh','extract_riskman','dwhb','AZ-SQLBI01');
+insert into management.table_dim values('tblContributingFactors_IFR','dwh','extract_riskman','dwhb','AZ-SQLBI01')
 
 
 -- schema: conform_riskman
@@ -49,6 +51,7 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('service_stream_dim', 'dwh', 'confo
 
 INSERT INTO [management].[TABLE_DIM] VALUES ('prgram_map_CustomerSite', 'dwh', 'conform_riskman', 'dwhb', 'AZ-SQLBI01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('program_mapping', 'dwh', 'conform_riskman', 'dwhb', 'AZ-SQLBI01');
+insert into management.table_dim values('ContributingFactors_fact','dwh','conform_riskman','dwhb','AZ-SQLBI01')
 
 
 -- schema: riskman
@@ -64,3 +67,4 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('person_dim', 'dwh', 'riskman', 'dw
 INSERT INTO [management].[TABLE_DIM] VALUES ('portfolio_dim', 'dwh', 'riskman', 'dwhf_riskman', 'AZ-SQLBI01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('program_dim', 'dwh', 'riskman', 'dwhf_riskman', 'AZ-SQLBI01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('service_stream_dim', 'dwh', 'riskman', 'dwhf_riskman', 'AZ-SQLBI01');
+insert into management.table_dim values('ContributingFactors_fact','dwh','riskman','dwhf_riskman','AZ-SQLBI01')
