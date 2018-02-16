@@ -21,6 +21,14 @@
           <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
           <Property Name="ch_id" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DWHB.conform_riskman.ContributingFactors_fact' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="ContributingFactors_fact">
+          <Property Name="id" Type="int" />
+          <Property Name="display_id" Type="int" />
+          <Property Name="CFactorGroup" Type="varchar" MaxLength="400" />
+          <Property Name="CFactor" Type="varchar" MaxLength="400" />
+        </EntityType>-->
         <EntityType Name="date_dim">
           <Key>
             <PropertyRef Name="date_key" />
@@ -130,6 +138,72 @@
           <Property Name="AD_UserID" Type="varchar" MaxLength="100" />
           <Property Name="ASA_Email" Type="varchar" MaxLength="100" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_riskman.Feedback_Fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Feedback_Fact">
+          <Key>
+            <PropertyRef Name="feedback_key" />
+          </Key>
+          <Property Name="feedback_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID" Type="int" />
+          <Property Name="Base_id" Type="int" />
+          <Property Name="DisplayID" Type="int" />
+          <Property Name="IncidentInvolved" Type="varchar" MaxLength="50" />
+          <Property Name="person_key" Type="int" />
+          <Property Name="portfolio_key" Type="int" />
+          <Property Name="service_stream_key" Type="int" />
+          <Property Name="program_key" Type="int" />
+          <Property Name="closed_date_key" Type="int" />
+          <Property Name="incident_date_key" Type="int" />
+          <Property Name="notified_date_key" Type="int" />
+          <Property Name="age" Type="int" />
+          <Property Name="severity" Type="varchar" MaxLength="255" />
+          <Property Name="status" Type="varchar" MaxLength="50" />
+          <Property Name="location" Type="varchar" MaxLength="50" />
+          <Property Name="detail" Type="nvarchar(max)" />
+          <Property Name="AdditionalRef" Type="varchar" MaxLength="8000" />
+          <Property Name="Site" Type="varchar" MaxLength="100" />
+          <Property Name="Incident_Location" Type="varchar" MaxLength="50" />
+          <Property Name="Outcome" Type="varchar" MaxLength="255" />
+          <Property Name="InvestigationFinding" Type="varchar" MaxLength="5000" />
+          <Property Name="Comment" Type="varchar" MaxLength="8000" />
+          <Property Name="FBModeRecieved" Type="varchar" MaxLength="255" />
+          <Property Name="FBRelateClient" Type="varchar" MaxLength="3" />
+          <Property Name="FBRelateStaff" Type="varchar" MaxLength="3" />
+          <Property Name="FBAssocInc" Type="varchar" MaxLength="3" />
+          <Property Name="FBCompStatus" Type="varchar" MaxLength="50" />
+          <Property Name="FBCompStatusOther" Type="varchar" MaxLength="200" />
+          <Property Name="FBCompAnon" Type="varchar" MaxLength="3" />
+          <Property Name="FBCompRelationship" Type="varchar" MaxLength="50" />
+          <Property Name="FBAckDate" Type="datetime" />
+          <Property Name="FBFirstFormalDate" Type="datetime" />
+          <Property Name="FBObjectives" Type="varchar" MaxLength="500" />
+          <Property Name="FBExtAgency" Type="varchar" MaxLength="3" />
+          <Property Name="FBExtAgencyName" Type="varchar" MaxLength="100" />
+          <Property Name="FBIsClosed" Type="varchar" MaxLength="3" />
+          <Property Name="FBOutcome" Type="varchar" MaxLength="4000" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_Bridge' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Feedbak_issue_Bridge">
+          <Key>
+            <PropertyRef Name="fb_key" />
+          </Key>
+          <Property Name="fb_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id" Type="int" />
+          <Property Name="batchid" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Feedbak_issue_fact">
+          <Key>
+            <PropertyRef Name="fd_key" />
+          </Key>
+          <Property Name="fd_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="batchid" Type="int" />
+          <Property Name="fieldname" Type="varchar" MaxLength="50" />
+          <Property Name="valuestring" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="incident_action_fact">
           <Key>
             <PropertyRef Name="incident_action_fact_key" />
@@ -191,6 +265,8 @@
           <Property Name="detail" Type="varchar" MaxLength="255" />
           <Property Name="cust_service" Type="varchar" MaxLength="100" />
           <Property Name="customer_site" Type="varchar" MaxLength="200" />
+          <Property Name="service_service" Type="varchar" MaxLength="100" />
+          <Property Name="ChCCUNotif" Type="varchar" MaxLength="3" />
         </EntityType>
         <EntityType Name="incident_history_fact">
           <Key>
@@ -535,6 +611,63 @@
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="program_mapping" EntityType="Self.program_mapping" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_riskman" store:Type="Tables" />
+          <EntitySet Name="Feedback_Fact" EntityType="Self.Feedback_Fact" store:Type="Tables" store:Schema="conform_riskman">
+            <DefiningQuery>SELECT 
+    [Feedback_Fact].[feedback_key] AS [feedback_key], 
+    [Feedback_Fact].[ID] AS [ID], 
+    [Feedback_Fact].[Base_id] AS [Base_id], 
+    [Feedback_Fact].[DisplayID] AS [DisplayID], 
+    [Feedback_Fact].[IncidentInvolved] AS [IncidentInvolved], 
+    [Feedback_Fact].[person_key] AS [person_key], 
+    [Feedback_Fact].[portfolio_key] AS [portfolio_key], 
+    [Feedback_Fact].[service_stream_key] AS [service_stream_key], 
+    [Feedback_Fact].[program_key] AS [program_key], 
+    [Feedback_Fact].[closed_date_key] AS [closed_date_key], 
+    [Feedback_Fact].[incident_date_key] AS [incident_date_key], 
+    [Feedback_Fact].[notified_date_key] AS [notified_date_key], 
+    [Feedback_Fact].[age] AS [age], 
+    [Feedback_Fact].[severity] AS [severity], 
+    [Feedback_Fact].[status] AS [status], 
+    [Feedback_Fact].[location] AS [location], 
+    [Feedback_Fact].[detail] AS [detail], 
+    [Feedback_Fact].[AdditionalRef] AS [AdditionalRef], 
+    [Feedback_Fact].[Site] AS [Site], 
+    [Feedback_Fact].[Incident_Location] AS [Incident_Location], 
+    [Feedback_Fact].[Outcome] AS [Outcome], 
+    [Feedback_Fact].[InvestigationFinding] AS [InvestigationFinding], 
+    [Feedback_Fact].[Comment] AS [Comment], 
+    [Feedback_Fact].[FBModeRecieved] AS [FBModeRecieved], 
+    [Feedback_Fact].[FBRelateClient] AS [FBRelateClient], 
+    [Feedback_Fact].[FBRelateStaff] AS [FBRelateStaff], 
+    [Feedback_Fact].[FBAssocInc] AS [FBAssocInc], 
+    [Feedback_Fact].[FBCompStatus] AS [FBCompStatus], 
+    [Feedback_Fact].[FBCompStatusOther] AS [FBCompStatusOther], 
+    [Feedback_Fact].[FBCompAnon] AS [FBCompAnon], 
+    [Feedback_Fact].[FBCompRelationship] AS [FBCompRelationship], 
+    [Feedback_Fact].[FBAckDate] AS [FBAckDate], 
+    [Feedback_Fact].[FBFirstFormalDate] AS [FBFirstFormalDate], 
+    [Feedback_Fact].[FBObjectives] AS [FBObjectives], 
+    [Feedback_Fact].[FBExtAgency] AS [FBExtAgency], 
+    [Feedback_Fact].[FBExtAgencyName] AS [FBExtAgencyName], 
+    [Feedback_Fact].[FBIsClosed] AS [FBIsClosed], 
+    [Feedback_Fact].[FBOutcome] AS [FBOutcome]
+    FROM [conform_riskman].[Feedback_Fact] AS [Feedback_Fact]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Feedbak_issue_Bridge" EntityType="Self.Feedbak_issue_Bridge" store:Type="Tables" store:Schema="conform_riskman">
+            <DefiningQuery>SELECT 
+    [Feedbak_issue_Bridge].[fb_key] AS [fb_key], 
+    [Feedbak_issue_Bridge].[id] AS [id], 
+    [Feedbak_issue_Bridge].[batchid] AS [batchid]
+    FROM [conform_riskman].[Feedbak_issue_Bridge] AS [Feedbak_issue_Bridge]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Feedbak_issue_fact" EntityType="Self.Feedbak_issue_fact" store:Type="Tables" store:Schema="conform_riskman">
+            <DefiningQuery>SELECT 
+    [Feedbak_issue_fact].[fd_key] AS [fd_key], 
+    [Feedbak_issue_fact].[batchid] AS [batchid], 
+    [Feedbak_issue_fact].[fieldname] AS [fieldname], 
+    [Feedbak_issue_fact].[valuestring] AS [valuestring]
+    FROM [conform_riskman].[Feedbak_issue_fact] AS [Feedbak_issue_fact]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="fk_incident_action_fact_action_dim" Association="Self.fk_incident_action_fact_action_dim">
             <End Role="action_dim" EntitySet="action_dim" />
             <End Role="incident_action_fact" EntitySet="incident_action_fact" />
@@ -691,6 +824,45 @@
             <End Role="incident_type_fact" EntitySet="incident_type_fact" />
           </AssociationSet>
           <EntitySet Name="prgram_map_CustomerSite" EntityType="conform_riskman_conceptual.prgram_map_CustomerSite" />
+          <EntitySet Name="Feedback_Fact" EntityType="conform_riskman_conceptual.Feedback_Fact" />
+          <EntitySet Name="Feedbak_issue_Bridge" EntityType="conform_riskman_conceptual.Feedbak_issue_Bridge" />
+          <EntitySet Name="Feedbak_issue_fact" EntityType="conform_riskman_conceptual.Feedbak_issue_fact" />
+          <AssociationSet Name="person_dimFeedback_Fact" Association="conform_riskman_conceptual.person_dimFeedback_Fact">
+            <End Role="person_dim" EntitySet="person_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="program_dimFeedback_Fact" Association="conform_riskman_conceptual.program_dimFeedback_Fact">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="portfolio_dimFeedback_Fact" Association="conform_riskman_conceptual.portfolio_dimFeedback_Fact">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="service_stream_dimFeedback_Fact" Association="conform_riskman_conceptual.service_stream_dimFeedback_Fact">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="date_dimFeedback_Fact" Association="conform_riskman_conceptual.date_dimFeedback_Fact">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="date_dimFeedback_Fact1" Association="conform_riskman_conceptual.date_dimFeedback_Fact1">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="date_dimFeedback_Fact2" Association="conform_riskman_conceptual.date_dimFeedback_Fact2">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="Feedbak_issue_BridgeFeedbak_issue_fact" Association="conform_riskman_conceptual.Feedbak_issue_BridgeFeedbak_issue_fact">
+            <End Role="Feedbak_issue_Bridge" EntitySet="Feedbak_issue_Bridge" />
+            <End Role="Feedbak_issue_fact" EntitySet="Feedbak_issue_fact" />
+          </AssociationSet>
+          <AssociationSet Name="Feedbak_issue_BridgeFeedback_Fact" Association="conform_riskman_conceptual.Feedbak_issue_BridgeFeedback_Fact">
+            <End Role="Feedbak_issue_Bridge" EntitySet="Feedbak_issue_Bridge" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="date_dim">
           <Key>
@@ -723,6 +895,9 @@
           <NavigationProperty Name="incident_fact3" Relationship="conform_riskman_conceptual.fk_incident_fact_investigation_completed_date_key" FromRole="date_dim" ToRole="incident_fact" />
           <NavigationProperty Name="incident_fact4" Relationship="conform_riskman_conceptual.fk_incident_fact_investigation_initiated_date_key" FromRole="date_dim" ToRole="incident_fact" />
           <NavigationProperty Name="incident_fact5" Relationship="conform_riskman_conceptual.fk_incident_fact_notified_date_key" FromRole="date_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact" FromRole="date_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact1" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact1" FromRole="date_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact2" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact2" FromRole="date_dim" ToRole="Feedback_Fact" />
           </EntityType>
         <EntityType Name="employee_dim">
           <Key>
@@ -840,6 +1015,7 @@
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_person_key" FromRole="person_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.person_dimFeedback_Fact" FromRole="person_dim" ToRole="Feedback_Fact" />
         </EntityType>
         <EntityType Name="portfolio_dim">
           <Key>
@@ -854,6 +1030,7 @@
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_portfolio_key" FromRole="portfolio_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.portfolio_dimFeedback_Fact" FromRole="portfolio_dim" ToRole="Feedback_Fact" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -871,6 +1048,7 @@
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_program_key" FromRole="program_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.program_dimFeedback_Fact" FromRole="program_dim" ToRole="Feedback_Fact" />
         </EntityType>
         <EntityType Name="action_dim">
           <Key>
@@ -903,6 +1081,7 @@
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_service_stream_key" FromRole="service_stream_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.service_stream_dimFeedback_Fact" FromRole="service_stream_dim" ToRole="Feedback_Fact" />
         </EntityType>
         <EntityType Name="incident_fact">
           <Key>
@@ -971,6 +1150,8 @@
           <NavigationProperty Name="incident_history_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_incident_key" FromRole="incident_fact" ToRole="incident_history_fact" />
           <NavigationProperty Name="incident_type_fact" Relationship="conform_riskman_conceptual.fk_incident_type_fact_incident_fact" FromRole="incident_fact" ToRole="incident_type_fact" />
           <Property Name="site" Type="String" Nullable="false" />
+          <Property Name="service_service" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ChCCUNotif" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="fk_incident_fact_closed_date_key">
           <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
@@ -1242,6 +1423,197 @@
           <Property Name="Record_Number" Type="Double" />
           <Property Name="T1_Program" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Feedback_Fact">
+          <Key>
+            <PropertyRef Name="feedback_key" />
+          </Key>
+          <Property Name="feedback_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="Int32" />
+          <Property Name="Base_id" Type="Int32" />
+          <Property Name="DisplayID" Type="Int32" />
+          <Property Name="IncidentInvolved" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="person_key" Type="Int32" />
+          <Property Name="portfolio_key" Type="Int32" />
+          <Property Name="service_stream_key" Type="Int32" />
+          <Property Name="program_key" Type="Int32" />
+          <Property Name="closed_date_key" Type="Int32" />
+          <Property Name="incident_date_key" Type="Int32" />
+          <Property Name="notified_date_key" Type="Int32" />
+          <Property Name="age" Type="Int32" />
+          <Property Name="severity" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AdditionalRef" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="Site" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Incident_Location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Outcome" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="InvestigationFinding" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="FBModeRecieved" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="FBRelateClient" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBRelateStaff" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBAssocInc" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBCompStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FBCompStatusOther" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FBCompAnon" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBCompRelationship" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FBAckDate" Type="DateTime" Precision="3" />
+          <Property Name="FBFirstFormalDate" Type="DateTime" Precision="3" />
+          <Property Name="FBObjectives" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FBExtAgency" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBExtAgencyName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FBIsClosed" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBOutcome" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <Property Name="person_dim_person_key" Type="Int32" Nullable="false" />
+          <Property Name="person_dim_person_key1" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="person_dim" Relationship="conform_riskman_conceptual.person_dimFeedback_Fact" FromRole="Feedback_Fact" ToRole="person_dim" />
+          <Property Name="person_dim_person_key2" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="program_dim" Relationship="conform_riskman_conceptual.program_dimFeedback_Fact" FromRole="Feedback_Fact" ToRole="program_dim" />
+          <Property Name="program_dim_program_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="portfolio_dim" Relationship="conform_riskman_conceptual.portfolio_dimFeedback_Fact" FromRole="Feedback_Fact" ToRole="portfolio_dim" />
+          <Property Name="portfolio_dim_portfolio_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="service_stream_dim" Relationship="conform_riskman_conceptual.service_stream_dimFeedback_Fact" FromRole="Feedback_Fact" ToRole="service_stream_dim" />
+          <Property Name="service_stream_dim_service_stream_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="date_dim" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact" FromRole="Feedback_Fact" ToRole="date_dim" />
+          <Property Name="date_dim_date_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="date_dim1" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact1" FromRole="Feedback_Fact" ToRole="date_dim" />
+          <Property Name="date_dim_date_key1" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="date_dim2" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact2" FromRole="Feedback_Fact" ToRole="date_dim" />
+          <Property Name="date_dim_date_key2" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Feedbak_issue_Bridge" Relationship="conform_riskman_conceptual.Feedbak_issue_BridgeFeedback_Fact" FromRole="Feedback_Fact" ToRole="Feedbak_issue_Bridge" />
+          <Property Name="Feedbak_issue_Bridge_fb_key" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Feedbak_issue_Bridge">
+          <Key>
+            <PropertyRef Name="fb_key" />
+          </Key>
+          <Property Name="fb_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" />
+          <Property Name="batchid" Type="Int32" />
+          <Property Name="Feedback_Fact_feedback_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Feedbak_issue_fact" Relationship="conform_riskman_conceptual.Feedbak_issue_BridgeFeedbak_issue_fact" FromRole="Feedbak_issue_Bridge" ToRole="Feedbak_issue_fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.Feedbak_issue_BridgeFeedback_Fact" FromRole="Feedbak_issue_Bridge" ToRole="Feedback_Fact" />
+        </EntityType>
+        <EntityType Name="Feedbak_issue_fact">
+          <Key>
+            <PropertyRef Name="fd_key" />
+          </Key>
+          <Property Name="fd_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="batchid" Type="Int32" />
+          <Property Name="fieldname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="valuestring" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Feedbak_issue_Bridge" Relationship="conform_riskman_conceptual.Feedbak_issue_BridgeFeedbak_issue_fact" FromRole="Feedbak_issue_fact" ToRole="Feedbak_issue_Bridge" />
+          <Property Name="Feedbak_issue_Bridge_fb_key" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="person_dimFeedback_Fact">
+          <End Type="conform_riskman_conceptual.person_dim" Role="person_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person_dim">
+              <PropertyRef Name="person_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="person_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="program_dimFeedback_Fact">
+          <End Type="conform_riskman_conceptual.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="portfolio_dimFeedback_Fact">
+          <End Type="conform_riskman_conceptual.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="service_stream_dimFeedback_Fact">
+          <End Type="conform_riskman_conceptual.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="date_dimFeedback_Fact">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="closed_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="date_dimFeedback_Fact1">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="incident_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="date_dimFeedback_Fact2">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="notified_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Feedbak_issue_BridgeFeedbak_issue_fact">
+          <End Type="conform_riskman_conceptual.Feedbak_issue_Bridge" Role="Feedbak_issue_Bridge" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.Feedbak_issue_fact" Role="Feedbak_issue_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Feedbak_issue_Bridge">
+              <PropertyRef Name="fb_key" />
+            </Principal>
+            <Dependent Role="Feedbak_issue_fact">
+              <PropertyRef Name="Feedbak_issue_Bridge_fb_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Feedbak_issue_BridgeFeedback_Fact">
+          <End Type="conform_riskman_conceptual.Feedbak_issue_Bridge" Role="Feedbak_issue_Bridge" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Feedbak_issue_Bridge">
+              <PropertyRef Name="fb_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="Feedbak_issue_Bridge_fb_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1459,6 +1831,8 @@
           <EntitySetMapping Name="incident_fact">
             <EntityTypeMapping TypeName="conform_riskman_conceptual.incident_fact">
               <MappingFragment StoreEntitySet="incident_fact">
+                <ScalarProperty Name="ChCCUNotif" ColumnName="ChCCUNotif" />
+                <ScalarProperty Name="service_service" ColumnName="service_service" />
                 <ScalarProperty Name="customer_site" ColumnName="customer_site" />
                 <ScalarProperty Name="cust_service" ColumnName="cust_service" />
                 <ScalarProperty Name="detail" ColumnName="detail" />
@@ -1575,6 +1949,69 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Feedback_Fact">
+            <EntityTypeMapping TypeName="conform_riskman_conceptual.Feedback_Fact">
+              <MappingFragment StoreEntitySet="Feedback_Fact">
+                <ScalarProperty Name="FBOutcome" ColumnName="FBOutcome" />
+                <ScalarProperty Name="FBIsClosed" ColumnName="FBIsClosed" />
+                <ScalarProperty Name="FBExtAgencyName" ColumnName="FBExtAgencyName" />
+                <ScalarProperty Name="FBExtAgency" ColumnName="FBExtAgency" />
+                <ScalarProperty Name="FBObjectives" ColumnName="FBObjectives" />
+                <ScalarProperty Name="FBFirstFormalDate" ColumnName="FBFirstFormalDate" />
+                <ScalarProperty Name="FBAckDate" ColumnName="FBAckDate" />
+                <ScalarProperty Name="FBCompRelationship" ColumnName="FBCompRelationship" />
+                <ScalarProperty Name="FBCompAnon" ColumnName="FBCompAnon" />
+                <ScalarProperty Name="FBCompStatusOther" ColumnName="FBCompStatusOther" />
+                <ScalarProperty Name="FBCompStatus" ColumnName="FBCompStatus" />
+                <ScalarProperty Name="FBAssocInc" ColumnName="FBAssocInc" />
+                <ScalarProperty Name="FBRelateStaff" ColumnName="FBRelateStaff" />
+                <ScalarProperty Name="FBRelateClient" ColumnName="FBRelateClient" />
+                <ScalarProperty Name="FBModeRecieved" ColumnName="FBModeRecieved" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="InvestigationFinding" ColumnName="InvestigationFinding" />
+                <ScalarProperty Name="Outcome" ColumnName="Outcome" />
+                <ScalarProperty Name="Incident_Location" ColumnName="Incident_Location" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="AdditionalRef" ColumnName="AdditionalRef" />
+                <ScalarProperty Name="detail" ColumnName="detail" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="severity" ColumnName="severity" />
+                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="notified_date_key" ColumnName="notified_date_key" />
+                <ScalarProperty Name="incident_date_key" ColumnName="incident_date_key" />
+                <ScalarProperty Name="closed_date_key" ColumnName="closed_date_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="person_key" ColumnName="person_key" />
+                <ScalarProperty Name="IncidentInvolved" ColumnName="IncidentInvolved" />
+                <ScalarProperty Name="DisplayID" ColumnName="DisplayID" />
+                <ScalarProperty Name="Base_id" ColumnName="Base_id" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="feedback_key" ColumnName="feedback_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Feedbak_issue_Bridge">
+            <EntityTypeMapping TypeName="conform_riskman_conceptual.Feedbak_issue_Bridge">
+              <MappingFragment StoreEntitySet="Feedbak_issue_Bridge">
+                <ScalarProperty Name="batchid" ColumnName="batchid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="fb_key" ColumnName="fb_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Feedbak_issue_fact">
+            <EntityTypeMapping TypeName="conform_riskman_conceptual.Feedbak_issue_fact">
+              <MappingFragment StoreEntitySet="Feedbak_issue_fact">
+                <ScalarProperty Name="valuestring" ColumnName="valuestring" />
+                <ScalarProperty Name="fieldname" ColumnName="fieldname" />
+                <ScalarProperty Name="batchid" ColumnName="batchid" />
+                <ScalarProperty Name="fd_key" ColumnName="fd_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1591,7 +2028,7 @@
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="UseLegacyProvider" Value="False" />
       </DesignerInfoPropertySet>
     </edmx:Options>
