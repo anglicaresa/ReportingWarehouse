@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[FBDetail_IFR](
+﻿CREATE TABLE [extract_riskman].[FBDetail_IFR](
 	[FBDetail_ID] [int] NOT NULL,
 	[FBFormalityLevel] [varchar](50) NULL,
 	[FBModeReceived] [varchar](255) NULL,

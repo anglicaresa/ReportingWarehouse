@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[FBInvestigation_IFR](
+﻿CREATE TABLE [extract_riskman].[FBInvestigation_IFR](
 	[FBInvestigation_ID] [int] NOT NULL,
 	[FBObjectives] [varchar](500) NULL,
 	[FBResolution] [varchar](100) NULL,

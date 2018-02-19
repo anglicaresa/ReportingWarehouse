@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[FBIssue_IFR](
+﻿CREATE TABLE [extract_riskman].[FBIssue_IFR](
 	[FBIssue_ID] [int] NOT NULL,
 	[FBIssueRECID] [varchar](50) NULL,
 	[FBIssuePrevRECID] [varchar](50) NULL,

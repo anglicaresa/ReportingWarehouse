@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[FBComplainant_IFR](
+﻿CREATE TABLE [extract_riskman].[FBComplainant_IFR](
 	[FBComplainant_ID] [int] NOT NULL,
 	[FBCompMRN] [varchar](100) NULL,
 	[FBCompTitle] [varchar](100) NULL,

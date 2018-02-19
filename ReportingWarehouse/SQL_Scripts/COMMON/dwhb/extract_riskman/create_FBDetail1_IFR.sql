@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[FBDetail1_IFR](
+﻿CREATE TABLE [extract_riskman].[FBDetail1_IFR](
 	[FBDetail1_ID] [int] NOT NULL,
 	[FBResultedInQIANotes] [nvarchar](max) NULL,
 	[FBTestField] [varchar](250) NULL,
