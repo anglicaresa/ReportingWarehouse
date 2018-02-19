@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [riskman].[Feedback_issue_fact](
-	[fd_key] [int] IDENTITY(1,1) NOT NULL,
+	[fd_key] [int]  NOT NULL,
 	[batchid] [int] NULL,
 	[fieldname] [varchar](50) NULL,
 	[valuestring] [nvarchar](max) NULL

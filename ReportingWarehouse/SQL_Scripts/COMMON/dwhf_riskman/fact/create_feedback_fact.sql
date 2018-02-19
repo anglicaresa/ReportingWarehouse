@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [riskman].[Feedback_Fact](
-	[feedback_key] [int] IDENTITY(1,1) NOT NULL,
+	[feedback_key] [int]  NOT NULL,
 	[ID] [int] NULL,
 	[Base_id] [int] NULL,
 	[DisplayID] [int] NULL,
