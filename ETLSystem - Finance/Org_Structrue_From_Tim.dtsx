@@ -1,0 +1,656 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="2/19/2018 10:57:13 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="W7PC032LMM"
+  DTS:CreatorName="ANGLICARE-SA\frank.wang"
+  DTS:Description="SSIS Package Description"
+  DTS:DTSID="{755BE78C-C789-401F-A5B4-4C6436D32B65}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="13.0.4001.0"
+  DTS:LocaleID="3081"
+  DTS:MaxErrorCount="0"
+  DTS:ObjectName="Org_Structrue_From_Tim"
+  DTS:ProtectionLevel="0"
+  DTS:VersionGUID="{67F0BDA9-B043-4A3F-B62C-262A852FB3BE}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{05BB6D86-8D2F-43D5-B9EA-70C52BAEBA24}"
+      DTS:ObjectName="DestinationConnectionOLEDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHF_FINANCE;Provider=SQLNCLI11;Integrated Security=SSPI;Auto Translate=false;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SourceConnectionExcel]"
+      DTS:CreationName="EXCEL"
+      DTS:DTSID="{A67D070F-6616-4E6E-822F-D0B720B77E13}"
+      DTS:ObjectName="SourceConnectionExcel">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Frank\Download\Expense users and org structure preview.xlsx;Extended Properties=&quot;Excel 12.0 XML;HDR=YES&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SourceConnectionFlatFile]"
+      DTS:CreationName="FLATFILE"
+      DTS:DTSID="{3DF5BBAF-4FA4-4132-9744-1D35C2BE53A3}"
+      DTS:ObjectName="SourceConnectionFlatFile">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:Format="Delimited"
+          DTS:LocaleID="3081"
+          DTS:HeaderRowDelimiter="_x000D__x000A_"
+          DTS:ColumnNamesInFirstDataRow="True"
+          DTS:RowDelimiter=""
+          DTS:TextQualifier="_x003C_none_x003E_"
+          DTS:CodePage="1252" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Data Flow Task 1"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:DelayValidation="True"
+      DTS:DTSID="{3FB40017-4C8E-4C16-8126-7A5098E330EF}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Data Flow Task 1"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferSize="3145728"
+          version="1">
+          <components>
+            <component
+              refId="Package\Data Flow Task 1\Destination - org_structure"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Destination - org_structure"
+              usesDispositions="true"
+              validateExternalMetadata="False"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[dbo].[org_structure]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Destination - org_structure.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[CountNo]"
+                      cachedDataType="r8"
+                      cachedName="CountNo"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[CountNo]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[CountNo]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[User_Id]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="User_Id"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[User_Id]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[User_Id]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[Preferred_Name]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Preferred_Name"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Preferred_Name]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Preferred_Name]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[Family_Name]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Family_Name"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Family_Name]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Family_Name]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[Position_Title]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Position_Title"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Position_Title]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Position_Title]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[Cost_Centre]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Cost_Centre"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Cost_Centre]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Cost_Centre]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[Email_Address]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Email_Address"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Email_Address]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Email_Address]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[Manager_full_name]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="Manager_full_name"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Manager_full_name]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Manager_full_name]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[ASA4__Gen_Manager_Description]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="ASA4__Gen_Manager_Description"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[ASA4__Gen_Manager_Description]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[ASA4__Gen_Manager_Description]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[ASA3__Sen_Manager_Description]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="ASA3__Sen_Manager_Description"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[ASA3__Sen_Manager_Description]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[ASA3__Sen_Manager_Description]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].Columns[ASA2__Manager_Description]"
+                      cachedDataType="wstr"
+                      cachedLength="255"
+                      cachedName="ASA2__Manager_Description"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[ASA2__Manager_Description]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[ASA2__Manager_Description]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[CountNo]"
+                      dataType="r8"
+                      name="CountNo" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[User_Id]"
+                      dataType="wstr"
+                      length="255"
+                      name="User_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Preferred_Name]"
+                      dataType="wstr"
+                      length="255"
+                      name="Preferred_Name" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Family_Name]"
+                      dataType="wstr"
+                      length="255"
+                      name="Family_Name" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Position_Title]"
+                      dataType="wstr"
+                      length="255"
+                      name="Position_Title" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Cost_Centre]"
+                      dataType="wstr"
+                      length="255"
+                      name="Cost_Centre" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Email_Address]"
+                      dataType="wstr"
+                      length="50"
+                      name="Email_Address" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[Manager_full_name]"
+                      dataType="wstr"
+                      length="255"
+                      name="Manager_full_name" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[ASA4__Gen_Manager_Description]"
+                      dataType="wstr"
+                      length="255"
+                      name="ASA4__Gen_Manager_Description" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[ASA3__Sen_Manager_Description]"
+                      dataType="wstr"
+                      length="255"
+                      name="ASA3__Sen_Manager_Description" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input].ExternalColumns[ASA2__Manager_Description]"
+                      dataType="wstr"
+                      length="255"
+                      name="ASA2__Manager_Description" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Destination - org_structure.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination - org_structure.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination - org_structure.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination - org_structure.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Source - org_structure$"
+              componentClassID="Microsoft.ExcelSource"
+              contactInfo="Excel Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Excel Source"
+              name="Source - org_structure$"
+              usesDispositions="true"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">org_structure$</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mapping from parameters in the SQL command to variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Source - org_structure$.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[SourceConnectionExcel]"
+                  connectionManagerRefId="Package.ConnectionManagers[SourceConnectionExcel]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output]"
+                  name="Excel Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[CountNo]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[CountNo]"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[CountNo]"
+                      name="CountNo"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[User_Id]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[User_Id]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[User_Id]"
+                      name="User_Id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Preferred_Name]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Preferred_Name]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Preferred_Name]"
+                      name="Preferred_Name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Family_Name]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Family_Name]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Family_Name]"
+                      name="Family_Name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Position_Title]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Position_Title]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Position_Title]"
+                      name="Position_Title"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Cost_Centre]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Cost_Centre]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Cost_Centre]"
+                      name="Cost_Centre"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Email_Address]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Email_Address]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Email_Address]"
+                      name="Email_Address"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Manager_full_name]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Manager_full_name]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[Manager_full_name]"
+                      name="Manager_full_name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[ASA4__Gen_Manager_Description]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[ASA4__Gen_Manager_Description]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[ASA4__Gen_Manager_Description]"
+                      name="ASA4__Gen_Manager_Description"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[ASA3__Sen_Manager_Description]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[ASA3__Sen_Manager_Description]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[ASA3__Sen_Manager_Description]"
+                      name="ASA3__Sen_Manager_Description"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[ASA2__Manager_Description]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[ASA2__Manager_Description]"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].Columns[ASA2__Manager_Description]"
+                      name="ASA2__Manager_Description"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[CountNo]"
+                      dataType="r8"
+                      name="CountNo" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[User_Id]"
+                      dataType="wstr"
+                      length="255"
+                      name="User_Id" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Preferred_Name]"
+                      dataType="wstr"
+                      length="255"
+                      name="Preferred_Name" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Family_Name]"
+                      dataType="wstr"
+                      length="255"
+                      name="Family_Name" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Position_Title]"
+                      dataType="wstr"
+                      length="255"
+                      name="Position_Title" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Cost_Centre]"
+                      dataType="wstr"
+                      length="255"
+                      name="Cost_Centre" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Email_Address]"
+                      dataType="wstr"
+                      length="255"
+                      name="Email_Address" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[Manager_full_name]"
+                      dataType="wstr"
+                      length="255"
+                      name="Manager_full_name" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[ASA4__Gen_Manager_Description]"
+                      dataType="wstr"
+                      length="255"
+                      name="ASA4__Gen_Manager_Description" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[ASA3__Sen_Manager_Description]"
+                      dataType="wstr"
+                      length="255"
+                      name="ASA3__Sen_Manager_Description" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output].ExternalColumns[ASA2__Manager_Description]"
+                      dataType="wstr"
+                      length="255"
+                      name="ASA2__Manager_Description" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output]"
+                  isErrorOut="true"
+                  name="Excel Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[CountNo]"
+                      dataType="r8"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[CountNo]"
+                      name="CountNo" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[User_Id]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[User_Id]"
+                      name="User_Id" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Preferred_Name]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Preferred_Name]"
+                      name="Preferred_Name" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Family_Name]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Family_Name]"
+                      name="Family_Name" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Position_Title]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Position_Title]"
+                      name="Position_Title" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Cost_Centre]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Cost_Centre]"
+                      name="Cost_Centre" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Email_Address]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Email_Address]"
+                      name="Email_Address" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Manager_full_name]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[Manager_full_name]"
+                      name="Manager_full_name" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[ASA4__Gen_Manager_Description]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[ASA4__Gen_Manager_Description]"
+                      name="ASA4__Gen_Manager_Description" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[ASA3__Sen_Manager_Description]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[ASA3__Sen_Manager_Description]"
+                      name="ASA3__Sen_Manager_Description" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[ASA2__Manager_Description]"
+                      dataType="wstr"
+                      length="255"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[ASA2__Manager_Description]"
+                      name="ASA2__Manager_Description" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Data Flow Task 1.Paths[Excel Source Output]"
+              endId="Package\Data Flow Task 1\Destination - org_structure.Inputs[Destination Input]"
+              name="Excel Source Output"
+              startId="Package\Data Flow Task 1\Source - org_structure$.Outputs[Excel Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Preparation SQL Task 1"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:DTSID="{9F91EEBD-90BD-48FC-BE0B-1D9676C436E3}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Preparation SQL Task 1"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{05BB6D86-8D2F-43D5-B9EA-70C52BAEBA24}"
+          SQLTask:SqlStatementSource="CREATE TABLE [dbo].[org_structure] (&#xA;[CountNo] float,&#xA;[User_Id] nvarchar(255),&#xA;[Preferred_Name] nvarchar(255),&#xA;[Family_Name] nvarchar(255),&#xA;[Position_Title] nvarchar(255),&#xA;[Cost_Centre] nvarchar(255),&#xA;[Email_Address] nvarchar(50),&#xA;[Manager_full_name] nvarchar(255),&#xA;[ASA4__Gen_Manager_Description] nvarchar(255),&#xA;[ASA3__Sen_Manager_Description] nvarchar(255),&#xA;[ASA2__Manager_Description] nvarchar(255)&#xA;)&#xA;GO&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[{CC9BDF0B-036E-4105-A43E-D19BAA9BA654\}]"
+      DTS:CreationName=""
+      DTS:DTSID="{CC9BDF0B-036E-4105-A43E-D19BAA9BA654}"
+      DTS:From="Package\Preparation SQL Task 1"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="{CC9BDF0B-036E-4105-A43E-D19BAA9BA654}"
+      DTS:To="Package\Data Flow Task 1" />
+  </DTS:PrecedenceConstraints>
+</DTS:Executable>
