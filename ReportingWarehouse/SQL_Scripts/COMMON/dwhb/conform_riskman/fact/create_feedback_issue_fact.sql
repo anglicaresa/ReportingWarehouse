@@ -1,8 +1,10 @@
 ﻿CREATE TABLE [conform_riskman].[Feedback_issue_fact](
 	[fd_key] [int] IDENTITY(1,1) NOT NULL,
 	[batchid] [int] NULL,
-	[fieldname] [varchar](50) NULL,
-	[valuestring] [nvarchar](max) NULL
+    FBIssueGroup nvarchar(max),
+    FBIssue nvarchar(max),
+    FBIssueNotes nvarchar(max),
+    FBIssueSite nvarchar(max)
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
