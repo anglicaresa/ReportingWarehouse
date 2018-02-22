@@ -66,9 +66,9 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('prgram_map_CustomerSite', 'dwh', '
 INSERT INTO [management].[TABLE_DIM] VALUES ('program_mapping', 'dwh', 'conform_riskman', 'dwhb', 'AZ-SQLBI01');
 insert into management.table_dim values('ContributingFactors_fact','dwh','conform_riskman','dwhb','AZ-SQLBI01')
 ------ tables for feedback module
-insert into management.table_dim values('feedback_fact','dwh','conform_riskman','dwhb','devsql-1')
-insert into management.table_dim values('Feedback_issue_Bridge','dwh','conform_riskman','dwhb','devsql-1')
-insert into management.table_dim values('Feedback_issue_fact','dwh','conform_riskman','dwhb','devsql-1')
+insert into management.table_dim values('feedback_fact','dwh','conform_riskman','dwhb','AZ-SQLBI01')
+insert into management.table_dim values('Feedback_issue_Bridge','dwh','conform_riskman','dwhb','AZ-SQLBI01')
+insert into management.table_dim values('Feedback_issue_fact','dwh','conform_riskman','dwhb','AZ-SQLBI01')
 
 
 
