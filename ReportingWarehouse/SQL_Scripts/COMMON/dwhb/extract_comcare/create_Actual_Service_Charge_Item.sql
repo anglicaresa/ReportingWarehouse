@@ -1,0 +1,30 @@
+﻿CREATE TABLE [extract_comcare].[Actual_Service_Charge_Item](
+	[Actual_Service_Charge_Item_ID] [numeric](18, 0) NOT NULL,
+	[Client_ID] [int] NOT NULL,
+	[Visit_Date] [datetime] NOT NULL,
+	[Visit_No] [tinyint] NOT NULL,
+	[Provider_ID] [int] NOT NULL,
+	[Service_Prov_Position_ID] [numeric](18, 0) NOT NULL,
+	[Client_CB_Item_ID] [numeric](18, 0) NULL,
+	[Contract_Billing_Item_ID] [numeric](18, 0) NULL,
+	[Contract_Billing_Rate_ID] [numeric](18, 0) NULL,
+	[Contract_Billing_Exception_Rate_ID] [numeric](18, 0) NULL,
+	[Org_Charge_Item_Rate_ID] [numeric](18, 0) NULL,
+	[FC_Account_ID] [numeric](18, 0) NULL,
+	[Split_Line_No] [int] NULL,
+	[Rate] [numeric](28, 5) NULL,
+	[Unit] [numeric](28, 5) NULL,
+	[Amount] [numeric](28, 5) NULL,
+	[Rate_Type] [varchar](10) NULL,
+	[Line_Description] [varchar](255) NULL,
+	[Start_Time] [time](7) NULL,
+	[Billed_Date] [datetime] NULL,
+	[Creation_Date] [datetime] NOT NULL,
+	[Creator_User_Name] [varchar](20) NOT NULL,
+	[Last_Modified_Date] [datetime] NULL,
+	[Last_Modified_User_Name] [varchar](20) NULL,
+	[FC_Product_ID] [numeric](18, 0) NULL,
+	[Archived] [bit] NULL
+) ON [PRIMARY]
+
+GO
