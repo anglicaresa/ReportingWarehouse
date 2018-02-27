@@ -69,6 +69,13 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('pt_program','comcare','dbo','comca
 INSERT INTO [management].[TABLE_DIM] VALUES ('state','comcare','dbo','comcareprod','appsql-3');
 INSERT INTO [management].[TABLE_DIM] VALUES ('suburb','comcare','dbo','comcareprod','appsql-3');
 INSERT INTO [management].[TABLE_DIM] VALUES ('task_type','comcare','dbo','comcareprod','appsql-3');
+--added  by JS 27/02/2018
+INSERT INTO [management].[TABLE_DIM] VALUES ('Actual_Service_Charge_Item','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('FC_Contract_Area_Product','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('FC_Funder_Contract_GL_Mapping','comcare','dbo','comcareprod','appsql-3');
+INSERT INTO [management].[TABLE_DIM] VALUES ('Funding_Program','comcare','dbo','comcareprod','appsql-3');
+
+
 
 -- schema: extract_comcare
 
@@ -91,6 +98,12 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('pt_program','dwh', 'extract_comcar
 INSERT INTO [management].[TABLE_DIM] VALUES ('state','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('suburb','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
 INSERT INTO [management].[TABLE_DIM] VALUES ('task_type','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+--added  by JS 27/02/2018
+INSERT INTO [management].[TABLE_DIM] VALUES ('Actual_Service_Charge_Item','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('FC_Contract_Area_Product','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('FC_Funder_Contract_GL_Mapping','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+INSERT INTO [management].[TABLE_DIM] VALUES ('Funding_Program','dwh', 'extract_comcare', 'dwhb', 'az-sqlbi01');
+
 --add to job control table
 use dwhb;
 go
