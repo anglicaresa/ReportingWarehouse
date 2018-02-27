@@ -1,4 +1,5 @@
-﻿CREATE TABLE [extract_kypera].[Security_user](
+﻿
+CREATE TABLE [extract_kypera].[Security_user](
 	[User] [int] NOT NULL,
 	[Username] [varchar](50) NOT NULL,
 	[FullName] [varchar](255) NOT NULL,
@@ -25,7 +26,7 @@
 	[CanChangeMainVoidStatus] [bit] NULL,
 	[CanApproveAllocations] [bit] NULL,
 	[CanEditPropertyHistory] [bit] NULL,
-	[Version] [varchar](100) NULL,
+	[Version] binary(8) NOT NULL,
 	[CreatedOn] [datetime] NULL,
 	[CreatedBy] [int] NULL,
 	[LastUpdateOn] [datetime] NULL,
@@ -33,9 +34,8 @@
 	[ShowDashboard] [int] NULL,
 	[ShowWarningConfirmation] [bit] NULL,
 	[MenuType] [int] NULL,
-	[LocalPhoneExtension] [varchar](20) NULL
+	[LocalPhoneExtension] [varchar](20) NULL,
+	[CanChangeHistoricalCharges] [bit] NULL,
+	[UserTheme] [int] NULL,
+	[PasswordChangeDate] [datetime] NULL
 ) ON [PRIMARY]
-
-GO
-
-

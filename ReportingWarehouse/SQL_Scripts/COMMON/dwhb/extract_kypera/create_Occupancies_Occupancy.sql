@@ -25,7 +25,7 @@
 	[FinalBalance] [money] NULL,
 	[TechnicalArrears] [money] NULL,
 	[TenantArrears] [money] NULL,
-	[Version] [varchar](100) NULL,
+	[Version] binary(8) NOT NULL,
 	[CreatedBy] [int] NULL,
 	[CreatedOn] [datetime] NULL,
 	[LastUpdateBy] [int] NULL,
@@ -107,8 +107,13 @@
 	[LastRentReviewType] [int] NULL,
 	[CaseManagementAgency] [int] NULL,
 	[RentCapped] [bit] NULL,
-	[RentAllowance] [money] NULL
+	[RentAllowance] [money] NULL,
+	[BondLoan] [money] NULL,
+	[BondChargedThroughSystem] [money] NULL,
+	[FinalDayRate] [money] NULL,
+	[FinalDayOutstanding] [money] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
+
 

@@ -1,5 +1,4 @@
-﻿
-CREATE TABLE [extract_kypera].[PropertyStructure_scheme](
+﻿CREATE TABLE [extract_kypera].[PropertyStructure_scheme](
 	[Company] [int] NOT NULL,
 	[District] [varchar](3) NOT NULL,
 	[Code] [varchar](3) NOT NULL,
@@ -11,7 +10,7 @@ CREATE TABLE [extract_kypera].[PropertyStructure_scheme](
 	[CreatedOn] [datetime] NULL,
 	[LastUpdateBy] [int] NULL,
 	[LastUpdateOn] [datetime] NULL,
-	[Version] [varchar](100) NULL,
+	[Version] binary(8) NOT NULL,     ----------- change from timestamp to binary(8)
 	[TechnicalOfficerCode] [int] NULL,
 	[Active] [bit] NULL,
 	[Number] [varchar](25) NULL,
@@ -23,7 +22,10 @@ CREATE TABLE [extract_kypera].[PropertyStructure_scheme](
 	[LastinspectionDate] [datetime] NULL,
 	[LastInspectionNotes] [varchar](500) NULL,
 	[BuildingName] [varchar](50) NULL,
-	[AlternateReference] [varchar](50) NULL
+	[AlternateReference] [varchar](50) NULL,
+	[IncludeInHPAReport] [bit] NULL,
+	[ExternalFilesFolder] [varchar](200) NULL
 ) ON [PRIMARY]
 
 GO
+
