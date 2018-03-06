@@ -7,13 +7,13 @@
   DTS:CreatorName="ANGLICARE-SA\jshen"
   DTS:DTSID="{15F80AD7-C723-4F2A-8039-0987E0C8775E}"
   DTS:ExecutableType="SSIS.Package.3"
-  DTS:LastModifiedProductVersion="14.0.0800.90"
+  DTS:LastModifiedProductVersion="14.0.3002.92"
   DTS:LocaleID="3081"
   DTS:ObjectName="Conform_Fact - PROD"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="635"
-  DTS:VersionGUID="{7D0EC39E-E100-4457-9155-9C06CCF8993D}">
+  DTS:VersionBuild="636"
+  DTS:VersionGUID="{28814BCF-9B62-46CD-BB99-33372789DC50}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">2/6/2018 11:53:06 AM</DTS:VariableValue>
+        DTS:DataType="7">3/6/2018 11:04:50 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">2/6/2018 11:53:06 AM</DTS:VariableValue>
+        DTS:DataType="7">3/6/2018 11:04:50 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">2/6/2018 11:53:06 AM</DTS:VariableValue>
+        DTS:DataType="7">3/6/2018 11:04:50 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -12535,7 +12535,7 @@ where employee_key=? </property>
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{2A78DA3F-7CEE-4C44-A9F0-85606FA444B9}"
-                  SQLTask:SqlStatementSource="&#xA;--get accreditation details&#xA; insert into conform.employee_accreditation_fact&#xA;select t2.employee_key,&#xA;       (select employee_key from conform.employee_dim where id_number='9999999' and  current_row_indicator='Y'), -- defualt manager employee_key,&#xA;      (select position_key from conform.position_dim where position_name ='No Position' and current_row_indicator='Y'), -- default manager position_key,&#xA;        isnull(t3.date_key,'9999999') as received_date_key,&#xA;&#x9;&#x9;isnull(t4.date_key,'9999999') as valid_until_date_key,&#xA;&#x9;&#x9;'9999999' as renewal_sent_date_key,&#xA;&#x9;&#x9; isnull(t5.date_key,'9999999')  as expiry_date_key,&#xA;  t2.organisation_key,&#xA;  t2.portfolio_key,&#xA;  t2.service_stream_key,&#xA;  t2.program_key,&#xA;  t6.accreditation_key,&#xA;  t2.position_key,&#xA;  'NO' as Convictions,&#xA;t1.qual_code,&#xA; t1.SERIAL_NUMBER, &#xA;t1.extend_qual_desc,&#xA;t1.qual_level,&#xA;t1.remarks,&#xA;1&#xA; from extract.HRHMN_EMPLQUAL_DTL t1&#xA; inner join &#xA; ( select id_number,qual_code, max(QUAL_EXPIRY_DATEI) as QUAL_EXPIRY_DATEI&#xA;  from extract.HRHMN_EMPLQUAL_DTL&#xA;  group by id_number,  qual_code&#xA;) as t7 on t1.id_number =t7.id_number and t1.qual_code=t7.qual_code and t1.QUAL_EXPIRY_DATEI= t7.QUAL_EXPIRY_DATEI&#xA; inner join conform.employee_temp t2  on t1.ID_NUMBER = t2.id_number  COLLATE DATABASE_DEFAULT  and t2.employee_key in (select employee_key from conform.employee_dim where current_row_indicator='Y')&#xA; left join conform.date_dim t3 on  t1.QUAL_ISSUE_DATE=t3.full_date &#xA; left join conform.date_dim t4 on t1.QUAL_TARGET_DATEI=t4.full_date&#xA; left join conform.date_dim t5 on t1.QUAL_EXPIRY_DATEI=t5.full_date&#xA; left join conform.accreditation_dim t6 on t1.qual_code =t6.accredition_type  COLLATE DATABASE_DEFAULT and t6.current_row_indicator='Y'&#xA;&#xA;&#xA; --update manager employee key&#xA; update ttt&#xA; set ttt.[manager_key]=fff.manager_employee_key,&#xA; ttt.manager_position_key=fff.manager_position_key&#xA; from conform.employee_accreditation_fact as ttt&#xA; inner join&#xA; (&#xA; select tt.*&#xA; ,f1.employee_key&#xA; ,d1.given_name+' '+d1.family_name as Employee_Name&#xA; ,f2.employee_key as Manager_employee_key&#xA; ,d2.given_name+' '+d2.family_name as Manager_Name&#xA; from &#xA;(select t1.emp_position_code,d1.position_key as emp_position_key,d1.position_name as emp_position_name&#xA;,t1.manager_position_code&#xA;,d2.position_key as manager_position_key, d2.position_name as manager_position_name&#xA;from &#xA;&#xA;( select   &#xA;distinct t2.hierarchy_code as emp_position_code, t2.PARENT_NODE as manager_position_code&#xA;  from &#xA; extract.hrsys_hierarch_itm t2&#xA;  , extract.hrsys_hierarch_ctl t3&#xA;  , extract.hrsys_hierarch_lvl t4&#xA;  where t2.hierarchy_code = t3.hierarchy_code&#xA;  and t2.current_level = t4.hierarchy_level&#xA;  and t4.hierarchy_level = 7) as t1&#xA;inner join conform.position_dim as d1 on d1.position_code=t1.emp_position_code  COLLATE DATABASE_DEFAULT and d1.current_row_indicator='Y'&#xA;inner join conform.position_dim as d2 on d2.position_code=t1.manager_position_code  COLLATE DATABASE_DEFAULT and d2.current_row_indicator='Y') as tt&#xA;&#xA;inner join conform.employee_position_fact as f1 on tt.emp_position_key=f1.position_key&#xA;          inner join conform.employee_dim as d1 on f1.employee_key=d1.employee_key and d1.current_row_indicator='Y'&#xA;&#xA;inner join conform.employee_position_fact as f2 on tt.manager_position_key=f2.position_key&#xA;          inner join conform.employee_dim as d2 on f2.employee_key=d2.employee_key and d2.current_row_indicator='Y'&#xA;) fff&#xA;on ttt.employee_key=fff.employee_key&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="--changed on 6-Mar-2018 only fetch the primiary position rather than repeat different positions for one employee.&#xA;--get accreditation details&#xA;insert into conform.employee_accreditation_fact&#xA;&#x9;select t2.employee_key,&#xA;&#x9;&#x9;(select employee_key from conform.employee_dim where id_number='9999999' and  current_row_indicator='Y') AS manager_key, -- defualt manager employee_key,&#xA;&#x9;&#x9;(select position_key from conform.position_dim where position_name ='No Position' and current_row_indicator='Y') AS manager_position_key, -- default manager position_key,&#xA;&#x9;&#x9;isnull(t3.date_key,'9999999') as received_date_key,&#xA;&#x9;&#x9;isnull(t4.date_key,'9999999') as valid_until_date_key,&#xA;&#x9;&#x9;'9999999' as renewal_sent_date_key,&#xA;&#x9;&#x9;isnull(t5.date_key,'9999999')  as expiry_date_key,&#xA;&#x9;&#x9;t2.organisation_key,&#xA;&#x9;&#x9;t2.portfolio_key,&#xA;&#x9;&#x9;t2.service_stream_key,&#xA;&#x9;&#x9;t2.program_key,&#xA;&#x9;&#x9;t6.accreditation_key,&#xA;&#x9;&#x9;t2.position_key,&#xA;&#x9;&#x9;'NO' as Convictions,&#xA;&#x9;&#x9;t1.qual_code,&#xA;&#x9;&#x9;t1.SERIAL_NUMBER, &#xA;&#x9;&#x9;t1.extend_qual_desc,&#xA;&#x9;&#x9;t1.qual_level,&#xA;&#x9;&#x9;t1.remarks,&#xA;&#x9;&#x9;1&#xA;&#x9; from extract.HRHMN_EMPLQUAL_DTL t1&#xA;&#x9; inner join &#xA;&#x9;&#x9; ( &#xA;&#x9;&#x9; SELECT id_number,qual_code, max(QUAL_EXPIRY_DATEI) as QUAL_EXPIRY_DATEI&#xA;&#x9;&#x9;  from extract.HRHMN_EMPLQUAL_DTL&#xA;&#x9;&#x9;  group by id_number,  qual_code&#xA;&#x9;&#x9;) as t7 &#xA;&#x9;ON t1.id_number =t7.id_number and t1.qual_code=t7.qual_code  COLLATE DATABASE_DEFAULT  and t1.QUAL_EXPIRY_DATEI= t7.QUAL_EXPIRY_DATEI&#xA;&#x9; inner join conform.employee_temp t2  &#xA;&#x9;&#x9;ON t1.ID_NUMBER = t2.id_number  COLLATE DATABASE_DEFAULT  &#xA;&#x9;&#x9;AND t2.employee_key in (select employee_key from conform.employee_dim where current_row_indicator='Y')&#xA;&#x9;&#x9;AND t2.primary_position_flag = 'P'&#xA;&#x9; left join conform.date_dim t3 on  t1.QUAL_ISSUE_DATE=t3.full_date &#xA;&#x9; left join conform.date_dim t4 on t1.QUAL_TARGET_DATEI=t4.full_date&#xA;&#x9; left join conform.date_dim t5 on t1.QUAL_EXPIRY_DATEI=t5.full_date&#xA;&#x9; left join conform.accreditation_dim t6 on t1.qual_code =t6.accredition_type  COLLATE DATABASE_DEFAULT and t6.current_row_indicator='Y'&#xA;&#xA;&#xA; --update manager employee key&#xA; update ttt&#xA; set ttt.[manager_key]=fff.manager_employee_key,&#xA; ttt.manager_position_key=fff.manager_position_key&#xA; from conform.employee_accreditation_fact as ttt&#xA; inner join&#xA; (&#xA; select tt.*&#xA; ,f1.employee_key&#xA; ,d1.given_name+' '+d1.family_name as Employee_Name&#xA; ,f2.employee_key as Manager_employee_key&#xA; ,d2.given_name+' '+d2.family_name as Manager_Name&#xA; from &#xA;(select t1.emp_position_code,d1.position_key as emp_position_key,d1.position_name as emp_position_name&#xA;,t1.manager_position_code&#xA;,d2.position_key as manager_position_key, d2.position_name as manager_position_name&#xA;from &#xA;&#xA;( select   &#xA;distinct t2.hierarchy_code as emp_position_code, t2.PARENT_NODE as manager_position_code&#xA;  from &#xA; extract.hrsys_hierarch_itm t2&#xA;  , extract.hrsys_hierarch_ctl t3&#xA;  , extract.hrsys_hierarch_lvl t4&#xA;  where t2.hierarchy_code = t3.hierarchy_code&#x9;   COLLATE DATABASE_DEFAULT &#xA;  and t2.current_level = t4.hierarchy_level&#xA;  and t4.hierarchy_level = 7) as t1&#xA;inner join conform.position_dim as d1 on d1.position_code=t1.emp_position_code  COLLATE DATABASE_DEFAULT and d1.current_row_indicator='Y'&#xA;inner join conform.position_dim as d2 on d2.position_code=t1.manager_position_code  COLLATE DATABASE_DEFAULT and d2.current_row_indicator='Y') as tt&#xA;&#xA;inner join conform.employee_position_fact as f1 on tt.emp_position_key=f1.position_key&#xA;          inner join conform.employee_dim as d1 on f1.employee_key=d1.employee_key and d1.current_row_indicator='Y'&#xA;&#xA;inner join conform.employee_position_fact as f2 on tt.manager_position_key=f2.position_key&#xA;          inner join conform.employee_dim as d2 on f2.employee_key=d2.employee_key and d2.current_row_indicator='Y'&#xA;) fff&#xA;on ttt.employee_key=fff.employee_key&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
