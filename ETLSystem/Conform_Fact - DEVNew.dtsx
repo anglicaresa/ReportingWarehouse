@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEVNew"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="667"
-  DTS:VersionGUID="{82F7CB21-EEFE-4514-887C-3AE2D932A328}">
+  DTS:VersionBuild="671"
+  DTS:VersionGUID="{71E45532-D002-40EF-9D4D-1C62422F99A7}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -32,26 +32,6 @@
       DTS:CreationName="OLEDB"
       DTS:DTSID="{476CD5C3-0FB5-46D0-B31E-A8381EC0659A}"
       DTS:ObjectName="devsql-1\whouse.DWHB.asadwh 1">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[devsql-1\whouse.DWHB.asadwh 1 1]"
-      DTS:CreationName="OLEDB"
-      DTS:DTSID="{2A78DA3F-7CEE-4C44-A9F0-85606FA444B9}"
-      DTS:ObjectName="devsql-1\whouse.DWHB.asadwh 1 1">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[devsql-1\whouse.DWHB.asadwh 2]"
-      DTS:CreationName="OLEDB"
-      DTS:DTSID="{B5E46C99-99F6-4442-BC4D-22FCC2FD0263}"
-      DTS:ObjectName="devsql-1\whouse.DWHB.asadwh 2">
       <DTS:ObjectData>
         <DTS:ConnectionManager
           DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
@@ -122,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">3/6/2018 10:44:57 AM</DTS:VariableValue>
+        DTS:DataType="7">3/6/2018 2:25:02 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -169,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">3/6/2018 10:44:57 AM</DTS:VariableValue>
+        DTS:DataType="7">3/6/2018 2:25:02 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -180,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">3/6/2018 10:44:57 AM</DTS:VariableValue>
+        DTS:DataType="7">3/6/2018 2:25:02 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -12551,7 +12531,7 @@ where employee_key=? </property>
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{476CD5C3-0FB5-46D0-B31E-A8381EC0659A}"
-                  SQLTask:SqlStatementSource="--changed on 6-Mar-2018 only fetch the primiary position rather than repeat different positions for one employee.&#xA;--get accreditation details&#xA;insert into conform.employee_accreditation_fact&#xA;&#x9;select t2.employee_key,&#xA;&#x9;&#x9;(select employee_key from conform.employee_dim where id_number='9999999' and  current_row_indicator='Y') AS manager_key, -- defualt manager employee_key,&#xA;&#x9;&#x9;(select position_key from conform.position_dim where position_name ='No Position' and current_row_indicator='Y') AS manager_position_key, -- default manager position_key,&#xA;&#x9;&#x9;isnull(t3.date_key,'9999999') as received_date_key,&#xA;&#x9;&#x9;isnull(t4.date_key,'9999999') as valid_until_date_key,&#xA;&#x9;&#x9;'9999999' as renewal_sent_date_key,&#xA;&#x9;&#x9;isnull(t5.date_key,'9999999')  as expiry_date_key,&#xA;&#x9;&#x9;t2.organisation_key,&#xA;&#x9;&#x9;t2.portfolio_key,&#xA;&#x9;&#x9;t2.service_stream_key,&#xA;&#x9;&#x9;t2.program_key,&#xA;&#x9;&#x9;t6.accreditation_key,&#xA;&#x9;&#x9;t2.position_key,&#xA;&#x9;&#x9;'NO' as Convictions,&#xA;&#x9;&#x9;t1.qual_code,&#xA;&#x9;&#x9;t1.SERIAL_NUMBER, &#xA;&#x9;&#x9;t1.extend_qual_desc,&#xA;&#x9;&#x9;t1.qual_level,&#xA;&#x9;&#x9;t1.remarks,&#xA;&#x9;&#x9;1&#xA;&#x9; from extract.HRHMN_EMPLQUAL_DTL t1&#xA;&#x9; inner join &#xA;&#x9;&#x9; ( &#xA;&#x9;&#x9; SELECT id_number,qual_code, max(QUAL_EXPIRY_DATEI) as QUAL_EXPIRY_DATEI&#xA;&#x9;&#x9;  from extract.HRHMN_EMPLQUAL_DTL&#xA;&#x9;&#x9;  group by id_number,  qual_code&#xA;&#x9;&#x9;) as t7 &#xA;&#x9;ON t1.id_number =t7.id_number and t1.qual_code=t7.qual_code  COLLATE DATABASE_DEFAULT  and t1.QUAL_EXPIRY_DATEI= t7.QUAL_EXPIRY_DATEI&#xA;&#x9; inner join conform.employee_temp t2  &#xA;&#x9;&#x9;ON t1.ID_NUMBER = t2.id_number  COLLATE DATABASE_DEFAULT  &#xA;&#x9;&#x9;AND t2.employee_key in (select employee_key from conform.employee_dim where current_row_indicator='Y')&#xA;&#x9;&#x9;AND t2.primary_position_flag = 'P'&#xA;&#x9; left join conform.date_dim t3 on  t1.QUAL_ISSUE_DATE=t3.full_date &#xA;&#x9; left join conform.date_dim t4 on t1.QUAL_TARGET_DATEI=t4.full_date&#xA;&#x9; left join conform.date_dim t5 on t1.QUAL_EXPIRY_DATEI=t5.full_date&#xA;&#x9; left join conform.accreditation_dim t6 on t1.qual_code =t6.accredition_type  COLLATE DATABASE_DEFAULT and t6.current_row_indicator='Y'&#xA;&#xA;&#xA; --update manager employee key&#xA; update ttt&#xA; set ttt.[manager_key]=fff.manager_employee_key,&#xA; ttt.manager_position_key=fff.manager_position_key&#xA; from conform.employee_accreditation_fact as ttt&#xA; inner join&#xA; (&#xA; select tt.*&#xA; ,f1.employee_key&#xA; ,d1.given_name+' '+d1.family_name as Employee_Name&#xA; ,f2.employee_key as Manager_employee_key&#xA; ,d2.given_name+' '+d2.family_name as Manager_Name&#xA; from &#xA;(select t1.emp_position_code,d1.position_key as emp_position_key,d1.position_name as emp_position_name&#xA;,t1.manager_position_code&#xA;,d2.position_key as manager_position_key, d2.position_name as manager_position_name&#xA;from &#xA;&#xA;( select   &#xA;distinct t2.hierarchy_code as emp_position_code, t2.PARENT_NODE as manager_position_code&#xA;  from &#xA; extract.hrsys_hierarch_itm t2&#xA;  , extract.hrsys_hierarch_ctl t3&#xA;  , extract.hrsys_hierarch_lvl t4&#xA;  where t2.hierarchy_code = t3.hierarchy_code&#x9;   COLLATE DATABASE_DEFAULT &#xA;  and t2.current_level = t4.hierarchy_level&#xA;  and t4.hierarchy_level = 7) as t1&#xA;inner join conform.position_dim as d1 on d1.position_code=t1.emp_position_code  COLLATE DATABASE_DEFAULT and d1.current_row_indicator='Y'&#xA;inner join conform.position_dim as d2 on d2.position_code=t1.manager_position_code  COLLATE DATABASE_DEFAULT and d2.current_row_indicator='Y') as tt&#xA;&#xA;inner join conform.employee_position_fact as f1 on tt.emp_position_key=f1.position_key&#xA;          inner join conform.employee_dim as d1 on f1.employee_key=d1.employee_key and d1.current_row_indicator='Y'&#xA;&#xA;inner join conform.employee_position_fact as f2 on tt.manager_position_key=f2.position_key&#xA;          inner join conform.employee_dim as d2 on f2.employee_key=d2.employee_key and d2.current_row_indicator='Y'&#xA;) fff&#xA;on ttt.employee_key=fff.employee_key&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="--changed on 6-Mar-2018 only fetch the primiary position rather than repeat different positions for one employee.&#xA;--get accreditation details&#xA;insert into conform.employee_accreditation_fact&#xA;&#x9;select t2.employee_key,&#xA;&#x9;&#x9;(select employee_key from conform.employee_dim where id_number='9999999' and  current_row_indicator='Y') AS manager_key, -- defualt manager employee_key,&#xA;&#x9;&#x9;(select position_key from conform.position_dim where position_name ='No Position' and current_row_indicator='Y') AS manager_position_key, -- default manager position_key,&#xA;&#x9;&#x9;isnull(t3.date_key,'9999999') as received_date_key,&#xA;&#x9;&#x9;isnull(t4.date_key,'9999999') as valid_until_date_key,&#xA;&#x9;&#x9;'9999999' as renewal_sent_date_key,&#xA;&#x9;&#x9;isnull(t5.date_key,'9999999')  as expiry_date_key,&#xA;&#x9;&#x9;t2.organisation_key,&#xA;&#x9;&#x9;t2.portfolio_key,&#xA;&#x9;&#x9;t2.service_stream_key,&#xA;&#x9;&#x9;t2.program_key,&#xA;&#x9;&#x9;t6.accreditation_key,&#xA;&#x9;&#x9;t2.position_key,&#xA;&#x9;&#x9;'NO' as Convictions,&#xA;&#x9;&#x9;t1.qual_code,&#xA;&#x9;&#x9;t1.SERIAL_NUMBER, &#xA;&#x9;&#x9;t1.extend_qual_desc,&#xA;&#x9;&#x9;t1.qual_level,&#xA;&#x9;&#x9;t1.remarks,&#xA;&#x9;&#x9;1&#xA;&#x9; from extract.HRHMN_EMPLQUAL_DTL t1&#xA;&#x9; inner join &#xA;&#x9;&#x9; ( &#xA;&#x9;&#x9; SELECT id_number,qual_code, max(QUAL_EXPIRY_DATEI) as QUAL_EXPIRY_DATEI&#xA;&#x9;&#x9;  from extract.HRHMN_EMPLQUAL_DTL&#xA;&#x9;&#x9;  group by id_number,  qual_code&#xA;&#x9;&#x9;) as t7 &#xA;&#x9;ON t1.id_number =t7.id_number and t1.qual_code=t7.qual_code  COLLATE DATABASE_DEFAULT  and t1.QUAL_EXPIRY_DATEI= t7.QUAL_EXPIRY_DATEI&#xA;&#x9; inner join conform.employee_temp t2  &#xA;&#x9;&#x9;ON t1.ID_NUMBER = t2.id_number  COLLATE DATABASE_DEFAULT  &#xA;&#x9;&#x9;AND t2.employee_key in (select employee_key from conform.employee_dim where current_row_indicator='Y')&#xA;&#x9;&#x9;AND t2.primary_position_flag = 'P'&#xA;&#x9; left join conform.date_dim t3 on  t1.QUAL_ISSUE_DATE=t3.full_date &#xA;&#x9; left join conform.date_dim t4 on t1.QUAL_TARGET_DATEI=t4.full_date&#xA;&#x9; left join conform.date_dim t5 on t1.QUAL_EXPIRY_DATEI=t5.full_date&#xA;&#x9; left join conform.accreditation_dim t6 on t1.qual_code =t6.accredition_type  COLLATE DATABASE_DEFAULT and t6.current_row_indicator='Y'&#xA;&#xA;&#xA; --update manager employee key&#xA; /*&#xA; update ttt&#xA; set ttt.[manager_key]=fff.manager_employee_key,&#xA; ttt.manager_position_key=fff.manager_position_key&#xA; from conform.employee_accreditation_fact as ttt&#xA; inner join&#xA; (&#xA; select tt.*&#xA; ,f1.employee_key&#xA; ,d1.given_name+' '+d1.family_name as Employee_Name&#xA; ,f2.employee_key as Manager_employee_key&#xA; ,d2.given_name+' '+d2.family_name as Manager_Name&#xA; from &#xA;(select t1.emp_position_code,d1.position_key as emp_position_key,d1.position_name as emp_position_name&#xA;,t1.manager_position_code&#xA;,d2.position_key as manager_position_key, d2.position_name as manager_position_name&#xA;from &#xA;&#xA;( select   &#xA;distinct t2.hierarchy_code as emp_position_code, t2.PARENT_NODE as manager_position_code&#xA;  from &#xA; extract.hrsys_hierarch_itm t2&#xA;  , extract.hrsys_hierarch_ctl t3&#xA;  , extract.hrsys_hierarch_lvl t4&#xA;  where t2.hierarchy_code = t3.hierarchy_code&#x9;   COLLATE DATABASE_DEFAULT &#xA;  and t2.current_level = t4.hierarchy_level&#xA;  and t4.hierarchy_level = 7) as t1&#xA;inner join conform.position_dim as d1 on d1.position_code=t1.emp_position_code  COLLATE DATABASE_DEFAULT and d1.current_row_indicator='Y'&#xA;inner join conform.position_dim as d2 on d2.position_code=t1.manager_position_code  COLLATE DATABASE_DEFAULT and d2.current_row_indicator='Y') as tt&#xA;&#xA;inner join conform.employee_position_fact as f1 on tt.emp_position_key=f1.position_key&#xA;          inner join conform.employee_dim as d1 on f1.employee_key=d1.employee_key and d1.current_row_indicator='Y'&#xA;&#xA;inner join conform.employee_position_fact as f2 on tt.manager_position_key=f2.position_key&#xA;          inner join conform.employee_dim as d2 on f2.employee_key=d2.employee_key and d2.current_row_indicator='Y'&#xA;) fff&#xA;on ttt.employee_key=fff.employee_key&#xA;*/&#xA;&#xA;--using employee_position_fact table instead  6-Mar-2018&#xA; update ttt&#xA; set ttt.[manager_key]=f.manager_key,&#xA; ttt.manager_position_key=f.manager_position_key&#xA; from conform.employee_accreditation_fact as ttt&#xA; inner join conform.employee_position_fact f&#xA; on ttt.employee_key = f.employee_key&#xA; and ttt.position_key = f.position_key;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -19133,7 +19113,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - Delete">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="343,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - Delete\OLE DB Source - Get data from employee_position_fact"
@@ -19151,7 +19131,7 @@ where employee_key=? </property>
           TopLeft="508.25,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="0,50.5">
@@ -19165,9 +19145,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -19175,7 +19153,7 @@ where employee_key=? </property>
           TopLeft="508,285">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,90"
               Start="0,0"
               End="0,82.5">
@@ -19244,7 +19222,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - New or Update">
     <LayoutInfo>
       <GraphLayout
-        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="165,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - New or Update\Derived Column 1"
@@ -19294,7 +19272,7 @@ where employee_key=? </property>
           TopLeft="526,128">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="104,76"
               Start="0,0"
               End="104,68.5">
@@ -19330,7 +19308,7 @@ where employee_key=? </property>
           TopLeft="462.5,320">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-87.8333333333333,47"
               Start="0,0"
               End="-87.8333333333333,39.5">
@@ -19364,7 +19342,7 @@ where employee_key=? </property>
           TopLeft="272.5,240">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="80,127"
               Start="0,0"
               End="80,119.5">
@@ -19398,7 +19376,7 @@ where employee_key=? </property>
           TopLeft="437.5,236">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="25,42"
               Start="0,0"
               End="25,34.5">
@@ -19432,7 +19410,7 @@ where employee_key=? </property>
           TopLeft="269.5,49">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-8.5,46"
               Start="0,0"
               End="-8.5,38.5">
@@ -19466,7 +19444,7 @@ where employee_key=? </property>
           TopLeft="354,409">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,52"
               Start="0,0"
               End="0,44.5">
@@ -19488,7 +19466,7 @@ where employee_key=? </property>
           TopLeft="261,137">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="11.5,61"
               Start="0,0"
               End="11.5,53.5">
@@ -19524,7 +19502,7 @@ where employee_key=? </property>
           TopLeft="323,116">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="120,-9"
               Start="0,0"
               End="112.5,-9">
@@ -19560,7 +19538,7 @@ where employee_key=? </property>
           TopLeft="352.5,503">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,51"
               Start="0,0"
               End="0,43.5">
@@ -19582,7 +19560,7 @@ where employee_key=? </property>
           TopLeft="349.5,596">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="43,42"
               Start="0,0"
               End="43,34.5">
@@ -19681,7 +19659,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT\DFT - Delete">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="360,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT\DFT - Delete\OLE DB Source - Get data from employee_recruitment_fact"
@@ -19699,7 +19677,7 @@ where employee_key=? </property>
           TopLeft="516.25,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="0,50.5">
@@ -19713,9 +19691,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -19723,7 +19699,7 @@ where employee_key=? </property>
           TopLeft="511.75,285">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,90"
               Start="0,0"
               End="0,82.5">
@@ -19792,7 +19768,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT\DFT - New or Update">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="152,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT\DFT - New or Update\OLE DB Source"
@@ -19818,7 +19794,7 @@ where employee_key=? </property>
           TopLeft="482,219">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-39,109"
               Start="0,0"
               End="-39,101.5">
@@ -19854,7 +19830,7 @@ where employee_key=? </property>
           TopLeft="185,116">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,55"
               Start="0,0"
               End="0,47.5">
@@ -19868,9 +19844,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -19878,7 +19852,7 @@ where employee_key=? </property>
           TopLeft="187,213">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-17,114"
               Start="0,0"
               End="-17,106.5">
@@ -19914,7 +19888,7 @@ where employee_key=? </property>
           TopLeft="249,195">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="150,0"
               Start="0,0"
               End="142.5,0">
@@ -19995,7 +19969,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_TERMINATION_FACT\DFT - INSERT NEW RECORDS">
     <LayoutInfo>
       <GraphLayout
-        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="167,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_TERMINATION_FACT\DFT - INSERT NEW RECORDS\Data Conversion 3 1"
@@ -20065,7 +20039,7 @@ where employee_key=? </property>
           TopLeft="662.5,586.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-77.8333333333334,55"
               Start="0,0"
               End="-77.8333333333334,47.5">
@@ -20091,9 +20065,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20101,7 +20073,7 @@ where employee_key=? </property>
           TopLeft="331,519.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="188.333333333333,122"
               Start="0,0"
               End="188.333333333333,114.5">
@@ -20127,9 +20099,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20137,7 +20107,7 @@ where employee_key=? </property>
           TopLeft="470.5,270.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-114.166666666667,46"
               Start="0,0"
               End="-114.166666666667,38.5">
@@ -20163,9 +20133,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20173,7 +20141,7 @@ where employee_key=? </property>
           TopLeft="170.5,265.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="123.166666666667,51"
               Start="0,0"
               End="123.166666666667,43.5">
@@ -20199,9 +20167,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20209,7 +20175,7 @@ where employee_key=? </property>
           TopLeft="657.5,449.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -20223,9 +20189,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20233,7 +20197,7 @@ where employee_key=? </property>
           TopLeft="474,100.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,47"
               Start="0,0"
               End="0,39.5">
@@ -20247,9 +20211,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20257,7 +20219,7 @@ where employee_key=? </property>
           TopLeft="165.25,100.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,38"
               Start="0,0"
               End="0,30.5">
@@ -20271,9 +20233,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20281,7 +20241,7 @@ where employee_key=? </property>
           TopLeft="552,683.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="9,39.333333333333"
               Start="0,0"
               End="9,31.833333333333">
@@ -20307,9 +20267,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20317,7 +20275,7 @@ where employee_key=? </property>
           TopLeft="325.25,358.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,38"
               Start="0,0"
               End="0,30.5">
@@ -20331,9 +20289,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20341,7 +20297,7 @@ where employee_key=? </property>
           TopLeft="561,765">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-20,41"
               Start="0,0"
               End="-20,33.5">
@@ -20367,9 +20323,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20377,7 +20331,7 @@ where employee_key=? </property>
           TopLeft="544.75,848">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,36"
               Start="0,0"
               End="0,28.5">
@@ -20391,9 +20345,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20401,7 +20353,7 @@ where employee_key=? </property>
           TopLeft="659.5,521.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,22.9999999999999"
               Start="0,0"
               End="0,15.4999999999999">
@@ -20415,9 +20367,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20425,7 +20375,7 @@ where employee_key=? </property>
           TopLeft="328.25,438.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,39"
               Start="0,0"
               End="0,31.5">
@@ -20439,9 +20389,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20449,7 +20397,7 @@ where employee_key=? </property>
           TopLeft="472.25,189.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,39"
               Start="0,0"
               End="0,31.5">
@@ -20463,9 +20411,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20473,7 +20419,7 @@ where employee_key=? </property>
           TopLeft="168.5,180.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,39"
               Start="0,0"
               End="0,31.5">
@@ -20487,16 +20433,14 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <AnnotationLayout
           Text="need to change : just extract the data for yesterday from source table"
           ParentId="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_TERMINATION_FACT\DFT - INSERT NEW RECORDS"
-          FontInfo="{x:Null}"
-          Size="548,NaN"
+          FontInfo="{assembly:Null}"
+          Size="548,42"
           Id="c81b5dd9-8947-47e6-aea6-2b1fd830cc98"
           TopLeft="658,106" />
       </GraphLayout>
@@ -20551,7 +20495,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - PROBATION_MONITORING_FACT\DFT - Delete">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="348,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - PROBATION_MONITORING_FACT\DFT - Delete\OLE DB Command - Delete from employee_position_fact"
@@ -20569,7 +20513,7 @@ where employee_key=? </property>
           TopLeft="515.25,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="0,50.5">
@@ -20583,9 +20527,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20593,7 +20535,7 @@ where employee_key=? </property>
           TopLeft="511.75,285">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,90"
               Start="0,0"
               End="0,82.5">
@@ -20662,7 +20604,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - PROBATION_MONITORING_FACT\DFT - New or Update">
     <LayoutInfo>
       <GraphLayout
-        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="300,43"
           Id="Package\Sequence Container - Fact Tables\SD1 - PROBATION_MONITORING_FACT\DFT - New or Update\OLE DB Source  - EMPLOYEE_TEMP"
@@ -20704,7 +20646,7 @@ where employee_key=? </property>
           TopLeft="493.5,388">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-102.833333333333,50"
               Start="0,0"
               End="-102.833333333333,42.5">
@@ -20730,9 +20672,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20740,7 +20680,7 @@ where employee_key=? </property>
           TopLeft="280.5,311">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="89.5,127"
               Start="0,0"
               End="89.5,119.5">
@@ -20766,9 +20706,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20776,7 +20714,7 @@ where employee_key=? </property>
           TopLeft="269,110">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="8.5,51"
               Start="0,0"
               End="8.5,43.5">
@@ -20802,9 +20740,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20812,7 +20748,7 @@ where employee_key=? </property>
           TopLeft="491.75,312">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,33"
               Start="0,0"
               End="0,25.5">
@@ -20826,9 +20762,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20836,7 +20770,7 @@ where employee_key=? </property>
           TopLeft="370,480">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-15.5,90"
               Start="0,0"
               End="-15.5,82.5">
@@ -20862,9 +20796,7 @@ where employee_key=? </property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -20872,7 +20804,7 @@ where employee_key=? </property>
           TopLeft="279,203">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,66"
               Start="0,0"
               End="0,58.5">
@@ -20896,7 +20828,7 @@ where employee_key=? </property>
           TopLeft="335,182">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="308,0"
               Start="0,0"
               End="300.5,0">
@@ -20920,7 +20852,7 @@ where employee_key=? </property>
           TopLeft="774.5,203">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,79"
               Start="0,0"
               End="0,71.5">
