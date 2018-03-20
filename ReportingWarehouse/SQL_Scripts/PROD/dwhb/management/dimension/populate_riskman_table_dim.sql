@@ -23,7 +23,8 @@ insert into management.table_dim values('FBComplainant_IFR','riskman','dbo','Ris
 insert into management.table_dim values('FBInvestigation_IFR','riskman','dbo','Riskman','ted')
 insert into management.table_dim values('FBDetail1_IFR','riskman','dbo','Riskman','ted')
 insert into management.table_dim values('FBIssue_IFR','riskman','dbo','Riskman','ted')
-
+insert into management.table_dim values('vwReg_RMFeedback','riskman','dbo','Riskman','ted')
+insert into management.table_dim values('vwSF_FBIssue','riskman','dbo','Riskman','ted')
 
 -- schema: replicated riskman tables
 INSERT INTO [management].[TABLE_DIM] VALUES ('angcare_ifr', 'dwh', 'extract_riskman', 'dwhb', 'AZ-SQLBI01');
@@ -45,6 +46,8 @@ insert into management.table_dim values('FBComplainant_IFR','dwh','extract_riskm
 insert into management.table_dim values('FBInvestigation_IFR','dwh','extract_riskman','dwhb','AZ-SQLBI01')
 insert into management.table_dim values('FBDetail1_IFR','dwh','extract_riskman','dwhb','AZ-SQLBI01')
 insert into management.table_dim values('FBIssue_IFR','dwh','extract_riskman','dwhb','AZ-SQLBI01')
+insert into management.table_dim values('vwReg_RMFeedback','dwh','extract_riskman','dwhb','AZ-SQLBI01')
+insert into management.table_dim values('vwSF_FBIssue','dwh','extract_riskman','dwhb','AZ-SQLBI01')
 
 
 
@@ -67,7 +70,6 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('program_mapping', 'dwh', 'conform_
 insert into management.table_dim values('ContributingFactors_fact','dwh','conform_riskman','dwhb','AZ-SQLBI01')
 ------ tables for feedback module
 insert into management.table_dim values('feedback_fact','dwh','conform_riskman','dwhb','AZ-SQLBI01')
-insert into management.table_dim values('Feedback_issue_Bridge','dwh','conform_riskman','dwhb','AZ-SQLBI01')
 insert into management.table_dim values('Feedback_issue_fact','dwh','conform_riskman','dwhb','AZ-SQLBI01')
 
 
@@ -88,5 +90,4 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('service_stream_dim', 'dwh', 'riskm
 insert into management.table_dim values('ContributingFactors_fact','dwh','riskman','dwhf_riskman','AZ-SQLBI01')
 ------ tables for feedback module
 insert into management.table_dim values('feedback_fact','dwh','riskman','dwhf_riskman','AZ-SQLBI01')
-insert into management.table_dim values('Feedback_issue_Bridge','dwh','riskman','dwhf_riskman','AZ-SQLBI01')
 insert into management.table_dim values('Feedback_issue_fact','dwh','riskman','dwhf_riskman','AZ-SQLBI01')
