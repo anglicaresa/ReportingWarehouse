@@ -241,6 +241,32 @@ warning 6002: The table/view 'DWHB.conform.e3learning_fact' does not have a prim
           <Property Name="contract_expiry_date_key" Type="int" Nullable="false" />
           <Property Name="count" Type="int" />
         </EntityType>
+        <EntityType Name="employee_contracted_hours_report_fact">
+          <Key>
+            <PropertyRef Name="employee_contracted_hours_report_fact_key" />
+          </Key>
+          <Property Name="employee_contracted_hours_report_fact_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="position_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="pay_period_date_key" Type="int" />
+          <Property Name="work_pattern_hours" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="payment_hours" Type="decimal" Precision="10" Scale="4" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DWHB.conform.employee_costing_fact' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="employee_costing_fact">
+          <Property Name="id_number" Type="int" />
+          <Property Name="full_name" Type="varchar" MaxLength="101" />
+          <Property Name="position_code" Type="varchar" MaxLength="50" />
+          <Property Name="position_name" Type="varchar" MaxLength="50" />
+          <Property Name="position_type" Type="varchar" MaxLength="3" />
+          <Property Name="costing" Type="varchar" MaxLength="6" />
+          <Property Name="natural" Type="varchar" MaxLength="10" />
+          <Property Name="costing_name" Type="varchar" MaxLength="50" />
+        </EntityType>-->
         <EntityType Name="employee_dim">
           <Key>
             <PropertyRef Name="employee_key" />
@@ -515,6 +541,7 @@ warning 6002: The table/view 'DWHB.conform.e3learning_fact' does not have a prim
           <Property Name="pay_component_ref" Type="decimal" Precision="10" Scale="4" />
           <Property Name="pay_period_type" Type="varchar" MaxLength="10" />
           <Property Name="posted_ind" Type="varchar" MaxLength="1" />
+          <Property Name="document_type" Type="varchar" MaxLength="10" />
           <Property Name="count" Type="int" />
         </EntityType>
         <EntityType Name="employee_payment_summary_fact">
@@ -674,6 +701,7 @@ warning 6002: The table/view 'DWHB.conform.e3learning_fact' does not have a prim
           <Property Name="total_count" Type="int" />
           <Property Name="commencement_date_key" Type="int" Nullable="false" />
           <Property Name="term_type" Type="varchar" MaxLength="30" />
+          <Property Name="date_of_birth" Type="datetime" />
         </EntityType>
         <EntityType Name="employee_timesheet_fact">
           <Key>
@@ -1640,6 +1668,78 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
               <PropertyRef Name="service_stream_key" />
             </Principal>
             <Dependent Role="employee_contract_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_pay_period_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="pay_period_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
               <PropertyRef Name="service_stream_key" />
             </Dependent>
           </ReferentialConstraint>
@@ -3585,6 +3685,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <EntitySet Name="employee_accreditation_fact" EntityType="Self.employee_accreditation_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_benefit_dim" EntityType="Self.employee_benefit_dim" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_contract_fact" EntityType="Self.employee_contract_fact" Schema="conform" store:Type="Tables" />
+          <EntitySet Name="employee_contracted_hours_report_fact" EntityType="Self.employee_contracted_hours_report_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_dim" EntityType="Self.employee_dim" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_last_paid_date_fact" EntityType="Self.employee_last_paid_date_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_leave_accrued_fact" EntityType="Self.employee_leave_accrued_fact" Schema="conform" store:Type="Tables" />
@@ -3869,6 +3970,30 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <AssociationSet Name="fk_employee_contract_fact_service_stream_key" Association="Self.fk_employee_contract_fact_service_stream_key">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="employee_contract_fact" EntitySet="employee_contract_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_employee_key" Association="Self.fk_employee_contracted_hours_report_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_pay_period_date_key" Association="Self.fk_employee_contracted_hours_report_fact_pay_period_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_portfolio_key" Association="Self.fk_employee_contracted_hours_report_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_position_key" Association="Self.fk_employee_contracted_hours_report_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_program_key" Association="Self.fk_employee_contracted_hours_report_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_service_stream_key" Association="Self.fk_employee_contracted_hours_report_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_employee_dimemployee_accreditation_fact" Association="Self.fk_employee_dimemployee_accreditation_fact">
             <End Role="employee_dim" EntitySet="employee_dim" />
@@ -5408,6 +5533,31 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
           </AssociationSet>
+          <EntitySet Name="employee_contracted_hours_report_fact" EntityType="conform_hris_conceptual.employee_contracted_hours_report_fact" />
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_pay_period_date_key" Association="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_pay_period_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_employee_key" Association="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_portfolio_key" Association="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_position_key" Association="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_program_key" Association="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_service_stream_key" Association="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="account_dim">
           <Key>
@@ -5521,6 +5671,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <NavigationProperty Name="non_primary_positions_fact2" Relationship="conform_hris_conceptual.fk_conform_non_primary_positions_fact_position_end_date_key" FromRole="date_dim" ToRole="non_primary_positions_fact" />
           <NavigationProperty Name="all_employees_report_fact_history" Relationship="conform_hris_conceptual.fk_all_employees_report_fact_history_backup_date_key" FromRole="date_dim" ToRole="all_employees_report_fact_history" />
           <NavigationProperty Name="all_employees_report_fact_history1" Relationship="conform_hris_conceptual.fk_all_employees_report_fact_history_commencement_date_key" FromRole="date_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_pay_period_date_key" FromRole="date_dim" ToRole="employee_contracted_hours_report_fact" />
           </EntityType>
         <EntityType Name="employee_accreditation_fact">
           <Key>
@@ -5714,6 +5865,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <NavigationProperty Name="non_primary_positions_fact1" Relationship="conform_hris_conceptual.fk_conform_non_primary_positions_fact_manager_key" FromRole="employee_dim" ToRole="non_primary_positions_fact" />
           <NavigationProperty Name="all_employees_report_fact_history" Relationship="conform_hris_conceptual.fk_all_employees_report_fact_history_employee_key" FromRole="employee_dim" ToRole="all_employees_report_fact_history" />
           <NavigationProperty Name="all_employees_report_fact_history1" Relationship="conform_hris_conceptual.fk_all_employees_report_fact_history_manager_key" FromRole="employee_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_employee_key" FromRole="employee_dim" ToRole="employee_contracted_hours_report_fact" />
         </EntityType>
         <EntityType Name="employee_leave_accrued_fact">
           <Key>
@@ -5943,6 +6095,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <NavigationProperty Name="position_dim" Relationship="conform_hris_conceptual.fk_employee_payment_fact_position_key" FromRole="employee_payment_fact" ToRole="position_dim" />
           <NavigationProperty Name="program_dim" Relationship="conform_hris_conceptual.fk_employee_payment_fact_program_key" FromRole="employee_payment_fact" ToRole="program_dim" />
           <NavigationProperty Name="service_stream_dim" Relationship="conform_hris_conceptual.fk_employee_payment_fact_service_stream_key" FromRole="employee_payment_fact" ToRole="service_stream_dim" />
+          <Property Name="document_type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="employee_position_fact">
           <Key>
@@ -6107,6 +6260,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <NavigationProperty Name="program_dim" Relationship="conform_hris_conceptual.fk_program_dimemployee_termination_fact" FromRole="employee_termination_fact" ToRole="program_dim" />
           <NavigationProperty Name="service_stream_dim" Relationship="conform_hris_conceptual.fk_service_stream_dimemployee_termination_fact" FromRole="employee_termination_fact" ToRole="service_stream_dim" />
           <Property Name="term_type" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="date_of_birth" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="employee_timesheet_fact">
           <Key>
@@ -6270,6 +6424,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <NavigationProperty Name="timesheet_validation_fact" Relationship="conform_hris_conceptual.fk_timesheet_validation_portfolio_key" FromRole="portfolio_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="non_primary_positions_fact" Relationship="conform_hris_conceptual.fk_conform_non_primary_positions_fact_portfolio_key" FromRole="portfolio_dim" ToRole="non_primary_positions_fact" />
           <NavigationProperty Name="all_employees_report_fact_history" Relationship="conform_hris_conceptual.fk_all_employees_report_fact_history_portfolio_key" FromRole="portfolio_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_portfolio_key" FromRole="portfolio_dim" ToRole="employee_contracted_hours_report_fact" />
         </EntityType>
         <EntityType Name="portfolio_temp">
           <Key>
@@ -6336,6 +6491,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <NavigationProperty Name="non_primary_positions_fact1" Relationship="conform_hris_conceptual.fk_conform_non_primary_positions_fact_position_key" FromRole="position_dim" ToRole="non_primary_positions_fact" />
           <NavigationProperty Name="all_employees_report_fact_history" Relationship="conform_hris_conceptual.fk_all_employees_report_fact_history_manager_position_key" FromRole="position_dim" ToRole="all_employees_report_fact_history" />
           <NavigationProperty Name="all_employees_report_fact_history1" Relationship="conform_hris_conceptual.fk_all_employees_report_fact_history_position_key" FromRole="position_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_position_key" FromRole="position_dim" ToRole="employee_contracted_hours_report_fact" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -6374,6 +6530,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <NavigationProperty Name="timesheet_validation_fact" Relationship="conform_hris_conceptual.fk_timesheet_validation_program_key" FromRole="program_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="non_primary_positions_fact" Relationship="conform_hris_conceptual.fk_conform_non_primary_positions_fact_program_key" FromRole="program_dim" ToRole="non_primary_positions_fact" />
           <NavigationProperty Name="all_employees_report_fact_history" Relationship="conform_hris_conceptual.fk_all_employees_report_fact_history_program_key" FromRole="program_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_program_key" FromRole="program_dim" ToRole="employee_contracted_hours_report_fact" />
         </EntityType>
         <EntityType Name="program_temp">
           <Key>
@@ -6439,6 +6596,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <NavigationProperty Name="timesheet_validation_fact" Relationship="conform_hris_conceptual.fk_timesheet_validation_service_stream_key" FromRole="service_stream_dim" ToRole="timesheet_validation_fact" />
           <NavigationProperty Name="non_primary_positions_fact" Relationship="conform_hris_conceptual.fk_conform_non_primary_positions_fact_service_stream_key" FromRole="service_stream_dim" ToRole="non_primary_positions_fact" />
           <NavigationProperty Name="all_employees_report_fact_history" Relationship="conform_hris_conceptual.fk_all_employees_report_fact_history_service_stream_key" FromRole="service_stream_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_service_stream_key" FromRole="service_stream_dim" ToRole="employee_contracted_hours_report_fact" />
         </EntityType>
         <EntityType Name="service_stream_temp">
           <Key>
@@ -9371,6 +9529,98 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="employee_contracted_hours_report_fact">
+          <Key>
+            <PropertyRef Name="employee_contracted_hours_report_fact_key" />
+          </Key>
+          <Property Name="employee_contracted_hours_report_fact_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="position_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="pay_period_date_key" Type="Int32" />
+          <Property Name="work_pattern_hours" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="payment_hours" Type="Decimal" Precision="10" Scale="4" />
+          <NavigationProperty Name="date_dim" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_pay_period_date_key" FromRole="employee_contracted_hours_report_fact" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_employee_key" FromRole="employee_contracted_hours_report_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_portfolio_key" FromRole="employee_contracted_hours_report_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="position_dim" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_position_key" FromRole="employee_contracted_hours_report_fact" ToRole="position_dim" />
+          <NavigationProperty Name="program_dim" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_program_key" FromRole="employee_contracted_hours_report_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="conform_hris_conceptual.fk_employee_contracted_hours_report_fact_service_stream_key" FromRole="employee_contracted_hours_report_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <Association Name="fk_employee_contracted_hours_report_fact_pay_period_date_key">
+          <End Type="conform_hris_conceptual.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="conform_hris_conceptual.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="pay_period_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_employee_key">
+          <End Type="conform_hris_conceptual.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_portfolio_key">
+          <End Type="conform_hris_conceptual.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_position_key">
+          <End Type="conform_hris_conceptual.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_program_key">
+          <End Type="conform_hris_conceptual.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_service_stream_key">
+          <End Type="conform_hris_conceptual.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="conform_hris_conceptual.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -9752,6 +10002,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <EntitySetMapping Name="employee_payment_fact">
             <EntityTypeMapping TypeName="conform_hris_conceptual.employee_payment_fact">
               <MappingFragment StoreEntitySet="employee_payment_fact">
+                <ScalarProperty Name="document_type" ColumnName="document_type" />
                 <ScalarProperty Name="count" ColumnName="count" />
                 <ScalarProperty Name="posted_ind" ColumnName="posted_ind" />
                 <ScalarProperty Name="pay_period_type" ColumnName="pay_period_type" />
@@ -9882,6 +10133,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <EntitySetMapping Name="employee_termination_fact">
             <EntityTypeMapping TypeName="conform_hris_conceptual.employee_termination_fact">
               <MappingFragment StoreEntitySet="employee_termination_fact">
+                <ScalarProperty Name="date_of_birth" ColumnName="date_of_birth" />
                 <ScalarProperty Name="term_type" ColumnName="term_type" />
                 <ScalarProperty Name="commencement_date_key" ColumnName="commencement_date_key" />
                 <ScalarProperty Name="total_count" ColumnName="total_count" />
@@ -10441,6 +10693,21 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
                 <ScalarProperty Name="Family_Name" ColumnName="Family Name" />
                 <ScalarProperty Name="Preferred_Name" ColumnName="Preferred Name" />
                 <ScalarProperty Name="Id_Number" ColumnName="Id Number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employee_contracted_hours_report_fact">
+            <EntityTypeMapping TypeName="conform_hris_conceptual.employee_contracted_hours_report_fact">
+              <MappingFragment StoreEntitySet="employee_contracted_hours_report_fact">
+                <ScalarProperty Name="payment_hours" ColumnName="payment_hours" />
+                <ScalarProperty Name="work_pattern_hours" ColumnName="work_pattern_hours" />
+                <ScalarProperty Name="pay_period_date_key" ColumnName="pay_period_date_key" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="position_key" ColumnName="position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="employee_contracted_hours_report_fact_key" ColumnName="employee_contracted_hours_report_fact_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
