@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - T1M"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="651"
-  DTS:VersionGUID="{E4050D37-3B24-491A-8E81-968FEA9078E3}">
+  DTS:VersionBuild="653"
+  DTS:VersionGUID="{A2E3941D-91B4-4AF8-BCAE-E6C2007C4A62}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">4/4/2018 11:59:11 AM</DTS:VariableValue>
+        DTS:DataType="7">4/5/2018 9:08:06 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">4/4/2018 11:59:11 AM</DTS:VariableValue>
+        DTS:DataType="7">4/5/2018 9:08:06 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">4/4/2018 11:59:11 AM</DTS:VariableValue>
+        DTS:DataType="7">4/5/2018 9:08:06 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -1231,7 +1231,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
-                  SQLTask:SqlStatementSource="update ef &#xA;set ef.manager_key = ed.employee_key, ef.manager_position_key = ISNULL((select position_key from conform.position_dim where position_name='No Position'),d2.position_key)&#xA;from conform.position_establishment_fact ef &#xA;inner join conform.position_dim d on ef.position_key = d.position_key --213&#xA;left outer join extract.AllVacPositions_IFT1 ep on d.position_code = ep.HierarchyCode&#xA;left outer  join conform.position_dim d2 on ep.Supervisor_Position = d2.position_code and d2.current_row_indicator = 'y'&#xA;inner join extract.employee_position_IFT1 ep2 on ep.Supervisor_Position = ep2.Position_Code&#xA;inner join conform.employee_dim ed on ep2.Id_Number = ed.id_number and ed.current_row_indicator = 'y'&#xA;where ef.manager_key = (select employee_key from conform.employee_dim where id_number = 9999999) --213&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="&#xA;-- 1.positions with employees&#xA;-- 2.positions with terminated employees (without manager key and manager position)&#xA;-- 3.positions without any employees (without manager key and manager position)&#xA;-- 4.update manager key and manager position&#xA;&#xA;&#xA;-- 1.positions with employees&#xA;insert into conform.position_establishment_fact&#xA;select pf.portfolio_key,pf.service_stream_key,pf.program_key,pf.position_key,pf.employee_key,&#xA;d.employee_type,d.employee_class,&#xA;pf.position_start_date_key,pf.position_vacant_date_key ,pf.manager_key,pf.manager_position_key,&#xA;d2.contract_type,d2.position_class,1&#xA;from conform.employee_position_fact pf &#xA;inner join conform.employee_dim d on pf.employee_key = d.employee_key&#xA;inner join conform.position_dim d2 on pf.position_key = d2.position_key&#xA;where pf.employee_key in&#xA;(   --current employees only&#xA; select d.employee_key from extract.AllVacPositions_IFT1 t &#xA; inner join conform.employee_dim d on t.Id_Number = d.id_number and d.current_row_indicator = 'y'&#xA;);&#xA;&#xA;&#xA;&#xA;-- 2.positions with terminated employees&#xA;insert into conform.position_establishment_fact&#xA; select &#xA; tf.portfolio_key,&#xA; tf.service_stream_key,&#xA; tf.program_key,&#xA; tf.position_key,&#xA; tf.employee_key,&#xA; ed.employee_type,&#xA; ed.employee_class,&#xA; tf.commencement_date_key,&#xA; tf.termination_date_key,&#xA; (select employee_key from conform.employee_dim where id_number = 9999999) as manager_key,&#xA; (select position_key from conform.position_dim d where d.current_row_indicator = 'y' and d.position_code = '9999999' ),&#xA; pd.contract_type,&#xA; pd.position_class,&#xA; 1 as count&#xA; from &#xA; (&#xA;  select * from conform.employee_termination_fact f where f.position_key IN&#xA;  (&#xA;   select d.position_key from conform.position_dim d where d.position_code IN&#xA;   (&#xA;    select t.HierarchyCode as position_code from extract.AllVacPositions_IFT1 t &#xA;    left outer join conform.employee_dim d on t.Id_Number = d.id_number and d.current_row_indicator = 'y'&#xA;    where d.employee_key is null --148  &#xA;    )&#xA;   and d.current_row_indicator = 'y'--159 &#xA;  )--51&#xA; ) as tf &#xA; inner join conform.position_dim pd on tf.position_key = pd.position_key&#xA; inner join conform.employee_dim ed on tf.employee_key = ed.employee_key--51 rows&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;-- 3.positions without any employees&#xA;insert into conform.position_establishment_fact&#xA; select &#xA; (select portfolio_key from conform.portfolio_dim d where d.current_row_indicator = 'y' and d.portfolio_code= 99999 )&#xA;  as portfolio_key,&#xA; (select service_stream_key from conform.service_stream_dim d where d.current_row_indicator = 'y' and d.service_stream_code= 99999 )&#xA;  as service_stream_key,&#xA; (select program_key from conform.program_dim d where d.current_row_indicator = 'y' and d.program_code= 99999 )&#xA; as program_key,&#xA; --(select position_key from conform.position_dim d where d.current_row_indicator = 'y' and d.position_code = 9999999 )  as position_key,&#xA;&#xA; pd.position_key,&#xA;&#xA; (select employee_key from conform.employee_dim where id_number = 9999999)&#xA; as employee_key,&#xA; '' as employee_type,&#xA; '' as employee_class,&#xA; 9999999 as commencement_date_key,&#xA; 9999999 as termination_date_key,&#xA; (select employee_key from conform.employee_dim where id_number = 9999999) as manager_key,&#xA; (select position_key from conform.position_dim d where d.current_row_indicator = 'y' and d.position_code = '9999999' ),&#xA; tfa1.PosEmployee_Type,&#xA; tfa1.PosEmployee_Class,&#xA; 1 as count&#xA; from &#xA; (&#xA;  select * from extract.AllVacPositions_IFT1 t --154&#xA;  where t.Id_Number not IN&#xA;  (&#xA;   select d.id_number from conform.position_establishment_fact ef inner join conform.employee_dim d on ef.employee_key = d.employee_key&#xA;  )&#xA; ) as tfa1&#xA; inner join conform.position_dim pd on pd.position_code = tfa1.HierarchyCode and pd.current_row_indicator = 'y'&#xA;&#xA;&#xA;&#xA;-- 4.update manager key and manager position&#xA;&#xA;update ef &#xA;set ef.manager_key = ed.employee_key, ef.manager_position_key = d2.position_key&#xA;from conform.position_establishment_fact ef &#xA;inner join conform.position_dim d on ef.position_key = d.position_key --213&#xA;left outer join extract.AllVacPositions_IFT1 ep on d.position_code = ep.HierarchyCode&#xA;left outer  join conform.position_dim d2 on ep.Supervisor_Position = d2.position_code and d2.current_row_indicator = 'y'&#xA;inner join extract.employee_position_IFT1 ep2 on ep.Supervisor_Position = ep2.Position_Code&#xA;inner join conform.employee_dim ed on ep2.Id_Number = ed.id_number and ed.current_row_indicator = 'y'&#xA;where ef.manager_key = (select employee_key from conform.employee_dim where id_number = 9999999) --213&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -15360,7 +15360,7 @@ where employee_key=? </property>
           PanelSize="345,599"
           Size="345,676"
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history"
-          TopLeft="28,9740.5" />
+          TopLeft="13.0000000000013,9740.5" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Finish info"
@@ -15423,7 +15423,7 @@ where employee_key=? </property>
           PanelSize="345,358"
           Size="345,435"
           Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact"
-          TopLeft="44.7222222222219,12478.5" />
+          TopLeft="13.0000000000016,12340.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\employee_last_paid_date_fact\Delete data for Yesterday"
@@ -15524,7 +15524,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\employee_last_paid_date_fact"
-          TopLeft="27.9999999999998,8464.5" />
+          TopLeft="13.0000000000011,8464.5" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact\EST - Write Job Finish info"
@@ -15587,7 +15587,7 @@ where employee_key=? </property>
           PanelSize="345,360"
           Size="345,437"
           Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact"
-          TopLeft="37.0000000000001,11453.5" />
+          TopLeft="13.0000000000014,11348.5" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\EST - Write Job Finish info"
@@ -15650,7 +15650,7 @@ where employee_key=? </property>
           PanelSize="345,326"
           Size="345,403"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact"
-          TopLeft="37,10990.5" />
+          TopLeft="13.0000000000014,10885.5" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\non_primary_position_fact\EST - Write Job Finish info"
@@ -15713,7 +15713,7 @@ where employee_key=? </property>
           PanelSize="345,358"
           Size="345,435"
           Id="Package\Sequence Container - Fact Tables\non_primary_position_fact"
-          TopLeft="41.722222222222,11952.6111111111" />
+          TopLeft="13.0000000000015,11845.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\personalleave_usage_report_fact\EST - Write Job Finish info"
@@ -15776,7 +15776,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\personalleave_usage_report_fact"
-          TopLeft="27.9999999999998,8873.5" />
+          TopLeft="13.0000000000011,8873.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\position_estabelishment_report_fact\Delete data for Yesterday"
@@ -15865,7 +15865,7 @@ where employee_key=? </property>
           PanelSize="345,355"
           Size="345,398"
           Id="Package\Sequence Container - Fact Tables\position_estabelishment_report_fact"
-          TopLeft="27.9999999999999,9282.5" />
+          TopLeft="13.0000000000012,9282.5" />
         <NodeLayout
           Size="245,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\delete all records"
@@ -16196,7 +16196,7 @@ where employee_key=? </property>
           PanelSize="346,790"
           Size="346,833"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT"
-          TopLeft="27.4999999999988,456.5" />
+          TopLeft="12.5000000000001,456.5" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT\delete all records"
@@ -16397,7 +16397,7 @@ where employee_key=? </property>
           PanelSize="347,347"
           Size="347,390"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT"
-          TopLeft="26.9999999999989,1349.5" />
+          TopLeft="12.0000000000002,1349.5" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_TERMINATION_FACT\DFT - INSERT NEW RECORDS"
@@ -16548,7 +16548,7 @@ where employee_key=? </property>
           PanelSize="347,348"
           Size="347,391"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_TERMINATION_FACT"
-          TopLeft="26.9999999999988,5.5" />
+          TopLeft="12.0000000000001,5.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - PROBATION_MONITORING_FACT\DFT - Delete"
@@ -16695,7 +16695,7 @@ where employee_key=? </property>
           PanelSize="348,253"
           Size="348,296"
           Id="Package\Sequence Container - Fact Tables\SD1 - PROBATION_MONITORING_FACT"
-          TopLeft="26.499999999999,1799.5" />
+          TopLeft="11.5000000000003,1799.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_ACCREDITATION_FACT\Delete data for Yesterday"
@@ -16808,7 +16808,7 @@ where employee_key=? </property>
           PanelSize="345,301"
           Size="345,344"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_ACCREDITATION_FACT"
-          TopLeft="27.9999999999991,2937.5" />
+          TopLeft="13.0000000000004,2937.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_CONTRACT_FACT\Delete data for Yesterday"
@@ -16909,7 +16909,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_CONTRACT_FACT"
-          TopLeft="27.9999999999993,4159.5" />
+          TopLeft="13.0000000000005,4159.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_ACCRUED_FACT\Delete data for Yesterday"
@@ -17010,7 +17010,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_ACCRUED_FACT"
-          TopLeft="27.9999999999992,3341.5" />
+          TopLeft="13.0000000000005,3341.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_ACCURED_FACT\Delete data for Yesterday"
@@ -17111,7 +17111,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_ACCURED_FACT"
-          TopLeft="27.9999999999996,6951.5" />
+          TopLeft="13.0000000000009,6951.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_BOOKED_FACT\Delete data for Yesterday"
@@ -17212,7 +17212,7 @@ where employee_key=? </property>
           PanelSize="345,270"
           Size="345,313"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_BOOKED_FACT"
-          TopLeft="27.999999999999,2155.5" />
+          TopLeft="13.0000000000003,2155.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_BOOKED_txn_FACT\Delete data for Yesterday"
@@ -17313,7 +17313,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_BOOKED_txn_FACT"
-          TopLeft="27.9999999999995,6133.5" />
+          TopLeft="13.0000000000008,6133.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_TAKEN_FACT\EST - Write Job Finish info"
@@ -17414,7 +17414,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_TAKEN_FACT"
-          TopLeft="27.9999999999991,2528.5" />
+          TopLeft="13.0000000000003,2528.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_payment_fact\Delete data for Yesterday"
@@ -17515,7 +17515,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_payment_fact"
-          TopLeft="27.9999999999995,5724.5" />
+          TopLeft="13.0000000000007,5724.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_PROFILE_FACT\Delete data for Yesterday"
@@ -17616,7 +17616,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_PROFILE_FACT"
-          TopLeft="27.9999999999992,3750.5" />
+          TopLeft="13.0000000000005,3750.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_renumeration_fact\Delete data for Yesterday"
@@ -17717,7 +17717,7 @@ where employee_key=? </property>
           PanelSize="345,269"
           Size="345,312"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_renumeration_fact"
-          TopLeft="27.9999999999994,4943.5" />
+          TopLeft="13.0000000000007,4943.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_timesheet_fact\Delete data for Yesterday"
@@ -17818,7 +17818,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_timesheet_fact"
-          TopLeft="27.9999999999994,5315.5" />
+          TopLeft="13.0000000000007,5315.5" />
         <NodeLayout
           Size="233,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_WORKING_HOURS_FACT\Delete data for Yesterday -5 days"
@@ -17907,7 +17907,7 @@ where employee_key=? </property>
           PanelSize="360,343"
           Size="360,386"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_WORKING_HOURS_FACT"
-          TopLeft="20.4999999999997,7360.5" />
+          TopLeft="5.50000000000094,7360.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT\Delete data for Yesterday"
@@ -18008,7 +18008,7 @@ where employee_key=? </property>
           PanelSize="345,272"
           Size="345,315"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT"
-          TopLeft="27.9999999999993,4568.5" />
+          TopLeft="13.0000000000006,4568.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Delete data for Yesterday"
@@ -18109,7 +18109,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun"
-          TopLeft="29.4999999999998,10503.6111111111" />
+          TopLeft="13.0000000000013,10476.5" />
         <NodeLayout
           Size="233,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - TIMESHEET_VALICATION_FACT\Delete data"
@@ -18198,7 +18198,7 @@ where employee_key=? </property>
           PanelSize="360,298"
           Size="360,341"
           Id="Package\Sequence Container - Fact Tables\SD2 - TIMESHEET_VALICATION_FACT"
-          TopLeft="20.4999999999997,7806.5" />
+          TopLeft="5.50000000000099,7806.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - WORK_PATTERN_FACT\Delete data for Yesterday"
@@ -18299,7 +18299,7 @@ where employee_key=? </property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - WORK_PATTERN_FACT"
-          TopLeft="27.9999999999996,6542.5" />
+          TopLeft="13.0000000000009,6542.5" />
         <NodeLayout
           Size="233,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process\Get new data"
@@ -18310,10 +18310,10 @@ where employee_key=? </property>
           PanelSize="360,154"
           Size="360,197"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process"
-          TopLeft="20.4999999999997,8207.5" />
+          TopLeft="5.50000000000105,8207.5" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint]"
-          TopLeft="200.499999999999,1289.5">
+          TopLeft="185.5,1289.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18337,7 +18337,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 1]"
-          TopLeft="200.499999999999,1739.5">
+          TopLeft="185.5,1739.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18361,7 +18361,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 10]"
-          TopLeft="200.5,4883.5">
+          TopLeft="185.500000000001,4883.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18385,7 +18385,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 11]"
-          TopLeft="200.5,5255.5">
+          TopLeft="185.500000000001,5255.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18409,7 +18409,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 12]"
-          TopLeft="200.5,5664.5">
+          TopLeft="185.500000000001,5664.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18433,7 +18433,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 13]"
-          TopLeft="200.5,6073.5">
+          TopLeft="185.500000000001,6073.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18457,7 +18457,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 14]"
-          TopLeft="200.5,6482.5">
+          TopLeft="185.500000000001,6482.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18481,7 +18481,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 15]"
-          TopLeft="200.5,6891.5">
+          TopLeft="185.500000000001,6891.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18505,7 +18505,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 16]"
-          TopLeft="200.5,7300.5">
+          TopLeft="185.500000000001,7300.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18529,7 +18529,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 17]"
-          TopLeft="200.5,7746.5">
+          TopLeft="185.500000000001,7746.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18553,7 +18553,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 18]"
-          TopLeft="200.5,8147.5">
+          TopLeft="185.500000000001,8147.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18577,7 +18577,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 19]"
-          TopLeft="200.5,8404.5">
+          TopLeft="185.500000000001,8404.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18601,7 +18601,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 2]"
-          TopLeft="200.499999999999,2095.5">
+          TopLeft="185.5,2095.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18625,7 +18625,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 20]"
-          TopLeft="200.5,8813.5">
+          TopLeft="185.500000000001,8813.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18649,7 +18649,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 21]"
-          TopLeft="200.5,9222.5">
+          TopLeft="185.500000000001,9222.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18673,7 +18673,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 22]"
-          TopLeft="200.5,9680.5">
+          TopLeft="185.500000000001,9680.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18697,18 +18697,18 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 23]"
-          TopLeft="205.75,10818.6111111111">
+          TopLeft="185.500000000001,10825.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,171.8888888889"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,164.3888888889">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,164.3888888889" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -18719,7 +18719,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 24]"
-          TopLeft="209.5,11393.5">
+          TopLeft="185.500000000001,11288.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18743,42 +18743,42 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 25]"
-          TopLeft="211.861111111111,11890.5">
+          TopLeft="185.500000000001,11785.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,62.1111111111113"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,54.6111111111113">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,54.6111111111113" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-25.304453125,21.5008680555557,50.60890625,11.609375"
+              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 26]"
-          TopLeft="201.25,10416.5">
+          TopLeft="185.500000000001,10416.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,87.1111111111004"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,79.6111111111004">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,79.6111111111004" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -18789,18 +18789,18 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 27]"
-          TopLeft="215.722222222222,12387.6111111111">
+          TopLeft="185.500000000002,12280.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,90.8888888888996"
+              EndConnector="0,60"
               Start="0,0"
-              End="0,83.3888888888996">
+              End="0,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,83.3888888888996" />
+                    End="0,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -18811,7 +18811,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
-          TopLeft="200.499999999999,3690.5">
+          TopLeft="185.5,3690.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18835,7 +18835,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 4]"
-          TopLeft="200.499999999999,2468.5">
+          TopLeft="185.5,2468.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18859,7 +18859,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 5]"
-          TopLeft="200.499999999999,2877.5">
+          TopLeft="185.5,2877.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18883,7 +18883,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 6]"
-          TopLeft="200.499999999999,3281.5">
+          TopLeft="185.5,3281.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18907,7 +18907,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 7]"
-          TopLeft="200.499999999999,396.5">
+          TopLeft="185.5,396.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18931,7 +18931,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 8]"
-          TopLeft="200.5,4099.5">
+          TopLeft="185.500000000001,4099.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18955,7 +18955,7 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 9]"
-          TopLeft="200.5,4508.5">
+          TopLeft="185.500000000001,4508.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -18980,8 +18980,8 @@ where employee_key=? </property>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="857,13200"
-          Size="857,13242"
+          PanelSize="371,12830"
+          Size="371,12874"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="171.833333333333,1.99999999999818" />
       </GraphLayout>
