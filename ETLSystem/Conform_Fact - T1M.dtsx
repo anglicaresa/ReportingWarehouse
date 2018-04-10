@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - T1M"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="655"
-  DTS:VersionGUID="{16FD570D-699C-455E-AA95-E22C42BDC292}">
+  DTS:VersionBuild="656"
+  DTS:VersionGUID="{FAF6ED07-B365-48FD-B26B-44ECDBEB379B}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">6</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">4/9/2018 3:28:22 PM</DTS:VariableValue>
+        DTS:DataType="7">4/10/2018 4:07:24 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">4/9/2018 3:28:22 PM</DTS:VariableValue>
+        DTS:DataType="7">4/10/2018 4:07:24 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">4/9/2018 3:28:22 PM</DTS:VariableValue>
+        DTS:DataType="7">4/10/2018 4:07:24 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -761,6 +761,79 @@
                   DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
                   DTS:Description="Execute SQL Task"
                   DTS:DTSID="{C4992599-37FF-4C2F-A605-80FC0AB082D7}"
+                  DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{a7589c37-8711-4638-a9f7-e43a17a0670c}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="employee_profile_withTERMEmpl_fact">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact\employee_profile_withTERMEmpl_fact"
+              DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{512908e9-cb1e-4532-88b5-e71ac9b13ca4}"
+              DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="employee_profile_withTERMEmpl_fact"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                  SQLTask:SqlStatementSource="/*--------------------------------------------------------------------------------------------------------------------------------&#xA;        Purpose: HRIS.Payment FTE report need to join employee_profile_fact but it has no terminated employees. &#xA;           Don't want to affect other reports, so create another similar table to add terminated employee information.&#xA;  Developer: Jerry Shen&#xA;  Notes:&#xA;             03.04.2018 Created by JS&#xA;&#xA;&#xA;---------------------------------------------------------------------------------------------------------------------------------*/&#xA;&#xA;&#xA;truncate table conform.employee_profile_withTERMEmpl_fact&#xA;-----get data from position_fact table for actvie employee&#xA;insert into conform.employee_profile_withTERMEmpl_fact(portfolio_key,service_stream_key,program_key,position_key,employee_key,manager_key,manager_position_key,permanent_ft_count,permanent_pt_count,contract_ft_count,contract_pt_count,casual_count,total_count,recruitment_date_key,service_date_key)&#xA;select distinct portfolio_key,service_stream_key,program_key,position_key,employee_key,manager_key,manager_position_key,permanent_ft_count,permanent_pt_count,contract_ft_count,contract_pt_count,casual_count,total_count,9999999,9999999&#xA;from conform.employee_position_fact&#xA;where primary_position_flag='P'&#xA;and employee_key in (select employee_key from conform.employee_dim where current_row_indicator='Y')&#xA;-----get data from employee_temp for terminated employee&#xA;insert into conform.employee_profile_withTERMEmpl_fact(portfolio_key,service_stream_key,program_key,position_key,employee_key,permanent_ft_count,permanent_pt_count,contract_ft_count,contract_pt_count,casual_count,total_count)&#xA;select portfolio_key,service_stream_key,program_key,position_key,employee_key,0,0,0,0,0,0 from  conform.employee_temp &#xA;where id_number not in (select id_number from conform.employee_dim where current_row_indicator='Y')&#xA;and primary_position_flag='P'&#xA;&#xA;-----update count fileds&#xA;--[permanent_ft_count]&#xA;update t1 &#xA;set t1.permanent_ft_count=1&#xA;from [conform].employee_profile_withTERMEmpl_fact as t1&#xA;inner join conform.employee_dim as t2 &#xA;on t1.employee_key=t2.employee_key&#xA;where t2.employee_type='Permanent'&#xA;and t2.employee_class like '%Full Time%'&#xA;and t1.manager_key is NULL&#xA;&#xA;&#xA;--[permanent_pt_count]&#xA;update t1 &#xA;set t1.permanent_pt_count=1&#xA;from [conform].employee_profile_withTERMEmpl_fact as t1&#xA;inner join conform.employee_dim as t2 &#xA;on t1.employee_key=t2.employee_key&#xA;where t2.employee_type='Permanent'&#xA;and t2.employee_class not like '%Full Time%'&#xA;and t1.manager_key is NULL&#xA;&#xA;--[contract_ft_count]&#xA;update t1 &#xA;set t1.contract_ft_count=1&#xA;from [conform].employee_profile_withTERMEmpl_fact as t1&#xA;inner join conform.employee_dim as t2 &#xA;on t1.employee_key=t2.employee_key&#xA;where t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')&#xA;and t2.employee_class like '%Full Time%'&#xA;and t1.manager_key is NULL&#xA;&#xA;&#xA;--[contract_pt_count]&#xA;update t1 &#xA;set t1.contract_pt_count=1&#xA;from [conform].employee_profile_withTERMEmpl_fact as t1&#xA;inner join conform.employee_dim as t2 &#xA;on t1.employee_key=t2.employee_key&#xA;where t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')&#xA;and t2.employee_class not like '%Full Time%'&#xA;and t1.manager_key is NULL&#xA;&#xA;&#xA;--casual_count&#xA;update t1 &#xA;set t1.casual_count=1&#xA;from [conform].employee_profile_withTERMEmpl_fact as t1&#xA;inner join conform.employee_dim as t2 &#xA;on t1.employee_key=t2.employee_key&#xA;where t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent')&#xA;and t1.manager_key is NULL&#xA;&#xA;&#xA;--update total_count&#xA;update [conform].employee_profile_withTERMEmpl_fact&#xA;set total_count =permanent_ft_count+permanent_pt_count+contract_ft_count+contract_pt_count+casual_count;&#xA;&#xA;&#xA;----deliver to front&#xA;--truncate table dwhf.hris.[employee_profile_withTERMEmpl_fact]&#xA;--insert into dwhf.hris.[employee_profile_withTERMEmpl_fact]&#xA;--select * from [conform].employee_profile_withTERMEmpl_fact&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{fd367c2d-bec7-4ffd-86e1-0d1ec4f779f9}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{32fe7fd7-2880-46c9-be3a-f5cc8af41141}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{2e5ca749-ed4c-42a9-b011-b200d935d27a}"
                   DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
                   DTS:LocaleID="-1"
                   DTS:ObjectName="Execute SQL Task - Catch Error Details">
@@ -15120,6 +15193,15 @@ where employee_key=? </property>
           DTS:ObjectName="Constraint 27"
           DTS:To="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact" />
         <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 28]"
+          DTS:CreationName=""
+          DTS:DTSID="{3F2D6DB7-4F16-4A82-BF3F-ECE5A40A7163}"
+          DTS:From="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 28"
+          DTS:To="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact"
+          DTS:Value="2" />
+        <DTS:PrecedenceConstraint
           DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
           DTS:CreationName=""
           DTS:DTSID="{2F6E7DBE-9718-460C-881E-BE9AA413C8E4}"
@@ -18977,11 +19059,46 @@ where employee_key=? </property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="261,42"
+          Id="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact\employee_profile_withTERMEmpl_fact"
+          TopLeft="28.6041666666666,43.7575757575778" />
+        <ContainerLayout
+          HeaderHeight="77"
+          IsExpanded="True"
+          PanelSize="345,141"
+          Size="345,218"
+          Id="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact"
+          TopLeft="5.50000000000094,12835.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 28]"
+          TopLeft="181.750000000001,12775.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="371,12831"
-          Size="371,12874"
+          PanelSize="371,13108"
+          Size="371,13152"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="171.833333333333,1.99999999999818" />
       </GraphLayout>
@@ -21178,6 +21295,18 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
