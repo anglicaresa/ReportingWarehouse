@@ -1,0 +1,663 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="8/23/2016 2:19:58 PM"
+  DTS:CreationName="SSIS.Package.3"
+  DTS:CreatorComputerName="W7PC01XQ1T"
+  DTS:CreatorName="ANGLICARE-SA\jshen"
+  DTS:DTSID="{BD3E26BC-5D2B-48CF-AD0C-6D6530039A67}"
+  DTS:ExecutableType="SSIS.Package.3"
+  DTS:LastModifiedProductVersion="14.0.3002.92"
+  DTS:LocaleID="3081"
+  DTS:ObjectName="Delivery - PROD- T1M"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="89"
+  DTS:VersionGUID="{4E44837B-2C35-46E8-B05E-44438D1C6B4E}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">6</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[devsql-1\whouse.DWHB.asadwh]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{AF3B82EE-593F-4941-B208-298E939882C9}"
+      DTS:ObjectName="devsql-1\whouse.DWHB.asadwh">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=az-sqlbi01;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[devsql-1\whouse.DWHF.asadwh]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{9BBF0FDF-9995-43E2-82BB-116737F7B653}"
+      DTS:ObjectName="devsql-1\whouse.DWHF.asadwh">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=az-sqlbi01;Initial Catalog=DWHF;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{210F0D96-8E07-4FB4-B0E1-009FAD51A65F}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="DestinationTable">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{BC48D526-DE2C-411C-BD20-2BA2BE4185B1}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceTable">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E03D6A7A-D67B-4F95-9247-072C037452DC}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableResultSet">
+      <DTS:VariableValue
+        DTS:DataSubType="ManagedSerializable"
+        DTS:DataType="13">
+        <SOAP-ENV:Envelope xmlns:clr="http://schemas.microsoft.com/soap/encoding/clr/1.0" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+          <SOAP-ENV:Body>
+            <xsd:anyType
+              id="ref-1"></xsd:anyType>
+          </SOAP-ENV:Body>
+        </SOAP-ENV:Envelope>
+      </DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\EST get delivery tables (dims first)"
+      DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{36487884-1908-4B8A-BDD9-19E9CDE4A73A}"
+      DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="EST get delivery tables (dims first)"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF3B82EE-593F-4941-B208-298E939882C9}"
+          SQLTask:SqlStatementSource="select    &#xA; (SELECT 'dwhb_new'+'.'+T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; from  dwhb.management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;AND t1.package_key = (SELECT package_key FROM dwhb.management.package_dim WHERE package_name = 'DELIVERY' )&#xA;and  (SELECT T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.destination_table_key) like 'hris%'&#xA; ORDER BY T1.[priority] desc"
+          SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::TableResultSet" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\EST get delivery tables (facts first)"
+      DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{9AB0ECE4-5B69-4B00-BF4E-FFC4B2FD693B}"
+      DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="EST get delivery tables (facts first)"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF3B82EE-593F-4941-B208-298E939882C9}"
+          SQLTask:SqlStatementSource="select    &#xA; (SELECT 'dwhb_new'+'.'+T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; from  dwhb.management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;AND t1.package_key = (SELECT package_key FROM dwhb.management.package_dim WHERE package_name = 'DELIVERY' )&#xA;and  (SELECT T2.[schema]+'.'+T2.table_name  &#xA;FROM dwhb.management.TABLE_DIM  AS T2 &#xA;WHERE T2.table_key=T1.destination_table_key) like 'hris%'&#xA;&#xA; ORDER BY T1.[priority]"
+          SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::TableResultSet" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Populate Facs &amp; Dimensions"
+      DTS:CreationName="STOCK:FOREACHLOOP"
+      DTS:Description="Foreach Loop Container"
+      DTS:DisableEventHandlers="True"
+      DTS:DTSID="{9A0571A7-26E7-4565-869D-7319EDF6A151}"
+      DTS:ExecutableType="STOCK:FOREACHLOOP"
+      DTS:ForceExecutionResult="0"
+      DTS:LocaleID="-1"
+      DTS:MaxErrorCount="0"
+      DTS:ObjectName="Populate Facs &amp; Dimensions">
+      <DTS:ForEachEnumerator
+        DTS:CreationName="Microsoft.SqlServer.Dts.Runtime.Enumerators.ADO.ForEachADOEnumerator, Microsoft.SqlServer.ForEachADOEnumerator, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+        DTS:DTSID="{EFBA25C1-E426-4967-9194-3C12C57E54C2}"
+        DTS:ObjectName="{EFBA25C1-E426-4967-9194-3C12C57E54C2}">
+        <DTS:ObjectData>
+          <FEEADO
+            EnumType="EnumerateRowsInFirstTable"
+            VarName="User::TableResultSet" />
+        </DTS:ObjectData>
+      </DTS:ForEachEnumerator>
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Populate Facs &amp; Dimensions\EST audit finish"
+          DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:Description="Execute SQL Task"
+          DTS:DisableEventHandlers="True"
+          DTS:DTSID="{39818C61-E113-4C7E-92CF-A37A297C9DF5}"
+          DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EST audit finish"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{AF3B82EE-593F-4941-B208-298E939882C9}"
+              SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;3,&#xA;'Insert records finish'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::DestinationTable"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Populate Facs &amp; Dimensions\EST audit start"
+          DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:Description="Execute SQL Task"
+          DTS:DisableEventHandlers="True"
+          DTS:DTSID="{F776D05B-F215-467D-8272-B942856772DA}"
+          DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EST audit start"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{AF3B82EE-593F-4941-B208-298E939882C9}"
+              SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;3,&#xA;'Insert records start'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::DestinationTable"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Populate Facs &amp; Dimensions\EST insert records"
+          DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:Description="Execute SQL Task"
+          DTS:DisableEventHandlers="True"
+          DTS:DTSID="{E0E9CACC-360B-4EBD-B12E-F2F14868D10E}"
+          DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EST insert records"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{9BBF0FDF-9995-43E2-82BB-116737F7B653}"
+              SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='INSERT INTO  ' + ? + ' SELECT * FROM  '+?&#xA;EXEC (@SQL)&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::DestinationTable"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="User::SourceTable"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Populate Facs &amp; Dimensions.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{D30A68D1-6DF2-4919-A80C-FEF626CCF744}"
+          DTS:From="Package\Populate Facs &amp; Dimensions\EST insert records"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Populate Facs &amp; Dimensions\EST audit finish" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Populate Facs &amp; Dimensions.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{9D3CD827-C6D9-4368-B83C-99D19DA3AE8B}"
+          DTS:From="Package\Populate Facs &amp; Dimensions\EST audit start"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Populate Facs &amp; Dimensions\EST insert records" />
+      </DTS:PrecedenceConstraints>
+      <DTS:ForEachVariableMappings>
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{6E47C421-C4BC-4901-A399-469DAE7E7DAE}"
+          DTS:ObjectName="{6E47C421-C4BC-4901-A399-469DAE7E7DAE}"
+          DTS:ValueIndex="0"
+          DTS:VariableName="User::SourceTable" />
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{752C33FF-E58A-4D3B-970B-18F34F292232}"
+          DTS:ObjectName="{752C33FF-E58A-4D3B-970B-18F34F292232}"
+          DTS:ValueIndex="1"
+          DTS:VariableName="User::DestinationTable" />
+      </DTS:ForEachVariableMappings>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Truncate Facts &amp; Dimensions"
+      DTS:CreationName="STOCK:FOREACHLOOP"
+      DTS:Description="Foreach Loop Container"
+      DTS:DTSID="{751F98B7-363C-4603-AF43-D67623AE4130}"
+      DTS:ExecutableType="STOCK:FOREACHLOOP"
+      DTS:ForceExecutionResult="0"
+      DTS:LocaleID="-1"
+      DTS:MaxErrorCount="0"
+      DTS:ObjectName="Truncate Facts &amp; Dimensions">
+      <DTS:ForEachEnumerator
+        DTS:CreationName="Microsoft.SqlServer.Dts.Runtime.Enumerators.ADO.ForEachADOEnumerator, Microsoft.SqlServer.ForEachADOEnumerator, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+        DTS:DTSID="{6EEB0689-178C-4F49-8741-80B63469E932}"
+        DTS:ObjectName="{6EEB0689-178C-4F49-8741-80B63469E932}">
+        <DTS:ObjectData>
+          <FEEADO
+            EnumType="EnumerateRowsInFirstTable"
+            VarName="User::TableResultSet" />
+        </DTS:ObjectData>
+      </DTS:ForEachEnumerator>
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Truncate Facts &amp; Dimensions\EST audit finish"
+          DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{72112C41-16DB-4568-9282-362C4DEE3380}"
+          DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EST audit finish"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{AF3B82EE-593F-4941-B208-298E939882C9}"
+              SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;3,&#xA;'Delete records finish'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::DestinationTable"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Truncate Facts &amp; Dimensions\EST audit start"
+          DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{E1332073-3293-43EE-A349-39DF4833BB49}"
+          DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EST audit start"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{AF3B82EE-593F-4941-B208-298E939882C9}"
+              SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT &#x9;&#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;3,&#xA;'Delete records start'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::DestinationTable"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Truncate Facts &amp; Dimensions\EST delete records from table"
+          DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{2F903026-40C0-48AD-91CA-3C7272666761}"
+          DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EST delete records from table"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{9BBF0FDF-9995-43E2-82BB-116737F7B653}"
+              SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='DELETE FROM ' + ?&#xA;EXEC (@SQL)&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::DestinationTable"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Truncate Facts &amp; Dimensions.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{923F4DE1-4058-48AD-8D31-5E325363DD9B}"
+          DTS:From="Package\Truncate Facts &amp; Dimensions\EST audit start"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Truncate Facts &amp; Dimensions\EST delete records from table" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Truncate Facts &amp; Dimensions.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{1C6A8B00-2E36-4498-80E0-6EE82326EF5E}"
+          DTS:From="Package\Truncate Facts &amp; Dimensions\EST delete records from table"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Truncate Facts &amp; Dimensions\EST audit finish" />
+      </DTS:PrecedenceConstraints>
+      <DTS:ForEachVariableMappings>
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{788121E5-68AE-4E35-AFC2-4198A368D2DF}"
+          DTS:ObjectName="{788121E5-68AE-4E35-AFC2-4198A368D2DF}"
+          DTS:ValueIndex="0"
+          DTS:VariableName="User::SourceTable" />
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{E8D64E25-03F3-4140-B0DD-5D542E625383}"
+          DTS:ObjectName="{E8D64E25-03F3-4140-B0DD-5D542E625383}"
+          DTS:ValueIndex="1"
+          DTS:VariableName="User::DestinationTable" />
+      </DTS:ForEachVariableMappings>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{53078DFD-A605-4D8C-A6C7-7F3A5E64AEF3}"
+      DTS:From="Package\EST get delivery tables (facts first)"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Truncate Facts &amp; Dimensions" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{ABCE0734-9B1C-4906-B20E-16F39157707C}"
+      DTS:From="Package\EST get delivery tables (dims first)"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Populate Facs &amp; Dimensions" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{4173E3C8-ACF7-4827-821E-F92C063ECED9}"
+      DTS:From="Package\Truncate Facts &amp; Dimensions"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\EST get delivery tables (dims first)" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="sql11">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="357,42"
+          Id="Package\EST get delivery tables (dims first)"
+          TopLeft="655,140" />
+        <NodeLayout
+          Size="407,42"
+          Id="Package\EST get delivery tables (facts first)"
+          TopLeft="153,141" />
+        <NodeLayout
+          Size="306,42"
+          Id="Package\Populate Facs &amp; Dimensions\EST audit finish"
+          TopLeft="36.6666666666667,163" />
+        <NodeLayout
+          Size="306,42"
+          Id="Package\Populate Facs &amp; Dimensions\EST audit start"
+          TopLeft="36.6666666666667,18" />
+        <NodeLayout
+          Size="306,42"
+          Id="Package\Populate Facs &amp; Dimensions\EST insert records"
+          TopLeft="36.6666666666667,87" />
+        <EdgeLayout
+          Id="Package\Populate Facs &amp; Dimensions.PrecedenceConstraints[Constraint]"
+          TopLeft="189.666666666667,129">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34"
+              Start="0,0"
+              End="0,26.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Populate Facs &amp; Dimensions.PrecedenceConstraints[Constraint 1]"
+          TopLeft="189.666666666667,60">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,27"
+              Start="0,0"
+              End="0,19.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="371,274"
+          Size="371,317"
+          Id="Package\Populate Facs &amp; Dimensions"
+          TopLeft="650,256" />
+        <NodeLayout
+          Size="306,42"
+          Id="Package\Truncate Facts &amp; Dimensions\EST audit finish"
+          TopLeft="44,176" />
+        <NodeLayout
+          Size="306,42"
+          Id="Package\Truncate Facts &amp; Dimensions\EST audit start"
+          TopLeft="44,18" />
+        <NodeLayout
+          Size="306,42"
+          Id="Package\Truncate Facts &amp; Dimensions\EST delete records from table"
+          TopLeft="44,101" />
+        <EdgeLayout
+          Id="Package\Truncate Facts &amp; Dimensions.PrecedenceConstraints[Constraint]"
+          TopLeft="197,60">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41"
+              Start="0,0"
+              End="0,33.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Truncate Facts &amp; Dimensions.PrecedenceConstraints[Constraint 1]"
+          TopLeft="197,143">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,33"
+              Start="0,0"
+              End="0,25.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,25.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="408,273"
+          Size="408,316"
+          Id="Package\Truncate Facts &amp; Dimensions"
+          TopLeft="147,255" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="356.5,183">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-72.1666666666667,72"
+              Start="0,0"
+              End="-72.1666666666667,64.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,39.03125" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,39.03125"
+                    Point2="0,43.03125"
+                    Point3="-4,43.03125" />
+                  <mssgle:LineSegment
+                    End="-68.1666666666667,43.03125" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-68.1666666666667,43.03125"
+                    Point2="-72.1666666666667,43.03125"
+                    Point3="-72.1666666666667,47.03125" />
+                  <mssgle:LineSegment
+                    End="-72.1666666666667,64.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="891.666666666667,182">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-56.1666666666666,74"
+              Start="0,0"
+              End="-56.1666666666666,66.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,25.7981037367541" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,25.7981037367541"
+                    Point2="0,29.7981037367541"
+                    Point3="-4,29.7981037367541" />
+                  <mssgle:LineSegment
+                    End="-52.1666666666666,29.7981037367541" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-52.1666666666666,29.7981037367541"
+                    Point2="-56.1666666666666,29.7981037367541"
+                    Point3="-56.1666666666666,33.7981037367541" />
+                  <mssgle:LineSegment
+                    End="-56.1666666666666,66.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="417.666666666667,255">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="357.666666666667,-73"
+              Start="0,0"
+              End="357.666666666667,-65.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,-32.4747054747055" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,-32.4747054747055"
+                    Point2="0,-36.4747054747055"
+                    Point3="4,-36.4747054747055" />
+                  <mssgle:LineSegment
+                    End="353.666666666667,-36.4747054747055" />
+                  <mssgle:CubicBezierSegment
+                    Point1="353.666666666667,-36.4747054747055"
+                    Point2="357.666666666667,-36.4747054747055"
+                    Point3="357.666666666667,-40.4747054747055" />
+                  <mssgle:LineSegment
+                    End="357.666666666667,-65.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
