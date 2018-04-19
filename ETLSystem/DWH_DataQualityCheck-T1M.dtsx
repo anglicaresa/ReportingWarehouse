@@ -1,0 +1,70 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="5/3/2017 12:56:32 PM"
+  DTS:CreationName="SSIS.Package.3"
+  DTS:CreatorComputerName="W7PC01XQ1T"
+  DTS:CreatorName="ANGLICARE-SA\jshen"
+  DTS:DTSID="{8AFBB998-BDFB-41B0-96EF-FCBB9B8DCB98}"
+  DTS:ExecutableType="SSIS.Package.3"
+  DTS:LastModifiedProductVersion="14.0.3002.92"
+  DTS:LocaleID="3081"
+  DTS:ObjectName="DWH_DataQualityCheck-T1M"
+  DTS:PackageType="5"
+  DTS:ProtectionLevel="0"
+  DTS:VersionBuild="8"
+  DTS:VersionGUID="{7D94E2FD-8553-41EA-A863-C577E033E142}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">6</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DWHB_NEW]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{A5F1579A-1CE6-4C8A-80C1-BF5B0DD2774C}"
+      DTS:ObjectName="DWHB_NEW">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=az-sqlbi01;Initial Catalog=DWHB_NEW;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Data Quality Check"
+      DTS:CreationName="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{DB3C0A11-EC59-4501-BFDD-CFFC4C499A5A}"
+      DTS:ExecutableType="Microsoft.SqlServer.Dts.Tasks.ExecuteSQLTask.ExecuteSQLTask, Microsoft.SqlServer.SQLTask, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Data Quality Check"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{A5F1579A-1CE6-4C8A-80C1-BF5B0DD2774C}"
+          SQLTask:SqlStatementSource="/*=========================================================================================================&#xA;        * Purpose: Run validation check for data warehouse data quality&#xA;        * Developer: Jerry Shen&#xA;        * Update Logs:&#xA;             2017.04.12 Jerry Shen created&#xA;         &#xA;        * Notes:   &#xA;=========================================================================================================*/&#xA;    SET NOCOUNT ON;&#xA;&#xA;   --- Get check SQLs&#xA;    DECLARE @sqltext varchar(8000);&#xA;&#x9;DECLARE @finalsql1 varchar(8000);&#xA;&#x9;DECLARE @finalsql2 varchar(8000);&#xA;&#x9;DECLARE @qckey int;&#xA;&#xA; DECLARE c_sqltext CURSOR FOR&#xA; select sql,quality_check_key&#xA; from management.quality_check_fact&#xA; where on_off_flag='on' &#xA; order by quality_check_key asc;&#xA;&#xA;&#xA;&#xA; OPEN c_sqltext&#xA; FETCH NEXT FROM c_sqltext into  @sqltext,@qckey;&#xA; &#xA; WHILE @@FETCH_STATUS =0&#xA; BEGIN&#x9;             &#xA;    &#xA;    BEGIN TRY   &#xA;&#x9;    SET @sqltext =(select REPLACE(@sqltext,'''''',''''));&#xA;&#x9;    SET @finalsql1='insert into  management.audit_fact &#xA;&#x9;    select &#x9;d1.[database],&#xA;        d1.[schema],&#xA;&#x9;&#x9;d1.table_name,&#xA;&#x9;&#x9;f1.column_name,&#xA;&#x9;&#x9;ff.col1, &#xA;&#x9;&#x9;ff.col2,&#xA;&#x9;&#x9;f1.description,&#xA;&#x9;&#x9;f1.check_type,&#xA;&#x9;    f1.error_message, &#xA;&#x9;&#x9;getdate(),&#xA;&#x9;&#x9;f1.quality_check_key&#x9;   &#xA;        from management.table_dim as  d1&#xA;        inner join  management.quality_check_fact as f1&#x9;         on d1.table_key=f1.table_key &#xA;&#x9;&#x9;join &#xA;&#x9;&#x9; (' +@sqltext+' )&#x9;as ff  on 1=1  where  f1.quality_check_key= ' ;&#xA;&#xA;&#x9;&#x9; SET @finalsql2=@finalsql1+convert(varchar,@qckey);&#xA;     &#xA;          DECLARE @sql NVARCHAR(MAX) =@finalsql2;&#x9;&#xA;&#x9;&#x9;  EXEC sp_executesql @sql;     &#x9;      &#xA;&#xA;     &#xA;    END TRY&#xA;    BEGIN CATCH&#xA;&#xA;&#xA;    END CATCH&#x9;&#x9;     &#xA;    FETCH NEXT FROM c_sqltext into @sqltext,@qckey;   &#xA;    &#xA;&#xA; END&#xA;&#xA; CLOSE c_sqltext;&#xA; DEALLOCATE c_sqltext;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="sql11">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="171,42"
+          Id="Package\Data Quality Check"
+          TopLeft="491,83" />
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
