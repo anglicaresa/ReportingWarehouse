@@ -65,6 +65,24 @@
           <Property Name="expire_date_key" Type="int" Nullable="false" />
           <Property Name="count" Type="int" />
         </EntityType>
+        <EntityType Name="all_employees_report_fact_history">
+          <Key>
+            <PropertyRef Name="all_employees_report_fact_history_key" />
+          </Key>
+          <Property Name="all_employees_report_fact_history_key" Type="int" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="position_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="employee_type" Type="varchar" MaxLength="20" />
+          <Property Name="employee_class" Type="varchar" MaxLength="20" />
+          <Property Name="manager_key" Type="int" Nullable="false" />
+          <Property Name="manager_position_key" Type="int" Nullable="false" />
+          <Property Name="commencement_date_key" Type="int" Nullable="false" />
+          <Property Name="count" Type="int" />
+          <Property Name="backup_date_key" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="date_dim">
           <Key>
             <PropertyRef Name="date_key" />
@@ -142,6 +160,20 @@
           <Property Name="position_key" Type="int" Nullable="false" />
           <Property Name="contract_expiry_date_key" Type="int" Nullable="false" />
           <Property Name="count" Type="int" />
+        </EntityType>
+        <EntityType Name="employee_contracted_hours_report_fact">
+          <Key>
+            <PropertyRef Name="employee_contracted_hours_report_fact_key" />
+          </Key>
+          <Property Name="employee_contracted_hours_report_fact_key" Type="int" Nullable="false" />
+          <Property Name="portfolio_key" Type="int" Nullable="false" />
+          <Property Name="service_stream_key" Type="int" Nullable="false" />
+          <Property Name="program_key" Type="int" Nullable="false" />
+          <Property Name="position_key" Type="int" Nullable="false" />
+          <Property Name="employee_key" Type="int" Nullable="false" />
+          <Property Name="pay_period_date_key" Type="int" />
+          <Property Name="work_pattern_hours" Type="decimal" Precision="10" Scale="4" />
+          <Property Name="payment_hours" Type="decimal" Precision="10" Scale="4" />
         </EntityType>
         <EntityType Name="employee_dim">
           <Key>
@@ -369,6 +401,7 @@
           <Property Name="pay_component_ref" Type="decimal" Precision="10" Scale="4" />
           <Property Name="pay_period_type" Type="varchar" MaxLength="10" />
           <Property Name="posted_ind" Type="varchar" MaxLength="1" />
+          <Property Name="document_type" Type="varchar" MaxLength="10" />
           <Property Name="count" Type="int" />
         </EntityType>
         <EntityType Name="employee_payment_summary_fact">
@@ -501,6 +534,7 @@
           <Property Name="total_count" Type="int" />
           <Property Name="commencement_date_key" Type="int" Nullable="false" />
           <Property Name="term_type" Type="varchar" MaxLength="30" />
+          <Property Name="date_of_birth" Type="datetime" />
         </EntityType>
         <EntityType Name="employee_timesheet_fact">
           <Key>
@@ -529,6 +563,29 @@
           <Property Name="count" Type="int" />
           <Property Name="status" Type="varchar" MaxLength="20" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DWHF.hris.employee_work_pattern_payroll' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="employee_work_pattern_payroll">
+          <Property Name="roster_code" Type="varchar" MaxLength="10" />
+          <Property Name="day_number" Type="int" />
+          <Property Name="shift_code" Type="varchar" MaxLength="10" />
+          <Property Name="clock_in_time" Type="datetime" />
+          <Property Name="clock_out_time" Type="datetime" />
+          <Property Name="roster_desc" Type="varchar" MaxLength="50" />
+          <Property Name="rotation_no_days" Type="int" />
+          <Property Name="roster_start_date" Type="datetime" />
+          <Property Name="id_number" Type="int" />
+          <Property Name="position_code" Type="varchar" MaxLength="10" />
+          <Property Name="job_pos_title" Type="varchar" MaxLength="50" />
+          <Property Name="position_type_ind" Type="varchar" MaxLength="1" />
+          <Property Name="position_effective_date" Type="datetime" />
+          <Property Name="map_date" Type="datetime" />
+          <Property Name="days_rosterstartdate_pps" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="timesheet_date" Type="datetime" />
+          <Property Name="weekday" Type="varchar" MaxLength="30" />
+          <Property Name="payperiod_start_day" Type="varchar" MaxLength="10" />
+          <Property Name="employee_name" Type="varchar" MaxLength="50" />
+        </EntityType>-->
         <EntityType Name="employee_working_hours_fact">
           <Key>
             <PropertyRef Name="employee_working_hours_key" />
@@ -637,6 +694,7 @@
           <Property Name="contract_expire_date_key" Type="int" />
           <Property Name="position_effective_date_key" Type="int" />
           <Property Name="position_end_date_key" Type="int" />
+          <Property Name="pay_rate" Type="decimal" Precision="18" Scale="6" />
         </EntityType>
         <EntityType Name="organisation_dim">
           <Key>
@@ -825,6 +883,7 @@
           <Property Name="out_time" Type="datetime" />
           <Property Name="roster_type" Type="varchar" MaxLength="9" />
           <Property Name="roster_start_date_key" Type="int" />
+          <Property Name="roster_code" Type="varchar" MaxLength="10" />
         </EntityType>
         <Association Name="fk_all_employees_report_fact_commencement_date_key">
           <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
@@ -871,6 +930,114 @@
             </Principal>
             <Dependent Role="all_employees_report_fact">
               <PropertyRef Name="expire_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_backup_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="all_employees_report_fact_history" Type="Self.all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="backup_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_commencement_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
+          <End Role="all_employees_report_fact_history" Type="Self.all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="commencement_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="all_employees_report_fact_history" Type="Self.all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_manager_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="all_employees_report_fact_history" Type="Self.all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_manager_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="all_employees_report_fact_history" Type="Self.all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="manager_position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="all_employees_report_fact_history" Type="Self.all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="all_employees_report_fact_history" Type="Self.all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="all_employees_report_fact_history" Type="Self.all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="all_employees_report_fact_history" Type="Self.all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="service_stream_key" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1290,6 +1457,78 @@
               <PropertyRef Name="service_stream_key" />
             </Principal>
             <Dependent Role="employee_contract_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_pay_period_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="pay_period_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_position_key">
+          <End Role="position_dim" Type="Self.position_dim" Multiplicity="1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
+          <End Role="employee_contracted_hours_report_fact" Type="Self.employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
               <PropertyRef Name="service_stream_key" />
             </Dependent>
           </ReferentialConstraint>
@@ -3230,10 +3469,12 @@
           <EntitySet Name="account_dim" EntityType="Self.account_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="accreditation_dim" EntityType="Self.accreditation_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="all_employees_report_fact" EntityType="Self.all_employees_report_fact" Schema="hris" store:Type="Tables" />
+          <EntitySet Name="all_employees_report_fact_history" EntityType="Self.all_employees_report_fact_history" Schema="hris" store:Type="Tables" />
           <EntitySet Name="date_dim" EntityType="Self.date_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_accreditation_fact" EntityType="Self.employee_accreditation_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_benefit_dim" EntityType="Self.employee_benefit_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_contract_fact" EntityType="Self.employee_contract_fact" Schema="hris" store:Type="Tables" />
+          <EntitySet Name="employee_contracted_hours_report_fact" EntityType="Self.employee_contracted_hours_report_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_dim" EntityType="Self.employee_dim" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_last_paid_date_fact" EntityType="Self.employee_last_paid_date_fact" Schema="hris" store:Type="Tables" />
           <EntitySet Name="employee_leave_accrued_fact" EntityType="Self.employee_leave_accrued_fact" Schema="hris" store:Type="Tables" />
@@ -3283,6 +3524,42 @@
           <AssociationSet Name="fk_all_employees_report_fact_expire_date_key" Association="Self.fk_all_employees_report_fact_expire_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="all_employees_report_fact" EntitySet="all_employees_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_backup_date_key" Association="Self.fk_all_employees_report_fact_history_backup_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_commencement_date_key" Association="Self.fk_all_employees_report_fact_history_commencement_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_employee_key" Association="Self.fk_all_employees_report_fact_history_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_manager_key" Association="Self.fk_all_employees_report_fact_history_manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_manager_position_key" Association="Self.fk_all_employees_report_fact_history_manager_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_portfolio_key" Association="Self.fk_all_employees_report_fact_history_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_position_key" Association="Self.fk_all_employees_report_fact_history_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_program_key" Association="Self.fk_all_employees_report_fact_history_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_service_stream_key" Association="Self.fk_all_employees_report_fact_history_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
           </AssociationSet>
           <AssociationSet Name="fk_all_employees_report_fact_manager_employee_key" Association="Self.fk_all_employees_report_fact_manager_employee_key">
             <End Role="employee_dim" EntitySet="employee_dim" />
@@ -3423,6 +3700,30 @@
           <AssociationSet Name="fk_employee_contract_fact_service_stream_key" Association="Self.fk_employee_contract_fact_service_stream_key">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="employee_contract_fact" EntitySet="employee_contract_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_employee_key" Association="Self.fk_employee_contracted_hours_report_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_pay_period_date_key" Association="Self.fk_employee_contracted_hours_report_fact_pay_period_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_portfolio_key" Association="Self.fk_employee_contracted_hours_report_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_position_key" Association="Self.fk_employee_contracted_hours_report_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_program_key" Association="Self.fk_employee_contracted_hours_report_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_service_stream_key" Association="Self.fk_employee_contracted_hours_report_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
           </AssociationSet>
           <AssociationSet Name="fk_employee_dimemployee_accreditation_fact" Association="Self.fk_employee_dimemployee_accreditation_fact">
             <End Role="employee_dim" EntitySet="employee_dim" />
@@ -4915,6 +5216,68 @@
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="non_primary_positions_fact" EntitySet="non_primary_positions_fact" />
           </AssociationSet>
+          <EntitySet Name="all_employees_report_fact_history" EntityType="hris_physical.all_employees_report_fact_history" />
+          <EntitySet Name="employee_contracted_hours_report_fact" EntityType="hris_physical.employee_contracted_hours_report_fact" />
+          <AssociationSet Name="fk_all_employees_report_fact_history_backup_date_key" Association="hris_physical.fk_all_employees_report_fact_history_backup_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_commencement_date_key" Association="hris_physical.fk_all_employees_report_fact_history_commencement_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_employee_key" Association="hris_physical.fk_all_employees_report_fact_history_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_manager_key" Association="hris_physical.fk_all_employees_report_fact_history_manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_manager_position_key" Association="hris_physical.fk_all_employees_report_fact_history_manager_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_portfolio_key" Association="hris_physical.fk_all_employees_report_fact_history_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_position_key" Association="hris_physical.fk_all_employees_report_fact_history_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_program_key" Association="hris_physical.fk_all_employees_report_fact_history_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_all_employees_report_fact_history_service_stream_key" Association="hris_physical.fk_all_employees_report_fact_history_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="all_employees_report_fact_history" EntitySet="all_employees_report_fact_history" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_pay_period_date_key" Association="hris_physical.fk_employee_contracted_hours_report_fact_pay_period_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_employee_key" Association="hris_physical.fk_employee_contracted_hours_report_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_portfolio_key" Association="hris_physical.fk_employee_contracted_hours_report_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_position_key" Association="hris_physical.fk_employee_contracted_hours_report_fact_position_key">
+            <End Role="position_dim" EntitySet="position_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_program_key" Association="hris_physical.fk_employee_contracted_hours_report_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_employee_contracted_hours_report_fact_service_stream_key" Association="hris_physical.fk_employee_contracted_hours_report_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="account_dim">
           <Key>
@@ -5026,6 +5389,9 @@
           <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_contract_expire_date_key" FromRole="date_dim" ToRole="non_primary_positions_fact" />
           <NavigationProperty Name="non_primary_positions_fact1" Relationship="hris_physical.fk_conform_non_primary_positions_fact_position_effective_date_key" FromRole="date_dim" ToRole="non_primary_positions_fact" />
           <NavigationProperty Name="non_primary_positions_fact2" Relationship="hris_physical.fk_conform_non_primary_positions_fact_position_end_date_key" FromRole="date_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="all_employees_report_fact_history" Relationship="hris_physical.fk_all_employees_report_fact_history_backup_date_key" FromRole="date_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="all_employees_report_fact_history1" Relationship="hris_physical.fk_all_employees_report_fact_history_commencement_date_key" FromRole="date_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_pay_period_date_key" FromRole="date_dim" ToRole="employee_contracted_hours_report_fact" />
           </EntityType>
         <EntityType Name="employee_accreditation_fact">
           <Key>
@@ -5217,6 +5583,9 @@
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_employee_key" FromRole="employee_dim" ToRole="employee_payment_summary_fact" />
           <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_employee_key" FromRole="employee_dim" ToRole="non_primary_positions_fact" />
           <NavigationProperty Name="non_primary_positions_fact1" Relationship="hris_physical.fk_conform_non_primary_positions_fact_manager_key" FromRole="employee_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="all_employees_report_fact_history" Relationship="hris_physical.fk_all_employees_report_fact_history_employee_key" FromRole="employee_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="all_employees_report_fact_history1" Relationship="hris_physical.fk_all_employees_report_fact_history_manager_key" FromRole="employee_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_employee_key" FromRole="employee_dim" ToRole="employee_contracted_hours_report_fact" />
         </EntityType>
         <EntityType Name="employee_leave_accrued_fact">
           <Key>
@@ -5398,6 +5767,7 @@
           <NavigationProperty Name="position_dim" Relationship="hris_physical.fk_employee_payment_fact_position_key" FromRole="employee_payment_fact" ToRole="position_dim" />
           <NavigationProperty Name="program_dim" Relationship="hris_physical.fk_employee_payment_fact_program_key" FromRole="employee_payment_fact" ToRole="program_dim" />
           <NavigationProperty Name="service_stream_dim" Relationship="hris_physical.fk_employee_payment_fact_service_stream_key" FromRole="employee_payment_fact" ToRole="service_stream_dim" />
+          <Property Name="document_type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="employee_position_fact">
           <Key>
@@ -5658,6 +6028,8 @@
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_portfolio_key" FromRole="portfolio_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_portfolio_key" FromRole="portfolio_dim" ToRole="employee_payment_summary_fact" />
           <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_portfolio_key" FromRole="portfolio_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="all_employees_report_fact_history" Relationship="hris_physical.fk_all_employees_report_fact_history_portfolio_key" FromRole="portfolio_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_portfolio_key" FromRole="portfolio_dim" ToRole="employee_contracted_hours_report_fact" />
         </EntityType>
         <EntityType Name="position_dim">
           <Key>
@@ -5713,6 +6085,9 @@
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_position_key" FromRole="position_dim" ToRole="employee_payment_summary_fact" />
           <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_manager_position_key" FromRole="position_dim" ToRole="non_primary_positions_fact" />
           <NavigationProperty Name="non_primary_positions_fact1" Relationship="hris_physical.fk_conform_non_primary_positions_fact_position_key" FromRole="position_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="all_employees_report_fact_history" Relationship="hris_physical.fk_all_employees_report_fact_history_manager_position_key" FromRole="position_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="all_employees_report_fact_history1" Relationship="hris_physical.fk_all_employees_report_fact_history_position_key" FromRole="position_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_position_key" FromRole="position_dim" ToRole="employee_contracted_hours_report_fact" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -5750,6 +6125,8 @@
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_program_key" FromRole="program_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_program_key" FromRole="program_dim" ToRole="employee_payment_summary_fact" />
           <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_program_key" FromRole="program_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="all_employees_report_fact_history" Relationship="hris_physical.fk_all_employees_report_fact_history_program_key" FromRole="program_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_program_key" FromRole="program_dim" ToRole="employee_contracted_hours_report_fact" />
         </EntityType>
         <EntityType Name="salary_code_dim">
           <Key>
@@ -5805,6 +6182,8 @@
           <NavigationProperty Name="position_establishment_fact" Relationship="hris_physical.fk_position_establishment_fact_service_stream_key" FromRole="service_stream_dim" ToRole="position_establishment_fact" />
           <NavigationProperty Name="employee_payment_summary_fact" Relationship="hris_physical.fk_employee_payment_summary_fact_service_stream_key" FromRole="service_stream_dim" ToRole="employee_payment_summary_fact" />
           <NavigationProperty Name="non_primary_positions_fact" Relationship="hris_physical.fk_conform_non_primary_positions_fact_service_stream_key" FromRole="service_stream_dim" ToRole="non_primary_positions_fact" />
+          <NavigationProperty Name="all_employees_report_fact_history" Relationship="hris_physical.fk_all_employees_report_fact_history_service_stream_key" FromRole="service_stream_dim" ToRole="all_employees_report_fact_history" />
+          <NavigationProperty Name="employee_contracted_hours_report_fact" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_service_stream_key" FromRole="service_stream_dim" ToRole="employee_contracted_hours_report_fact" />
         </EntityType>
         <EntityType Name="work_pattern_fact">
           <Key>
@@ -5829,6 +6208,7 @@
           <NavigationProperty Name="position_dim" Relationship="hris_physical.fk_work_pattern_fact_position_key" FromRole="work_pattern_fact" ToRole="position_dim" />
           <NavigationProperty Name="program_dim" Relationship="hris_physical.fk_work_pattern_fact_program_key" FromRole="work_pattern_fact" ToRole="program_dim" />
           <NavigationProperty Name="service_stream_dim" Relationship="hris_physical.fk_work_pattern_fact_service_stream_key" FromRole="work_pattern_fact" ToRole="service_stream_dim" />
+          <Property Name="roster_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="fk_employee_payment_fact_account_key">
           <End Type="hris_physical.account_dim" Role="account_dim" Multiplicity="1" />
@@ -7744,6 +8124,7 @@
           <NavigationProperty Name="position_dim" Relationship="hris_physical.fk_position_dimemployee_termination_fact" FromRole="employee_termination_fact" ToRole="position_dim" />
           <NavigationProperty Name="program_dim" Relationship="hris_physical.fk_program_dimemployee_termination_fact" FromRole="employee_termination_fact" ToRole="program_dim" />
           <NavigationProperty Name="service_stream_dim" Relationship="hris_physical.fk_service_stream_dimemployee_termination_fact" FromRole="employee_termination_fact" ToRole="service_stream_dim" />
+          <Property Name="date_of_birth" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="fk_date_dimemployee_termination_fact">
           <End Type="hris_physical.date_dim" Role="date_dim" Multiplicity="1" />
@@ -8416,6 +8797,7 @@
           <NavigationProperty Name="position_dim1" Relationship="hris_physical.fk_conform_non_primary_positions_fact_position_key" FromRole="non_primary_positions_fact" ToRole="position_dim" />
           <NavigationProperty Name="program_dim" Relationship="hris_physical.fk_conform_non_primary_positions_fact_program_key" FromRole="non_primary_positions_fact" ToRole="program_dim" />
           <NavigationProperty Name="service_stream_dim" Relationship="hris_physical.fk_conform_non_primary_positions_fact_service_stream_key" FromRole="non_primary_positions_fact" ToRole="service_stream_dim" />
+          <Property Name="pay_rate" Type="Decimal" Precision="18" Scale="6" />
         </EntityType>
         <Association Name="fk_conform_non_primary_positions_fact_contract_expire_date_key">
           <End Type="hris_physical.date_dim" Role="date_dim" Multiplicity="0..1" />
@@ -8533,6 +8915,233 @@
               <PropertyRef Name="service_stream_key" />
             </Principal>
             <Dependent Role="non_primary_positions_fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="all_employees_report_fact_history">
+          <Key>
+            <PropertyRef Name="all_employees_report_fact_history_key" />
+          </Key>
+          <Property Name="all_employees_report_fact_history_key" Type="Int32" Nullable="false" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="position_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="employee_class" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="manager_key" Type="Int32" Nullable="false" />
+          <Property Name="manager_position_key" Type="Int32" Nullable="false" />
+          <Property Name="commencement_date_key" Type="Int32" Nullable="false" />
+          <Property Name="count" Type="Int32" />
+          <Property Name="backup_date_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="date_dim" Relationship="hris_physical.fk_all_employees_report_fact_history_backup_date_key" FromRole="all_employees_report_fact_history" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim1" Relationship="hris_physical.fk_all_employees_report_fact_history_commencement_date_key" FromRole="all_employees_report_fact_history" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="hris_physical.fk_all_employees_report_fact_history_employee_key" FromRole="all_employees_report_fact_history" ToRole="employee_dim" />
+          <NavigationProperty Name="employee_dim1" Relationship="hris_physical.fk_all_employees_report_fact_history_manager_key" FromRole="all_employees_report_fact_history" ToRole="employee_dim" />
+          <NavigationProperty Name="position_dim" Relationship="hris_physical.fk_all_employees_report_fact_history_manager_position_key" FromRole="all_employees_report_fact_history" ToRole="position_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="hris_physical.fk_all_employees_report_fact_history_portfolio_key" FromRole="all_employees_report_fact_history" ToRole="portfolio_dim" />
+          <NavigationProperty Name="position_dim1" Relationship="hris_physical.fk_all_employees_report_fact_history_position_key" FromRole="all_employees_report_fact_history" ToRole="position_dim" />
+          <NavigationProperty Name="program_dim" Relationship="hris_physical.fk_all_employees_report_fact_history_program_key" FromRole="all_employees_report_fact_history" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="hris_physical.fk_all_employees_report_fact_history_service_stream_key" FromRole="all_employees_report_fact_history" ToRole="service_stream_dim" />
+        </EntityType>
+        <EntityType Name="employee_contracted_hours_report_fact">
+          <Key>
+            <PropertyRef Name="employee_contracted_hours_report_fact_key" />
+          </Key>
+          <Property Name="employee_contracted_hours_report_fact_key" Type="Int32" Nullable="false" />
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
+          <Property Name="program_key" Type="Int32" Nullable="false" />
+          <Property Name="position_key" Type="Int32" Nullable="false" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="pay_period_date_key" Type="Int32" />
+          <Property Name="work_pattern_hours" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="payment_hours" Type="Decimal" Precision="10" Scale="4" />
+          <NavigationProperty Name="date_dim" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_pay_period_date_key" FromRole="employee_contracted_hours_report_fact" ToRole="date_dim" />
+          <NavigationProperty Name="employee_dim" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_employee_key" FromRole="employee_contracted_hours_report_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_portfolio_key" FromRole="employee_contracted_hours_report_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="position_dim" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_position_key" FromRole="employee_contracted_hours_report_fact" ToRole="position_dim" />
+          <NavigationProperty Name="program_dim" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_program_key" FromRole="employee_contracted_hours_report_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="hris_physical.fk_employee_contracted_hours_report_fact_service_stream_key" FromRole="employee_contracted_hours_report_fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <Association Name="fk_all_employees_report_fact_history_backup_date_key">
+          <End Type="hris_physical.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="hris_physical.all_employees_report_fact_history" Role="all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="backup_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_commencement_date_key">
+          <End Type="hris_physical.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="hris_physical.all_employees_report_fact_history" Role="all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="commencement_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_employee_key">
+          <End Type="hris_physical.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="hris_physical.all_employees_report_fact_history" Role="all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_manager_key">
+          <End Type="hris_physical.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="hris_physical.all_employees_report_fact_history" Role="all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_manager_position_key">
+          <End Type="hris_physical.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="hris_physical.all_employees_report_fact_history" Role="all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="manager_position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_portfolio_key">
+          <End Type="hris_physical.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="hris_physical.all_employees_report_fact_history" Role="all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_position_key">
+          <End Type="hris_physical.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="hris_physical.all_employees_report_fact_history" Role="all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_program_key">
+          <End Type="hris_physical.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="hris_physical.all_employees_report_fact_history" Role="all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_all_employees_report_fact_history_service_stream_key">
+          <End Type="hris_physical.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="hris_physical.all_employees_report_fact_history" Role="all_employees_report_fact_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="all_employees_report_fact_history">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_pay_period_date_key">
+          <End Type="hris_physical.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="hris_physical.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="pay_period_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_employee_key">
+          <End Type="hris_physical.employee_dim" Role="employee_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_portfolio_key">
+          <End Type="hris_physical.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_position_key">
+          <End Type="hris_physical.position_dim" Role="position_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="position_dim">
+              <PropertyRef Name="position_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="position_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_program_key">
+          <End Type="hris_physical.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_employee_contracted_hours_report_fact_service_stream_key">
+          <End Type="hris_physical.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="hris_physical.employee_contracted_hours_report_fact" Role="employee_contracted_hours_report_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="employee_contracted_hours_report_fact">
               <PropertyRef Name="service_stream_key" />
             </Dependent>
           </ReferentialConstraint>
@@ -8868,6 +9477,7 @@
           <EntitySetMapping Name="employee_payment_fact">
             <EntityTypeMapping TypeName="hris_physical.employee_payment_fact">
               <MappingFragment StoreEntitySet="employee_payment_fact">
+                <ScalarProperty Name="document_type" ColumnName="document_type" />
                 <ScalarProperty Name="count" ColumnName="count" />
                 <ScalarProperty Name="posted_ind" ColumnName="posted_ind" />
                 <ScalarProperty Name="pay_period_type" ColumnName="pay_period_type" />
@@ -9152,6 +9762,7 @@
           <EntitySetMapping Name="work_pattern_fact">
             <EntityTypeMapping TypeName="hris_physical.work_pattern_fact">
               <MappingFragment StoreEntitySet="work_pattern_fact">
+                <ScalarProperty Name="roster_code" ColumnName="roster_code" />
                 <ScalarProperty Name="roster_start_date_key" ColumnName="roster_start_date_key" />
                 <ScalarProperty Name="roster_type" ColumnName="roster_type" />
                 <ScalarProperty Name="out_time" ColumnName="out_time" />
@@ -9269,6 +9880,7 @@
           <EntitySetMapping Name="employee_termination_fact">
             <EntityTypeMapping TypeName="hris_physical.employee_termination_fact">
               <MappingFragment StoreEntitySet="employee_termination_fact">
+                <ScalarProperty Name="date_of_birth" ColumnName="date_of_birth" />
                 <ScalarProperty Name="term_type" ColumnName="term_type" />
                 <ScalarProperty Name="commencement_date_key" ColumnName="commencement_date_key" />
                 <ScalarProperty Name="total_count" ColumnName="total_count" />
@@ -9391,6 +10003,7 @@
           <EntitySetMapping Name="non_primary_positions_fact">
             <EntityTypeMapping TypeName="hris_physical.non_primary_positions_fact">
               <MappingFragment StoreEntitySet="non_primary_positions_fact">
+                <ScalarProperty Name="pay_rate" ColumnName="pay_rate" />
                 <ScalarProperty Name="position_end_date_key" ColumnName="position_end_date_key" />
                 <ScalarProperty Name="position_effective_date_key" ColumnName="position_effective_date_key" />
                 <ScalarProperty Name="contract_expire_date_key" ColumnName="contract_expire_date_key" />
@@ -9404,6 +10017,40 @@
                 <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
                 <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
                 <ScalarProperty Name="non_primary_position_key" ColumnName="non_primary_position_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="all_employees_report_fact_history">
+            <EntityTypeMapping TypeName="hris_physical.all_employees_report_fact_history">
+              <MappingFragment StoreEntitySet="all_employees_report_fact_history">
+                <ScalarProperty Name="backup_date_key" ColumnName="backup_date_key" />
+                <ScalarProperty Name="count" ColumnName="count" />
+                <ScalarProperty Name="commencement_date_key" ColumnName="commencement_date_key" />
+                <ScalarProperty Name="manager_position_key" ColumnName="manager_position_key" />
+                <ScalarProperty Name="manager_key" ColumnName="manager_key" />
+                <ScalarProperty Name="employee_class" ColumnName="employee_class" />
+                <ScalarProperty Name="employee_type" ColumnName="employee_type" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="position_key" ColumnName="position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="all_employees_report_fact_history_key" ColumnName="all_employees_report_fact_history_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employee_contracted_hours_report_fact">
+            <EntityTypeMapping TypeName="hris_physical.employee_contracted_hours_report_fact">
+              <MappingFragment StoreEntitySet="employee_contracted_hours_report_fact">
+                <ScalarProperty Name="payment_hours" ColumnName="payment_hours" />
+                <ScalarProperty Name="work_pattern_hours" ColumnName="work_pattern_hours" />
+                <ScalarProperty Name="pay_period_date_key" ColumnName="pay_period_date_key" />
+                <ScalarProperty Name="employee_key" ColumnName="employee_key" />
+                <ScalarProperty Name="position_key" ColumnName="position_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="employee_contracted_hours_report_fact_key" ColumnName="employee_contracted_hours_report_fact_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
