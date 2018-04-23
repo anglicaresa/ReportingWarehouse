@@ -255,18 +255,20 @@ warning 6002: The table/view 'DWHB.conform.e3learning_fact' does not have a prim
           <Property Name="work_pattern_hours" Type="decimal" Precision="10" Scale="4" />
           <Property Name="payment_hours" Type="decimal" Precision="10" Scale="4" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DWHB.conform.employee_costing_fact' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
         <EntityType Name="employee_costing_fact">
-          <Property Name="id_number" Type="int" />
+          <Key>
+            <PropertyRef Name="id_number" />
+            <PropertyRef Name="position_code" />
+          </Key>
+          <Property Name="id_number" Type="int" Nullable="false" />
           <Property Name="full_name" Type="varchar" MaxLength="101" />
-          <Property Name="position_code" Type="varchar" MaxLength="50" />
+          <Property Name="position_code" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="position_name" Type="varchar" MaxLength="50" />
           <Property Name="position_type" Type="varchar" MaxLength="3" />
           <Property Name="costing" Type="varchar" MaxLength="6" />
           <Property Name="natural" Type="varchar" MaxLength="10" />
           <Property Name="costing_name" Type="varchar" MaxLength="50" />
-        </EntityType>-->
+        </EntityType>
         <EntityType Name="employee_dim">
           <Key>
             <PropertyRef Name="employee_key" />
@@ -730,11 +732,13 @@ warning 6013: The table/view 'DWHB.conform.employee_costing_fact' does not have 
           <Property Name="count" Type="int" />
           <Property Name="status" Type="varchar" MaxLength="20" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
         <EntityType Name="employee_work_pattern_payroll">
-          <Property Name="roster_code" Type="varchar" MaxLength="10" />
-          <Property Name="day_number" Type="int" />
+          <Key>
+            <PropertyRef Name="roster_code" />
+            <PropertyRef Name="day_number" />
+          </Key>
+          <Property Name="roster_code" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="day_number" Type="int" Nullable="false" />
           <Property Name="shift_code" Type="varchar" MaxLength="10" />
           <Property Name="clock_in_time" Type="datetime" />
           <Property Name="clock_out_time" Type="datetime" />
@@ -752,7 +756,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <Property Name="weekday" Type="varchar" MaxLength="30" />
           <Property Name="payperiod_start_day" Type="varchar" MaxLength="10" />
           <Property Name="employee_name" Type="varchar" MaxLength="50" />
-        </EntityType>-->
+        </EntityType>
         <EntityType Name="employee_working_hours_fact">
           <Key>
             <PropertyRef Name="employee_working_hours_key" />
@@ -3686,6 +3690,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <EntitySet Name="employee_benefit_dim" EntityType="Self.employee_benefit_dim" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_contract_fact" EntityType="Self.employee_contract_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_contracted_hours_report_fact" EntityType="Self.employee_contracted_hours_report_fact" Schema="conform" store:Type="Tables" />
+          <EntitySet Name="employee_costing_fact" EntityType="Self.employee_costing_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_dim" EntityType="Self.employee_dim" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_last_paid_date_fact" EntityType="Self.employee_last_paid_date_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_leave_accrued_fact" EntityType="Self.employee_leave_accrued_fact" Schema="conform" store:Type="Tables" />
@@ -3705,6 +3710,7 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
           <EntitySet Name="employee_temp" EntityType="Self.employee_temp" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_termination_fact" EntityType="Self.employee_termination_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_timesheet_fact" EntityType="Self.employee_timesheet_fact" Schema="conform" store:Type="Tables" />
+          <EntitySet Name="employee_work_pattern_payroll" EntityType="Self.employee_work_pattern_payroll" Schema="conform" store:Type="Tables" />
           <EntitySet Name="employee_working_hours_fact" EntityType="Self.employee_working_hours_fact" Schema="conform" store:Type="Tables" />
           <EntitySet Name="item_dim" EntityType="Self.item_dim" Schema="conform" store:Type="Tables" />
           <EntitySet Name="labour_turnover_fact" EntityType="Self.labour_turnover_fact" Schema="conform" store:Type="Tables" />
@@ -5851,6 +5857,8 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="employee_contracted_hours_report_fact" EntitySet="employee_contracted_hours_report_fact" />
           </AssociationSet>
+          <EntitySet Name="employee_costing_fact" EntityType="DWHB_conform_impl.employee_costing_fact" />
+          <EntitySet Name="employee_work_pattern_payroll" EntityType="DWHB_conform_impl.employee_work_pattern_payroll" />
           </EntityContainer>
         <EntityType Name="organisation_temp">
           <Key>
@@ -9621,6 +9629,45 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="employee_costing_fact">
+          <Key>
+            <PropertyRef Name="id_number" />
+            <PropertyRef Name="position_code" />
+          </Key>
+          <Property Name="id_number" Type="Int32" Nullable="false" />
+          <Property Name="full_name" Type="String" MaxLength="101" FixedLength="false" Unicode="false" />
+          <Property Name="position_code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="position_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="position_type" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="costing" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="natural" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="costing_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="employee_work_pattern_payroll">
+          <Key>
+            <PropertyRef Name="roster_code" />
+            <PropertyRef Name="day_number" />
+          </Key>
+          <Property Name="roster_code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="day_number" Type="Int32" Nullable="false" />
+          <Property Name="shift_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="clock_in_time" Type="DateTime" Precision="3" />
+          <Property Name="clock_out_time" Type="DateTime" Precision="3" />
+          <Property Name="roster_desc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="rotation_no_days" Type="Int32" />
+          <Property Name="roster_start_date" Type="DateTime" Precision="3" />
+          <Property Name="id_number" Type="Int32" />
+          <Property Name="position_code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="job_pos_title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="position_type_ind" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="position_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="map_date" Type="DateTime" Precision="3" />
+          <Property Name="days_rosterstartdate_pps" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="timesheet_date" Type="DateTime" Precision="3" />
+          <Property Name="weekday" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="payperiod_start_day" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="employee_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -10706,6 +10753,45 @@ warning 6013: The table/view 'DWHB.conform.employee_work_pattern_payroll' does n
                 <ScalarProperty Name="Family_Name" ColumnName="Family Name" />
                 <ScalarProperty Name="Preferred_Name" ColumnName="Preferred Name" />
                 <ScalarProperty Name="Id_Number" ColumnName="Id Number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employee_costing_fact">
+            <EntityTypeMapping TypeName="DWHB_conform_impl.employee_costing_fact">
+              <MappingFragment StoreEntitySet="employee_costing_fact">
+                <ScalarProperty Name="costing_name" ColumnName="costing_name" />
+                <ScalarProperty Name="natural" ColumnName="natural" />
+                <ScalarProperty Name="costing" ColumnName="costing" />
+                <ScalarProperty Name="position_type" ColumnName="position_type" />
+                <ScalarProperty Name="position_name" ColumnName="position_name" />
+                <ScalarProperty Name="position_code" ColumnName="position_code" />
+                <ScalarProperty Name="full_name" ColumnName="full_name" />
+                <ScalarProperty Name="id_number" ColumnName="id_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="employee_work_pattern_payroll">
+            <EntityTypeMapping TypeName="DWHB_conform_impl.employee_work_pattern_payroll">
+              <MappingFragment StoreEntitySet="employee_work_pattern_payroll">
+                <ScalarProperty Name="employee_name" ColumnName="employee_name" />
+                <ScalarProperty Name="payperiod_start_day" ColumnName="payperiod_start_day" />
+                <ScalarProperty Name="weekday" ColumnName="weekday" />
+                <ScalarProperty Name="timesheet_date" ColumnName="timesheet_date" />
+                <ScalarProperty Name="days_rosterstartdate_pps" ColumnName="days_rosterstartdate_pps" />
+                <ScalarProperty Name="map_date" ColumnName="map_date" />
+                <ScalarProperty Name="position_effective_date" ColumnName="position_effective_date" />
+                <ScalarProperty Name="position_type_ind" ColumnName="position_type_ind" />
+                <ScalarProperty Name="job_pos_title" ColumnName="job_pos_title" />
+                <ScalarProperty Name="position_code" ColumnName="position_code" />
+                <ScalarProperty Name="id_number" ColumnName="id_number" />
+                <ScalarProperty Name="roster_start_date" ColumnName="roster_start_date" />
+                <ScalarProperty Name="rotation_no_days" ColumnName="rotation_no_days" />
+                <ScalarProperty Name="roster_desc" ColumnName="roster_desc" />
+                <ScalarProperty Name="clock_out_time" ColumnName="clock_out_time" />
+                <ScalarProperty Name="clock_in_time" ColumnName="clock_in_time" />
+                <ScalarProperty Name="shift_code" ColumnName="shift_code" />
+                <ScalarProperty Name="day_number" ColumnName="day_number" />
+                <ScalarProperty Name="roster_code" ColumnName="roster_code" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
