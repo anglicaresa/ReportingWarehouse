@@ -191,6 +191,8 @@
           <Property Name="detail" Type="varchar" MaxLength="255" />
           <Property Name="cust_service" Type="varchar" MaxLength="100" />
           <Property Name="customer_site" Type="varchar" MaxLength="200" />
+          <Property Name="service_service" Type="varchar" MaxLength="100" />
+          <Property Name="ChCCUNotif" Type="varchar" MaxLength="3" />
         </EntityType>
         <EntityType Name="incident_history_fact">
           <Key>
@@ -315,6 +317,22 @@
           <Property Name="row_effective_date" Type="datetime" />
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="SkinTear_Fact">
+          <Key>
+            <PropertyRef Name="ST_key" />
+          </Key>
+          <Property Name="ST_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Incident_ID" Type="int" />
+          <Property Name="Location_on_body" Type="nvarchar(max)" />
+          <Property Name="Other_location" Type="nvarchar(max)" />
+          <Property Name="Skin_Tear_Category" Type="nvarchar(max)" />
+          <Property Name="Care_setting_where_skintear_developed" Type="nvarchar(max)" />
+          <Property Name="Other_care_setting" Type="nvarchar(max)" />
+          <Property Name="Other_Site" Type="nvarchar(max)" />
+          <Property Name="How_skin_tear_developed" Type="nvarchar(max)" />
         </EntityType>
         <Association Name="fk_incident_action_fact_action_dim">
           <End Role="action_dim" Type="Self.action_dim" Multiplicity="1" />
@@ -535,6 +553,19 @@
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="program_mapping" EntityType="Self.program_mapping" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_riskman" store:Type="Tables" />
+          <EntitySet Name="SkinTear_Fact" EntityType="Self.SkinTear_Fact" store:Type="Tables" store:Schema="conform_riskman">
+            <DefiningQuery>SELECT 
+    [SkinTear_Fact].[ST_key] AS [ST_key], 
+    [SkinTear_Fact].[Incident_ID] AS [Incident_ID], 
+    [SkinTear_Fact].[Location_on_body] AS [Location_on_body], 
+    [SkinTear_Fact].[Other_location] AS [Other_location], 
+    [SkinTear_Fact].[Skin_Tear_Category] AS [Skin_Tear_Category], 
+    [SkinTear_Fact].[Care_setting_where_skintear_developed] AS [Care_setting_where_skintear_developed], 
+    [SkinTear_Fact].[Other_care_setting] AS [Other_care_setting], 
+    [SkinTear_Fact].[Other_Site] AS [Other_Site], 
+    [SkinTear_Fact].[How_skin_tear_developed] AS [How_skin_tear_developed]
+    FROM [conform_riskman].[SkinTear_Fact] AS [SkinTear_Fact]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="fk_incident_action_fact_action_dim" Association="Self.fk_incident_action_fact_action_dim">
             <End Role="action_dim" EntitySet="action_dim" />
             <End Role="incident_action_fact" EntitySet="incident_action_fact" />
@@ -819,6 +850,9 @@
           <NavigationProperty Name="service_stream_dim" Relationship="Self.fk_incident_fact_service_stream_key" FromRole="incident_fact" ToRole="service_stream_dim" />
           <NavigationProperty Name="incident_type_fact" Relationship="Self.fk_incident_type_fact_incident_fact" FromRole="incident_fact" ToRole="incident_type_fact" />
           <Property Name="site" Type="Time" Nullable="false" />
+          <Property Name="service_service" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ChCCUNotif" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SkinTear_Fact" Relationship="DWHBModel2.SkinTear_Factincident_fact" FromRole="incident_fact" ToRole="SkinTear_Fact" />
         </EntityType>
         <EntityType Name="incident_history_fact">
           <Key>
@@ -1233,6 +1267,11 @@
             <End Role="incident_type_fact" EntitySet="incident_type_fact" />
           </AssociationSet>
           <EntitySet Name="prgram_map_CustomerSite" EntityType="DWHBModel2.prgram_map_CustomerSite" />
+          <EntitySet Name="SkinTear_Fact" EntityType="DWHBModel2.SkinTear_Fact" />
+          <AssociationSet Name="SkinTear_Factincident_fact" Association="DWHBModel2.SkinTear_Factincident_fact">
+            <End Role="SkinTear_Fact" EntitySet="SkinTear_Fact" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="prgram_map_CustomerSite">
           <Key>
@@ -1242,6 +1281,33 @@
           <Property Name="Record_Number" Type="Double" />
           <Property Name="T1_Program" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="SkinTear_Fact">
+          <Key>
+            <PropertyRef Name="ST_key" />
+          </Key>
+          <Property Name="ST_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Incident_ID" Type="Int32" />
+          <Property Name="Location_on_body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Skin_Tear_Category" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Care_setting_where_skintear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_care_setting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="How_skin_tear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="incident_fact" Relationship="DWHBModel2.SkinTear_Factincident_fact" FromRole="SkinTear_Fact" ToRole="incident_fact" />
+        </EntityType>
+        <Association Name="SkinTear_Factincident_fact">
+          <End Type="DWHBModel2.SkinTear_Fact" Role="SkinTear_Fact" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="SkinTear_Fact">
+              <PropertyRef Name="ST_key" />
+            </Principal>
+            <Dependent Role="incident_fact">
+              <PropertyRef Name="display_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1388,6 +1454,8 @@
           <EntitySetMapping Name="incident_fact">
             <EntityTypeMapping TypeName="DWHBModel2.incident_fact">
               <MappingFragment StoreEntitySet="incident_fact">
+                <ScalarProperty Name="ChCCUNotif" ColumnName="ChCCUNotif" />
+                <ScalarProperty Name="service_service" ColumnName="service_service" />
                 <ScalarProperty Name="incident_key" ColumnName="incident_key" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="base_id" ColumnName="base_id" />
@@ -1570,6 +1638,21 @@
                 <ScalarProperty Name="T1_Program" ColumnName="T1-Program" />
                 <ScalarProperty Name="Record_Number" ColumnName="Record Number" />
                 <ScalarProperty Name="CustomerSite" ColumnName="CustomerSite" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SkinTear_Fact">
+            <EntityTypeMapping TypeName="DWHBModel2.SkinTear_Fact">
+              <MappingFragment StoreEntitySet="SkinTear_Fact">
+                <ScalarProperty Name="How_skin_tear_developed" ColumnName="How_skin_tear_developed" />
+                <ScalarProperty Name="Other_Site" ColumnName="Other_Site" />
+                <ScalarProperty Name="Other_care_setting" ColumnName="Other_care_setting" />
+                <ScalarProperty Name="Care_setting_where_skintear_developed" ColumnName="Care_setting_where_skintear_developed" />
+                <ScalarProperty Name="Skin_Tear_Category" ColumnName="Skin_Tear_Category" />
+                <ScalarProperty Name="Other_location" ColumnName="Other_location" />
+                <ScalarProperty Name="Location_on_body" ColumnName="Location_on_body" />
+                <ScalarProperty Name="Incident_ID" ColumnName="Incident_ID" />
+                <ScalarProperty Name="ST_key" ColumnName="ST_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
