@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_RiskMan_Fact - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="645"
-  DTS:VersionGUID="{5FC21D14-F481-4D6B-BC87-10D9CDEE4662}">
+  DTS:VersionBuild="646"
+  DTS:VersionGUID="{4BE827F1-039A-4804-93BC-3DD249C1B7E3}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -92,7 +92,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">4/24/2018 10:33:58 AM</DTS:VariableValue>
+        DTS:DataType="7">4/24/2018 12:06:49 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -139,7 +139,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">4/24/2018 10:33:58 AM</DTS:VariableValue>
+        DTS:DataType="7">4/24/2018 12:06:49 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -150,7 +150,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">4/24/2018 10:33:58 AM</DTS:VariableValue>
+        DTS:DataType="7">4/24/2018 12:06:49 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -1075,6 +1075,132 @@
           </DTS:EventHandlers>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{022bdb37-be96-4b21-97c1-3513306fab3c}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SD1 - pressure_injury_fact">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\Delete and Populate new data"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{009669b9-fd43-4a44-b850-0d49b5344379}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Delete and Populate new data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{5A883BE2-5337-4500-9122-FDA41FA62F37}"
+                  SQLTask:SqlStatementSource="&#xA; truncate table conform_riskman.pressure_injury_fact;&#xA;&#xA;go&#xA;&#xA;insert into [conform_riskman].[pressure_injury_fact]&#xA;([incident_id]&#xA;      ,[location_on_body]&#xA;      ,[other_location]&#xA;      ,[stage_of_pressure_injury]&#xA;      ,[care_setting]&#xA;      ,[other_care_setting]&#xA;      ,[other_site]&#xA;      ,[how_developed])&#xA;  select &#xA;r.Displayid as 'Incident ID',&#xA;f.BodyLocation as 'Location on body',&#xA;f.OtherDetail as 'Other location', &#xA;f.UlcerStage as 'Stage of pressure injury', &#xA;f.CareSetting as 'Care setting where injury developed',&#xA;f.CareSettingOther as 'Other care setting', &#xA;f.CareSettingOtherSite as 'Other Site',&#xA;f.HowDeveloped as 'How pressure injury developed'&#xA;&#xA;from extract_riskman.vwReg_Incidents  r &#xA;inner join extract_riskman.[vwSF_PressureUlcer] f on r.PrevRecID2=f.Keydata" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{a17e0d71-f86d-4d35-b604-d1d0045d0c71}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{5A883BE2-5337-4500-9122-FDA41FA62F37}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_riskman.pressure_injury_fact'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{c0e28b7f-151c-49dd-a52e-1088d9d434ee}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{5A883BE2-5337-4500-9122-FDA41FA62F37}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_riskman.pressure_injury_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{F28FDF2F-4AB7-425C-A5E5-F24F7C4C03A0}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\Delete and Populate new data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{976199e3-bfcf-476a-9226-f06c511f4c43}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\Delete and Populate new data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{cde80283-83f9-4ab6-a52e-7d33860a7b12}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{027d96c2-56c5-41bd-8a2e-2bd4616cfdaf}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{dec61fe8-d832-4bf6-8b8d-b4c2db882f75}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{5A883BE2-5337-4500-9122-FDA41FA62F37}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT"
           DTS:CreationName="STOCK:SEQUENCE"
           DTS:Description="Sequence Container"
@@ -1454,6 +1580,14 @@
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 6"
           DTS:To="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- Keep one record for one incident" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 7]"
+          DTS:CreationName=""
+          DTS:DTSID="{A7C5AF84-9444-43B2-B65F-5BEE20279D76}"
+          DTS:From="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 7"
+          DTS:To="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
   </DTS:Executables>
@@ -2017,6 +2151,95 @@
           TopLeft="5.50000000000009,437.5" />
         <NodeLayout
           Size="271,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\Delete Existing Data"
+          TopLeft="31.75,91" />
+        <NodeLayout
+          Size="271,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\EST - Write Job Finish info"
+          TopLeft="32.75,256" />
+        <NodeLayout
+          Size="271,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\EST - Write Job Start info"
+          TopLeft="30.75,15" />
+        <NodeLayout
+          Size="269,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\Populate new data"
+          TopLeft="29.75,158" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT.PrecedenceConstraints[Constraint]"
+          TopLeft="166.75,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34"
+              Start="0,0"
+              End="0,26.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT.PrecedenceConstraints[Constraint 1]"
+          TopLeft="165.75,133">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,25"
+              Start="0,0"
+              End="0,17.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,17.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT.PrecedenceConstraints[Constraint 2]"
+          TopLeft="166.25,200">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,56"
+              Start="0,0"
+              End="0,48.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,48.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="409,353"
+          Size="409,396"
+          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT"
+          TopLeft="5.50000000000006,3053.5" />
+        <NodeLayout
+          Size="271,42"
           Id="Package\Sequence Container - Fact Tables\SD1 INCIDENT_HISTORY_FACT\Delete Existing Data"
           TopLeft="31.75,91" />
         <NodeLayout
@@ -2108,6 +2331,30 @@
           Size="399,42"
           Id="Package\Sequence Container - Fact Tables\Update Incident_Location"
           TopLeft="12,346" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint]"
+          TopLeft="210,2993.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 1]"
           TopLeft="210,809.5">
@@ -2252,66 +2499,18 @@
         </EdgeLayout>
         <NodeLayout
           Size="271,42"
-          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\Delete Existing Data"
-          TopLeft="31.75,91" />
-        <NodeLayout
-          Size="271,42"
-          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\EST - Write Job Finish info"
+          Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\EST - Write Job Finish info"
           TopLeft="32.75,256" />
         <NodeLayout
           Size="271,42"
-          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\EST - Write Job Start info"
+          Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\EST - Write Job Start info"
           TopLeft="30.75,15" />
         <NodeLayout
           Size="269,42"
-          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\Populate new data"
+          Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\Delete and Populate new data"
           TopLeft="29.75,158" />
         <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT.PrecedenceConstraints[Constraint]"
-          TopLeft="166.75,57">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,34"
-              Start="0,0"
-              End="0,26.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,26.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT.PrecedenceConstraints[Constraint 1]"
-          TopLeft="165.75,133">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,25"
-              Start="0,0"
-              End="0,17.5">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,17.5" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT.PrecedenceConstraints[Constraint 2]"
+          Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact.PrecedenceConstraints[Constraint 2]"
           TopLeft="166.25,200">
           <EdgeLayout.Curve>
             <mssgle:Curve
@@ -2332,16 +2531,38 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact.PrecedenceConstraints[Constraint]"
+          TopLeft="165.25,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,101"
+              Start="0,0"
+              End="0,93.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,93.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
           PanelSize="409,353"
           Size="409,396"
-          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT"
-          TopLeft="5.50000000000006,3053.5" />
+          Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact"
+          TopLeft="5.50000000000006,3509.5" />
         <EdgeLayout
-          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint]"
-          TopLeft="210,2993.5">
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 7]"
+          TopLeft="210,3449.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -2358,16 +2579,14 @@
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="501,3504"
-          Size="501,3548"
+          PanelSize="501,3960"
+          Size="501,4004"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="34.5,14" />
       </GraphLayout>
@@ -2446,6 +2665,18 @@
     </LayoutInfo>
   </DtsEventHandler>
   <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
     design-time-name="Package\Sequence Container - Fact Tables\SD1 INCIDENT_HISTORY_FACT.EventHandlers[OnError]">
     <LayoutInfo>
       <GraphLayout
@@ -2458,13 +2689,13 @@
     </LayoutInfo>
   </DtsEventHandler>
   <DtsEventHandler
-    design-time-name="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT.EventHandlers[OnError]">
+    design-time-name="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact.EventHandlers[OnError]">
     <LayoutInfo>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
         <NodeLayout
           Size="264,42"
-          Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
