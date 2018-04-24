@@ -21,14 +21,6 @@
           <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
           <Property Name="ch_id" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DWHB.conform_riskman.ContributingFactors_fact' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="ContributingFactors_fact">
-          <Property Name="id" Type="int" />
-          <Property Name="display_id" Type="int" />
-          <Property Name="CFactorGroup" Type="varchar" MaxLength="400" />
-          <Property Name="CFactor" Type="varchar" MaxLength="400" />
-        </EntityType>-->
         <EntityType Name="date_dim">
           <Key>
             <PropertyRef Name="date_key" />
@@ -138,8 +130,6 @@ warning 6013: The table/view 'DWHB.conform_riskman.ContributingFactors_fact' doe
           <Property Name="AD_UserID" Type="varchar" MaxLength="100" />
           <Property Name="ASA_Email" Type="varchar" MaxLength="100" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DWHB.conform_riskman.Feedback_Fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Feedback_Fact">
           <Key>
             <PropertyRef Name="feedback_key" />
@@ -182,27 +172,6 @@ warning 6002: The table/view 'DWHB.conform_riskman.Feedback_Fact' does not have 
           <Property Name="FBExtAgencyName" Type="varchar" MaxLength="100" />
           <Property Name="FBIsClosed" Type="varchar" MaxLength="3" />
           <Property Name="FBOutcome" Type="varchar" MaxLength="4000" />
-        </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_Bridge' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="Feedbak_issue_Bridge">
-          <Key>
-            <PropertyRef Name="fb_key" />
-          </Key>
-          <Property Name="fb_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="id" Type="int" />
-          <Property Name="batchid" Type="int" />
-        </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="Feedbak_issue_fact">
-          <Key>
-            <PropertyRef Name="fd_key" />
-          </Key>
-          <Property Name="fd_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="batchid" Type="int" />
-          <Property Name="fieldname" Type="varchar" MaxLength="50" />
-          <Property Name="valuestring" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="incident_action_fact">
           <Key>
@@ -392,6 +361,106 @@ warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_fact' does not 
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="nvarchar" MaxLength="1" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="SkinTear_Fact">
+          <Key>
+            <PropertyRef Name="ST_key" />
+          </Key>
+          <Property Name="ST_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Incident_ID" Type="int" />
+          <Property Name="Location_on_body" Type="nvarchar(max)" />
+          <Property Name="Other_location" Type="nvarchar(max)" />
+          <Property Name="Skin_Tear_Category" Type="nvarchar(max)" />
+          <Property Name="Care_setting_where_skintear_developed" Type="nvarchar(max)" />
+          <Property Name="Other_care_setting" Type="nvarchar(max)" />
+          <Property Name="Other_Site" Type="nvarchar(max)" />
+          <Property Name="How_skin_tear_developed" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="fk_feedback_key_closed_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="closed_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_incident_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="incident_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_notified_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="notified_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_person_key">
+          <End Role="person_dim" Type="Self.person_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person_dim">
+              <PropertyRef Name="person_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="person_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_incident_action_fact_action_dim">
           <End Role="action_dim" Type="Self.action_dim" Multiplicity="1" />
           <End Role="incident_action_fact" Type="Self.incident_action_fact" Multiplicity="*" />
@@ -600,6 +669,7 @@ warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_fact' does not 
           <EntitySet Name="action_dim" EntityType="Self.action_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="date_dim" EntityType="Self.date_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="employee_dim" EntityType="Self.employee_dim" Schema="conform_riskman" store:Type="Tables" />
+          <EntitySet Name="Feedback_Fact" EntityType="Self.Feedback_Fact" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="incident_action_fact" EntityType="Self.incident_action_fact" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="incident_fact" EntityType="Self.incident_fact" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="incident_history_fact" EntityType="Self.incident_history_fact" Schema="conform_riskman" store:Type="Tables" />
@@ -611,63 +681,47 @@ warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_fact' does not 
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="program_mapping" EntityType="Self.program_mapping" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_riskman" store:Type="Tables" />
-          <EntitySet Name="Feedback_Fact" EntityType="Self.Feedback_Fact" store:Type="Tables" store:Schema="conform_riskman">
+          <EntitySet Name="SkinTear_Fact" EntityType="Self.SkinTear_Fact" store:Type="Tables" store:Schema="conform_riskman">
             <DefiningQuery>SELECT 
-    [Feedback_Fact].[feedback_key] AS [feedback_key], 
-    [Feedback_Fact].[ID] AS [ID], 
-    [Feedback_Fact].[Base_id] AS [Base_id], 
-    [Feedback_Fact].[DisplayID] AS [DisplayID], 
-    [Feedback_Fact].[IncidentInvolved] AS [IncidentInvolved], 
-    [Feedback_Fact].[person_key] AS [person_key], 
-    [Feedback_Fact].[portfolio_key] AS [portfolio_key], 
-    [Feedback_Fact].[service_stream_key] AS [service_stream_key], 
-    [Feedback_Fact].[program_key] AS [program_key], 
-    [Feedback_Fact].[closed_date_key] AS [closed_date_key], 
-    [Feedback_Fact].[incident_date_key] AS [incident_date_key], 
-    [Feedback_Fact].[notified_date_key] AS [notified_date_key], 
-    [Feedback_Fact].[age] AS [age], 
-    [Feedback_Fact].[severity] AS [severity], 
-    [Feedback_Fact].[status] AS [status], 
-    [Feedback_Fact].[location] AS [location], 
-    [Feedback_Fact].[detail] AS [detail], 
-    [Feedback_Fact].[AdditionalRef] AS [AdditionalRef], 
-    [Feedback_Fact].[Site] AS [Site], 
-    [Feedback_Fact].[Incident_Location] AS [Incident_Location], 
-    [Feedback_Fact].[Outcome] AS [Outcome], 
-    [Feedback_Fact].[InvestigationFinding] AS [InvestigationFinding], 
-    [Feedback_Fact].[Comment] AS [Comment], 
-    [Feedback_Fact].[FBModeRecieved] AS [FBModeRecieved], 
-    [Feedback_Fact].[FBRelateClient] AS [FBRelateClient], 
-    [Feedback_Fact].[FBRelateStaff] AS [FBRelateStaff], 
-    [Feedback_Fact].[FBAssocInc] AS [FBAssocInc], 
-    [Feedback_Fact].[FBCompStatus] AS [FBCompStatus], 
-    [Feedback_Fact].[FBCompStatusOther] AS [FBCompStatusOther], 
-    [Feedback_Fact].[FBCompAnon] AS [FBCompAnon], 
-    [Feedback_Fact].[FBCompRelationship] AS [FBCompRelationship], 
-    [Feedback_Fact].[FBAckDate] AS [FBAckDate], 
-    [Feedback_Fact].[FBFirstFormalDate] AS [FBFirstFormalDate], 
-    [Feedback_Fact].[FBObjectives] AS [FBObjectives], 
-    [Feedback_Fact].[FBExtAgency] AS [FBExtAgency], 
-    [Feedback_Fact].[FBExtAgencyName] AS [FBExtAgencyName], 
-    [Feedback_Fact].[FBIsClosed] AS [FBIsClosed], 
-    [Feedback_Fact].[FBOutcome] AS [FBOutcome]
-    FROM [conform_riskman].[Feedback_Fact] AS [Feedback_Fact]</DefiningQuery>
+    [SkinTear_Fact].[ST_key] AS [ST_key], 
+    [SkinTear_Fact].[Incident_ID] AS [Incident_ID], 
+    [SkinTear_Fact].[Location_on_body] AS [Location_on_body], 
+    [SkinTear_Fact].[Other_location] AS [Other_location], 
+    [SkinTear_Fact].[Skin_Tear_Category] AS [Skin_Tear_Category], 
+    [SkinTear_Fact].[Care_setting_where_skintear_developed] AS [Care_setting_where_skintear_developed], 
+    [SkinTear_Fact].[Other_care_setting] AS [Other_care_setting], 
+    [SkinTear_Fact].[Other_Site] AS [Other_Site], 
+    [SkinTear_Fact].[How_skin_tear_developed] AS [How_skin_tear_developed]
+    FROM [conform_riskman].[SkinTear_Fact] AS [SkinTear_Fact]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="Feedbak_issue_Bridge" EntityType="Self.Feedbak_issue_Bridge" store:Type="Tables" store:Schema="conform_riskman">
-            <DefiningQuery>SELECT 
-    [Feedbak_issue_Bridge].[fb_key] AS [fb_key], 
-    [Feedbak_issue_Bridge].[id] AS [id], 
-    [Feedbak_issue_Bridge].[batchid] AS [batchid]
-    FROM [conform_riskman].[Feedbak_issue_Bridge] AS [Feedbak_issue_Bridge]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Feedbak_issue_fact" EntityType="Self.Feedbak_issue_fact" store:Type="Tables" store:Schema="conform_riskman">
-            <DefiningQuery>SELECT 
-    [Feedbak_issue_fact].[fd_key] AS [fd_key], 
-    [Feedbak_issue_fact].[batchid] AS [batchid], 
-    [Feedbak_issue_fact].[fieldname] AS [fieldname], 
-    [Feedbak_issue_fact].[valuestring] AS [valuestring]
-    FROM [conform_riskman].[Feedbak_issue_fact] AS [Feedbak_issue_fact]</DefiningQuery>
-          </EntitySet>
+          <AssociationSet Name="fk_feedback_key_closed_date_key" Association="Self.fk_feedback_key_closed_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_incident_date_key" Association="Self.fk_feedback_key_incident_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_notified_date_key" Association="Self.fk_feedback_key_notified_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_person_key" Association="Self.fk_feedback_key_person_key">
+            <End Role="person_dim" EntitySet="person_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_portfolio_key" Association="Self.fk_feedback_key_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_program_key" Association="Self.fk_feedback_key_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_service_stream_key" Association="Self.fk_feedback_key_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
           <AssociationSet Name="fk_incident_action_fact_action_dim" Association="Self.fk_incident_action_fact_action_dim">
             <End Role="action_dim" EntitySet="action_dim" />
             <End Role="incident_action_fact" EntitySet="incident_action_fact" />
@@ -862,6 +916,11 @@ warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_fact' does not 
           <AssociationSet Name="Feedbak_issue_BridgeFeedback_Fact" Association="conform_riskman_conceptual.Feedbak_issue_BridgeFeedback_Fact">
             <End Role="Feedbak_issue_Bridge" EntitySet="Feedbak_issue_Bridge" />
             <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <EntitySet Name="SkinTear_Fact" EntityType="conform_riskman_conceptual.SkinTear_Fact" />
+          <AssociationSet Name="SkinTear_Factincident_fact" Association="conform_riskman_conceptual.SkinTear_Factincident_fact">
+            <End Role="SkinTear_Fact" EntitySet="SkinTear_Fact" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="date_dim">
@@ -1152,6 +1211,7 @@ warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_fact' does not 
           <Property Name="site" Type="String" Nullable="false" />
           <Property Name="service_service" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ChCCUNotif" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SkinTear_Fact" Relationship="conform_riskman_conceptual.SkinTear_Factincident_fact" FromRole="incident_fact" ToRole="SkinTear_Fact" />
         </EntityType>
         <Association Name="fk_incident_fact_closed_date_key">
           <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
@@ -1614,6 +1674,33 @@ warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_fact' does not 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="SkinTear_Fact">
+          <Key>
+            <PropertyRef Name="ST_key" />
+          </Key>
+          <Property Name="ST_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Incident_ID" Type="Int32" />
+          <Property Name="Location_on_body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Skin_Tear_Category" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Care_setting_where_skintear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_care_setting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="How_skin_tear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.SkinTear_Factincident_fact" FromRole="SkinTear_Fact" ToRole="incident_fact" />
+        </EntityType>
+        <Association Name="SkinTear_Factincident_fact">
+          <End Type="conform_riskman_conceptual.SkinTear_Fact" Role="SkinTear_Fact" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="SkinTear_Fact">
+              <PropertyRef Name="ST_key" />
+            </Principal>
+            <Dependent Role="incident_fact">
+              <PropertyRef Name="display_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1993,26 +2080,22 @@ warning 6002: The table/view 'DWHB.conform_riskman.Feedbak_issue_fact' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Feedbak_issue_Bridge">
-            <EntityTypeMapping TypeName="conform_riskman_conceptual.Feedbak_issue_Bridge">
-              <MappingFragment StoreEntitySet="Feedbak_issue_Bridge">
-                <ScalarProperty Name="batchid" ColumnName="batchid" />
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="fb_key" ColumnName="fb_key" />
+          <EntitySetMapping Name="SkinTear_Fact">
+            <EntityTypeMapping TypeName="conform_riskman_conceptual.SkinTear_Fact">
+              <MappingFragment StoreEntitySet="SkinTear_Fact">
+                <ScalarProperty Name="How_skin_tear_developed" ColumnName="How_skin_tear_developed" />
+                <ScalarProperty Name="Other_Site" ColumnName="Other_Site" />
+                <ScalarProperty Name="Other_care_setting" ColumnName="Other_care_setting" />
+                <ScalarProperty Name="Care_setting_where_skintear_developed" ColumnName="Care_setting_where_skintear_developed" />
+                <ScalarProperty Name="Skin_Tear_Category" ColumnName="Skin_Tear_Category" />
+                <ScalarProperty Name="Other_location" ColumnName="Other_location" />
+                <ScalarProperty Name="Location_on_body" ColumnName="Location_on_body" />
+                <ScalarProperty Name="Incident_ID" ColumnName="Incident_ID" />
+                <ScalarProperty Name="ST_key" ColumnName="ST_key" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Feedbak_issue_fact">
-            <EntityTypeMapping TypeName="conform_riskman_conceptual.Feedbak_issue_fact">
-              <MappingFragment StoreEntitySet="Feedbak_issue_fact">
-                <ScalarProperty Name="valuestring" ColumnName="valuestring" />
-                <ScalarProperty Name="fieldname" ColumnName="fieldname" />
-                <ScalarProperty Name="batchid" ColumnName="batchid" />
-                <ScalarProperty Name="fd_key" ColumnName="fd_key" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
