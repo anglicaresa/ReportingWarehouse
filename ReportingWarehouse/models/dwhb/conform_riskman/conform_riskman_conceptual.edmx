@@ -21,6 +21,14 @@
           <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
           <Property Name="ch_id" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DWHB.conform_riskman.ContributingFactors_fact' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="ContributingFactors_fact">
+          <Property Name="id" Type="int" />
+          <Property Name="display_id" Type="int" />
+          <Property Name="CFactorGroup" Type="varchar" MaxLength="400" />
+          <Property Name="CFactor" Type="varchar" MaxLength="400" />
+        </EntityType>-->
         <EntityType Name="date_dim">
           <Key>
             <PropertyRef Name="date_key" />
@@ -173,6 +181,19 @@
           <Property Name="FBIsClosed" Type="varchar" MaxLength="3" />
           <Property Name="FBOutcome" Type="varchar" MaxLength="4000" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_riskman.Feedback_Issue_Fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Feedback_Issue_Fact">
+          <Key>
+            <PropertyRef Name="fd_key" />
+          </Key>
+          <Property Name="fd_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Displayid" Type="int" />
+          <Property Name="FBIssueId" Type="int" />
+          <Property Name="FBIssueGroup" Type="nvarchar(max)" />
+          <Property Name="FBIssue" Type="nvarchar(max)" />
+          <Property Name="FBIssueNotes" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="incident_action_fact">
           <Key>
             <PropertyRef Name="incident_action_fact_key" />
@@ -298,6 +319,22 @@
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="nvarchar" MaxLength="1" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_riskman.pressure_injury_fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="pressure_injury_fact">
+          <Key>
+            <PropertyRef Name="pressure_injury_key" />
+          </Key>
+          <Property Name="pressure_injury_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="incident_id" Type="int" />
+          <Property Name="location_on_body" Type="nvarchar(max)" />
+          <Property Name="other_location" Type="nvarchar(max)" />
+          <Property Name="stage_of_pressure_injury" Type="nvarchar(max)" />
+          <Property Name="care_setting" Type="nvarchar(max)" />
+          <Property Name="other_care_setting" Type="nvarchar(max)" />
+          <Property Name="other_site" Type="nvarchar(max)" />
+          <Property Name="how_developed" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="prgram_map_CustomerSite">
           <Key>
             <PropertyRef Name="CustomerSite" />
@@ -361,8 +398,6 @@
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="nvarchar" MaxLength="1" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="SkinTear_Fact">
           <Key>
             <PropertyRef Name="ST_key" />
@@ -681,18 +716,29 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="program_mapping" EntityType="Self.program_mapping" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_riskman" store:Type="Tables" />
-          <EntitySet Name="SkinTear_Fact" EntityType="Self.SkinTear_Fact" store:Type="Tables" store:Schema="conform_riskman">
+          <EntitySet Name="SkinTear_Fact" EntityType="Self.SkinTear_Fact" Schema="conform_riskman" store:Type="Tables" />
+          <EntitySet Name="Feedback_Issue_Fact" EntityType="Self.Feedback_Issue_Fact" store:Type="Tables" store:Schema="conform_riskman">
             <DefiningQuery>SELECT 
-    [SkinTear_Fact].[ST_key] AS [ST_key], 
-    [SkinTear_Fact].[Incident_ID] AS [Incident_ID], 
-    [SkinTear_Fact].[Location_on_body] AS [Location_on_body], 
-    [SkinTear_Fact].[Other_location] AS [Other_location], 
-    [SkinTear_Fact].[Skin_Tear_Category] AS [Skin_Tear_Category], 
-    [SkinTear_Fact].[Care_setting_where_skintear_developed] AS [Care_setting_where_skintear_developed], 
-    [SkinTear_Fact].[Other_care_setting] AS [Other_care_setting], 
-    [SkinTear_Fact].[Other_Site] AS [Other_Site], 
-    [SkinTear_Fact].[How_skin_tear_developed] AS [How_skin_tear_developed]
-    FROM [conform_riskman].[SkinTear_Fact] AS [SkinTear_Fact]</DefiningQuery>
+    [Feedback_Issue_Fact].[fd_key] AS [fd_key], 
+    [Feedback_Issue_Fact].[Displayid] AS [Displayid], 
+    [Feedback_Issue_Fact].[FBIssueId] AS [FBIssueId], 
+    [Feedback_Issue_Fact].[FBIssueGroup] AS [FBIssueGroup], 
+    [Feedback_Issue_Fact].[FBIssue] AS [FBIssue], 
+    [Feedback_Issue_Fact].[FBIssueNotes] AS [FBIssueNotes]
+    FROM [conform_riskman].[Feedback_Issue_Fact] AS [Feedback_Issue_Fact]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="pressure_injury_fact" EntityType="Self.pressure_injury_fact" store:Type="Tables" store:Schema="conform_riskman">
+            <DefiningQuery>SELECT 
+    [pressure_injury_fact].[pressure_injury_key] AS [pressure_injury_key], 
+    [pressure_injury_fact].[incident_id] AS [incident_id], 
+    [pressure_injury_fact].[location_on_body] AS [location_on_body], 
+    [pressure_injury_fact].[other_location] AS [other_location], 
+    [pressure_injury_fact].[stage_of_pressure_injury] AS [stage_of_pressure_injury], 
+    [pressure_injury_fact].[care_setting] AS [care_setting], 
+    [pressure_injury_fact].[other_care_setting] AS [other_care_setting], 
+    [pressure_injury_fact].[other_site] AS [other_site], 
+    [pressure_injury_fact].[how_developed] AS [how_developed]
+    FROM [conform_riskman].[pressure_injury_fact] AS [pressure_injury_fact]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="fk_feedback_key_closed_date_key" Association="Self.fk_feedback_key_closed_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
@@ -804,7 +850,31 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <EntitySet Name="program_dim" EntityType="conform_riskman_conceptual.program_dim" />
           <EntitySet Name="action_dim" EntityType="conform_riskman_conceptual.action_dim" />
           <EntitySet Name="service_stream_dim" EntityType="conform_riskman_conceptual.service_stream_dim" />
+          <EntitySet Name="incident_action_fact" EntityType="conform_riskman_conceptual.incident_action_fact" />
+          <EntitySet Name="incident_history_fact" EntityType="conform_riskman_conceptual.incident_history_fact" />
+          <EntitySet Name="incident_type_fact" EntityType="conform_riskman_conceptual.incident_type_fact" />
+          <EntitySet Name="program_mapping" EntityType="conform_riskman_conceptual.program_mapping" />
+          <AssociationSet Name="fk_incident_action_fact_action_dim" Association="conform_riskman_conceptual.fk_incident_action_fact_action_dim">
+            <End Role="action_dim" EntitySet="action_dim" />
+            <End Role="incident_action_fact" EntitySet="incident_action_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_employee_key" Association="conform_riskman_conceptual.fk_incident_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_manager_key" Association="conform_riskman_conceptual.fk_incident_fact_manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_type_fact_incident_type_dim" Association="conform_riskman_conceptual.fk_incident_type_fact_incident_type_dim">
+            <End Role="incident_type_dim" EntitySet="incident_type_dim" />
+            <End Role="incident_type_fact" EntitySet="incident_type_fact" />
+          </AssociationSet>
+          <EntitySet Name="prgram_map_CustomerSite" EntityType="conform_riskman_conceptual.prgram_map_CustomerSite" />
+          <EntitySet Name="SkinTear_Fact" EntityType="conform_riskman_conceptual.SkinTear_Fact" />
           <EntitySet Name="incident_fact" EntityType="conform_riskman_conceptual.incident_fact" />
+          <EntitySet Name="Feedback_Issue_Fact" EntityType="conform_riskman_conceptual.Feedback_Issue_Fact" />
+          <EntitySet Name="pressure_injury_fact" EntityType="conform_riskman_conceptual.pressure_injury_fact" />
           <AssociationSet Name="fk_incident_fact_closed_date_key" Association="conform_riskman_conceptual.fk_incident_fact_closed_date_key">
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="incident_fact" EntitySet="incident_fact" />
@@ -829,6 +899,14 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
             <End Role="date_dim" EntitySet="date_dim" />
             <End Role="incident_fact" EntitySet="incident_fact" />
           </AssociationSet>
+          <AssociationSet Name="fk_incident_action_fact_incident_fact" Association="conform_riskman_conceptual.fk_incident_action_fact_incident_fact">
+            <End Role="incident_fact" EntitySet="incident_fact" />
+            <End Role="incident_action_fact" EntitySet="incident_action_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_incident_key" Association="conform_riskman_conceptual.fk_incident_fact_incident_key">
+            <End Role="incident_fact" EntitySet="incident_fact" />
+            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
+          </AssociationSet>
           <AssociationSet Name="fk_incident_fact_person_key" Association="conform_riskman_conceptual.fk_incident_fact_person_key">
             <End Role="person_dim" EntitySet="person_dim" />
             <End Role="incident_fact" EntitySet="incident_fact" />
@@ -845,82 +923,38 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="incident_fact" EntitySet="incident_fact" />
           </AssociationSet>
-          <EntitySet Name="incident_action_fact" EntityType="conform_riskman_conceptual.incident_action_fact" />
-          <EntitySet Name="incident_history_fact" EntityType="conform_riskman_conceptual.incident_history_fact" />
-          <EntitySet Name="incident_type_fact" EntityType="conform_riskman_conceptual.incident_type_fact" />
-          <EntitySet Name="program_mapping" EntityType="conform_riskman_conceptual.program_mapping" />
-          <AssociationSet Name="fk_incident_action_fact_action_dim" Association="conform_riskman_conceptual.fk_incident_action_fact_action_dim">
-            <End Role="action_dim" EntitySet="action_dim" />
-            <End Role="incident_action_fact" EntitySet="incident_action_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_employee_key" Association="conform_riskman_conceptual.fk_incident_fact_employee_key">
-            <End Role="employee_dim" EntitySet="employee_dim" />
-            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_manager_key" Association="conform_riskman_conceptual.fk_incident_fact_manager_key">
-            <End Role="employee_dim" EntitySet="employee_dim" />
-            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_action_fact_incident_fact" Association="conform_riskman_conceptual.fk_incident_action_fact_incident_fact">
-            <End Role="incident_fact" EntitySet="incident_fact" />
-            <End Role="incident_action_fact" EntitySet="incident_action_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_incident_key" Association="conform_riskman_conceptual.fk_incident_fact_incident_key">
-            <End Role="incident_fact" EntitySet="incident_fact" />
-            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
-          </AssociationSet>
           <AssociationSet Name="fk_incident_type_fact_incident_fact" Association="conform_riskman_conceptual.fk_incident_type_fact_incident_fact">
             <End Role="incident_fact" EntitySet="incident_fact" />
             <End Role="incident_type_fact" EntitySet="incident_type_fact" />
           </AssociationSet>
-          <AssociationSet Name="fk_incident_type_fact_incident_type_dim" Association="conform_riskman_conceptual.fk_incident_type_fact_incident_type_dim">
-            <End Role="incident_type_dim" EntitySet="incident_type_dim" />
-            <End Role="incident_type_fact" EntitySet="incident_type_fact" />
-          </AssociationSet>
-          <EntitySet Name="prgram_map_CustomerSite" EntityType="conform_riskman_conceptual.prgram_map_CustomerSite" />
           <EntitySet Name="Feedback_Fact" EntityType="conform_riskman_conceptual.Feedback_Fact" />
-          <EntitySet Name="Feedbak_issue_Bridge" EntityType="conform_riskman_conceptual.Feedbak_issue_Bridge" />
-          <EntitySet Name="Feedbak_issue_fact" EntityType="conform_riskman_conceptual.Feedbak_issue_fact" />
-          <AssociationSet Name="person_dimFeedback_Fact" Association="conform_riskman_conceptual.person_dimFeedback_Fact">
+          <AssociationSet Name="fk_feedback_key_closed_date_key" Association="conform_riskman_conceptual.fk_feedback_key_closed_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_incident_date_key" Association="conform_riskman_conceptual.fk_feedback_key_incident_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_notified_date_key" Association="conform_riskman_conceptual.fk_feedback_key_notified_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_person_key" Association="conform_riskman_conceptual.fk_feedback_key_person_key">
             <End Role="person_dim" EntitySet="person_dim" />
             <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
           </AssociationSet>
-          <AssociationSet Name="program_dimFeedback_Fact" Association="conform_riskman_conceptual.program_dimFeedback_Fact">
-            <End Role="program_dim" EntitySet="program_dim" />
-            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
-          </AssociationSet>
-          <AssociationSet Name="portfolio_dimFeedback_Fact" Association="conform_riskman_conceptual.portfolio_dimFeedback_Fact">
+          <AssociationSet Name="fk_feedback_key_portfolio_key" Association="conform_riskman_conceptual.fk_feedback_key_portfolio_key">
             <End Role="portfolio_dim" EntitySet="portfolio_dim" />
             <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
           </AssociationSet>
-          <AssociationSet Name="service_stream_dimFeedback_Fact" Association="conform_riskman_conceptual.service_stream_dimFeedback_Fact">
+          <AssociationSet Name="fk_feedback_key_program_key" Association="conform_riskman_conceptual.fk_feedback_key_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_service_stream_key" Association="conform_riskman_conceptual.fk_feedback_key_service_stream_key">
             <End Role="service_stream_dim" EntitySet="service_stream_dim" />
             <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
-          </AssociationSet>
-          <AssociationSet Name="date_dimFeedback_Fact" Association="conform_riskman_conceptual.date_dimFeedback_Fact">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
-          </AssociationSet>
-          <AssociationSet Name="date_dimFeedback_Fact1" Association="conform_riskman_conceptual.date_dimFeedback_Fact1">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
-          </AssociationSet>
-          <AssociationSet Name="date_dimFeedback_Fact2" Association="conform_riskman_conceptual.date_dimFeedback_Fact2">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
-          </AssociationSet>
-          <AssociationSet Name="Feedbak_issue_BridgeFeedbak_issue_fact" Association="conform_riskman_conceptual.Feedbak_issue_BridgeFeedbak_issue_fact">
-            <End Role="Feedbak_issue_Bridge" EntitySet="Feedbak_issue_Bridge" />
-            <End Role="Feedbak_issue_fact" EntitySet="Feedbak_issue_fact" />
-          </AssociationSet>
-          <AssociationSet Name="Feedbak_issue_BridgeFeedback_Fact" Association="conform_riskman_conceptual.Feedbak_issue_BridgeFeedback_Fact">
-            <End Role="Feedbak_issue_Bridge" EntitySet="Feedbak_issue_Bridge" />
-            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
-          </AssociationSet>
-          <EntitySet Name="SkinTear_Fact" EntityType="conform_riskman_conceptual.SkinTear_Fact" />
-          <AssociationSet Name="SkinTear_Factincident_fact" Association="conform_riskman_conceptual.SkinTear_Factincident_fact">
-            <End Role="SkinTear_Fact" EntitySet="SkinTear_Fact" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="date_dim">
@@ -954,9 +988,9 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <NavigationProperty Name="incident_fact3" Relationship="conform_riskman_conceptual.fk_incident_fact_investigation_completed_date_key" FromRole="date_dim" ToRole="incident_fact" />
           <NavigationProperty Name="incident_fact4" Relationship="conform_riskman_conceptual.fk_incident_fact_investigation_initiated_date_key" FromRole="date_dim" ToRole="incident_fact" />
           <NavigationProperty Name="incident_fact5" Relationship="conform_riskman_conceptual.fk_incident_fact_notified_date_key" FromRole="date_dim" ToRole="incident_fact" />
-          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact" FromRole="date_dim" ToRole="Feedback_Fact" />
-          <NavigationProperty Name="Feedback_Fact1" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact1" FromRole="date_dim" ToRole="Feedback_Fact" />
-          <NavigationProperty Name="Feedback_Fact2" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact2" FromRole="date_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.fk_feedback_key_closed_date_key" FromRole="date_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact1" Relationship="conform_riskman_conceptual.fk_feedback_key_incident_date_key" FromRole="date_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact2" Relationship="conform_riskman_conceptual.fk_feedback_key_notified_date_key" FromRole="date_dim" ToRole="Feedback_Fact" />
           </EntityType>
         <EntityType Name="employee_dim">
           <Key>
@@ -1074,7 +1108,7 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_person_key" FromRole="person_dim" ToRole="incident_fact" />
-          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.person_dimFeedback_Fact" FromRole="person_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.fk_feedback_key_person_key" FromRole="person_dim" ToRole="Feedback_Fact" />
         </EntityType>
         <EntityType Name="portfolio_dim">
           <Key>
@@ -1089,7 +1123,7 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_portfolio_key" FromRole="portfolio_dim" ToRole="incident_fact" />
-          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.portfolio_dimFeedback_Fact" FromRole="portfolio_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.fk_feedback_key_portfolio_key" FromRole="portfolio_dim" ToRole="Feedback_Fact" />
         </EntityType>
         <EntityType Name="program_dim">
           <Key>
@@ -1107,7 +1141,7 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_program_key" FromRole="program_dim" ToRole="incident_fact" />
-          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.program_dimFeedback_Fact" FromRole="program_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.fk_feedback_key_program_key" FromRole="program_dim" ToRole="Feedback_Fact" />
         </EntityType>
         <EntityType Name="action_dim">
           <Key>
@@ -1140,199 +1174,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
           <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_service_stream_key" FromRole="service_stream_dim" ToRole="incident_fact" />
-          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.service_stream_dimFeedback_Fact" FromRole="service_stream_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.fk_feedback_key_service_stream_key" FromRole="service_stream_dim" ToRole="Feedback_Fact" />
         </EntityType>
-        <EntityType Name="incident_fact">
-          <Key>
-            <PropertyRef Name="incident_key" />
-          </Key>
-          <Property Name="incident_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="base_id" Type="Int32" Nullable="false" />
-          <Property Name="display_id" Type="Int32" Nullable="false" />
-          <Property Name="person_key" Type="Int32" Nullable="false" />
-          <Property Name="portfolio_key" Type="Int32" Nullable="false" />
-          <Property Name="service_stream_key" Type="Int32" Nullable="false" />
-          <Property Name="program_key" Type="Int32" Nullable="false" />
-          <Property Name="closed_date_key" Type="Int32" Nullable="false" />
-          <Property Name="incident_date_key" Type="Int32" Nullable="false" />
-          <Property Name="notified_date_key" Type="Int32" Nullable="false" />
-          <Property Name="deleted_date_key" Type="Int32" Nullable="false" />
-          <Property Name="investigation_initiated_date_key" Type="Int32" Nullable="false" />
-          <Property Name="investigation_completed_date_key" Type="Int32" Nullable="false" />
-          <Property Name="incident_time" Type="DateTime" Precision="0" />
-          <Property Name="age" Type="Int32" />
-          <Property Name="severity" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="area_room" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="incident_involved" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="deceased" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="coroner_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="autopsy" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="next_of_kin_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="notification_reason" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="transfer_location" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="employee_site" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="nature_of_injury" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="summary" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="lti_incurred" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="investigation_initiated" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="safeworksa_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="staff_injury" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="preventative_corrective_action_required" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="police_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="fire_brigade_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="ambulance__notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="human_services_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="health_sa_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="crisis_intervention_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="carl_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="ag_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="housing_regulator_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="funder_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="parent_guardian_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="detail" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="cust_service" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="customer_site" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="date_dim" Relationship="conform_riskman_conceptual.fk_incident_fact_closed_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim1" Relationship="conform_riskman_conceptual.fk_incident_fact_deleted_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim2" Relationship="conform_riskman_conceptual.fk_incident_fact_incident_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim3" Relationship="conform_riskman_conceptual.fk_incident_fact_investigation_completed_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim4" Relationship="conform_riskman_conceptual.fk_incident_fact_investigation_initiated_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim5" Relationship="conform_riskman_conceptual.fk_incident_fact_notified_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="person_dim" Relationship="conform_riskman_conceptual.fk_incident_fact_person_key" FromRole="incident_fact" ToRole="person_dim" />
-          <NavigationProperty Name="portfolio_dim" Relationship="conform_riskman_conceptual.fk_incident_fact_portfolio_key" FromRole="incident_fact" ToRole="portfolio_dim" />
-          <NavigationProperty Name="program_dim" Relationship="conform_riskman_conceptual.fk_incident_fact_program_key" FromRole="incident_fact" ToRole="program_dim" />
-          <NavigationProperty Name="service_stream_dim" Relationship="conform_riskman_conceptual.fk_incident_fact_service_stream_key" FromRole="incident_fact" ToRole="service_stream_dim" />
-          <NavigationProperty Name="incident_action_fact" Relationship="conform_riskman_conceptual.fk_incident_action_fact_incident_fact" FromRole="incident_fact" ToRole="incident_action_fact" />
-          <NavigationProperty Name="incident_history_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_incident_key" FromRole="incident_fact" ToRole="incident_history_fact" />
-          <NavigationProperty Name="incident_type_fact" Relationship="conform_riskman_conceptual.fk_incident_type_fact_incident_fact" FromRole="incident_fact" ToRole="incident_type_fact" />
-          <Property Name="site" Type="String" Nullable="false" />
-          <Property Name="service_service" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ChCCUNotif" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="SkinTear_Fact" Relationship="conform_riskman_conceptual.SkinTear_Factincident_fact" FromRole="incident_fact" ToRole="SkinTear_Fact" />
-        </EntityType>
-        <Association Name="fk_incident_fact_closed_date_key">
-          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="closed_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_deleted_date_key">
-          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="deleted_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_incident_date_key">
-          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="incident_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_investigation_completed_date_key">
-          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="investigation_completed_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_investigation_initiated_date_key">
-          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="investigation_initiated_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_notified_date_key">
-          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="notified_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_person_key">
-          <End Type="conform_riskman_conceptual.person_dim" Role="person_dim" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="person_dim">
-              <PropertyRef Name="person_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="person_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_portfolio_key">
-          <End Type="conform_riskman_conceptual.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="portfolio_dim">
-              <PropertyRef Name="portfolio_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="portfolio_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_program_key">
-          <End Type="conform_riskman_conceptual.program_dim" Role="program_dim" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="program_dim">
-              <PropertyRef Name="program_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="program_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_service_stream_key">
-          <End Type="conform_riskman_conceptual.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="service_stream_dim">
-              <PropertyRef Name="service_stream_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="service_stream_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="incident_action_fact">
           <Key>
             <PropertyRef Name="incident_action_fact_key" />
@@ -1363,8 +1206,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="incident_type_fact_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="incident_key" Type="Int32" Nullable="false" />
           <Property Name="incident_type_key" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.fk_incident_type_fact_incident_fact" FromRole="incident_type_fact" ToRole="incident_fact" />
           <NavigationProperty Name="incident_type_dim" Relationship="conform_riskman_conceptual.fk_incident_type_fact_incident_type_dim" FromRole="incident_type_fact" ToRole="incident_type_dim" />
+          <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.fk_incident_type_fact_incident_fact" FromRole="incident_type_fact" ToRole="incident_fact" />
         </EntityType>
         <EntityType Name="program_mapping">
           <Key>
@@ -1427,42 +1270,6 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_incident_action_fact_incident_fact">
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_action_fact" Role="incident_action_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="incident_fact">
-              <PropertyRef Name="incident_key" />
-            </Principal>
-            <Dependent Role="incident_action_fact">
-              <PropertyRef Name="incident_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_incident_key">
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_history_fact" Role="incident_history_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="incident_fact">
-              <PropertyRef Name="incident_key" />
-            </Principal>
-            <Dependent Role="incident_history_fact">
-              <PropertyRef Name="incident_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_type_fact_incident_fact">
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_type_fact" Role="incident_type_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="incident_fact">
-              <PropertyRef Name="incident_key" />
-            </Principal>
-            <Dependent Role="incident_type_fact">
-              <PropertyRef Name="incident_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_incident_type_fact_incident_type_dim">
           <End Type="conform_riskman_conceptual.incident_type_dim" Role="incident_type_dim" Multiplicity="1" />
           <End Type="conform_riskman_conceptual.incident_type_fact" Role="incident_type_fact" Multiplicity="*" />
@@ -1483,6 +1290,156 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="Record_Number" Type="Double" />
           <Property Name="T1_Program" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="SkinTear_Fact">
+          <Key>
+            <PropertyRef Name="ST_key" />
+          </Key>
+          <Property Name="ST_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Incident_ID" Type="Int32" />
+          <Property Name="Location_on_body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Skin_Tear_Category" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Care_setting_where_skintear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_care_setting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="How_skin_tear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="incident_fact">
+          <Key>
+            <PropertyRef Name="incident_key" />
+          </Key>
+          <Property Name="incident_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="base_id" Type="Int32" Nullable="false" />
+          <Property Name="display_id" Type="Int32" Nullable="false" />
+          <Property Name="incident_time" Type="DateTime" Precision="0" />
+          <Property Name="age" Type="Int32" />
+          <Property Name="severity" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="area_room" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="incident_involved" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="deceased" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="coroner_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="autopsy" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="next_of_kin_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="notification_reason" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="transfer_location" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="employee_site" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="nature_of_injury" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="summary" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="lti_incurred" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="investigation_initiated" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="safeworksa_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="staff_injury" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="preventative_corrective_action_required" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="police_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="fire_brigade_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="ambulance__notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="human_services_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="health_sa_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="crisis_intervention_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="carl_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="ag_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="housing_regulator_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="funder_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="parent_guardian_notified" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="detail" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="cust_service" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="customer_site" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="service_service" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ChCCUNotif" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="date_dim" Relationship="conform_riskman_conceptual.fk_incident_fact_closed_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim1" Relationship="conform_riskman_conceptual.fk_incident_fact_deleted_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim2" Relationship="conform_riskman_conceptual.fk_incident_fact_incident_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim3" Relationship="conform_riskman_conceptual.fk_incident_fact_investigation_completed_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim4" Relationship="conform_riskman_conceptual.fk_incident_fact_investigation_initiated_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim5" Relationship="conform_riskman_conceptual.fk_incident_fact_notified_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="incident_action_fact" Relationship="conform_riskman_conceptual.fk_incident_action_fact_incident_fact" FromRole="incident_fact" ToRole="incident_action_fact" />
+          <NavigationProperty Name="incident_history_fact" Relationship="conform_riskman_conceptual.fk_incident_fact_incident_key" FromRole="incident_fact" ToRole="incident_history_fact" />
+          <NavigationProperty Name="person_dim" Relationship="conform_riskman_conceptual.fk_incident_fact_person_key" FromRole="incident_fact" ToRole="person_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="conform_riskman_conceptual.fk_incident_fact_portfolio_key" FromRole="incident_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="program_dim" Relationship="conform_riskman_conceptual.fk_incident_fact_program_key" FromRole="incident_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="conform_riskman_conceptual.fk_incident_fact_service_stream_key" FromRole="incident_fact" ToRole="service_stream_dim" />
+          <NavigationProperty Name="incident_type_fact" Relationship="conform_riskman_conceptual.fk_incident_type_fact_incident_fact" FromRole="incident_fact" ToRole="incident_type_fact" />
+        </EntityType>
+        <EntityType Name="Feedback_Issue_Fact">
+          <Key>
+            <PropertyRef Name="fd_key" />
+          </Key>
+          <Property Name="fd_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Displayid" Type="Int32" />
+          <Property Name="FBIssueId" Type="Int32" />
+          <Property Name="FBIssueGroup" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FBIssue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FBIssueNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="pressure_injury_fact">
+          <Key>
+            <PropertyRef Name="pressure_injury_key" />
+          </Key>
+          <Property Name="pressure_injury_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="incident_id" Type="Int32" />
+          <Property Name="location_on_body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="other_location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="stage_of_pressure_injury" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="care_setting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="other_care_setting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="other_site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="how_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="fk_incident_fact_closed_date_key">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_fact_deleted_date_key">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_fact_incident_date_key">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_fact_investigation_completed_date_key">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_fact_investigation_initiated_date_key">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_fact_notified_date_key">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_action_fact_incident_fact">
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_action_fact" Role="incident_action_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_fact_incident_key">
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_history_fact" Role="incident_history_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_fact_person_key">
+          <End Type="conform_riskman_conceptual.person_dim" Role="person_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_fact_portfolio_key">
+          <End Type="conform_riskman_conceptual.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_fact_program_key">
+          <End Type="conform_riskman_conceptual.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_fact_service_stream_key">
+          <End Type="conform_riskman_conceptual.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_incident_type_fact_incident_fact">
+          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="1" />
+          <End Type="conform_riskman_conceptual.incident_type_fact" Role="incident_type_fact" Multiplicity="*" />
+        </Association>
         <EntityType Name="Feedback_Fact">
           <Key>
             <PropertyRef Name="feedback_key" />
@@ -1492,13 +1449,6 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="Base_id" Type="Int32" />
           <Property Name="DisplayID" Type="Int32" />
           <Property Name="IncidentInvolved" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="person_key" Type="Int32" />
-          <Property Name="portfolio_key" Type="Int32" />
-          <Property Name="service_stream_key" Type="Int32" />
-          <Property Name="program_key" Type="Int32" />
-          <Property Name="closed_date_key" Type="Int32" />
-          <Property Name="incident_date_key" Type="Int32" />
-          <Property Name="notified_date_key" Type="Int32" />
           <Property Name="age" Type="Int32" />
           <Property Name="severity" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -1525,181 +1475,41 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="FBExtAgencyName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="FBIsClosed" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="FBOutcome" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
-          <Property Name="person_dim_person_key" Type="Int32" Nullable="false" />
-          <Property Name="person_dim_person_key1" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="person_dim" Relationship="conform_riskman_conceptual.person_dimFeedback_Fact" FromRole="Feedback_Fact" ToRole="person_dim" />
-          <Property Name="person_dim_person_key2" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="program_dim" Relationship="conform_riskman_conceptual.program_dimFeedback_Fact" FromRole="Feedback_Fact" ToRole="program_dim" />
-          <Property Name="program_dim_program_key" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="portfolio_dim" Relationship="conform_riskman_conceptual.portfolio_dimFeedback_Fact" FromRole="Feedback_Fact" ToRole="portfolio_dim" />
-          <Property Name="portfolio_dim_portfolio_key" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="service_stream_dim" Relationship="conform_riskman_conceptual.service_stream_dimFeedback_Fact" FromRole="Feedback_Fact" ToRole="service_stream_dim" />
-          <Property Name="service_stream_dim_service_stream_key" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="date_dim" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact" FromRole="Feedback_Fact" ToRole="date_dim" />
-          <Property Name="date_dim_date_key" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="date_dim1" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact1" FromRole="Feedback_Fact" ToRole="date_dim" />
-          <Property Name="date_dim_date_key1" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="date_dim2" Relationship="conform_riskman_conceptual.date_dimFeedback_Fact2" FromRole="Feedback_Fact" ToRole="date_dim" />
-          <Property Name="date_dim_date_key2" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Feedbak_issue_Bridge" Relationship="conform_riskman_conceptual.Feedbak_issue_BridgeFeedback_Fact" FromRole="Feedback_Fact" ToRole="Feedbak_issue_Bridge" />
-          <Property Name="Feedbak_issue_Bridge_fb_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="date_dim" Relationship="conform_riskman_conceptual.fk_feedback_key_closed_date_key" FromRole="Feedback_Fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim1" Relationship="conform_riskman_conceptual.fk_feedback_key_incident_date_key" FromRole="Feedback_Fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim2" Relationship="conform_riskman_conceptual.fk_feedback_key_notified_date_key" FromRole="Feedback_Fact" ToRole="date_dim" />
+          <NavigationProperty Name="person_dim" Relationship="conform_riskman_conceptual.fk_feedback_key_person_key" FromRole="Feedback_Fact" ToRole="person_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="conform_riskman_conceptual.fk_feedback_key_portfolio_key" FromRole="Feedback_Fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="program_dim" Relationship="conform_riskman_conceptual.fk_feedback_key_program_key" FromRole="Feedback_Fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="conform_riskman_conceptual.fk_feedback_key_service_stream_key" FromRole="Feedback_Fact" ToRole="service_stream_dim" />
         </EntityType>
-        <EntityType Name="Feedbak_issue_Bridge">
-          <Key>
-            <PropertyRef Name="fb_key" />
-          </Key>
-          <Property Name="fb_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="id" Type="Int32" />
-          <Property Name="batchid" Type="Int32" />
-          <Property Name="Feedback_Fact_feedback_key" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Feedbak_issue_fact" Relationship="conform_riskman_conceptual.Feedbak_issue_BridgeFeedbak_issue_fact" FromRole="Feedbak_issue_Bridge" ToRole="Feedbak_issue_fact" />
-          <NavigationProperty Name="Feedback_Fact" Relationship="conform_riskman_conceptual.Feedbak_issue_BridgeFeedback_Fact" FromRole="Feedbak_issue_Bridge" ToRole="Feedback_Fact" />
-        </EntityType>
-        <EntityType Name="Feedbak_issue_fact">
-          <Key>
-            <PropertyRef Name="fd_key" />
-          </Key>
-          <Property Name="fd_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="batchid" Type="Int32" />
-          <Property Name="fieldname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="valuestring" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Feedbak_issue_Bridge" Relationship="conform_riskman_conceptual.Feedbak_issue_BridgeFeedbak_issue_fact" FromRole="Feedbak_issue_fact" ToRole="Feedbak_issue_Bridge" />
-          <Property Name="Feedbak_issue_Bridge_fb_key" Type="Int32" Nullable="false" />
-        </EntityType>
-        <Association Name="person_dimFeedback_Fact">
-          <End Type="conform_riskman_conceptual.person_dim" Role="person_dim" Multiplicity="1" />
+        <Association Name="fk_feedback_key_closed_date_key">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="0..1" />
           <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="person_dim">
-              <PropertyRef Name="person_key" />
-            </Principal>
-            <Dependent Role="Feedback_Fact">
-              <PropertyRef Name="person_key" />
-            </Dependent>
-          </ReferentialConstraint>
         </Association>
-        <Association Name="program_dimFeedback_Fact">
-          <End Type="conform_riskman_conceptual.program_dim" Role="program_dim" Multiplicity="1" />
+        <Association Name="fk_feedback_key_incident_date_key">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="0..1" />
           <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="program_dim">
-              <PropertyRef Name="program_key" />
-            </Principal>
-            <Dependent Role="Feedback_Fact">
-              <PropertyRef Name="program_key" />
-            </Dependent>
-          </ReferentialConstraint>
         </Association>
-        <Association Name="portfolio_dimFeedback_Fact">
-          <End Type="conform_riskman_conceptual.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+        <Association Name="fk_feedback_key_notified_date_key">
+          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="0..1" />
           <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="portfolio_dim">
-              <PropertyRef Name="portfolio_key" />
-            </Principal>
-            <Dependent Role="Feedback_Fact">
-              <PropertyRef Name="portfolio_key" />
-            </Dependent>
-          </ReferentialConstraint>
         </Association>
-        <Association Name="service_stream_dimFeedback_Fact">
-          <End Type="conform_riskman_conceptual.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+        <Association Name="fk_feedback_key_person_key">
+          <End Type="conform_riskman_conceptual.person_dim" Role="person_dim" Multiplicity="0..1" />
           <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="service_stream_dim">
-              <PropertyRef Name="service_stream_key" />
-            </Principal>
-            <Dependent Role="Feedback_Fact">
-              <PropertyRef Name="service_stream_key" />
-            </Dependent>
-          </ReferentialConstraint>
         </Association>
-        <Association Name="date_dimFeedback_Fact">
-          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+        <Association Name="fk_feedback_key_portfolio_key">
+          <End Type="conform_riskman_conceptual.portfolio_dim" Role="portfolio_dim" Multiplicity="0..1" />
           <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="Feedback_Fact">
-              <PropertyRef Name="closed_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
         </Association>
-        <Association Name="date_dimFeedback_Fact1">
-          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+        <Association Name="fk_feedback_key_program_key">
+          <End Type="conform_riskman_conceptual.program_dim" Role="program_dim" Multiplicity="0..1" />
           <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="Feedback_Fact">
-              <PropertyRef Name="incident_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
         </Association>
-        <Association Name="date_dimFeedback_Fact2">
-          <End Type="conform_riskman_conceptual.date_dim" Role="date_dim" Multiplicity="1" />
+        <Association Name="fk_feedback_key_service_stream_key">
+          <End Type="conform_riskman_conceptual.service_stream_dim" Role="service_stream_dim" Multiplicity="0..1" />
           <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="date_dim">
-              <PropertyRef Name="date_key" />
-            </Principal>
-            <Dependent Role="Feedback_Fact">
-              <PropertyRef Name="notified_date_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Feedbak_issue_BridgeFeedbak_issue_fact">
-          <End Type="conform_riskman_conceptual.Feedbak_issue_Bridge" Role="Feedbak_issue_Bridge" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.Feedbak_issue_fact" Role="Feedbak_issue_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Feedbak_issue_Bridge">
-              <PropertyRef Name="fb_key" />
-            </Principal>
-            <Dependent Role="Feedbak_issue_fact">
-              <PropertyRef Name="Feedbak_issue_Bridge_fb_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Feedbak_issue_BridgeFeedback_Fact">
-          <End Type="conform_riskman_conceptual.Feedbak_issue_Bridge" Role="Feedbak_issue_Bridge" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Feedbak_issue_Bridge">
-              <PropertyRef Name="fb_key" />
-            </Principal>
-            <Dependent Role="Feedback_Fact">
-              <PropertyRef Name="Feedbak_issue_Bridge_fb_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="SkinTear_Fact">
-          <Key>
-            <PropertyRef Name="ST_key" />
-          </Key>
-          <Property Name="ST_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Incident_ID" Type="Int32" />
-          <Property Name="Location_on_body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Other_location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Skin_Tear_Category" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Care_setting_where_skintear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Other_care_setting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Other_Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="How_skin_tear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="incident_fact" Relationship="conform_riskman_conceptual.SkinTear_Factincident_fact" FromRole="SkinTear_Fact" ToRole="incident_fact" />
-        </EntityType>
-        <Association Name="SkinTear_Factincident_fact">
-          <End Type="conform_riskman_conceptual.SkinTear_Fact" Role="SkinTear_Fact" Multiplicity="1" />
-          <End Type="conform_riskman_conceptual.incident_fact" Role="incident_fact" Multiplicity="1" />
-          <ReferentialConstraint>
-            <Principal Role="SkinTear_Fact">
-              <PropertyRef Name="ST_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="display_id" />
-            </Dependent>
-          </ReferentialConstraint>
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -1915,63 +1725,6 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="incident_fact">
-            <EntityTypeMapping TypeName="conform_riskman_conceptual.incident_fact">
-              <MappingFragment StoreEntitySet="incident_fact">
-                <ScalarProperty Name="ChCCUNotif" ColumnName="ChCCUNotif" />
-                <ScalarProperty Name="service_service" ColumnName="service_service" />
-                <ScalarProperty Name="customer_site" ColumnName="customer_site" />
-                <ScalarProperty Name="cust_service" ColumnName="cust_service" />
-                <ScalarProperty Name="detail" ColumnName="detail" />
-                <ScalarProperty Name="parent_guardian_notified" ColumnName="parent_guardian_notified" />
-                <ScalarProperty Name="funder_notified" ColumnName="funder_notified" />
-                <ScalarProperty Name="housing_regulator_notified" ColumnName="housing_regulator_notified" />
-                <ScalarProperty Name="ag_notified" ColumnName="ag_notified" />
-                <ScalarProperty Name="carl_notified" ColumnName="carl_notified" />
-                <ScalarProperty Name="crisis_intervention_notified" ColumnName="crisis_intervention_notified" />
-                <ScalarProperty Name="health_sa_notified" ColumnName="health_sa_notified" />
-                <ScalarProperty Name="human_services_notified" ColumnName="human_services_notified" />
-                <ScalarProperty Name="ambulance__notified" ColumnName="ambulance__notified" />
-                <ScalarProperty Name="fire_brigade_notified" ColumnName="fire_brigade_notified" />
-                <ScalarProperty Name="police_notified" ColumnName="police_notified" />
-                <ScalarProperty Name="preventative_corrective_action_required" ColumnName="preventative_corrective_action_required" />
-                <ScalarProperty Name="staff_injury" ColumnName="staff_injury" />
-                <ScalarProperty Name="safeworksa_notified" ColumnName="safeworksa_notified" />
-                <ScalarProperty Name="investigation_initiated" ColumnName="investigation_initiated" />
-                <ScalarProperty Name="lti_incurred" ColumnName="lti_incurred" />
-                <ScalarProperty Name="summary" ColumnName="summary" />
-                <ScalarProperty Name="nature_of_injury" ColumnName="nature_of_injury" />
-                <ScalarProperty Name="employee_site" ColumnName="employee_site" />
-                <ScalarProperty Name="transfer_location" ColumnName="transfer_location" />
-                <ScalarProperty Name="notification_reason" ColumnName="notification_reason" />
-                <ScalarProperty Name="next_of_kin_notified" ColumnName="next_of_kin_notified" />
-                <ScalarProperty Name="autopsy" ColumnName="autopsy" />
-                <ScalarProperty Name="coroner_notified" ColumnName="coroner_notified" />
-                <ScalarProperty Name="deceased" ColumnName="deceased" />
-                <ScalarProperty Name="incident_involved" ColumnName="incident_involved" />
-                <ScalarProperty Name="area_room" ColumnName="area_room" />
-                <ScalarProperty Name="location" ColumnName="location" />
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="severity" ColumnName="severity" />
-                <ScalarProperty Name="age" ColumnName="age" />
-                <ScalarProperty Name="incident_time" ColumnName="incident_time" />
-                <ScalarProperty Name="investigation_completed_date_key" ColumnName="investigation_completed_date_key" />
-                <ScalarProperty Name="investigation_initiated_date_key" ColumnName="investigation_initiated_date_key" />
-                <ScalarProperty Name="deleted_date_key" ColumnName="deleted_date_key" />
-                <ScalarProperty Name="notified_date_key" ColumnName="notified_date_key" />
-                <ScalarProperty Name="incident_date_key" ColumnName="incident_date_key" />
-                <ScalarProperty Name="closed_date_key" ColumnName="closed_date_key" />
-                <ScalarProperty Name="program_key" ColumnName="program_key" />
-                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
-                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
-                <ScalarProperty Name="person_key" ColumnName="person_key" />
-                <ScalarProperty Name="display_id" ColumnName="display_id" />
-                <ScalarProperty Name="base_id" ColumnName="base_id" />
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="incident_key" ColumnName="incident_key" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="incident_action_fact">
             <EntityTypeMapping TypeName="conform_riskman_conceptual.incident_action_fact">
               <MappingFragment StoreEntitySet="incident_action_fact">
@@ -2036,6 +1789,199 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="SkinTear_Fact">
+            <EntityTypeMapping TypeName="conform_riskman_conceptual.SkinTear_Fact">
+              <MappingFragment StoreEntitySet="SkinTear_Fact">
+                <ScalarProperty Name="How_skin_tear_developed" ColumnName="How_skin_tear_developed" />
+                <ScalarProperty Name="Other_Site" ColumnName="Other_Site" />
+                <ScalarProperty Name="Other_care_setting" ColumnName="Other_care_setting" />
+                <ScalarProperty Name="Care_setting_where_skintear_developed" ColumnName="Care_setting_where_skintear_developed" />
+                <ScalarProperty Name="Skin_Tear_Category" ColumnName="Skin_Tear_Category" />
+                <ScalarProperty Name="Other_location" ColumnName="Other_location" />
+                <ScalarProperty Name="Location_on_body" ColumnName="Location_on_body" />
+                <ScalarProperty Name="Incident_ID" ColumnName="Incident_ID" />
+                <ScalarProperty Name="ST_key" ColumnName="ST_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="incident_fact">
+            <EntityTypeMapping TypeName="conform_riskman_conceptual.incident_fact">
+              <MappingFragment StoreEntitySet="incident_fact">
+                <ScalarProperty Name="ChCCUNotif" ColumnName="ChCCUNotif" />
+                <ScalarProperty Name="service_service" ColumnName="service_service" />
+                <ScalarProperty Name="customer_site" ColumnName="customer_site" />
+                <ScalarProperty Name="cust_service" ColumnName="cust_service" />
+                <ScalarProperty Name="detail" ColumnName="detail" />
+                <ScalarProperty Name="parent_guardian_notified" ColumnName="parent_guardian_notified" />
+                <ScalarProperty Name="funder_notified" ColumnName="funder_notified" />
+                <ScalarProperty Name="housing_regulator_notified" ColumnName="housing_regulator_notified" />
+                <ScalarProperty Name="ag_notified" ColumnName="ag_notified" />
+                <ScalarProperty Name="carl_notified" ColumnName="carl_notified" />
+                <ScalarProperty Name="crisis_intervention_notified" ColumnName="crisis_intervention_notified" />
+                <ScalarProperty Name="health_sa_notified" ColumnName="health_sa_notified" />
+                <ScalarProperty Name="human_services_notified" ColumnName="human_services_notified" />
+                <ScalarProperty Name="ambulance__notified" ColumnName="ambulance__notified" />
+                <ScalarProperty Name="fire_brigade_notified" ColumnName="fire_brigade_notified" />
+                <ScalarProperty Name="police_notified" ColumnName="police_notified" />
+                <ScalarProperty Name="preventative_corrective_action_required" ColumnName="preventative_corrective_action_required" />
+                <ScalarProperty Name="staff_injury" ColumnName="staff_injury" />
+                <ScalarProperty Name="safeworksa_notified" ColumnName="safeworksa_notified" />
+                <ScalarProperty Name="investigation_initiated" ColumnName="investigation_initiated" />
+                <ScalarProperty Name="lti_incurred" ColumnName="lti_incurred" />
+                <ScalarProperty Name="summary" ColumnName="summary" />
+                <ScalarProperty Name="nature_of_injury" ColumnName="nature_of_injury" />
+                <ScalarProperty Name="employee_site" ColumnName="employee_site" />
+                <ScalarProperty Name="transfer_location" ColumnName="transfer_location" />
+                <ScalarProperty Name="notification_reason" ColumnName="notification_reason" />
+                <ScalarProperty Name="next_of_kin_notified" ColumnName="next_of_kin_notified" />
+                <ScalarProperty Name="autopsy" ColumnName="autopsy" />
+                <ScalarProperty Name="coroner_notified" ColumnName="coroner_notified" />
+                <ScalarProperty Name="deceased" ColumnName="deceased" />
+                <ScalarProperty Name="incident_involved" ColumnName="incident_involved" />
+                <ScalarProperty Name="area_room" ColumnName="area_room" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="severity" ColumnName="severity" />
+                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="incident_time" ColumnName="incident_time" />
+                <ScalarProperty Name="display_id" ColumnName="display_id" />
+                <ScalarProperty Name="base_id" ColumnName="base_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Feedback_Issue_Fact">
+            <EntityTypeMapping TypeName="conform_riskman_conceptual.Feedback_Issue_Fact">
+              <MappingFragment StoreEntitySet="Feedback_Issue_Fact">
+                <ScalarProperty Name="FBIssueNotes" ColumnName="FBIssueNotes" />
+                <ScalarProperty Name="FBIssue" ColumnName="FBIssue" />
+                <ScalarProperty Name="FBIssueGroup" ColumnName="FBIssueGroup" />
+                <ScalarProperty Name="FBIssueId" ColumnName="FBIssueId" />
+                <ScalarProperty Name="Displayid" ColumnName="Displayid" />
+                <ScalarProperty Name="fd_key" ColumnName="fd_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pressure_injury_fact">
+            <EntityTypeMapping TypeName="conform_riskman_conceptual.pressure_injury_fact">
+              <MappingFragment StoreEntitySet="pressure_injury_fact">
+                <ScalarProperty Name="how_developed" ColumnName="how_developed" />
+                <ScalarProperty Name="other_site" ColumnName="other_site" />
+                <ScalarProperty Name="other_care_setting" ColumnName="other_care_setting" />
+                <ScalarProperty Name="care_setting" ColumnName="care_setting" />
+                <ScalarProperty Name="stage_of_pressure_injury" ColumnName="stage_of_pressure_injury" />
+                <ScalarProperty Name="other_location" ColumnName="other_location" />
+                <ScalarProperty Name="location_on_body" ColumnName="location_on_body" />
+                <ScalarProperty Name="incident_id" ColumnName="incident_id" />
+                <ScalarProperty Name="pressure_injury_key" ColumnName="pressure_injury_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_closed_date_key" TypeName="conform_riskman_conceptual.fk_incident_fact_closed_date_key" StoreEntitySet="incident_fact">
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+            <EndProperty Name="date_dim">
+              <ScalarProperty Name="date_key" ColumnName="closed_date_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_deleted_date_key" TypeName="conform_riskman_conceptual.fk_incident_fact_deleted_date_key" StoreEntitySet="incident_fact">
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+            <EndProperty Name="date_dim">
+              <ScalarProperty Name="date_key" ColumnName="deleted_date_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_incident_date_key" TypeName="conform_riskman_conceptual.fk_incident_fact_incident_date_key" StoreEntitySet="incident_fact">
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+            <EndProperty Name="date_dim">
+              <ScalarProperty Name="date_key" ColumnName="incident_date_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_investigation_completed_date_key" TypeName="conform_riskman_conceptual.fk_incident_fact_investigation_completed_date_key" StoreEntitySet="incident_fact">
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+            <EndProperty Name="date_dim">
+              <ScalarProperty Name="date_key" ColumnName="investigation_completed_date_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_investigation_initiated_date_key" TypeName="conform_riskman_conceptual.fk_incident_fact_investigation_initiated_date_key" StoreEntitySet="incident_fact">
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+            <EndProperty Name="date_dim">
+              <ScalarProperty Name="date_key" ColumnName="investigation_initiated_date_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_notified_date_key" TypeName="conform_riskman_conceptual.fk_incident_fact_notified_date_key" StoreEntitySet="incident_fact">
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+            <EndProperty Name="date_dim">
+              <ScalarProperty Name="date_key" ColumnName="notified_date_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_action_fact_incident_fact" TypeName="conform_riskman_conceptual.fk_incident_action_fact_incident_fact" StoreEntitySet="incident_action_fact">
+            <EndProperty Name="incident_action_fact">
+              <ScalarProperty Name="incident_action_fact_key" ColumnName="incident_action_fact_key" />
+            </EndProperty>
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_incident_key" TypeName="conform_riskman_conceptual.fk_incident_fact_incident_key" StoreEntitySet="incident_history_fact">
+            <EndProperty Name="incident_history_fact">
+              <ScalarProperty Name="incident_history_key" ColumnName="incident_history_key" />
+            </EndProperty>
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_person_key" TypeName="conform_riskman_conceptual.fk_incident_fact_person_key" StoreEntitySet="incident_fact">
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+            <EndProperty Name="person_dim">
+              <ScalarProperty Name="person_key" ColumnName="person_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_portfolio_key" TypeName="conform_riskman_conceptual.fk_incident_fact_portfolio_key" StoreEntitySet="incident_fact">
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+            <EndProperty Name="portfolio_dim">
+              <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_program_key" TypeName="conform_riskman_conceptual.fk_incident_fact_program_key" StoreEntitySet="incident_fact">
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+            <EndProperty Name="program_dim">
+              <ScalarProperty Name="program_key" ColumnName="program_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_fact_service_stream_key" TypeName="conform_riskman_conceptual.fk_incident_fact_service_stream_key" StoreEntitySet="incident_fact">
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+            <EndProperty Name="service_stream_dim">
+              <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_incident_type_fact_incident_fact" TypeName="conform_riskman_conceptual.fk_incident_type_fact_incident_fact" StoreEntitySet="incident_type_fact">
+            <EndProperty Name="incident_type_fact">
+              <ScalarProperty Name="incident_type_fact_key" ColumnName="incident_type_fact_key" />
+            </EndProperty>
+            <EndProperty Name="incident_fact">
+              <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+            </EndProperty>
+          </AssociationSetMapping>
           <EntitySetMapping Name="Feedback_Fact">
             <EntityTypeMapping TypeName="conform_riskman_conceptual.Feedback_Fact">
               <MappingFragment StoreEntitySet="Feedback_Fact">
@@ -2065,13 +2011,6 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
                 <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="severity" ColumnName="severity" />
                 <ScalarProperty Name="age" ColumnName="age" />
-                <ScalarProperty Name="notified_date_key" ColumnName="notified_date_key" />
-                <ScalarProperty Name="incident_date_key" ColumnName="incident_date_key" />
-                <ScalarProperty Name="closed_date_key" ColumnName="closed_date_key" />
-                <ScalarProperty Name="program_key" ColumnName="program_key" />
-                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
-                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
-                <ScalarProperty Name="person_key" ColumnName="person_key" />
                 <ScalarProperty Name="IncidentInvolved" ColumnName="IncidentInvolved" />
                 <ScalarProperty Name="DisplayID" ColumnName="DisplayID" />
                 <ScalarProperty Name="Base_id" ColumnName="Base_id" />
@@ -2080,21 +2019,69 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SkinTear_Fact">
-            <EntityTypeMapping TypeName="conform_riskman_conceptual.SkinTear_Fact">
-              <MappingFragment StoreEntitySet="SkinTear_Fact">
-                <ScalarProperty Name="How_skin_tear_developed" ColumnName="How_skin_tear_developed" />
-                <ScalarProperty Name="Other_Site" ColumnName="Other_Site" />
-                <ScalarProperty Name="Other_care_setting" ColumnName="Other_care_setting" />
-                <ScalarProperty Name="Care_setting_where_skintear_developed" ColumnName="Care_setting_where_skintear_developed" />
-                <ScalarProperty Name="Skin_Tear_Category" ColumnName="Skin_Tear_Category" />
-                <ScalarProperty Name="Other_location" ColumnName="Other_location" />
-                <ScalarProperty Name="Location_on_body" ColumnName="Location_on_body" />
-                <ScalarProperty Name="Incident_ID" ColumnName="Incident_ID" />
-                <ScalarProperty Name="ST_key" ColumnName="ST_key" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
+          <AssociationSetMapping Name="fk_feedback_key_closed_date_key" TypeName="conform_riskman_conceptual.fk_feedback_key_closed_date_key" StoreEntitySet="Feedback_Fact">
+            <EndProperty Name="Feedback_Fact">
+              <ScalarProperty Name="feedback_key" ColumnName="feedback_key" />
+            </EndProperty>
+            <EndProperty Name="date_dim">
+              <ScalarProperty Name="date_key" ColumnName="closed_date_key" />
+            </EndProperty>
+            <Condition ColumnName="closed_date_key" IsNull="false" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_feedback_key_incident_date_key" TypeName="conform_riskman_conceptual.fk_feedback_key_incident_date_key" StoreEntitySet="Feedback_Fact">
+            <EndProperty Name="Feedback_Fact">
+              <ScalarProperty Name="feedback_key" ColumnName="feedback_key" />
+            </EndProperty>
+            <EndProperty Name="date_dim">
+              <ScalarProperty Name="date_key" ColumnName="incident_date_key" />
+            </EndProperty>
+            <Condition ColumnName="incident_date_key" IsNull="false" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_feedback_key_notified_date_key" TypeName="conform_riskman_conceptual.fk_feedback_key_notified_date_key" StoreEntitySet="Feedback_Fact">
+            <EndProperty Name="Feedback_Fact">
+              <ScalarProperty Name="feedback_key" ColumnName="feedback_key" />
+            </EndProperty>
+            <EndProperty Name="date_dim">
+              <ScalarProperty Name="date_key" ColumnName="notified_date_key" />
+            </EndProperty>
+            <Condition ColumnName="notified_date_key" IsNull="false" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_feedback_key_person_key" TypeName="conform_riskman_conceptual.fk_feedback_key_person_key" StoreEntitySet="Feedback_Fact">
+            <EndProperty Name="Feedback_Fact">
+              <ScalarProperty Name="feedback_key" ColumnName="feedback_key" />
+            </EndProperty>
+            <EndProperty Name="person_dim">
+              <ScalarProperty Name="person_key" ColumnName="person_key" />
+            </EndProperty>
+            <Condition ColumnName="person_key" IsNull="false" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_feedback_key_portfolio_key" TypeName="conform_riskman_conceptual.fk_feedback_key_portfolio_key" StoreEntitySet="Feedback_Fact">
+            <EndProperty Name="Feedback_Fact">
+              <ScalarProperty Name="feedback_key" ColumnName="feedback_key" />
+            </EndProperty>
+            <EndProperty Name="portfolio_dim">
+              <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+            </EndProperty>
+            <Condition ColumnName="portfolio_key" IsNull="false" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_feedback_key_program_key" TypeName="conform_riskman_conceptual.fk_feedback_key_program_key" StoreEntitySet="Feedback_Fact">
+            <EndProperty Name="Feedback_Fact">
+              <ScalarProperty Name="feedback_key" ColumnName="feedback_key" />
+            </EndProperty>
+            <EndProperty Name="program_dim">
+              <ScalarProperty Name="program_key" ColumnName="program_key" />
+            </EndProperty>
+            <Condition ColumnName="program_key" IsNull="false" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_feedback_key_service_stream_key" TypeName="conform_riskman_conceptual.fk_feedback_key_service_stream_key" StoreEntitySet="Feedback_Fact">
+            <EndProperty Name="Feedback_Fact">
+              <ScalarProperty Name="feedback_key" ColumnName="feedback_key" />
+            </EndProperty>
+            <EndProperty Name="service_stream_dim">
+              <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+            </EndProperty>
+            <Condition ColumnName="service_stream_key" IsNull="false" />
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -2109,7 +2096,7 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
     <edmx:Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="UseLegacyProvider" Value="False" />
