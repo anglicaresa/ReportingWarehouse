@@ -21,6 +21,14 @@
           <Property Name="current_row_indicator" Type="varchar" MaxLength="1" />
           <Property Name="ch_id" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'DWHB.conform_riskman.ContributingFactors_fact' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="ContributingFactors_fact">
+          <Property Name="id" Type="int" />
+          <Property Name="display_id" Type="int" />
+          <Property Name="CFactorGroup" Type="varchar" MaxLength="400" />
+          <Property Name="CFactor" Type="varchar" MaxLength="400" />
+        </EntityType>-->
         <EntityType Name="date_dim">
           <Key>
             <PropertyRef Name="date_key" />
@@ -129,6 +137,62 @@
           <Property Name="user_id" Type="varchar" MaxLength="14" />
           <Property Name="AD_UserID" Type="varchar" MaxLength="100" />
           <Property Name="ASA_Email" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Feedback_Fact">
+          <Key>
+            <PropertyRef Name="feedback_key" />
+          </Key>
+          <Property Name="feedback_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID" Type="int" />
+          <Property Name="Base_id" Type="int" />
+          <Property Name="DisplayID" Type="int" />
+          <Property Name="IncidentInvolved" Type="varchar" MaxLength="50" />
+          <Property Name="person_key" Type="int" />
+          <Property Name="portfolio_key" Type="int" />
+          <Property Name="service_stream_key" Type="int" />
+          <Property Name="program_key" Type="int" />
+          <Property Name="closed_date_key" Type="int" />
+          <Property Name="incident_date_key" Type="int" />
+          <Property Name="notified_date_key" Type="int" />
+          <Property Name="age" Type="int" />
+          <Property Name="severity" Type="varchar" MaxLength="255" />
+          <Property Name="status" Type="varchar" MaxLength="50" />
+          <Property Name="location" Type="varchar" MaxLength="50" />
+          <Property Name="detail" Type="nvarchar(max)" />
+          <Property Name="AdditionalRef" Type="varchar" MaxLength="8000" />
+          <Property Name="Site" Type="varchar" MaxLength="100" />
+          <Property Name="Incident_Location" Type="varchar" MaxLength="50" />
+          <Property Name="Outcome" Type="varchar" MaxLength="255" />
+          <Property Name="InvestigationFinding" Type="varchar" MaxLength="5000" />
+          <Property Name="Comment" Type="varchar" MaxLength="8000" />
+          <Property Name="FBModeRecieved" Type="varchar" MaxLength="255" />
+          <Property Name="FBRelateClient" Type="varchar" MaxLength="3" />
+          <Property Name="FBRelateStaff" Type="varchar" MaxLength="3" />
+          <Property Name="FBAssocInc" Type="varchar" MaxLength="3" />
+          <Property Name="FBCompStatus" Type="varchar" MaxLength="50" />
+          <Property Name="FBCompStatusOther" Type="varchar" MaxLength="200" />
+          <Property Name="FBCompAnon" Type="varchar" MaxLength="3" />
+          <Property Name="FBCompRelationship" Type="varchar" MaxLength="50" />
+          <Property Name="FBAckDate" Type="datetime" />
+          <Property Name="FBFirstFormalDate" Type="datetime" />
+          <Property Name="FBObjectives" Type="varchar" MaxLength="500" />
+          <Property Name="FBExtAgency" Type="varchar" MaxLength="3" />
+          <Property Name="FBExtAgencyName" Type="varchar" MaxLength="100" />
+          <Property Name="FBIsClosed" Type="varchar" MaxLength="3" />
+          <Property Name="FBOutcome" Type="varchar" MaxLength="4000" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_riskman.Feedback_Issue_Fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Feedback_Issue_Fact">
+          <Key>
+            <PropertyRef Name="fd_key" />
+          </Key>
+          <Property Name="fd_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Displayid" Type="int" />
+          <Property Name="FBIssueId" Type="int" />
+          <Property Name="FBIssueGroup" Type="nvarchar(max)" />
+          <Property Name="FBIssue" Type="nvarchar(max)" />
+          <Property Name="FBIssueNotes" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="incident_action_fact">
           <Key>
@@ -255,6 +319,22 @@
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="nvarchar" MaxLength="1" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DWHB.conform_riskman.pressure_injury_fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="pressure_injury_fact">
+          <Key>
+            <PropertyRef Name="pressure_injury_key" />
+          </Key>
+          <Property Name="pressure_injury_key" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="incident_id" Type="int" />
+          <Property Name="location_on_body" Type="nvarchar(max)" />
+          <Property Name="other_location" Type="nvarchar(max)" />
+          <Property Name="stage_of_pressure_injury" Type="nvarchar(max)" />
+          <Property Name="care_setting" Type="nvarchar(max)" />
+          <Property Name="other_care_setting" Type="nvarchar(max)" />
+          <Property Name="other_site" Type="nvarchar(max)" />
+          <Property Name="how_developed" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="prgram_map_CustomerSite">
           <Key>
             <PropertyRef Name="CustomerSite" />
@@ -318,8 +398,6 @@
           <Property Name="row_expiration_date" Type="datetime" />
           <Property Name="current_row_indicator" Type="nvarchar" MaxLength="1" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="SkinTear_Fact">
           <Key>
             <PropertyRef Name="ST_key" />
@@ -334,6 +412,90 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="Other_Site" Type="nvarchar(max)" />
           <Property Name="How_skin_tear_developed" Type="nvarchar(max)" />
         </EntityType>
+        <Association Name="fk_feedback_key_closed_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="closed_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_incident_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="incident_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_notified_date_key">
+          <End Role="date_dim" Type="Self.date_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="notified_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_person_key">
+          <End Role="person_dim" Type="Self.person_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person_dim">
+              <PropertyRef Name="person_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="person_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_portfolio_key">
+          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_program_key">
+          <End Role="program_dim" Type="Self.program_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_service_stream_key">
+          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="0..1" />
+          <End Role="Feedback_Fact" Type="Self.Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_incident_action_fact_action_dim">
           <End Role="action_dim" Type="Self.action_dim" Multiplicity="1" />
           <End Role="incident_action_fact" Type="Self.incident_action_fact" Multiplicity="*" />
@@ -542,6 +704,7 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <EntitySet Name="action_dim" EntityType="Self.action_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="date_dim" EntityType="Self.date_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="employee_dim" EntityType="Self.employee_dim" Schema="conform_riskman" store:Type="Tables" />
+          <EntitySet Name="Feedback_Fact" EntityType="Self.Feedback_Fact" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="incident_action_fact" EntityType="Self.incident_action_fact" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="incident_fact" EntityType="Self.incident_fact" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="incident_history_fact" EntityType="Self.incident_history_fact" Schema="conform_riskman" store:Type="Tables" />
@@ -553,19 +716,58 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <EntitySet Name="program_dim" EntityType="Self.program_dim" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="program_mapping" EntityType="Self.program_mapping" Schema="conform_riskman" store:Type="Tables" />
           <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" Schema="conform_riskman" store:Type="Tables" />
-          <EntitySet Name="SkinTear_Fact" EntityType="Self.SkinTear_Fact" store:Type="Tables" store:Schema="conform_riskman">
+          <EntitySet Name="SkinTear_Fact" EntityType="Self.SkinTear_Fact" Schema="conform_riskman" store:Type="Tables" />
+          <EntitySet Name="Feedback_Issue_Fact" EntityType="Self.Feedback_Issue_Fact" store:Type="Tables" store:Schema="conform_riskman">
             <DefiningQuery>SELECT 
-    [SkinTear_Fact].[ST_key] AS [ST_key], 
-    [SkinTear_Fact].[Incident_ID] AS [Incident_ID], 
-    [SkinTear_Fact].[Location_on_body] AS [Location_on_body], 
-    [SkinTear_Fact].[Other_location] AS [Other_location], 
-    [SkinTear_Fact].[Skin_Tear_Category] AS [Skin_Tear_Category], 
-    [SkinTear_Fact].[Care_setting_where_skintear_developed] AS [Care_setting_where_skintear_developed], 
-    [SkinTear_Fact].[Other_care_setting] AS [Other_care_setting], 
-    [SkinTear_Fact].[Other_Site] AS [Other_Site], 
-    [SkinTear_Fact].[How_skin_tear_developed] AS [How_skin_tear_developed]
-    FROM [conform_riskman].[SkinTear_Fact] AS [SkinTear_Fact]</DefiningQuery>
+    [Feedback_Issue_Fact].[fd_key] AS [fd_key], 
+    [Feedback_Issue_Fact].[Displayid] AS [Displayid], 
+    [Feedback_Issue_Fact].[FBIssueId] AS [FBIssueId], 
+    [Feedback_Issue_Fact].[FBIssueGroup] AS [FBIssueGroup], 
+    [Feedback_Issue_Fact].[FBIssue] AS [FBIssue], 
+    [Feedback_Issue_Fact].[FBIssueNotes] AS [FBIssueNotes]
+    FROM [conform_riskman].[Feedback_Issue_Fact] AS [Feedback_Issue_Fact]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="pressure_injury_fact" EntityType="Self.pressure_injury_fact" store:Type="Tables" store:Schema="conform_riskman">
+            <DefiningQuery>SELECT 
+    [pressure_injury_fact].[pressure_injury_key] AS [pressure_injury_key], 
+    [pressure_injury_fact].[incident_id] AS [incident_id], 
+    [pressure_injury_fact].[location_on_body] AS [location_on_body], 
+    [pressure_injury_fact].[other_location] AS [other_location], 
+    [pressure_injury_fact].[stage_of_pressure_injury] AS [stage_of_pressure_injury], 
+    [pressure_injury_fact].[care_setting] AS [care_setting], 
+    [pressure_injury_fact].[other_care_setting] AS [other_care_setting], 
+    [pressure_injury_fact].[other_site] AS [other_site], 
+    [pressure_injury_fact].[how_developed] AS [how_developed]
+    FROM [conform_riskman].[pressure_injury_fact] AS [pressure_injury_fact]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="fk_feedback_key_closed_date_key" Association="Self.fk_feedback_key_closed_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_incident_date_key" Association="Self.fk_feedback_key_incident_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_notified_date_key" Association="Self.fk_feedback_key_notified_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_person_key" Association="Self.fk_feedback_key_person_key">
+            <End Role="person_dim" EntitySet="person_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_portfolio_key" Association="Self.fk_feedback_key_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_program_key" Association="Self.fk_feedback_key_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_service_stream_key" Association="Self.fk_feedback_key_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
           <AssociationSet Name="fk_incident_action_fact_action_dim" Association="Self.fk_incident_action_fact_action_dim">
             <End Role="action_dim" EntitySet="action_dim" />
             <End Role="incident_action_fact" EntitySet="incident_action_fact" />
@@ -681,12 +883,15 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="min_temperature" Type="Decimal" Precision="5" Scale="2" />
           <Property Name="rainfall" Type="Decimal" Precision="5" Scale="2" />
           <Property Name="max_wind_speed" Type="Decimal" Precision="5" Scale="2" />
-          <NavigationProperty Name="incident_fact" Relationship="Self.fk_incident_fact_closed_date_key" FromRole="date_dim" ToRole="incident_fact" />
-          <NavigationProperty Name="incident_fact1" Relationship="Self.fk_incident_fact_deleted_date_key" FromRole="date_dim" ToRole="incident_fact" />
-          <NavigationProperty Name="incident_fact2" Relationship="Self.fk_incident_fact_incident_date_key" FromRole="date_dim" ToRole="incident_fact" />
-          <NavigationProperty Name="incident_fact3" Relationship="Self.fk_incident_fact_investigation_completed_date_key" FromRole="date_dim" ToRole="incident_fact" />
-          <NavigationProperty Name="incident_fact4" Relationship="Self.fk_incident_fact_investigation_initiated_date_key" FromRole="date_dim" ToRole="incident_fact" />
-          <NavigationProperty Name="incident_fact5" Relationship="Self.fk_incident_fact_notified_date_key" FromRole="date_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="DWHBModel2.fk_feedback_key_closed_date_key" FromRole="date_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact1" Relationship="DWHBModel2.fk_feedback_key_incident_date_key" FromRole="date_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="Feedback_Fact2" Relationship="DWHBModel2.fk_feedback_key_notified_date_key" FromRole="date_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="incident_fact" Relationship="DWHBModel2.fk_incident_fact_closed_date_key" FromRole="date_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="incident_fact1" Relationship="DWHBModel2.fk_incident_fact_deleted_date_key" FromRole="date_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="incident_fact2" Relationship="DWHBModel2.fk_incident_fact_incident_date_key" FromRole="date_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="incident_fact3" Relationship="DWHBModel2.fk_incident_fact_investigation_completed_date_key" FromRole="date_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="incident_fact4" Relationship="DWHBModel2.fk_incident_fact_investigation_initiated_date_key" FromRole="date_dim" ToRole="incident_fact" />
+          <NavigationProperty Name="incident_fact5" Relationship="DWHBModel2.fk_incident_fact_notified_date_key" FromRole="date_dim" ToRole="incident_fact" />
         </EntityType>
         <EntityType Name="employee_dim">
           <Key>
@@ -781,8 +986,483 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="incident_key" Type="Int32" Nullable="false" />
           <Property Name="action_key" Type="Int32" Nullable="false" />
           <NavigationProperty Name="action_dim" Relationship="Self.fk_incident_action_fact_action_dim" FromRole="incident_action_fact" ToRole="action_dim" />
-          <NavigationProperty Name="incident_fact" Relationship="Self.fk_incident_action_fact_incident_fact" FromRole="incident_action_fact" ToRole="incident_fact" />
+          <NavigationProperty Name="incident_fact" Relationship="DWHBModel2.fk_incident_action_fact_incident_fact" FromRole="incident_action_fact" ToRole="incident_fact" />
         </EntityType>
+        <EntityType Name="incident_history_fact">
+          <Key>
+            <PropertyRef Name="incident_history_key" />
+          </Key>
+          <Property Name="incident_history_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="employee_key" Type="Int32" Nullable="false" />
+          <Property Name="incident_key" Type="Int32" Nullable="false" />
+          <Property Name="manager_key" Type="Int32" Nullable="false" />
+          <Property Name="entered_date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="employee_dim" Relationship="Self.fk_incident_fact_employee_key" FromRole="incident_history_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="employee_dim1" Relationship="Self.fk_incident_fact_manager_key" FromRole="incident_history_fact" ToRole="employee_dim" />
+          <NavigationProperty Name="incident_fact" Relationship="DWHBModel2.fk_incident_fact_incident_key" FromRole="incident_history_fact" ToRole="incident_fact" />
+        </EntityType>
+        <EntityType Name="incident_type_dim">
+          <Key>
+            <PropertyRef Name="incident_type_key" />
+          </Key>
+          <Property Name="incident_type_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="super_group" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="incident_class" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="definitions" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="incident_type_fact" Relationship="Self.fk_incident_type_fact_incident_type_dim" FromRole="incident_type_dim" ToRole="incident_type_fact" />
+        </EntityType>
+        <EntityType Name="incident_type_fact">
+          <Key>
+            <PropertyRef Name="incident_type_fact_key" />
+          </Key>
+          <Property Name="incident_type_fact_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="incident_key" Type="Int32" Nullable="false" />
+          <Property Name="incident_type_key" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="incident_type_dim" Relationship="Self.fk_incident_type_fact_incident_type_dim" FromRole="incident_type_fact" ToRole="incident_type_dim" />
+          <NavigationProperty Name="incident_fact" Relationship="DWHBModel2.fk_incident_type_fact_incident_fact" FromRole="incident_type_fact" ToRole="incident_fact" />
+        </EntityType>
+        <EntityType Name="person_dim">
+          <Key>
+            <PropertyRef Name="person_key" />
+          </Key>
+          <Property Name="person_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="given_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="family_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="date_of_birth" Type="DateTime" Precision="0" />
+          <Property Name="gender" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="contact_phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="DWHBModel2.fk_feedback_key_person_key" FromRole="person_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="incident_fact" Relationship="DWHBModel2.fk_incident_fact_person_key" FromRole="person_dim" ToRole="incident_fact" />
+        </EntityType>
+        <EntityType Name="portfolio_dim">
+          <Key>
+            <PropertyRef Name="portfolio_key" />
+          </Key>
+          <Property Name="portfolio_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="portfolio_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="portfolio_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="DWHBModel2.fk_feedback_key_portfolio_key" FromRole="portfolio_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="incident_fact" Relationship="DWHBModel2.fk_incident_fact_portfolio_key" FromRole="portfolio_dim" ToRole="incident_fact" />
+        </EntityType>
+        <EntityType Name="program_dim">
+          <Key>
+            <PropertyRef Name="program_key" />
+          </Key>
+          <Property Name="program_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="program_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="program_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="program_street" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="program_suburb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="program_postcode" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="DWHBModel2.fk_feedback_key_program_key" FromRole="program_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="incident_fact" Relationship="DWHBModel2.fk_incident_fact_program_key" FromRole="program_dim" ToRole="incident_fact" />
+        </EntityType>
+        <EntityType Name="program_mapping">
+          <Key>
+            <PropertyRef Name="program_mapping_key" />
+          </Key>
+          <Property Name="program_mapping_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="system" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="table1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="value1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="table2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="value2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="table3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="value3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="table4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="value4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="table5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="name5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="value5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="mapping_type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="program_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="program_key" Type="Int32" />
+        </EntityType>
+        <EntityType Name="service_stream_dim">
+          <Key>
+            <PropertyRef Name="service_stream_key" />
+          </Key>
+          <Property Name="service_stream_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="service_stream_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="service_stream_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="service_stream_region" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
+          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
+          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Feedback_Fact" Relationship="DWHBModel2.fk_feedback_key_service_stream_key" FromRole="service_stream_dim" ToRole="Feedback_Fact" />
+          <NavigationProperty Name="incident_fact" Relationship="DWHBModel2.fk_incident_fact_service_stream_key" FromRole="service_stream_dim" ToRole="incident_fact" />
+        </EntityType>
+        <Association Name="fk_incident_action_fact_action_dim">
+          <End Role="action_dim" Type="Self.action_dim" Multiplicity="1" />
+          <End Role="incident_action_fact" Type="Self.incident_action_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="action_dim">
+              <PropertyRef Name="action_key" />
+            </Principal>
+            <Dependent Role="incident_action_fact">
+              <PropertyRef Name="action_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_incident_fact_employee_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="incident_history_fact" Type="Self.incident_history_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="incident_history_fact">
+              <PropertyRef Name="employee_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_incident_fact_manager_key">
+          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
+          <End Role="incident_history_fact" Type="Self.incident_history_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee_dim">
+              <PropertyRef Name="employee_key" />
+            </Principal>
+            <Dependent Role="incident_history_fact">
+              <PropertyRef Name="manager_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_incident_type_fact_incident_type_dim">
+          <End Role="incident_type_dim" Type="Self.incident_type_dim" Multiplicity="1" />
+          <End Role="incident_type_fact" Type="Self.incident_type_fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="incident_type_dim">
+              <PropertyRef Name="incident_type_key" />
+            </Principal>
+            <Dependent Role="incident_type_fact">
+              <PropertyRef Name="incident_type_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DWHBEntities4" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="action_dim" EntityType="Self.action_dim" />
+          <EntitySet Name="date_dim" EntityType="Self.date_dim" />
+          <EntitySet Name="employee_dim" EntityType="Self.employee_dim" />
+          <EntitySet Name="incident_action_fact" EntityType="Self.incident_action_fact" />
+          <EntitySet Name="incident_history_fact" EntityType="Self.incident_history_fact" />
+          <EntitySet Name="incident_type_dim" EntityType="Self.incident_type_dim" />
+          <EntitySet Name="incident_type_fact" EntityType="Self.incident_type_fact" />
+          <EntitySet Name="person_dim" EntityType="Self.person_dim" />
+          <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" />
+          <EntitySet Name="program_dim" EntityType="Self.program_dim" />
+          <EntitySet Name="program_mapping" EntityType="Self.program_mapping" />
+          <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" />
+          <AssociationSet Name="fk_incident_action_fact_action_dim" Association="Self.fk_incident_action_fact_action_dim">
+            <End Role="action_dim" EntitySet="action_dim" />
+            <End Role="incident_action_fact" EntitySet="incident_action_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_employee_key" Association="Self.fk_incident_fact_employee_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_manager_key" Association="Self.fk_incident_fact_manager_key">
+            <End Role="employee_dim" EntitySet="employee_dim" />
+            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_type_fact_incident_type_dim" Association="Self.fk_incident_type_fact_incident_type_dim">
+            <End Role="incident_type_dim" EntitySet="incident_type_dim" />
+            <End Role="incident_type_fact" EntitySet="incident_type_fact" />
+          </AssociationSet>
+          <EntitySet Name="prgram_map_CustomerSite" EntityType="DWHBModel2.prgram_map_CustomerSite" />
+          <EntitySet Name="SkinTear_Fact" EntityType="DWHBModel2.SkinTear_Fact" />
+          <EntitySet Name="Feedback_Fact" EntityType="DWHBModel2.Feedback_Fact" />
+          <EntitySet Name="Feedback_Issue_Fact" EntityType="DWHBModel2.Feedback_Issue_Fact" />
+          <EntitySet Name="pressure_injury_fact" EntityType="DWHBModel2.pressure_injury_fact" />
+          <AssociationSet Name="fk_feedback_key_closed_date_key" Association="DWHBModel2.fk_feedback_key_closed_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_incident_date_key" Association="DWHBModel2.fk_feedback_key_incident_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_notified_date_key" Association="DWHBModel2.fk_feedback_key_notified_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_person_key" Association="DWHBModel2.fk_feedback_key_person_key">
+            <End Role="person_dim" EntitySet="person_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_portfolio_key" Association="DWHBModel2.fk_feedback_key_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_program_key" Association="DWHBModel2.fk_feedback_key_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_feedback_key_service_stream_key" Association="DWHBModel2.fk_feedback_key_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="Feedback_Fact" EntitySet="Feedback_Fact" />
+          </AssociationSet>
+          <EntitySet Name="incident_fact" EntityType="DWHBModel2.incident_fact" />
+          <AssociationSet Name="fk_incident_fact_closed_date_key" Association="DWHBModel2.fk_incident_fact_closed_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_deleted_date_key" Association="DWHBModel2.fk_incident_fact_deleted_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_incident_date_key" Association="DWHBModel2.fk_incident_fact_incident_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_investigation_completed_date_key" Association="DWHBModel2.fk_incident_fact_investigation_completed_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_investigation_initiated_date_key" Association="DWHBModel2.fk_incident_fact_investigation_initiated_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_notified_date_key" Association="DWHBModel2.fk_incident_fact_notified_date_key">
+            <End Role="date_dim" EntitySet="date_dim" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_action_fact_incident_fact" Association="DWHBModel2.fk_incident_action_fact_incident_fact">
+            <End Role="incident_fact" EntitySet="incident_fact" />
+            <End Role="incident_action_fact" EntitySet="incident_action_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_incident_key" Association="DWHBModel2.fk_incident_fact_incident_key">
+            <End Role="incident_fact" EntitySet="incident_fact" />
+            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_person_key" Association="DWHBModel2.fk_incident_fact_person_key">
+            <End Role="person_dim" EntitySet="person_dim" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_portfolio_key" Association="DWHBModel2.fk_incident_fact_portfolio_key">
+            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_program_key" Association="DWHBModel2.fk_incident_fact_program_key">
+            <End Role="program_dim" EntitySet="program_dim" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_fact_service_stream_key" Association="DWHBModel2.fk_incident_fact_service_stream_key">
+            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
+            <End Role="incident_fact" EntitySet="incident_fact" />
+          </AssociationSet>
+          <AssociationSet Name="fk_incident_type_fact_incident_fact" Association="DWHBModel2.fk_incident_type_fact_incident_fact">
+            <End Role="incident_fact" EntitySet="incident_fact" />
+            <End Role="incident_type_fact" EntitySet="incident_type_fact" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="prgram_map_CustomerSite">
+          <Key>
+            <PropertyRef Name="CustomerSite" />
+          </Key>
+          <Property Name="CustomerSite" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Record_Number" Type="Double" />
+          <Property Name="T1_Program" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SkinTear_Fact">
+          <Key>
+            <PropertyRef Name="ST_key" />
+          </Key>
+          <Property Name="ST_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Incident_ID" Type="Int32" />
+          <Property Name="Location_on_body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Skin_Tear_Category" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Care_setting_where_skintear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_care_setting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Other_Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="How_skin_tear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Feedback_Fact">
+          <Key>
+            <PropertyRef Name="feedback_key" />
+          </Key>
+          <Property Name="feedback_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="Int32" />
+          <Property Name="Base_id" Type="Int32" />
+          <Property Name="DisplayID" Type="Int32" />
+          <Property Name="IncidentInvolved" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="person_key" Type="Int32" />
+          <Property Name="portfolio_key" Type="Int32" />
+          <Property Name="service_stream_key" Type="Int32" />
+          <Property Name="program_key" Type="Int32" />
+          <Property Name="closed_date_key" Type="Int32" />
+          <Property Name="incident_date_key" Type="Int32" />
+          <Property Name="notified_date_key" Type="Int32" />
+          <Property Name="age" Type="Int32" />
+          <Property Name="severity" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AdditionalRef" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="Site" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Incident_Location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Outcome" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="InvestigationFinding" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="FBModeRecieved" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="FBRelateClient" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBRelateStaff" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBAssocInc" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBCompStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FBCompStatusOther" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FBCompAnon" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBCompRelationship" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FBAckDate" Type="DateTime" Precision="3" />
+          <Property Name="FBFirstFormalDate" Type="DateTime" Precision="3" />
+          <Property Name="FBObjectives" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="FBExtAgency" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBExtAgencyName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FBIsClosed" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="FBOutcome" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="date_dim" Relationship="DWHBModel2.fk_feedback_key_closed_date_key" FromRole="Feedback_Fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim1" Relationship="DWHBModel2.fk_feedback_key_incident_date_key" FromRole="Feedback_Fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim2" Relationship="DWHBModel2.fk_feedback_key_notified_date_key" FromRole="Feedback_Fact" ToRole="date_dim" />
+          <NavigationProperty Name="person_dim" Relationship="DWHBModel2.fk_feedback_key_person_key" FromRole="Feedback_Fact" ToRole="person_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="DWHBModel2.fk_feedback_key_portfolio_key" FromRole="Feedback_Fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="program_dim" Relationship="DWHBModel2.fk_feedback_key_program_key" FromRole="Feedback_Fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="DWHBModel2.fk_feedback_key_service_stream_key" FromRole="Feedback_Fact" ToRole="service_stream_dim" />
+        </EntityType>
+        <EntityType Name="Feedback_Issue_Fact">
+          <Key>
+            <PropertyRef Name="fd_key" />
+          </Key>
+          <Property Name="fd_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Displayid" Type="Int32" />
+          <Property Name="FBIssueId" Type="Int32" />
+          <Property Name="FBIssueGroup" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FBIssue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FBIssueNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="pressure_injury_fact">
+          <Key>
+            <PropertyRef Name="pressure_injury_key" />
+          </Key>
+          <Property Name="pressure_injury_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="incident_id" Type="Int32" />
+          <Property Name="location_on_body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="other_location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="stage_of_pressure_injury" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="care_setting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="other_care_setting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="other_site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="how_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="fk_feedback_key_closed_date_key">
+          <End Type="DWHBModel2.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel2.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="closed_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_incident_date_key">
+          <End Type="DWHBModel2.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel2.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="incident_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_notified_date_key">
+          <End Type="DWHBModel2.date_dim" Role="date_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel2.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="date_dim">
+              <PropertyRef Name="date_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="notified_date_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_person_key">
+          <End Type="DWHBModel2.person_dim" Role="person_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel2.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person_dim">
+              <PropertyRef Name="person_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="person_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_portfolio_key">
+          <End Type="DWHBModel2.portfolio_dim" Role="portfolio_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel2.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="portfolio_dim">
+              <PropertyRef Name="portfolio_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="portfolio_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_program_key">
+          <End Type="DWHBModel2.program_dim" Role="program_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel2.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="program_dim">
+              <PropertyRef Name="program_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="program_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_feedback_key_service_stream_key">
+          <End Type="DWHBModel2.service_stream_dim" Role="service_stream_dim" Multiplicity="0..1" />
+          <End Type="DWHBModel2.Feedback_Fact" Role="Feedback_Fact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="service_stream_dim">
+              <PropertyRef Name="service_stream_key" />
+            </Principal>
+            <Dependent Role="Feedback_Fact">
+              <PropertyRef Name="service_stream_key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="incident_fact">
           <Key>
             <PropertyRef Name="incident_key" />
@@ -836,165 +1516,25 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           <Property Name="detail" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="cust_service" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="customer_site" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="date_dim" Relationship="Self.fk_incident_fact_closed_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim1" Relationship="Self.fk_incident_fact_deleted_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim2" Relationship="Self.fk_incident_fact_incident_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim3" Relationship="Self.fk_incident_fact_investigation_completed_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim4" Relationship="Self.fk_incident_fact_investigation_initiated_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="date_dim5" Relationship="Self.fk_incident_fact_notified_date_key" FromRole="incident_fact" ToRole="date_dim" />
-          <NavigationProperty Name="incident_action_fact" Relationship="Self.fk_incident_action_fact_incident_fact" FromRole="incident_fact" ToRole="incident_action_fact" />
-          <NavigationProperty Name="incident_history_fact" Relationship="Self.fk_incident_fact_incident_key" FromRole="incident_fact" ToRole="incident_history_fact" />
-          <NavigationProperty Name="person_dim" Relationship="Self.fk_incident_fact_person_key" FromRole="incident_fact" ToRole="person_dim" />
-          <NavigationProperty Name="portfolio_dim" Relationship="Self.fk_incident_fact_portfolio_key" FromRole="incident_fact" ToRole="portfolio_dim" />
-          <NavigationProperty Name="program_dim" Relationship="Self.fk_incident_fact_program_key" FromRole="incident_fact" ToRole="program_dim" />
-          <NavigationProperty Name="service_stream_dim" Relationship="Self.fk_incident_fact_service_stream_key" FromRole="incident_fact" ToRole="service_stream_dim" />
-          <NavigationProperty Name="incident_type_fact" Relationship="Self.fk_incident_type_fact_incident_fact" FromRole="incident_fact" ToRole="incident_type_fact" />
-          <Property Name="site" Type="Time" Nullable="false" />
           <Property Name="service_service" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ChCCUNotif" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="SkinTear_Fact" Relationship="DWHBModel2.SkinTear_Factincident_fact" FromRole="incident_fact" ToRole="SkinTear_Fact" />
+          <NavigationProperty Name="date_dim" Relationship="DWHBModel2.fk_incident_fact_closed_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim1" Relationship="DWHBModel2.fk_incident_fact_deleted_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim2" Relationship="DWHBModel2.fk_incident_fact_incident_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim3" Relationship="DWHBModel2.fk_incident_fact_investigation_completed_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim4" Relationship="DWHBModel2.fk_incident_fact_investigation_initiated_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="date_dim5" Relationship="DWHBModel2.fk_incident_fact_notified_date_key" FromRole="incident_fact" ToRole="date_dim" />
+          <NavigationProperty Name="incident_action_fact" Relationship="DWHBModel2.fk_incident_action_fact_incident_fact" FromRole="incident_fact" ToRole="incident_action_fact" />
+          <NavigationProperty Name="incident_history_fact" Relationship="DWHBModel2.fk_incident_fact_incident_key" FromRole="incident_fact" ToRole="incident_history_fact" />
+          <NavigationProperty Name="person_dim" Relationship="DWHBModel2.fk_incident_fact_person_key" FromRole="incident_fact" ToRole="person_dim" />
+          <NavigationProperty Name="portfolio_dim" Relationship="DWHBModel2.fk_incident_fact_portfolio_key" FromRole="incident_fact" ToRole="portfolio_dim" />
+          <NavigationProperty Name="program_dim" Relationship="DWHBModel2.fk_incident_fact_program_key" FromRole="incident_fact" ToRole="program_dim" />
+          <NavigationProperty Name="service_stream_dim" Relationship="DWHBModel2.fk_incident_fact_service_stream_key" FromRole="incident_fact" ToRole="service_stream_dim" />
+          <NavigationProperty Name="incident_type_fact" Relationship="DWHBModel2.fk_incident_type_fact_incident_fact" FromRole="incident_fact" ToRole="incident_type_fact" />
         </EntityType>
-        <EntityType Name="incident_history_fact">
-          <Key>
-            <PropertyRef Name="incident_history_key" />
-          </Key>
-          <Property Name="incident_history_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="employee_key" Type="Int32" Nullable="false" />
-          <Property Name="incident_key" Type="Int32" Nullable="false" />
-          <Property Name="manager_key" Type="Int32" Nullable="false" />
-          <Property Name="entered_date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="employee_dim" Relationship="Self.fk_incident_fact_employee_key" FromRole="incident_history_fact" ToRole="employee_dim" />
-          <NavigationProperty Name="employee_dim1" Relationship="Self.fk_incident_fact_manager_key" FromRole="incident_history_fact" ToRole="employee_dim" />
-          <NavigationProperty Name="incident_fact" Relationship="Self.fk_incident_fact_incident_key" FromRole="incident_history_fact" ToRole="incident_fact" />
-        </EntityType>
-        <EntityType Name="incident_type_dim">
-          <Key>
-            <PropertyRef Name="incident_type_key" />
-          </Key>
-          <Property Name="incident_type_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="super_group" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="incident_class" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="definitions" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
-          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
-          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="incident_type_fact" Relationship="Self.fk_incident_type_fact_incident_type_dim" FromRole="incident_type_dim" ToRole="incident_type_fact" />
-        </EntityType>
-        <EntityType Name="incident_type_fact">
-          <Key>
-            <PropertyRef Name="incident_type_fact_key" />
-          </Key>
-          <Property Name="incident_type_fact_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="incident_key" Type="Int32" Nullable="false" />
-          <Property Name="incident_type_key" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="incident_fact" Relationship="Self.fk_incident_type_fact_incident_fact" FromRole="incident_type_fact" ToRole="incident_fact" />
-          <NavigationProperty Name="incident_type_dim" Relationship="Self.fk_incident_type_fact_incident_type_dim" FromRole="incident_type_fact" ToRole="incident_type_dim" />
-        </EntityType>
-        <EntityType Name="person_dim">
-          <Key>
-            <PropertyRef Name="person_key" />
-          </Key>
-          <Property Name="person_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="given_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="family_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="date_of_birth" Type="DateTime" Precision="0" />
-          <Property Name="gender" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="contact_phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
-          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
-          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="incident_fact" Relationship="Self.fk_incident_fact_person_key" FromRole="person_dim" ToRole="incident_fact" />
-        </EntityType>
-        <EntityType Name="portfolio_dim">
-          <Key>
-            <PropertyRef Name="portfolio_key" />
-          </Key>
-          <Property Name="portfolio_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="portfolio_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="portfolio_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
-          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
-          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
-          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="incident_fact" Relationship="Self.fk_incident_fact_portfolio_key" FromRole="portfolio_dim" ToRole="incident_fact" />
-        </EntityType>
-        <EntityType Name="program_dim">
-          <Key>
-            <PropertyRef Name="program_key" />
-          </Key>
-          <Property Name="program_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="program_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="program_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="program_street" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="program_suburb" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="program_postcode" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
-          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
-          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="incident_fact" Relationship="Self.fk_incident_fact_program_key" FromRole="program_dim" ToRole="incident_fact" />
-        </EntityType>
-        <EntityType Name="program_mapping">
-          <Key>
-            <PropertyRef Name="program_mapping_key" />
-          </Key>
-          <Property Name="program_mapping_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="system" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="table1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="name1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="value1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="table2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="name2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="value2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="table3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="name3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="value3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="table4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="name4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="value4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="table5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="name5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="value5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="mapping_type" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="program_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="program_key" Type="Int32" />
-        </EntityType>
-        <EntityType Name="service_stream_dim">
-          <Key>
-            <PropertyRef Name="service_stream_key" />
-          </Key>
-          <Property Name="service_stream_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="service_stream_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="service_stream_code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="service_stream_region" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="change_reason_code" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
-          <Property Name="change_reason_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="row_effective_date" Type="DateTime" Precision="3" />
-          <Property Name="row_expiration_date" Type="DateTime" Precision="3" />
-          <Property Name="current_row_indicator" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="incident_fact" Relationship="Self.fk_incident_fact_service_stream_key" FromRole="service_stream_dim" ToRole="incident_fact" />
-        </EntityType>
-        <Association Name="fk_incident_action_fact_action_dim">
-          <End Role="action_dim" Type="Self.action_dim" Multiplicity="1" />
-          <End Role="incident_action_fact" Type="Self.incident_action_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="action_dim">
-              <PropertyRef Name="action_key" />
-            </Principal>
-            <Dependent Role="incident_action_fact">
-              <PropertyRef Name="action_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_incident_fact_closed_date_key">
-          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="date_dim">
               <PropertyRef Name="date_key" />
@@ -1005,8 +1545,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_fact_deleted_date_key">
-          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="date_dim">
               <PropertyRef Name="date_key" />
@@ -1017,8 +1557,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_fact_incident_date_key">
-          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="date_dim">
               <PropertyRef Name="date_key" />
@@ -1029,8 +1569,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_fact_investigation_completed_date_key">
-          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="date_dim">
               <PropertyRef Name="date_key" />
@@ -1041,8 +1581,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_fact_investigation_initiated_date_key">
-          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="date_dim">
               <PropertyRef Name="date_key" />
@@ -1053,8 +1593,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_fact_notified_date_key">
-          <End Role="date_dim" Type="Self.date_dim" Multiplicity="1" />
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.date_dim" Role="date_dim" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="date_dim">
               <PropertyRef Name="date_key" />
@@ -1064,33 +1604,9 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_incident_fact_employee_key">
-          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
-          <End Role="incident_history_fact" Type="Self.incident_history_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="employee_dim">
-              <PropertyRef Name="employee_key" />
-            </Principal>
-            <Dependent Role="incident_history_fact">
-              <PropertyRef Name="employee_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_fact_manager_key">
-          <End Role="employee_dim" Type="Self.employee_dim" Multiplicity="1" />
-          <End Role="incident_history_fact" Type="Self.incident_history_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="employee_dim">
-              <PropertyRef Name="employee_key" />
-            </Principal>
-            <Dependent Role="incident_history_fact">
-              <PropertyRef Name="manager_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_incident_action_fact_incident_fact">
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="1" />
-          <End Role="incident_action_fact" Type="Self.incident_action_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_action_fact" Role="incident_action_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="incident_fact">
               <PropertyRef Name="incident_key" />
@@ -1101,8 +1617,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_fact_incident_key">
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="1" />
-          <End Role="incident_history_fact" Type="Self.incident_history_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_history_fact" Role="incident_history_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="incident_fact">
               <PropertyRef Name="incident_key" />
@@ -1113,8 +1629,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_fact_person_key">
-          <End Role="person_dim" Type="Self.person_dim" Multiplicity="1" />
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.person_dim" Role="person_dim" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="person_dim">
               <PropertyRef Name="person_key" />
@@ -1125,8 +1641,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_fact_portfolio_key">
-          <End Role="portfolio_dim" Type="Self.portfolio_dim" Multiplicity="1" />
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.portfolio_dim" Role="portfolio_dim" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="portfolio_dim">
               <PropertyRef Name="portfolio_key" />
@@ -1137,8 +1653,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_fact_program_key">
-          <End Role="program_dim" Type="Self.program_dim" Multiplicity="1" />
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.program_dim" Role="program_dim" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="program_dim">
               <PropertyRef Name="program_key" />
@@ -1149,8 +1665,8 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_fact_service_stream_key">
-          <End Role="service_stream_dim" Type="Self.service_stream_dim" Multiplicity="1" />
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.service_stream_dim" Role="service_stream_dim" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="service_stream_dim">
               <PropertyRef Name="service_stream_key" />
@@ -1161,150 +1677,14 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_incident_type_fact_incident_fact">
-          <End Role="incident_fact" Type="Self.incident_fact" Multiplicity="1" />
-          <End Role="incident_type_fact" Type="Self.incident_type_fact" Multiplicity="*" />
+          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="1" />
+          <End Type="DWHBModel2.incident_type_fact" Role="incident_type_fact" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="incident_fact">
               <PropertyRef Name="incident_key" />
             </Principal>
             <Dependent Role="incident_type_fact">
               <PropertyRef Name="incident_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_incident_type_fact_incident_type_dim">
-          <End Role="incident_type_dim" Type="Self.incident_type_dim" Multiplicity="1" />
-          <End Role="incident_type_fact" Type="Self.incident_type_fact" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="incident_type_dim">
-              <PropertyRef Name="incident_type_key" />
-            </Principal>
-            <Dependent Role="incident_type_fact">
-              <PropertyRef Name="incident_type_key" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="DWHBEntities4" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="action_dim" EntityType="Self.action_dim" />
-          <EntitySet Name="date_dim" EntityType="Self.date_dim" />
-          <EntitySet Name="employee_dim" EntityType="Self.employee_dim" />
-          <EntitySet Name="incident_action_fact" EntityType="Self.incident_action_fact" />
-          <EntitySet Name="incident_fact" EntityType="Self.incident_fact" />
-          <EntitySet Name="incident_history_fact" EntityType="Self.incident_history_fact" />
-          <EntitySet Name="incident_type_dim" EntityType="Self.incident_type_dim" />
-          <EntitySet Name="incident_type_fact" EntityType="Self.incident_type_fact" />
-          <EntitySet Name="person_dim" EntityType="Self.person_dim" />
-          <EntitySet Name="portfolio_dim" EntityType="Self.portfolio_dim" />
-          <EntitySet Name="program_dim" EntityType="Self.program_dim" />
-          <EntitySet Name="program_mapping" EntityType="Self.program_mapping" />
-          <EntitySet Name="service_stream_dim" EntityType="Self.service_stream_dim" />
-          <AssociationSet Name="fk_incident_action_fact_action_dim" Association="Self.fk_incident_action_fact_action_dim">
-            <End Role="action_dim" EntitySet="action_dim" />
-            <End Role="incident_action_fact" EntitySet="incident_action_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_closed_date_key" Association="Self.fk_incident_fact_closed_date_key">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_deleted_date_key" Association="Self.fk_incident_fact_deleted_date_key">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_incident_date_key" Association="Self.fk_incident_fact_incident_date_key">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_investigation_completed_date_key" Association="Self.fk_incident_fact_investigation_completed_date_key">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_investigation_initiated_date_key" Association="Self.fk_incident_fact_investigation_initiated_date_key">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_notified_date_key" Association="Self.fk_incident_fact_notified_date_key">
-            <End Role="date_dim" EntitySet="date_dim" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_employee_key" Association="Self.fk_incident_fact_employee_key">
-            <End Role="employee_dim" EntitySet="employee_dim" />
-            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_manager_key" Association="Self.fk_incident_fact_manager_key">
-            <End Role="employee_dim" EntitySet="employee_dim" />
-            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_action_fact_incident_fact" Association="Self.fk_incident_action_fact_incident_fact">
-            <End Role="incident_fact" EntitySet="incident_fact" />
-            <End Role="incident_action_fact" EntitySet="incident_action_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_incident_key" Association="Self.fk_incident_fact_incident_key">
-            <End Role="incident_fact" EntitySet="incident_fact" />
-            <End Role="incident_history_fact" EntitySet="incident_history_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_person_key" Association="Self.fk_incident_fact_person_key">
-            <End Role="person_dim" EntitySet="person_dim" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_portfolio_key" Association="Self.fk_incident_fact_portfolio_key">
-            <End Role="portfolio_dim" EntitySet="portfolio_dim" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_program_key" Association="Self.fk_incident_fact_program_key">
-            <End Role="program_dim" EntitySet="program_dim" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_fact_service_stream_key" Association="Self.fk_incident_fact_service_stream_key">
-            <End Role="service_stream_dim" EntitySet="service_stream_dim" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_type_fact_incident_fact" Association="Self.fk_incident_type_fact_incident_fact">
-            <End Role="incident_fact" EntitySet="incident_fact" />
-            <End Role="incident_type_fact" EntitySet="incident_type_fact" />
-          </AssociationSet>
-          <AssociationSet Name="fk_incident_type_fact_incident_type_dim" Association="Self.fk_incident_type_fact_incident_type_dim">
-            <End Role="incident_type_dim" EntitySet="incident_type_dim" />
-            <End Role="incident_type_fact" EntitySet="incident_type_fact" />
-          </AssociationSet>
-          <EntitySet Name="prgram_map_CustomerSite" EntityType="DWHBModel2.prgram_map_CustomerSite" />
-          <EntitySet Name="SkinTear_Fact" EntityType="DWHBModel2.SkinTear_Fact" />
-          <AssociationSet Name="SkinTear_Factincident_fact" Association="DWHBModel2.SkinTear_Factincident_fact">
-            <End Role="SkinTear_Fact" EntitySet="SkinTear_Fact" />
-            <End Role="incident_fact" EntitySet="incident_fact" />
-          </AssociationSet>
-        </EntityContainer>
-        <EntityType Name="prgram_map_CustomerSite">
-          <Key>
-            <PropertyRef Name="CustomerSite" />
-          </Key>
-          <Property Name="CustomerSite" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Record_Number" Type="Double" />
-          <Property Name="T1_Program" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="SkinTear_Fact">
-          <Key>
-            <PropertyRef Name="ST_key" />
-          </Key>
-          <Property Name="ST_key" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Incident_ID" Type="Int32" />
-          <Property Name="Location_on_body" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Other_location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Skin_Tear_Category" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Care_setting_where_skintear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Other_care_setting" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Other_Site" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="How_skin_tear_developed" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="incident_fact" Relationship="DWHBModel2.SkinTear_Factincident_fact" FromRole="SkinTear_Fact" ToRole="incident_fact" />
-        </EntityType>
-        <Association Name="SkinTear_Factincident_fact">
-          <End Type="DWHBModel2.SkinTear_Fact" Role="SkinTear_Fact" Multiplicity="1" />
-          <End Type="DWHBModel2.incident_fact" Role="incident_fact" Multiplicity="1" />
-          <ReferentialConstraint>
-            <Principal Role="SkinTear_Fact">
-              <PropertyRef Name="ST_key" />
-            </Principal>
-            <Dependent Role="incident_fact">
-              <PropertyRef Name="display_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1448,63 +1828,6 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
                 <ScalarProperty Name="incident_action_fact_key" ColumnName="incident_action_fact_key" />
                 <ScalarProperty Name="incident_key" ColumnName="incident_key" />
                 <ScalarProperty Name="action_key" ColumnName="action_key" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="incident_fact">
-            <EntityTypeMapping TypeName="DWHBModel2.incident_fact">
-              <MappingFragment StoreEntitySet="incident_fact">
-                <ScalarProperty Name="ChCCUNotif" ColumnName="ChCCUNotif" />
-                <ScalarProperty Name="service_service" ColumnName="service_service" />
-                <ScalarProperty Name="incident_key" ColumnName="incident_key" />
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="base_id" ColumnName="base_id" />
-                <ScalarProperty Name="display_id" ColumnName="display_id" />
-                <ScalarProperty Name="person_key" ColumnName="person_key" />
-                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
-                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
-                <ScalarProperty Name="program_key" ColumnName="program_key" />
-                <ScalarProperty Name="closed_date_key" ColumnName="closed_date_key" />
-                <ScalarProperty Name="incident_date_key" ColumnName="incident_date_key" />
-                <ScalarProperty Name="notified_date_key" ColumnName="notified_date_key" />
-                <ScalarProperty Name="deleted_date_key" ColumnName="deleted_date_key" />
-                <ScalarProperty Name="investigation_initiated_date_key" ColumnName="investigation_initiated_date_key" />
-                <ScalarProperty Name="investigation_completed_date_key" ColumnName="investigation_completed_date_key" />
-                <ScalarProperty Name="incident_time" ColumnName="incident_time" />
-                <ScalarProperty Name="age" ColumnName="age" />
-                <ScalarProperty Name="severity" ColumnName="severity" />
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="location" ColumnName="location" />
-                <ScalarProperty Name="area_room" ColumnName="area_room" />
-                <ScalarProperty Name="incident_involved" ColumnName="incident_involved" />
-                <ScalarProperty Name="deceased" ColumnName="deceased" />
-                <ScalarProperty Name="coroner_notified" ColumnName="coroner_notified" />
-                <ScalarProperty Name="autopsy" ColumnName="autopsy" />
-                <ScalarProperty Name="next_of_kin_notified" ColumnName="next_of_kin_notified" />
-                <ScalarProperty Name="notification_reason" ColumnName="notification_reason" />
-                <ScalarProperty Name="transfer_location" ColumnName="transfer_location" />
-                <ScalarProperty Name="employee_site" ColumnName="employee_site" />
-                <ScalarProperty Name="nature_of_injury" ColumnName="nature_of_injury" />
-                <ScalarProperty Name="summary" ColumnName="summary" />
-                <ScalarProperty Name="lti_incurred" ColumnName="lti_incurred" />
-                <ScalarProperty Name="investigation_initiated" ColumnName="investigation_initiated" />
-                <ScalarProperty Name="safeworksa_notified" ColumnName="safeworksa_notified" />
-                <ScalarProperty Name="staff_injury" ColumnName="staff_injury" />
-                <ScalarProperty Name="preventative_corrective_action_required" ColumnName="preventative_corrective_action_required" />
-                <ScalarProperty Name="police_notified" ColumnName="police_notified" />
-                <ScalarProperty Name="fire_brigade_notified" ColumnName="fire_brigade_notified" />
-                <ScalarProperty Name="ambulance__notified" ColumnName="ambulance__notified" />
-                <ScalarProperty Name="human_services_notified" ColumnName="human_services_notified" />
-                <ScalarProperty Name="health_sa_notified" ColumnName="health_sa_notified" />
-                <ScalarProperty Name="crisis_intervention_notified" ColumnName="crisis_intervention_notified" />
-                <ScalarProperty Name="carl_notified" ColumnName="carl_notified" />
-                <ScalarProperty Name="ag_notified" ColumnName="ag_notified" />
-                <ScalarProperty Name="housing_regulator_notified" ColumnName="housing_regulator_notified" />
-                <ScalarProperty Name="funder_notified" ColumnName="funder_notified" />
-                <ScalarProperty Name="parent_guardian_notified" ColumnName="parent_guardian_notified" />
-                <ScalarProperty Name="detail" ColumnName="detail" />
-                <ScalarProperty Name="cust_service" ColumnName="cust_service" />
-                <ScalarProperty Name="customer_site" ColumnName="customer_site" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1656,6 +1979,134 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Feedback_Fact">
+            <EntityTypeMapping TypeName="DWHBModel2.Feedback_Fact">
+              <MappingFragment StoreEntitySet="Feedback_Fact">
+                <ScalarProperty Name="FBOutcome" ColumnName="FBOutcome" />
+                <ScalarProperty Name="FBIsClosed" ColumnName="FBIsClosed" />
+                <ScalarProperty Name="FBExtAgencyName" ColumnName="FBExtAgencyName" />
+                <ScalarProperty Name="FBExtAgency" ColumnName="FBExtAgency" />
+                <ScalarProperty Name="FBObjectives" ColumnName="FBObjectives" />
+                <ScalarProperty Name="FBFirstFormalDate" ColumnName="FBFirstFormalDate" />
+                <ScalarProperty Name="FBAckDate" ColumnName="FBAckDate" />
+                <ScalarProperty Name="FBCompRelationship" ColumnName="FBCompRelationship" />
+                <ScalarProperty Name="FBCompAnon" ColumnName="FBCompAnon" />
+                <ScalarProperty Name="FBCompStatusOther" ColumnName="FBCompStatusOther" />
+                <ScalarProperty Name="FBCompStatus" ColumnName="FBCompStatus" />
+                <ScalarProperty Name="FBAssocInc" ColumnName="FBAssocInc" />
+                <ScalarProperty Name="FBRelateStaff" ColumnName="FBRelateStaff" />
+                <ScalarProperty Name="FBRelateClient" ColumnName="FBRelateClient" />
+                <ScalarProperty Name="FBModeRecieved" ColumnName="FBModeRecieved" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="InvestigationFinding" ColumnName="InvestigationFinding" />
+                <ScalarProperty Name="Outcome" ColumnName="Outcome" />
+                <ScalarProperty Name="Incident_Location" ColumnName="Incident_Location" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="AdditionalRef" ColumnName="AdditionalRef" />
+                <ScalarProperty Name="detail" ColumnName="detail" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="severity" ColumnName="severity" />
+                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="notified_date_key" ColumnName="notified_date_key" />
+                <ScalarProperty Name="incident_date_key" ColumnName="incident_date_key" />
+                <ScalarProperty Name="closed_date_key" ColumnName="closed_date_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="person_key" ColumnName="person_key" />
+                <ScalarProperty Name="IncidentInvolved" ColumnName="IncidentInvolved" />
+                <ScalarProperty Name="DisplayID" ColumnName="DisplayID" />
+                <ScalarProperty Name="Base_id" ColumnName="Base_id" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="feedback_key" ColumnName="feedback_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Feedback_Issue_Fact">
+            <EntityTypeMapping TypeName="DWHBModel2.Feedback_Issue_Fact">
+              <MappingFragment StoreEntitySet="Feedback_Issue_Fact">
+                <ScalarProperty Name="FBIssueNotes" ColumnName="FBIssueNotes" />
+                <ScalarProperty Name="FBIssue" ColumnName="FBIssue" />
+                <ScalarProperty Name="FBIssueGroup" ColumnName="FBIssueGroup" />
+                <ScalarProperty Name="FBIssueId" ColumnName="FBIssueId" />
+                <ScalarProperty Name="Displayid" ColumnName="Displayid" />
+                <ScalarProperty Name="fd_key" ColumnName="fd_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pressure_injury_fact">
+            <EntityTypeMapping TypeName="DWHBModel2.pressure_injury_fact">
+              <MappingFragment StoreEntitySet="pressure_injury_fact">
+                <ScalarProperty Name="how_developed" ColumnName="how_developed" />
+                <ScalarProperty Name="other_site" ColumnName="other_site" />
+                <ScalarProperty Name="other_care_setting" ColumnName="other_care_setting" />
+                <ScalarProperty Name="care_setting" ColumnName="care_setting" />
+                <ScalarProperty Name="stage_of_pressure_injury" ColumnName="stage_of_pressure_injury" />
+                <ScalarProperty Name="other_location" ColumnName="other_location" />
+                <ScalarProperty Name="location_on_body" ColumnName="location_on_body" />
+                <ScalarProperty Name="incident_id" ColumnName="incident_id" />
+                <ScalarProperty Name="pressure_injury_key" ColumnName="pressure_injury_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="incident_fact">
+            <EntityTypeMapping TypeName="DWHBModel2.incident_fact">
+              <MappingFragment StoreEntitySet="incident_fact">
+                <ScalarProperty Name="ChCCUNotif" ColumnName="ChCCUNotif" />
+                <ScalarProperty Name="service_service" ColumnName="service_service" />
+                <ScalarProperty Name="customer_site" ColumnName="customer_site" />
+                <ScalarProperty Name="cust_service" ColumnName="cust_service" />
+                <ScalarProperty Name="detail" ColumnName="detail" />
+                <ScalarProperty Name="parent_guardian_notified" ColumnName="parent_guardian_notified" />
+                <ScalarProperty Name="funder_notified" ColumnName="funder_notified" />
+                <ScalarProperty Name="housing_regulator_notified" ColumnName="housing_regulator_notified" />
+                <ScalarProperty Name="ag_notified" ColumnName="ag_notified" />
+                <ScalarProperty Name="carl_notified" ColumnName="carl_notified" />
+                <ScalarProperty Name="crisis_intervention_notified" ColumnName="crisis_intervention_notified" />
+                <ScalarProperty Name="health_sa_notified" ColumnName="health_sa_notified" />
+                <ScalarProperty Name="human_services_notified" ColumnName="human_services_notified" />
+                <ScalarProperty Name="ambulance__notified" ColumnName="ambulance__notified" />
+                <ScalarProperty Name="fire_brigade_notified" ColumnName="fire_brigade_notified" />
+                <ScalarProperty Name="police_notified" ColumnName="police_notified" />
+                <ScalarProperty Name="preventative_corrective_action_required" ColumnName="preventative_corrective_action_required" />
+                <ScalarProperty Name="staff_injury" ColumnName="staff_injury" />
+                <ScalarProperty Name="safeworksa_notified" ColumnName="safeworksa_notified" />
+                <ScalarProperty Name="investigation_initiated" ColumnName="investigation_initiated" />
+                <ScalarProperty Name="lti_incurred" ColumnName="lti_incurred" />
+                <ScalarProperty Name="summary" ColumnName="summary" />
+                <ScalarProperty Name="nature_of_injury" ColumnName="nature_of_injury" />
+                <ScalarProperty Name="employee_site" ColumnName="employee_site" />
+                <ScalarProperty Name="transfer_location" ColumnName="transfer_location" />
+                <ScalarProperty Name="notification_reason" ColumnName="notification_reason" />
+                <ScalarProperty Name="next_of_kin_notified" ColumnName="next_of_kin_notified" />
+                <ScalarProperty Name="autopsy" ColumnName="autopsy" />
+                <ScalarProperty Name="coroner_notified" ColumnName="coroner_notified" />
+                <ScalarProperty Name="deceased" ColumnName="deceased" />
+                <ScalarProperty Name="incident_involved" ColumnName="incident_involved" />
+                <ScalarProperty Name="area_room" ColumnName="area_room" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="severity" ColumnName="severity" />
+                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="incident_time" ColumnName="incident_time" />
+                <ScalarProperty Name="investigation_completed_date_key" ColumnName="investigation_completed_date_key" />
+                <ScalarProperty Name="investigation_initiated_date_key" ColumnName="investigation_initiated_date_key" />
+                <ScalarProperty Name="deleted_date_key" ColumnName="deleted_date_key" />
+                <ScalarProperty Name="notified_date_key" ColumnName="notified_date_key" />
+                <ScalarProperty Name="incident_date_key" ColumnName="incident_date_key" />
+                <ScalarProperty Name="closed_date_key" ColumnName="closed_date_key" />
+                <ScalarProperty Name="program_key" ColumnName="program_key" />
+                <ScalarProperty Name="service_stream_key" ColumnName="service_stream_key" />
+                <ScalarProperty Name="portfolio_key" ColumnName="portfolio_key" />
+                <ScalarProperty Name="person_key" ColumnName="person_key" />
+                <ScalarProperty Name="display_id" ColumnName="display_id" />
+                <ScalarProperty Name="base_id" ColumnName="base_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="incident_key" ColumnName="incident_key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1670,7 +2121,7 @@ warning 6002: The table/view 'DWHB.conform_riskman.SkinTear_Fact' does not have 
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
