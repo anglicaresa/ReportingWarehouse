@@ -91,3 +91,14 @@ BEGIN
         (select table_key from [management].[table_dim] where table_name = @t_table and [schema] = 'comcare' and [system] = 'dwh'), 
         (select package_key from [management].[package_dim] where package_name = 'DELIVERY' and sub_system = 'Delivery system'),2,'daily');
 END
+
+--For RiskMan extract process
+s
+	    insert into [management].[job_control] 
+		(source_table_key,job_enabled_flag,destination_table_key,package_key,[priority],[frequency])
+		values 
+        ((select table_key from [management].[table_dim] where table_name = 'vwSF_SkinTear' and [schema] = 'dbo' and [system] = 'riskman'),
+        'YES', 
+        (select table_key from [management].[table_dim] where table_name = 'vwSF_SkinTear' and [schema] = 'extract_riskman' and [system] = 'dwh'), 
+        1,1,'daily');
+s
