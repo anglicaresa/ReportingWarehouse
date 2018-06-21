@@ -5,23 +5,23 @@
   DTS:CreationName="Microsoft.Package"
   DTS:CreatorComputerName="W7PC01XQ1T"
   DTS:CreatorName="ANGLICARE-SA\jshen"
-  DTS:DTSID="{8A85113F-E85A-483D-94F3-B47EAB75F861}"
+  DTS:DTSID="{3068755A-6A86-4BFC-99AA-205C0FA8E509}"
   DTS:ExecutableType="Microsoft.Package"
   DTS:LastModifiedProductVersion="14.0.3002.101"
   DTS:LocaleID="3081"
-  DTS:ObjectName="Extract_RiskMan - DEV-from-AZure"
+  DTS:ObjectName="Extract_RiskMan - DEV-from-RiskmanTest"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="145"
-  DTS:VersionGUID="{A2D02026-14BD-433D-BBB4-700521533CEE}">
+  DTS:VersionBuild="146"
+  DTS:VersionGUID="{9618D486-A3CF-4ADE-9768-957E7E3C9885}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
     <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[devsql-1\whouse-dwhb]"
+      DTS:refId="Package.ConnectionManagers[dev-dwhb]"
       DTS:CreationName="OLEDB"
-      DTS:DTSID="{3D84F613-8816-4ECF-961B-1DDA00800F98}"
-      DTS:ObjectName="devsql-1\whouse-dwhb">
+      DTS:DTSID="{A745EFEA-F314-4131-B3E5-132C71C0ECD4}"
+      DTS:ObjectName="dev-dwhb">
       <DTS:ObjectData>
         <DTS:ConnectionManager
           DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
@@ -31,7 +31,7 @@
   <DTS:Variables>
     <DTS:Variable
       DTS:CreationName=""
-      DTS:DTSID="{6054B9EE-DA06-49C9-B042-4B9F63C20F6E}"
+      DTS:DTSID="{E8CA2154-9A03-45BA-9EEA-581EE77A2E31}"
       DTS:IncludeInDebugDump="2345"
       DTS:Namespace="User"
       DTS:ObjectName="dblinkedserver">
@@ -40,7 +40,7 @@
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
-      DTS:DTSID="{7640D663-55C2-41A4-9A15-9EA0D169C289}"
+      DTS:DTSID="{9512BFDB-F66D-4911-BC29-4A4B75D317BD}"
       DTS:IncludeInDebugDump="2345"
       DTS:Namespace="User"
       DTS:ObjectName="DestTableName">
@@ -50,7 +50,7 @@
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
-      DTS:DTSID="{38D4E213-D50F-4070-B0A2-1F65E422170D}"
+      DTS:DTSID="{014EC4AC-0D0A-41C1-9C9C-9B669DC12009}"
       DTS:IncludeInDebugDump="2345"
       DTS:Namespace="User"
       DTS:ObjectName="SourcetableLists">
@@ -68,7 +68,7 @@
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
-      DTS:DTSID="{3CC1B1A0-46D9-4B42-BF4C-B98FC977EEA7}"
+      DTS:DTSID="{B574A9C8-F800-4380-964A-D3C4D910D4B5}"
       DTS:IncludeInDebugDump="2345"
       DTS:Namespace="User"
       DTS:ObjectName="SourceTableName">
@@ -82,7 +82,7 @@
       DTS:refId="Package\EST - Get all extract source tables in DWHB for extraction  for Riskman"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Execute SQL Task"
-      DTS:DTSID="{FF2A11CF-969E-4DE6-8453-7E66002B52F5}"
+      DTS:DTSID="{890925DF-CCA4-4838-9D59-D4AC69DE45D4}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
       DTS:ObjectName="EST - Get all extract source tables in DWHB for extraction  for Riskman"
@@ -90,8 +90,8 @@
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
-          SQLTask:Connection="{3D84F613-8816-4ECF-961B-1DDA00800F98}"
-          SQLTask:SqlStatementSource="--use dblink to az-sqlbi01&#xA;&#xA;select    &#xA; (SELECT '[az-sqlbi01].[dwhb].[extract_riskman]'+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='riskman' )      ---- need to filter source tables just for Riskman&#xA; ORDER BY T1.job_key ASC&#xA;&#xA;&#xA;&#xA;"
+          SQLTask:Connection="{A745EFEA-F314-4131-B3E5-132C71C0ECD4}"
+          SQLTask:SqlStatementSource="use dwhb;&#xA;&#xA;--use dblink to TED.RishmanTest&#xA;&#xA;select    &#xA; (SELECT '[TED].[RiskmanTest].'+T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.source_table_key)&#x9;as source_table_name   ,&#xA; (SELECT T2.[schema]+'.'+T2.table_name  FROM management.TABLE_DIM  AS T2 WHERE T2.table_key=T1.destination_table_key)&#x9;   as dest_table_name&#xA; &#xA; from  management.JOB_CONTROL&#x9; AS T1&#xA; WHERE T1.job_enabled_flag='YES'&#xA;and t1.package_key=1&#xA;and t1.source_table_key in (  select table_key  from  management.table_dim  where system='riskman' )      ---- need to filter source tables just for Riskman&#xA; ORDER BY T1.job_key ASC&#xA;"
           SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ResultBinding
             SQLTask:ResultName="0"
@@ -109,15 +109,15 @@
       DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables"
       DTS:CreationName="STOCK:FOREACHLOOP"
       DTS:Description="Extract data from source and import into destination"
-      DTS:DTSID="{A5D3009D-EEF4-4FEE-8503-54E0B8F0330C}"
+      DTS:DTSID="{B3B28794-26F5-4B8C-B3C6-99B13C2006E7}"
       DTS:ExecutableType="STOCK:FOREACHLOOP"
       DTS:LocaleID="-1"
       DTS:MaxErrorCount="0"
       DTS:ObjectName="Foreach Loop Container - Extract data from source tables and import into destination tables">
       <DTS:ForEachEnumerator
         DTS:CreationName="Microsoft.ForEachADOEnumerator"
-        DTS:DTSID="{24AF2075-CBE2-4C28-9D1D-416AF7CEF3FB}"
-        DTS:ObjectName="{24AF2075-CBE2-4C28-9D1D-416AF7CEF3FB}">
+        DTS:DTSID="{725CD587-4721-45C8-B7A7-28CE2FEE33F0}"
+        DTS:ObjectName="{725CD587-4721-45C8-B7A7-28CE2FEE33F0}">
         <DTS:ObjectData>
           <FEEADO
             EnumType="EnumerateRowsInFirstTable"
@@ -130,7 +130,7 @@
           DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
-          DTS:DTSID="{AEF993FE-9948-4CBA-9784-1FFD3AE28E85}"
+          DTS:DTSID="{394D5D5C-518F-4187-89BC-596A98327C7B}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
           DTS:ObjectName="EST - Extract and insert new data from source to dest"
@@ -140,7 +140,7 @@
             <DTS:EventHandler
               DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest.EventHandlers[OnError]"
               DTS:CreationName="OnError"
-              DTS:DTSID="{38418BD3-F361-44CB-B005-C22E50518FF2}"
+              DTS:DTSID="{146D7A02-AB42-469D-9680-56F1A050A804}"
               DTS:EventID="262283"
               DTS:EventName="OnError"
               DTS:LocaleID="-1">
@@ -148,7 +148,7 @@
                 <DTS:Variable
                   DTS:CreationName=""
                   DTS:Description="The propagate property of the event"
-                  DTS:DTSID="{8F736E31-BB85-4650-AB76-D403B92EBD0E}"
+                  DTS:DTSID="{333A6420-B969-4166-B317-6B7F9515F3B6}"
                   DTS:IncludeInDebugDump="6789"
                   DTS:Namespace="System"
                   DTS:ObjectName="Propagate">
@@ -161,14 +161,14 @@
                   DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
                   DTS:CreationName="Microsoft.ExecuteSQLTask"
                   DTS:Description="Execute SQL Task"
-                  DTS:DTSID="{6DA6DBF2-5E38-4FD7-9E55-F64714A6B17C}"
+                  DTS:DTSID="{575E5572-BF9C-4DF2-AFA8-F4183A0636F8}"
                   DTS:ExecutableType="Microsoft.ExecuteSQLTask"
                   DTS:LocaleID="-1"
                   DTS:ObjectName="Execute SQL Task - Catch Error Details">
                   <DTS:Variables />
                   <DTS:ObjectData>
                     <SQLTask:SqlTaskData
-                      SQLTask:Connection="{3D84F613-8816-4ECF-961B-1DDA00800F98}"
+                      SQLTask:Connection="{A745EFEA-F314-4131-B3E5-132C71C0ECD4}"
                       SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,''&#xA;,1    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() ,&#xA;1,&#xA;'Start insert new records'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,1    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
                       <SQLTask:ParameterBinding
                         SQLTask:ParameterName="0"
@@ -202,7 +202,7 @@
           </DTS:EventHandlers>
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{3D84F613-8816-4ECF-961B-1DDA00800F98}"
+              SQLTask:Connection="{A745EFEA-F314-4131-B3E5-132C71C0ECD4}"
               SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='INSERT INTO  ' + ? + ' SELECT * FROM  '+?&#xA;EXEC (@SQL)&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
@@ -223,7 +223,7 @@
           DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
-          DTS:DTSID="{A2F8D9C4-915A-4855-80E9-CCDD35C16324}"
+          DTS:DTSID="{B1D256E2-7E1F-4C5F-9788-F42962E1E707}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
           DTS:ObjectName="EST - Truncate destination tables"
@@ -233,7 +233,7 @@
             <DTS:EventHandler
               DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables.EventHandlers[OnError]"
               DTS:CreationName="OnError"
-              DTS:DTSID="{EC88BFF7-9644-42A9-977E-9BBC7CD50416}"
+              DTS:DTSID="{322586BB-691A-4FDA-BED4-CB1E3C38A316}"
               DTS:EventID="262283"
               DTS:EventName="OnError"
               DTS:LocaleID="-1">
@@ -241,7 +241,7 @@
                 <DTS:Variable
                   DTS:CreationName=""
                   DTS:Description="The propagate property of the event"
-                  DTS:DTSID="{BEB6E9C7-A332-4A04-BB1C-CA2CE7FA1353}"
+                  DTS:DTSID="{9AFB2EC9-AA96-4B91-A4E7-A53A7F4E55F1}"
                   DTS:IncludeInDebugDump="6789"
                   DTS:Namespace="System"
                   DTS:ObjectName="Propagate">
@@ -254,14 +254,14 @@
                   DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
                   DTS:CreationName="Microsoft.ExecuteSQLTask"
                   DTS:Description="Execute SQL Task"
-                  DTS:DTSID="{F8A4A4B7-4E17-4C84-9427-2C751D7897DB}"
+                  DTS:DTSID="{2F129E20-6430-4379-94E1-60F86C1F7E2E}"
                   DTS:ExecutableType="Microsoft.ExecuteSQLTask"
                   DTS:LocaleID="-1"
                   DTS:ObjectName="Execute SQL Task - Catch Error Details">
                   <DTS:Variables />
                   <DTS:ObjectData>
                     <SQLTask:SqlTaskData
-                      SQLTask:Connection="{3D84F613-8816-4ECF-961B-1DDA00800F98}"
+                      SQLTask:Connection="{A745EFEA-F314-4131-B3E5-132C71C0ECD4}"
                       SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#x9;&#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,''&#xA;,1&#x9;   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT &#x9;&#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() ,&#xA;1&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#x9;&#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,1&#x9;   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
                       <SQLTask:ParameterBinding
                         SQLTask:ParameterName="0"
@@ -295,7 +295,7 @@
           </DTS:EventHandlers>
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{3D84F613-8816-4ECF-961B-1DDA00800F98}"
+              SQLTask:Connection="{A745EFEA-F314-4131-B3E5-132C71C0ECD4}"
               SQLTask:SqlStatementSource="DECLARE @SQL VARCHAR(1000)&#xA;SET  @SQL='TRUNCATE TABLE  ' + ?&#xA;EXEC (@SQL)&#xA;GO" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
@@ -310,7 +310,7 @@
           DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Write Job Finish info to ETL_PROCESS_FACT"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
-          DTS:DTSID="{C55B244D-ACFC-4648-B159-87509AED4C38}"
+          DTS:DTSID="{4FBBCC96-F739-4550-9E8A-FB012B89E031}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
           DTS:ObjectName="EST - Write Job Finish info to ETL_PROCESS_FACT"
@@ -319,7 +319,7 @@
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{3D84F613-8816-4ECF-961B-1DDA00800F98}"
+              SQLTask:Connection="{A745EFEA-F314-4131-B3E5-132C71C0ECD4}"
               SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT &#x9;&#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;1,&#xA;'Finish extract source tables for ComCare'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
@@ -334,7 +334,7 @@
           DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Write Job Start info to ETL_PROCESS_FACT"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
-          DTS:DTSID="{7363900D-2FF7-4340-8DC9-5B7365AB5290}"
+          DTS:DTSID="{777EA4E0-5FAA-41CB-BB83-D135380A852E}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
           DTS:ObjectName="EST - Write Job Start info to ETL_PROCESS_FACT"
@@ -343,7 +343,7 @@
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{3D84F613-8816-4ECF-961B-1DDA00800F98}"
+              SQLTask:Connection="{A745EFEA-F314-4131-B3E5-132C71C0ECD4}"
               SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT &#x9;&#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;1,&#xA;'Start to extract source table for ComCare'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME=?&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ParameterBinding
                 SQLTask:ParameterName="0"
@@ -359,7 +359,7 @@
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.PrecedenceConstraints[Constraint]"
           DTS:CreationName=""
-          DTS:DTSID="{76AE2E13-D31A-49AE-B691-141BFC5D8466}"
+          DTS:DTSID="{49897F3C-0FEE-46F8-AAC2-4E473CF18A78}"
           DTS:From="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Truncate destination tables"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint"
@@ -367,7 +367,7 @@
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.PrecedenceConstraints[Constraint 1]"
           DTS:CreationName=""
-          DTS:DTSID="{797F4174-3D58-47DD-A30F-D1D56C8664CD}"
+          DTS:DTSID="{94499FAE-935A-4225-B7C1-D17B5A2C6F78}"
           DTS:From="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Write Job Start info to ETL_PROCESS_FACT"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 1"
@@ -375,7 +375,7 @@
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.PrecedenceConstraints[Constraint 2]"
           DTS:CreationName=""
-          DTS:DTSID="{2D706CCD-1070-4541-918B-E5D14B555B59}"
+          DTS:DTSID="{15D03139-3F0A-46A3-A3F1-4C2AEFC77CE4}"
           DTS:From="Package\Foreach Loop Container - Extract data from source tables and import into destination tables\EST - Extract and insert new data from source to dest"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 2"
@@ -385,7 +385,7 @@
         <DTS:EventHandler
           DTS:refId="Package\Foreach Loop Container - Extract data from source tables and import into destination tables.EventHandlers[OnError]"
           DTS:CreationName="OnError"
-          DTS:DTSID="{ED4EB7AC-8FF0-4B1F-8C19-E3CDEC3E8BCA}"
+          DTS:DTSID="{A83A5239-9AB3-4988-8919-AF317476E687}"
           DTS:EventID="244"
           DTS:EventName="OnError"
           DTS:LocaleID="-1">
@@ -393,7 +393,7 @@
             <DTS:Variable
               DTS:CreationName=""
               DTS:Description="The propagate property of the event"
-              DTS:DTSID="{F5A178A7-5D89-45EA-9C46-86B7EF12F2D8}"
+              DTS:DTSID="{0D57CB78-BD7B-456B-80FE-B944CF94BAE7}"
               DTS:IncludeInDebugDump="6789"
               DTS:Namespace="System"
               DTS:ObjectName="Propagate">
@@ -407,14 +407,14 @@
       <DTS:ForEachVariableMappings>
         <DTS:ForEachVariableMapping
           DTS:CreationName=""
-          DTS:DTSID="{B60C6CE2-0491-4554-8162-5623E15A3E0B}"
-          DTS:ObjectName="{B60C6CE2-0491-4554-8162-5623E15A3E0B}"
+          DTS:DTSID="{AED15E67-13BF-4576-B49D-0665FB271003}"
+          DTS:ObjectName="{AED15E67-13BF-4576-B49D-0665FB271003}"
           DTS:ValueIndex="0"
           DTS:VariableName="User::SourceTableName" />
         <DTS:ForEachVariableMapping
           DTS:CreationName=""
-          DTS:DTSID="{FF079FBC-48EF-44CA-BD98-2F1B3CDFF136}"
-          DTS:ObjectName="{FF079FBC-48EF-44CA-BD98-2F1B3CDFF136}"
+          DTS:DTSID="{5368C663-5A79-4BA4-A3AA-B6339CE45AC7}"
+          DTS:ObjectName="{5368C663-5A79-4BA4-A3AA-B6339CE45AC7}"
           DTS:ValueIndex="1"
           DTS:VariableName="User::DestTableName" />
       </DTS:ForEachVariableMappings>
@@ -424,7 +424,7 @@
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint]"
       DTS:CreationName=""
-      DTS:DTSID="{68A683EF-7052-49CC-B165-24573A64A11D}"
+      DTS:DTSID="{427F07AF-014D-4299-BDC6-C578858CDFDF}"
       DTS:From="Package\EST - Get all extract source tables in DWHB for extraction  for Riskman"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint"
@@ -434,7 +434,7 @@
     <DTS:EventHandler
       DTS:refId="Package.EventHandlers[OnError]"
       DTS:CreationName="OnError"
-      DTS:DTSID="{83E1D74E-2F6B-4B01-832C-A522D461EDA1}"
+      DTS:DTSID="{700AA02F-5FF1-4139-B15F-0EDD3AE18427}"
       DTS:EventID="7536754"
       DTS:EventName="OnError"
       DTS:LocaleID="-1">
@@ -442,7 +442,7 @@
         <DTS:Variable
           DTS:CreationName=""
           DTS:Description="The propagate property of the event"
-          DTS:DTSID="{058C4D3C-0BA8-480B-9219-016B64415A80}"
+          DTS:DTSID="{BEF52FF7-B234-44A1-A5C9-DBEAD70DC028}"
           DTS:IncludeInDebugDump="6789"
           DTS:Namespace="System"
           DTS:ObjectName="Propagate">
@@ -581,7 +581,7 @@
           </EdgeLayout.Labels>
         </EdgeLayout>
         <AnnotationLayout
-          Text="Extract data from az-sqlbi01 to Dev environment&#xA;For maintain the dev environment not far behind the production data&#xA;and not to add load to RiskMan prod environment.&#xA;"
+          Text="Extract data from riskman test db on ted to Dev environment&#xA;For maintain the dev environment not far behind the production data&#xA;and not to add load to RiskMan prod environment.&#xA;"
           ParentId="Package"
           Size="510,100"
           Id="acb232ed-908b-442e-b718-ec53962ea9a5"
