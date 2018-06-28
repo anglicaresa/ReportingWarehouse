@@ -7,13 +7,13 @@
   DTS:CreatorName="ANGLICARE-SA\jshen"
   DTS:DTSID="{2B825CBA-932C-4FDD-95DA-836890EFCCA6}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="14.0.3002.92"
+  DTS:LastModifiedProductVersion="14.0.3002.101"
   DTS:LocaleID="3081"
   DTS:ObjectName="Conform_RiskMan_Dim - T1M"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="435"
-  DTS:VersionGUID="{D79401E8-4BAF-46BD-ACDE-D291F6042E65}">
+  DTS:VersionBuild="437"
+  DTS:VersionGUID="{826B394F-04B0-4FFB-8122-1B03D54F2D18}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -137,7 +137,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">5/3/2018 11:57:29 AM</DTS:VariableValue>
+        DTS:DataType="7">6/14/2018 11:08:24 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -148,7 +148,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">5/3/2018 11:57:29 AM</DTS:VariableValue>
+        DTS:DataType="7">6/14/2018 11:08:24 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -812,6 +812,86 @@
               DTS:To="Package\Sequence Container - DIM TABLES\Service_Stream_Dim\EST - Write Job Finish Information" />
           </DTS:PrecedenceConstraints>
         </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container - DIM TABLES\Wing_Dim"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{9770522f-74cf-42fa-8061-60ef528c79b5}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Wing_Dim">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - DIM TABLES\Wing_Dim\EST - Write Job Finish Information"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{73d1b2bb-082c-4836-a76a-ecdfa36f28eb}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish Information"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{D03EA467-9059-4B71-988F-0520ABD08B00}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;1,&#xA;'Update DIM table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_riskman.wing_dim'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - DIM TABLES\Wing_Dim\EST - Write Job Start Information"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{e98ddd48-7026-4884-81d5-b8b99bcb41ef}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start Information"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{D03EA467-9059-4B71-988F-0520ABD08B00}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;1,&#xA;'Update DIM table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_riskman.wing_dim'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - DIM TABLES\Wing_Dim\Populate New Data"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{caeec156-d96c-4504-8c3f-69956b3d84fa}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Populate New Data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{D03EA467-9059-4B71-988F-0520ABD08B00}"
+                  SQLTask:SqlStatementSource="--1.Truncate&#xA;&#xA;Truncate table conform_riskman.wing_dim;&#xA;--2.Pop new data&#xA;&#xA;insert into conform_riskman.wing_dim (ANGCARE_ID,Wing) &#xA;select ANGCARE_ID,Wing from extract_riskman.ANGCARE_IFR;&#xA;&#xA;&#xA;--select * from conform_riskman.wing_dim;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - DIM TABLES\Wing_Dim.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{14c89ab4-8756-47a3-8d39-99a9c8a02e49}"
+              DTS:From="Package\Sequence Container - DIM TABLES\Wing_Dim\EST - Write Job Start Information"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - DIM TABLES\Wing_Dim\Populate New Data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - DIM TABLES\Wing_Dim.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{9adb446f-f64f-4742-ad91-738cb42cf8e7}"
+              DTS:From="Package\Sequence Container - DIM TABLES\Wing_Dim\Populate New Data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - DIM TABLES\Wing_Dim\EST - Write Job Finish Information" />
+          </DTS:PrecedenceConstraints>
+        </DTS:Executable>
       </DTS:Executables>
       <DTS:PrecedenceConstraints>
         <DTS:PrecedenceConstraint
@@ -877,6 +957,14 @@
           DTS:ObjectName="Constraint 6"
           DTS:To="Package\Sequence Container - DIM TABLES\Person_Dim"
           DTS:Value="2" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 7]"
+          DTS:CreationName=""
+          DTS:DTSID="{A3C7A1CE-8AED-4D1B-A4D3-D9CC5D81B3E1}"
+          DTS:From="Package\Sequence Container - DIM TABLES\Person_Dim"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 7"
+          DTS:To="Package\Sequence Container - DIM TABLES\Wing_Dim" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
   </DTS:Executables>
@@ -1587,11 +1675,96 @@
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="299,47"
+          Id="Package\Sequence Container - DIM TABLES\Wing_Dim\EST - Write Job Finish Information"
+          TopLeft="32.75,176.5" />
+        <NodeLayout
+          Size="301,42"
+          Id="Package\Sequence Container - DIM TABLES\Wing_Dim\EST - Write Job Start Information"
+          TopLeft="32.75,15" />
+        <NodeLayout
+          Size="299,47"
+          Id="Package\Sequence Container - DIM TABLES\Wing_Dim\Populate New Data"
+          TopLeft="35.75,102" />
+        <EdgeLayout
+          Id="Package\Sequence Container - DIM TABLES\Wing_Dim.PrecedenceConstraints[Constraint]"
+          TopLeft="184.25,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45"
+              Start="0,0"
+              End="0,37.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - DIM TABLES\Wing_Dim.PrecedenceConstraints[Constraint 2]"
+          TopLeft="183.75,149">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,27.5"
+              Start="0,0"
+              End="0,20">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="391,3049"
-          Size="391,3092"
+          PanelSize="378,278"
+          Size="378,321"
+          Id="Package\Sequence Container - DIM TABLES\Wing_Dim"
+          TopLeft="5.50000000000031,3053.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 7]"
+          TopLeft="195,2993.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="391,3430"
+          Size="391,3472"
           Id="Package\Sequence Container - DIM TABLES"
           TopLeft="15,15.75" />
       </GraphLayout>
