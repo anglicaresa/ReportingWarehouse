@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="8/23/2016 2:19:29 PM"
@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - DEVNew"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="678"
-  DTS:VersionGUID="{4612163B-5864-4853-A13C-C6483F64552E}">
+  DTS:VersionBuild="681"
+  DTS:VersionGUID="{501148F9-6699-4B49-BEB1-B73A1C806DF8}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">6/6/2018 2:32:48 PM</DTS:VariableValue>
+        DTS:DataType="7">7/30/2018 3:39:18 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">6/6/2018 2:32:48 PM</DTS:VariableValue>
+        DTS:DataType="7">7/30/2018 3:39:18 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">6/6/2018 2:32:48 PM</DTS:VariableValue>
+        DTS:DataType="7">7/30/2018 3:39:18 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -360,6 +360,155 @@
                   DTS:CreationName="Microsoft.ExecuteSQLTask"
                   DTS:Description="Execute SQL Task"
                   DTS:DTSID="{a4953848-a674-4ddb-9e62-3a2eea2632d8}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{b4343e0e-1f85-4608-88c1-7165204d93d4}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="employee_base50_constracted_part_time_hours_fact">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{16f9af2e-99f9-4a08-a917-77a504ee2445}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{65D23E3D-55A8-4569-BE26-ED17AE35E2DB}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_base50_constracted_part_time_hours_fact'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{2ef7bdc2-f43d-43df-98e3-578e8937c55d}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{65D23E3D-55A8-4569-BE26-ED17AE35E2DB}"
+                  SQLTask:SqlStatementSource="&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_base50_constracted_part_time_hours_fact'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\insert data"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{62348cfe-5714-40ef-92ff-5ca0520bf5a9}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="insert data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{476CD5C3-0FB5-46D0-B31E-A8381EC0659A}"
+                  SQLTask:SqlStatementSource="&#xA;--TRUNCATE TABLE conform.employee_base50_constracted_part_time_hours_fact;&#xA;&#xA;&#xA;-- Step 1: Insert current employees&#xA;INSERT INTO conform.employee_base50_constracted_part_time_hours_fact&#xA;(&#xA;    [portfolio_key] ,&#xA;    [service_stream_key] ,&#xA;    [program_key] ,&#xA;    [position_key] ,&#xA;    [employee_key] &#xA;)&#xA;select pf.portfolio_key,pf.service_stream_key,pf.program_key,pf.position_key,pf.employee_key&#xA;from conform.employee_position_fact pf &#xA;inner join conform.employee_dim d on pf.employee_key = d.employee_key&#xA;where d.current_row_indicator = 'y';&#xA;&#xA;&#xA;&#xA;-- Step 2: Update base 50 data&#xA;UPDATE ebf&#xA;SET ebf.units_per_period = t.UNITS_PER_PERIOD, ebf.effective_date_key = dd.date_key&#xA;FROM conform.employee_base50_constracted_part_time_hours_fact ebf inner join  conform.employee_dim d ON ebf.employee_key = d.employee_key&#xA;INNER JOIN (&#xA;SELECT h.* FROM extract.HREEN_EMPL_ENT_DTL h INNER join&#xA;&#x9;(SELECT hed.id_number,MAX(hed.EFFECTIVE_DATE) AS eff_date  from extract.HREEN_EMPL_ENT_DTL hed WHERE hed.PAY_COMPONENT_REF =50.000000  GROUP BY hed.id_number ) ht&#xA;&#x9;ON h.ID_NUMBER=ht.ID_NUMBER AND h.EFFECTIVE_DATE = ht.eff_date AND h.PAY_COMPONENT_REF =50.000000 &#xA;) t ON d.id_number = t.ID_NUMBER AND t.PAY_COMPONENT_REF = 50.000000&#xA;INNER JOIN conform.date_dim dd ON t.EFFECTIVE_DATE = dd.full_date;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\truncate data"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{64244e2f-6b2c-4b46-8d09-fc18707dc00d}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="truncate data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{476CD5C3-0FB5-46D0-B31E-A8381EC0659A}"
+                  SQLTask:SqlStatementSource="&#xA;TRUNCATE TABLE conform.employee_base50_constracted_part_time_hours_fact;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{4BC356F7-D83C-4FCA-AB88-4DAF1BDE65D3}"
+              DTS:From="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\truncate data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\insert data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{02C0EF72-1D53-4C13-ACD1-FAD998AE4DFA}"
+              DTS:From="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\truncate data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{75505386-d16f-4243-8772-c9aa25e17daf}"
+              DTS:From="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\insert data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{97a63319-6682-4b72-acae-318ad38c381e}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{8bbca7a4-bc05-4b8a-9a5c-e1b22efbc66d}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{f7c04272-831f-46af-98b9-ed3158e4118b}"
                   DTS:ExecutableType="Microsoft.ExecuteSQLTask"
                   DTS:LocaleID="-1"
                   DTS:ObjectName="Execute SQL Task - Catch Error Details">
@@ -1404,7 +1553,7 @@
                           description="Specifies the SQL statement that generates the lookup table."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select 
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select 
 employee_key,
 id_number,
 organisation_key,
@@ -1421,7 +1570,7 @@ WHERE employee_key IS NOT NULL</property>
                           description="Specifies a SQL statement that uses parameters to generate the lookup table."
                           expressionType="Notify"
                           name="SqlCommandParam"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select 
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from (select 
 employee_key,
 id_number,
 organisation_key,
@@ -1587,7 +1736,7 @@ where [refTable].[employee_key] = ? and [refTable].[position_key] = ?</property>
                           description="The SQL command to be executed."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">delete from conform.employee_position_fact
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">delete from conform.employee_position_fact
 where employee_key=?
 and position_key=?</property>
                         <property
@@ -1708,7 +1857,7 @@ and position_key=?</property>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from conform.employee_position_fact</property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from conform.employee_position_fact</property>
                         <property
                           dataType="System.String"
                           description="The variable that contains the SQL command to be executed."
@@ -2485,7 +2634,7 @@ and position_key=?</property>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT DATE_KEY,CONVERT(DATE,FULL_DATE) AS FULL_DATE FROM conform.date_dim</property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT DATE_KEY,CONVERT(DATE,FULL_DATE) AS FULL_DATE FROM conform.date_dim</property>
                         <property
                           dataType="System.String"
                           description="The variable that contains the SQL command to be executed."
@@ -2803,13 +2952,13 @@ and position_key=?</property>
                           description="Specifies the SQL statement that generates the lookup table."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from conform.employee_position_fact</property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from conform.employee_position_fact</property>
                         <property
                           dataType="System.String"
                           description="Specifies a SQL statement that uses parameters to generate the lookup table."
                           expressionType="Notify"
                           name="SqlCommandParam"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from conform.employee_position_fact) [refTable]
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from (select * from conform.employee_position_fact) [refTable]
 where [refTable].[employee_key] = ? and [refTable].[position_key] = ?</property>
                         <property
                           dataType="System.Int32"
@@ -3281,7 +3430,7 @@ where [refTable].[employee_key] = ? and [refTable].[position_key] = ?</property>
                           description="The SQL command to be executed."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">update conform.employee_position_fact
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">update conform.employee_position_fact
 set program_key=?, portfolio_key=?, service_stream_key=? 
 where employee_key=? and position_key=?</property>
                         <property
@@ -3446,7 +3595,7 @@ where employee_key=? and position_key=?</property>
                           description="The SQL command to be executed."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">  insert into [conform].[employee_position_fact]
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">  insert into [conform].[employee_position_fact]
 ([new_position_flag]
       ,[manager_key]
       ,[manager_position_key]
@@ -3716,7 +3865,7 @@ values
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select 
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select 
 employee_key,
 id_number,
 organisation_key,
@@ -4863,7 +5012,7 @@ and  employee_key in (select employee_key from conform.employee_dim where curren
                           description="Specifies the SQL statement that generates the lookup table."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select 
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select 
 employee_key,
 id_number,
 organisation_key,
@@ -4880,7 +5029,7 @@ WHERE employee_key IS NOT NULL</property>
                           description="Specifies a SQL statement that uses parameters to generate the lookup table."
                           expressionType="Notify"
                           name="SqlCommandParam"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select 
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from (select 
 employee_key,
 id_number,
 organisation_key,
@@ -5046,7 +5195,7 @@ where [refTable].[employee_key] = ? and [refTable].[position_key] = ?</property>
                           description="The SQL command to be executed."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">delete from conform.employee_recruitment_fact
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">delete from conform.employee_recruitment_fact
 where employee_key=?
 and position_key=?</property>
                         <property
@@ -5167,7 +5316,7 @@ and position_key=?</property>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from conform.employee_recruitment_fact</property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from conform.employee_recruitment_fact</property>
                         <property
                           dataType="System.String"
                           description="The variable that contains the SQL command to be executed."
@@ -5696,13 +5845,13 @@ and position_key=?</property>
                           description="Specifies the SQL statement that generates the lookup table."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from conform.employee_recruitment_fact</property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from conform.employee_recruitment_fact</property>
                         <property
                           dataType="System.String"
                           description="Specifies a SQL statement that uses parameters to generate the lookup table."
                           expressionType="Notify"
                           name="SqlCommandParam"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from conform.employee_recruitment_fact) [refTable]
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from (select * from conform.employee_recruitment_fact) [refTable]
 where [refTable].[employee_key] = ? and [refTable].[position_key] = ?</property>
                         <property
                           dataType="System.Int32"
@@ -5915,7 +6064,7 @@ where [refTable].[employee_key] = ? and [refTable].[position_key] = ?</property>
                           description="The SQL command to be executed."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">  insert into conform.employee_recruitment_fact
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">  insert into conform.employee_recruitment_fact
  values
 (?, ?, (select organisation_key from conform.organisation_dim where current_row_indicator='Y' and organisation_name='AnglicareSA'),?,?,?,?, 1,  (select employee_key from conform.employee_dim where current_row_indicator='Y' and given_name='-'), (select position_key from conform.position_dim where current_row_indicator='Y' and position_name like 'No Position%'),9999999,9999999,9999999)</property>
                         <property
@@ -6104,7 +6253,7 @@ where [refTable].[employee_key] = ? and [refTable].[position_key] = ?</property>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select 
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select 
 t1.employee_key,
 t1.id_number,
 t1.organisation_key,
@@ -6385,7 +6534,7 @@ and t1.employee_key in (select employee_key from conform.employee_dim where curr
                           description="The SQL command to be executed."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">update conform.employee_recruitment_fact
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">update conform.employee_recruitment_fact
 set program_key=?, service_stream_key=?,
 portfolio_key=?,
 organisation_key=?
@@ -7225,7 +7374,7 @@ where employee_key=? and position_key=?</property>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT DATE_KEY,CONVERT(DATE,FULL_DATE) AS FULL_DATE FROM management.date_dim</property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT DATE_KEY,CONVERT(DATE,FULL_DATE) AS FULL_DATE FROM management.date_dim</property>
                         <property
                           dataType="System.String"
                           description="The variable that contains the SQL command to be executed."
@@ -7423,7 +7572,7 @@ where employee_key=? and position_key=?</property>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                         <property
                           dataType="System.String"
                           description="The variable that contains the SQL command to be executed."
@@ -7705,7 +7854,7 @@ where employee_key=? and position_key=?</property>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select 
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select 
 convert(varchar(20),ID_NUMBER) as ID_NUMBER,
 TERM_REASON,
 TERM_DATE,
@@ -8402,7 +8551,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                         <property
                           dataType="System.Int32"
                           description="Specifies the column code page to use when code page information is unavailable from the data source."
@@ -9971,7 +10120,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
                           description="Specifies the SQL statement that generates the lookup table."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select 
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select 
 employee_key,
 id_number,
 organisation_key,
@@ -9988,7 +10137,7 @@ FROM conform.employee_temp
                           description="Specifies a SQL statement that uses parameters to generate the lookup table."
                           expressionType="Notify"
                           name="SqlCommandParam"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select 
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from (select 
 employee_key,
 id_number,
 organisation_key,
@@ -10138,7 +10287,7 @@ where [refTable].[employee_key] = ?</property>
                           description="The SQL command to be executed."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">delete from conform.probation_monitoring_fact
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">delete from conform.probation_monitoring_fact
 where employee_key=?
 </property>
                         <property
@@ -10242,7 +10391,7 @@ where employee_key=?
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from conform.probation_monitoring_fact</property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from conform.probation_monitoring_fact</property>
                         <property
                           dataType="System.String"
                           description="The variable that contains the SQL command to be executed."
@@ -10656,7 +10805,7 @@ where employee_key=?
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT DATE_KEY,CONVERT(DATE,FULL_DATE) AS FULL_DATE FROM management.date_dim</property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">SELECT DATE_KEY,CONVERT(DATE,FULL_DATE) AS FULL_DATE FROM management.date_dim</property>
                         <property
                           dataType="System.String"
                           description="The variable that contains the SQL command to be executed."
@@ -10769,13 +10918,13 @@ where employee_key=?
                           description="Specifies the SQL statement that generates the lookup table."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [conform].[probation_monitoring_fact]</property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from [conform].[probation_monitoring_fact]</property>
                         <property
                           dataType="System.String"
                           description="Specifies a SQL statement that uses parameters to generate the lookup table."
                           expressionType="Notify"
                           name="SqlCommandParam"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [conform].[probation_monitoring_fact]) [refTable]
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select * from (select * from [conform].[probation_monitoring_fact]) [refTable]
 where [refTable].[employee_key] = ?</property>
                         <property
                           dataType="System.Int32"
@@ -11271,7 +11420,7 @@ where [refTable].[employee_key] = ?</property>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                         <property
                           dataType="System.Int32"
                           description="Specifies the column code page to use when code page information is unavailable from the data source."
@@ -11438,7 +11587,7 @@ where [refTable].[employee_key] = ?</property>
                           dataType="System.String"
                           description="The SQL command to be executed."
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select 
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select 
 employee_key,
 id_number,
 organisation_key,
@@ -12147,7 +12296,7 @@ WHERE employee_key IS NOT NULL</property>
                           description="The SQL command to be executed."
                           expressionType="Notify"
                           name="SqlCommand"
-                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">update conform.probation_monitoring_fact
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">update conform.probation_monitoring_fact
 set program_key=?, service_stream_key=?,
 portfolio_key=?,
 organisation_key=?
@@ -15115,6 +15264,14 @@ where employee_key=? </property>
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 27"
           DTS:To="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 28]"
+          DTS:CreationName=""
+          DTS:DTSID="{0A5B81B2-383E-4399-9ADF-D0498960773C}"
+          DTS:From="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 28"
+          DTS:To="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
           DTS:CreationName=""
@@ -18991,11 +19148,134 @@ where employee_key=? </property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="206,42"
+          Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\EST - Write Job Finish info"
+          TopLeft="66.0587121212121,351.090909090908" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\EST - Write Job Start info"
+          TopLeft="45.9375,15" />
+        <NodeLayout
+          Size="130,42"
+          Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\insert data"
+          TopLeft="109.604166666667,244.757575757578" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="171.831439393939,286.757575757578">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,64.3333333333303"
+              Start="0,0"
+              End="0,56.8333333333303">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,56.8333333333303" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="139,42"
+          Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\truncate data"
+          TopLeft="99.0587121212121,132.090909090908" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact.PrecedenceConstraints[Constraint 1]"
+          TopLeft="146.4375,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="22.1212121212121,75.0909090909081"
+              Start="0,0"
+              End="22.1212121212121,67.5909090909081">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.545454545454" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,33.545454545454"
+                    Point2="0,37.545454545454"
+                    Point3="4,37.545454545454" />
+                  <mssgle:LineSegment
+                    End="18.1212121212121,37.545454545454" />
+                  <mssgle:CubicBezierSegment
+                    Point1="18.1212121212121,37.545454545454"
+                    Point2="22.1212121212121,37.545454545454"
+                    Point3="22.1212121212121,41.545454545454" />
+                  <mssgle:LineSegment
+                    End="22.1212121212121,67.5909090909081" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact.PrecedenceConstraints[Constraint]"
+          TopLeft="171.581439393939,174.090909090908">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,70.6666666666697"
+              Start="0,0"
+              End="0,63.1666666666697">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,63.1666666666697" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="77"
+          IsExpanded="True"
+          PanelSize="345,462"
+          Size="345,539"
+          Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact"
+          TopLeft="36.6666666666671,13499.0833333333" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 28]"
+          TopLeft="211.583333333334,13447.8333333333">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,51.2500000000346"
+              Start="0,0"
+              End="0,43.7500000000346">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,43.7500000000346" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="805,13499"
-          Size="805,13542"
+          PanelSize="805,14093"
+          Size="805,14136"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="31.833333333333,1.99999999999818" />
       </GraphLayout>
@@ -21192,6 +21472,18 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
