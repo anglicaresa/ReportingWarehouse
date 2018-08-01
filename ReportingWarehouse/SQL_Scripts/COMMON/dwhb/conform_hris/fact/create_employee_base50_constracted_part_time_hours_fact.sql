@@ -1,4 +1,4 @@
-use dwhb;
+use dwhb_new;
 -- creating table 'employee_base50_constracted_part_time_hours_fact'
 create table [conform].[employee_base50_constracted_part_time_hours_fact] (
     [employee_base50_constracted_part_time_hours_fact_key] int identity(1,1) not null,
