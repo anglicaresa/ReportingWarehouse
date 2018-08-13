@@ -24,11 +24,11 @@ Please change priority number in insert job control statement
 
 **/
 
---DECLARE @ENV varchar(10) = 'Dev';
-DECLARE @ENV varchar(10) = 'Prod';
+DECLARE @ENV varchar(10) = 'Dev';
+--DECLARE @ENV varchar(10) = 'Prod';
 
 DECLARE @MART VARCHAR(20) = 'Hris';
-DECLARE @t_table varchar(max)= 'employee_contracted_hours_report_fact';
+DECLARE @t_table varchar(max)= 'employee_base50_constracted_part_time_hours_fact';
 
 --Step1: Insert into Table_Dim.
 DECLARE @t_server varchar(max);
