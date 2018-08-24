@@ -2,6 +2,11 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
+    <DataSource Name="Kypera_Test">
+      <DataSourceReference>/DataSources/Kypera</DataSourceReference>
+      <rd:SecurityType>Integrated</rd:SecurityType>
+      <rd:DataSourceID>76efc458-cfc6-4958-82bd-ddcd99f1104a</rd:DataSourceID>
+    </DataSource>
     <DataSource Name="Kypera_Test2">
       <ConnectionProperties>
         <DataProvider>SQL</DataProvider>
@@ -16,35 +21,18 @@
     <DataSet Name="District">
       <Query>
         <DataSourceName>Kypera_Test2</DataSourceName>
-        <CommandText>SELECT 
-    distinct psd.code  as [District]
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-
-FROM 
-    dbo.v_RepairsData as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
-
-WHERE
-    vRD.Company = 1
-    -- and (psd.code IN (@District) or @District is null)
-    -- AND (pss.Name IN (@Scheme) or @Scheme is null)
-    -- AND (psbu.Block IN (@Block) or @Block is null)
-
-ORDER BY
-    psd.code</CommandText>
+        <CommandText>   SELECT  
+       distinct PSB.District as District
+		
+FROM [Anglicare].dbo.Repairs_WorksOrder AS WO
+     LEFT JOIN (SELECT worksorder, max(unit) as unit from [Anglicare].dbo.Repairs_WorksOrder_UnitJoin GROUP BY  worksorder) AS A ON WO.ID=A.WorksOrder
+                INNER JOIN [Anglicare].dbo.PropertyStructure_BlockUnit AS B ON B.Unit=A.Unit
+                           INNER JOIN  [Anglicare].dbo.PropertyStructure_Block AS PSB ON PSB.Code=B.Block                        
+	 left join [Anglicare].dbo.Repairs_WorksOrder_Completed_With_ContractorDetails as woc on wo.id=woc.worksorderid
+     left join [Anglicare].dbo.Repairs_Priorities as pri on wo.priority = pri.id
+	 left join [Anglicare].dbo.HomeTeam_LookupValues as lookupt on wo.classification=lookupt.id and lookupt.[lookup] =25 
+	 left join [Anglicare].dbo.Security_User as users on wo.owner =users.[User]
+</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -150,117 +138,112 @@ where
           <QueryParameter Name="@To_Date">
             <Value>=Parameters!To_Date.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@contractor">
-            <Value>=Parameters!contractor.Value</Value>
+          <QueryParameter Name="@ContractorName">
+            <Value>=Parameters!ContractorName.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@Priority">
             <Value>=Parameters!Priority.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@Trade">
-            <Value>=Parameters!Trade.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Classification">
-            <Value>=Parameters!Classification.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Status">
-            <Value>=Parameters!Status.Value</Value>
-          </QueryParameter>
         </QueryParameters>
         <CommandText>
--- DECLARE @District varchar(100);
--- DECLARE @Scheme varchar(100);
--- DECLARE @Block varchar(100);
--- DECLARE @From_Date DATE;
--- DECLARE @To_Date DATE;
-
--- DECLARE @contractor varchar(100);
--- DECLARE @Priority varchar(100);
--- DECLARE @Trade varchar(100);
--- DECLARE @Classification varchar(100);
--- DECLARE @Status varchar(100);
-
--- SET @District ='ASA';
--- SET @Scheme ='BPSC';
--- SET @Block ='Gro02';
--- SET @From_Date = '20170101';
-
-
 SELECT 
-    vRD.ID as [Property Ref.]
-    ,psu.Name as [Display Name]
-    -- ,psd.code as District
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
+     psd.code as District
+    ,pss.Name as Scheme
+    ,psbu.Block as Block
+   ,woc.TradeType as Trade
+   ,psus.[Name] AS [Status]
+,o.classification as RepairType	
+      ,u.[ID] as [Property Ref.]
+      --,u.[Name] as [Display Name]
+	  --,sum(i.Total) as [Total]
+	  ,SUM(CASE WHEN o.Priority in (16,17,18) THEN i.Total ELSE 0 END) as [Responsive]
+/** 
+	 Type code 16,17,18 from the following SQL, if configuration changed in Kypera, this needs to change accordingly:
+	  SELECT TOP (1000) [Company]
+      ,[ID]
+      ,[Name]      
+	  FROM [KH_Test].[dbo].[Repairs_Priorities] t
+	  where t.name like '%p%' 
+**/
+     ,SUM(CASE WHEN o.Priority in (19) THEN i.Total ELSE 0 END) as [Vacancy]
+	 ,SUM(CASE WHEN (o.Priority in (21) and (lv.[Name]!='ALI')) THEN i.Total ELSE 0 END) as [Planned]
+	 ,SUM(CASE WHEN (o.Priority in (22) and (lv.[Name]!='ALI')) THEN i.Total ELSE 0 END) as [Cyclical]
+	 ,SUM(CASE WHEN (o.Priority in (22) and (lv.[Name]='ALI')) THEN i.Total ELSE 0 END) as [ALI]
 
-    ,SUM(CASE WHEN (vRD.Priority like ('P1%') or vRD.Priority like ('P2%') or vRD.Priority like ('P3%')) THEN vRD.ActualCost ELSE 0 END) as [Responsive]
-    ,SUM(CASE WHEN (vRD.Priority like ('P4%')) THEN vRD.ActualCost ELSE 0 END) as [Vacancy]
-    ,SUM(CASE WHEN (vRD.Priority like ('P6%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) as [Planned]
-    ,SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) as [Cyclical]
-    ,SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2='ALI')) THEN vRD.ActualCost ELSE 0 END) as [ALI]
+  FROM [dbo].[PropertyStructure_Unit] u
+  inner join dbo.Repairs_WorksOrder o on o.AreaID = u.id
+  inner join dbo.Repairs_WorksOrder_InvoicesJoin j on o.ID = j.WorksOrder
+  inner join dbo.Invoice i on j.Invoice = i.id
+  /** HomeTeam_LookupValues table
+			  SELECT TOP (1000) [Company]
+				  ,[Lookup]
+				  ,[ID]
+				  ,[Name]
+				  ,[Description]
+      
+			  FROM [KH_Test].[dbo].[HomeTeam_LookupValues] h
+			  where h.Lookup = 26
+  **/
 
-FROM 
-    dbo.v_RepairsData as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
+  inner join dbo.HomeTeam_LookupValues lv on o.Classification2 = lv.ID and lv.[Lookup] = 26
 
+    LEFT JOIN PropertyStructure_Unit psu ON o.Company = psu.Company AND o.AreaID = psu.ID
+	LEFT JOIN PropertyStructure_BlockUnit psbu ON o.Company = psbu.Company AND o.AreaID = psbu.Unit
+	LEFT JOIN PropertyStructure_Block psb ON o.Company = psb.Company AND psbu.Block = psb.Code
+	LEFT JOIN PropertyStructure_scheme pss ON o.Company = pss.Company AND psb.Scheme = pss.Code
+	LEFT JOIN PropertyStructure_District psd ON o.Company = psd.Company AND psb.District = psd.Code
+	  LEFT JOIN [dbo].[PropertyStructure_Unit_Status] AS psus ON psus.[ID] = psu.[CurrentStatus] AND psus.[Company] = psu.[Company]
 
-WHERE
-    vRD.Company = 1
-    and (psd.code IN (@District))
-    AND (pss.Name IN (@Scheme))
-    AND (psbu.Block IN (@Block) )
-    and (vRD.Complete &gt; (@From_Date))
-    and (vRD.Complete &lt; @To_Date or @To_Date is null)
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    and (vRD.contractor IN (@contractor) or @contractor is null)
-    AND (vRd.Priority IN (@Priority) or @Priority is null)
-    AND (vRD.Trade IN (@Trade) or @Trade is null)
-    and (vRD.Classification IN (@Classification) or @Classification is null)
-    AND (vRD.[Status] IN (@Status) or @Status is null)
+left join [Anglicare].dbo.Repairs_WorksOrder_Completed_With_ContractorDetails as woc on o.id=woc.worksorderid
 
+  where -- u.id = '60637' and
+   u.Company = 1
+  and o.Company = 1
+  and i.Company = 1
+  and lv.Company = 1
+     and (psd.code IN (@District) or @District is null)
+    AND (pss.Name IN (@Scheme) or @Scheme is null)
+    AND (psbu.Block IN (@Block) or @Block is null)
+	and (o.Complete &gt; (@From_Date) or @From_Date is null)
+	and (o.Complete &lt; @To_Date or @To_Date is null)
+  and (woc.ContractorName = @ContractorName or @ContractorName is null)
+and (o.Priority = @Priority or @Priority is null)
 
-GROUP BY
-    vRD.ID 
-    ,psu.Name
-    -- ,psd.code 
-    -- ,pss.Name
-    -- ,psbu.Block 
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification 
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-ORDER BY
-    vRD.ID 
-    </CommandText>
+  group by u.id,u.[Name],psd.code,pss.[Name]
+    ,psbu.[Block],woc.TradeType,o.classification,psus.[Name]</CommandText>
       </Query>
       <Fields>
+        <Field Name="District">
+          <DataField>District</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="Property_Ref_">
           <DataField>Property Ref.</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Display_Name">
-          <DataField>Display Name</DataField>
+        <Field Name="Scheme">
+          <DataField>Scheme</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Trade">
+          <DataField>Trade</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Status">
+          <DataField>Status</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RepairType">
+          <DataField>RepairType</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Responsive">
           <DataField>Responsive</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Block">
+          <DataField>Block</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Vacancy">
           <DataField>Vacancy</DataField>
@@ -283,308 +266,109 @@ ORDER BY
     <DataSet Name="Priority">
       <Query>
         <DataSourceName>Kypera_Test2</DataSourceName>
-        <CommandText>
--- DECLARE @District varchar(100);
--- DECLARE @Scheme varchar(100);
--- DECLARE @Block varchar(100);
--- DECLARE @From_Date DATE;
--- DECLARE @To_Date DATE;
+        <QueryParameters>
+          <QueryParameter Name="@District">
+            <Value>=Parameters!District.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Scheme">
+            <Value>=Parameters!Scheme.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Block">
+            <Value>=Parameters!Block.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ContractorName">
+            <Value>=Parameters!ContractorName.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText> ( SELECT [ID]
+      ,[Name] 
+	  FROM [KH_Test].[dbo].[Repairs_Priorities] t
+	  where t.ID  IN
+	  (
+		SELECT  distinct WO.Priority				
+		FROM [Anglicare].dbo.Repairs_WorksOrder AS WO
+			 LEFT JOIN (SELECT worksorder, max(unit) as unit from [Anglicare].dbo.Repairs_WorksOrder_UnitJoin GROUP BY  worksorder) AS A ON WO.ID=A.WorksOrder
+			 --Block Unit
+			 INNER JOIN [Anglicare].dbo.PropertyStructure_BlockUnit AS B ON B.Unit=A.Unit
+			 --Unit
+			 INNER JOIN  [Anglicare].dbo.PropertyStructure_Block AS PSB ON PSB.Code=B.Block   
+			--District Level
+			INNER join anglicare.dbo.PropertyStructure_District as PSD on PSB.District = PSD.Code
+			--Scheme Level
+			INNER join anglicare.dbo.PropertyStructure_scheme as PSS on PSB.Scheme = PSS.Code
+			
+			 left join [Anglicare].dbo.Repairs_WorksOrder_Completed_With_ContractorDetails as woc on wo.id=woc.worksorderid
+			 left join [Anglicare].dbo.Repairs_Priorities as pri on wo.priority = pri.id
+			 left join [Anglicare].dbo.HomeTeam_LookupValues as lookupt on wo.classification=lookupt.id and lookupt.[lookup] =25 
+			 left join [Anglicare].dbo.Security_User as users on wo.owner =users.[User]
+		where 
+		 PSD.code in (@District)
+		 and PSS.[Name] in (@Scheme)
+		 AND B.Block  in (@Block)
+		 and ( (woc.ContractorName in (@ContractorName)) or (@ContractorName is null))
+	  )
+)
+union
+(Select NULL as [id], NULL as [Name]  )
 
--- DECLARE @contractor varchar(100);
--- DECLARE @Priority varchar(100);
--- DECLARE @Trade varchar(100);
--- DECLARE @Classification varchar(100);
--- DECLARE @Status varchar(100);
-
--- SET @District ='ASA';
--- SET @Scheme ='BPSC';
--- SET @Block ='Gro02';
--- SET @From_Date = '20170101';
-
-
-SELECT 
-    distinct vRd.Priority as Priority
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-
-FROM 
-    dbo.v_RepairsData as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
-
-WHERE
-    vRD.Company = 1
-    --and ((psd.code IN (@District)))
-    --AND (pss.Name IN (@Scheme))
-  -- AND (psbu.Block IN (@Block))
-    --and (vRD.Complete &gt; @From_Date or @From_Date is null)
-   -- and (vRD.Complete &lt; @To_Date or @To_Date is null)
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    --and (vRD.contractor IN (@contractor) or @contractor is null)
-    --AND (vRd.Priority IN (@Priority) or @Priority is null)
-    --AND (vRD.Trade IN (@Trade) or @Trade is null)
-    --and (vRD.Classification IN (@Classification) or @Classification is null)
-    --AND (vRD.[Status] IN (@Status) or @Status is null)
-UNION select null as Priority</CommandText>
+</CommandText>
       </Query>
       <Fields>
-        <Field Name="Priority">
-          <DataField>Priority</DataField>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="Contractor">
+    <DataSet Name="ContractorName">
       <Query>
         <DataSourceName>Kypera_Test2</DataSourceName>
-        <CommandText>SELECT 
-    distinct vRD.contractor as Contractor
-
-
-FROM 
-    dbo.v_RepairsData as vRD
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
-
-WHERE
-    vRD.Company = 1
-    --and ((psd.code IN (@District)))
-    --AND (pss.Name IN (@Scheme))
-   --AND (psbu.Block IN (@Block))
-    --and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    --and (vRD.Complete &lt; @To_Date or @To_Date is null)
-ORDER BY
-    vRd.Contractor</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@District">
+            <Value>=Parameters!District.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Scheme">
+            <Value>=Parameters!Scheme.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Block">
+            <Value>=Parameters!Block.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>(select distinct ContractorName from dbo.Repairs_WorksOrder_Completed_With_ContractorDetails S
+WHERE S.worksorderid IN
+	  (
+		SELECT  distinct WO.ID			
+		FROM [Anglicare].dbo.Repairs_WorksOrder AS WO
+			 LEFT JOIN (SELECT worksorder, max(unit) as unit from [Anglicare].dbo.Repairs_WorksOrder_UnitJoin GROUP BY  worksorder) AS A ON WO.ID=A.WorksOrder
+			 --Block Unit
+			 INNER JOIN [Anglicare].dbo.PropertyStructure_BlockUnit AS B ON B.Unit=A.Unit
+			 --Unit
+			 INNER JOIN  [Anglicare].dbo.PropertyStructure_Block AS PSB ON PSB.Code=B.Block   
+			--District Level
+			INNER join anglicare.dbo.PropertyStructure_District as PSD on PSB.District = PSD.Code
+			--Scheme Level
+			INNER join anglicare.dbo.PropertyStructure_scheme as PSS on PSB.Scheme = PSS.Code
+			
+			 left join [Anglicare].dbo.Repairs_WorksOrder_Completed_With_ContractorDetails as woc on wo.id=woc.worksorderid
+			 left join [Anglicare].dbo.Repairs_Priorities as pri on wo.priority = pri.id
+			 left join [Anglicare].dbo.HomeTeam_LookupValues as lookupt on wo.classification=lookupt.id and lookupt.[lookup] =25 
+			 left join [Anglicare].dbo.Security_User as users on wo.owner =users.[User]
+		where 
+		 PSD.code in (@District)
+		 and PSS.[Name] in (@Scheme)
+		 AND B.Block  in (@Block)
+	  )
+)
+union
+(Select NULL as [ContractorName]  )</CommandText>
       </Query>
       <Fields>
-        <Field Name="Contractor">
-          <DataField>Contractor</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Trade">
-      <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
-        <CommandText>
--- DECLARE @District varchar(100);
--- DECLARE @Scheme varchar(100);
--- DECLARE @Block varchar(100);
--- DECLARE @From_Date DATE;
--- DECLARE @To_Date DATE;
-
--- DECLARE @contractor varchar(100);
--- DECLARE @Priority varchar(100);
--- DECLARE @Trade varchar(100);
--- DECLARE @Classification varchar(100);
--- DECLARE @Status varchar(100);
-
--- SET @District ='ASA';
--- SET @Scheme ='BPSC';
--- SET @Block ='Gro02';
--- SET @From_Date = '20170101';
-
-
-SELECT 
-    distinct vRD.Trade as Trade
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-
-FROM 
-    dbo.v_RepairsData as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
-
-WHERE
-    vRD.Company = 1
-    --and ((psd.code IN (@District)))
-    --AND (pss.Name IN (@Scheme))
-   --AND (psbu.Block IN (@Block))
-    --and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    --and (vRD.Complete &lt; @To_Date or @To_Date is null)
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    --and (vRD.contractor IN (@contractor) or @contractor is null)
-    --AND (vRd.Priority IN (@Priority) or @Priority is null)
-
-    --and (vRD.Classification IN (@Classification) or @Classification is null)
-    --AND (vRD.[Status] IN (@Status) or @Status is null)
-UNION select null as Trade</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Trade">
-          <DataField>Trade</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Status">
-      <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
-        <CommandText>
--- DECLARE @District varchar(100);
--- DECLARE @Scheme varchar(100);
--- DECLARE @Block varchar(100);
--- DECLARE @From_Date DATE;
--- DECLARE @To_Date DATE;
-
--- DECLARE @contractor varchar(100);
--- DECLARE @Priority varchar(100);
--- DECLARE @Trade varchar(100);
--- DECLARE @Classification varchar(100);
--- DECLARE @Status varchar(100);
-
--- SET @District ='ASA';
--- SET @Scheme ='BPSC';
--- SET @Block ='Gro02';
--- SET @From_Date = '20170101';
-
-
-SELECT 
-    distinct vRD.[Status] as [Status]
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-
-FROM 
-    dbo.v_RepairsData as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
-
-WHERE
-    vRD.Company = 1
-    --and ((psd.code IN (@District)))
-    --AND (pss.Name IN (@Scheme))
-   --AND (psbu.Block IN (@Block))
-    --and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    --and (vRD.Complete &lt; @To_Date or @To_Date is null)
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-   -- and (vRD.contractor IN (@contractor) or @contractor is null)
-    --AND (vRd.Priority IN (@Priority) or @Priority is null)
-    --AND (vRD.Trade IN (@Trade) or @Trade is null)
-    --and (vRD.Classification IN (@Classification) or @Classification is null)
-
-UNION select null as [Status]</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Status">
-          <DataField>Status</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Repair_Type">
-      <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
-        <CommandText>
--- DECLARE @District varchar(100);
--- DECLARE @Scheme varchar(100);
--- DECLARE @Block varchar(100);
--- DECLARE @From_Date DATE;
--- DECLARE @To_Date DATE;
-
--- DECLARE @contractor varchar(100);
--- DECLARE @Priority varchar(100);
--- DECLARE @Trade varchar(100);
--- DECLARE @Classification varchar(100);
--- DECLARE @Status varchar(100);
-
--- SET @District ='ASA';
--- SET @Scheme ='BPSC';
--- SET @Block ='Gro02';
--- SET @From_Date = '20170101';
-
-
-SELECT 
-    distinct vRD.Classification as [Repair Type]
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-
-FROM 
-    dbo.v_RepairsData as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
-
-WHERE
-    vRD.Company = 1
-    --and ((psd.code IN (@District)))
-    --AND (pss.Name IN (@Scheme))
-   --AND (psbu.Block IN (@Block))
-    --and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    --and (vRD.Complete &lt; @To_Date or @To_Date is null)
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    --and (vRD.contractor IN (@contractor) or @contractor is null)
-    --AND (vRd.Priority IN (@Priority) or @Priority is null)
-    --AND (vRD.Trade IN (@Trade) or @Trade is null)
-   -- AND (vRD.[Status] IN (@Status) or @Status is null)
-ORDER BY
-    vRd.Classification</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Repair_Type">
-          <DataField>Repair Type</DataField>
+        <Field Name="ContractorName">
+          <DataField>ContractorName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -601,16 +385,19 @@ ORDER BY
                   <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
+                  <Width>5.47308cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
                   <Width>2.4793cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>8.69625cm</Width>
+                  <Width>4.56375cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.60246cm</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>3.08208cm</Width>
+                  <Width>3.4525cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>3.42604cm</Width>
@@ -619,7 +406,7 @@ ORDER BY
                   <Width>2.72132cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.1825cm</Width>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -628,14 +415,14 @@ ORDER BY
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox24">
+                        <Textbox Name="Textbox211">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Row No.</Value>
+                                  <Value>District</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -644,11 +431,85 @@ ORDER BY
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Left</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox24</rd:DefaultName>
+                          <rd:DefaultName>Textbox211</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox213">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Scheme</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox213</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox215">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Block</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox215</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -681,48 +542,11 @@ ORDER BY
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Left</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox197</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox1">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Display Name</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox1</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -755,7 +579,7 @@ ORDER BY
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Left</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -792,7 +616,7 @@ ORDER BY
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Left</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -829,7 +653,7 @@ ORDER BY
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Left</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -866,7 +690,7 @@ ORDER BY
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Left</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -903,7 +727,7 @@ ORDER BY
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Left</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -929,17 +753,16 @@ ORDER BY
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox25">
+                        <Textbox Name="District">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=RowNumber("MaintenancePlan")</Value>
+                                  <Value>=Fields!District.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
-                                    <Format>0;(0)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -948,7 +771,77 @@ ORDER BY
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox25</rd:DefaultName>
+                          <rd:DefaultName>District</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Scheme">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Scheme.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Scheme</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Block">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Block.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Block</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -984,41 +877,6 @@ ORDER BY
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Property_Ref_</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Display_Name">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Display_Name.Value</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Display_Name</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1210,295 +1068,11 @@ ORDER BY
                     </TablixCell>
                   </TablixCells>
                 </TablixRow>
-                <TablixRow>
-                  <Height>0.6cm</Height>
-                  <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox26">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Total:</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox26</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox17">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Count(Fields!Property_Ref_.Value)</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox17</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox18">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox18</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox19">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Sum(Fields!Responsive.Value)</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox19</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox20">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Sum(Fields!Vacancy.Value)</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox20</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox21">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Sum(Fields!Planned.Value)</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox21</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox22">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Sum(Fields!Cyclical.Value)</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox22</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox23">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Sum(Fields!ALI.Value)</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox23</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                  </TablixCells>
-                </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -1517,21 +1091,12 @@ ORDER BY
                 <TablixMember>
                   <Group Name="Details2" />
                 </TablixMember>
-                <TablixMember>
-                  <KeepWithGroup>Before</KeepWithGroup>
-                </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <RepeatRowHeaders>true</RepeatRowHeaders>
-            <FixedRowHeaders>true</FixedRowHeaders>
             <DataSetName>MaintenancePlan</DataSetName>
-            <PageBreak>
-              <BreakLocation>End</BreakLocation>
-            </PageBreak>
             <Top>0.12761cm</Top>
-            <Left>0.44662cm</Left>
-            <Height>1.8cm</Height>
-            <Width>28.68995cm</Width>
+            <Height>1.2cm</Height>
+            <Width>29.61599cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1947,15 +1512,15 @@ ORDER BY
       <Nullable>true</Nullable>
       <Prompt>To Date</Prompt>
     </ReportParameter>
-    <ReportParameter Name="contractor">
+    <ReportParameter Name="ContractorName">
       <DataType>String</DataType>
       <Nullable>true</Nullable>
-      <Prompt>Contractor</Prompt>
+      <Prompt>Contractor Name</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>Contractor</DataSetName>
-          <ValueField>Contractor</ValueField>
-          <LabelField>Contractor</LabelField>
+          <DataSetName>ContractorName</DataSetName>
+          <ValueField>ContractorName</ValueField>
+          <LabelField>ContractorName</LabelField>
         </DataSetReference>
       </ValidValues>
     </ReportParameter>
@@ -1966,44 +1531,8 @@ ORDER BY
       <ValidValues>
         <DataSetReference>
           <DataSetName>Priority</DataSetName>
-          <ValueField>Priority</ValueField>
-          <LabelField>Priority</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="Trade">
-      <DataType>String</DataType>
-      <Nullable>true</Nullable>
-      <Prompt>Trade</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Trade</DataSetName>
-          <ValueField>Trade</ValueField>
-          <LabelField>Trade</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="Classification">
-      <DataType>String</DataType>
-      <Nullable>true</Nullable>
-      <Prompt>Repair Type</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Repair_Type</DataSetName>
-          <ValueField>Repair_Type</ValueField>
-          <LabelField>Repair_Type</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="Status">
-      <DataType>String</DataType>
-      <Nullable>true</Nullable>
-      <Prompt>Status</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Status</DataSetName>
-          <ValueField>Status</ValueField>
-          <LabelField>Status</LabelField>
+          <ValueField>ID</ValueField>
+          <LabelField>Name</LabelField>
         </DataSetReference>
       </ValidValues>
     </ReportParameter>
@@ -2046,22 +1575,7 @@ ORDER BY
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>2</RowIndex>
-          <ParameterName>contractor</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>Trade</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>Classification</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>Status</ParameterName>
+          <ParameterName>ContractorName</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
