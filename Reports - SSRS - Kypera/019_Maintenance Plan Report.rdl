@@ -198,11 +198,11 @@ SELECT
     -- ,vRD.[Status]
     -- ,vRD.Complete
 
-    ,SUM(CASE WHEN (vRD.Priority like ('P1%') or vRD.Priority like ('P2%') or vRD.Priority like ('P3%')) THEN vRD.ActualCost ELSE 0 END) as [Responsive]
-    ,SUM(CASE WHEN (vRD.Priority like ('P4%')) THEN vRD.ActualCost ELSE 0 END) as [Vacancy]
-    ,SUM(CASE WHEN (vRD.Priority like ('P6%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) as [Planned]
-    ,SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) as [Cyclical]
-    ,SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2='ALI')) THEN vRD.ActualCost ELSE 0 END) as [ALI]
+    ,CAST(SUM(CASE WHEN (vRD.Priority like ('P1%') or vRD.Priority like ('P2%') or vRD.Priority like ('P3%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+    ,CAST(SUM(CASE WHEN (vRD.Priority like ('P4%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+    ,CAST(SUM(CASE WHEN (vRD.Priority like ('P6%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+    ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+    ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
 
 FROM 
     dbo.v_RepairsData as vRD
@@ -1522,12 +1522,9 @@ ORDER BY
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <RepeatRowHeaders>true</RepeatRowHeaders>
-            <FixedRowHeaders>true</FixedRowHeaders>
+            <RepeatColumnHeaders>true</RepeatColumnHeaders>
+            <FixedColumnHeaders>true</FixedColumnHeaders>
             <DataSetName>MaintenancePlan</DataSetName>
-            <PageBreak>
-              <BreakLocation>End</BreakLocation>
-            </PageBreak>
             <Top>0.12761cm</Top>
             <Left>0.44662cm</Left>
             <Height>1.8cm</Height>
