@@ -186,7 +186,7 @@ where
 
 
 SELECT 
-    vRD.ID as [Property Ref.]
+    vRD.AreaID as [Property Ref.]
     ,psu.Name as [Display Name]
     -- ,psd.code as District
     -- ,pss.Name as Scheme
@@ -226,15 +226,15 @@ WHERE
     -- ,vRD.Trade
     -- ,vRD.Classification as [Repair Type]
     -- ,vRD.[Status]
-    and (vRD.contractor IN (@contractor) or @contractor is null)
-    AND (vRd.Priority IN (@Priority) or @Priority is null)
-    AND (vRD.Trade IN (@Trade) or @Trade is null)
-    and (vRD.Classification IN (@Classification) or @Classification is null)
-    AND (vRD.[Status] IN (@Status) or @Status is null)
+    and (vRD.contractor IN (@contractor))
+    AND (vRd.Priority IN (@Priority) )
+    AND (vRD.Trade IN (@Trade) )
+    and (vRD.Classification IN (@Classification))
+    AND (vRD.[Status] IN (@Status) )
 
 
 GROUP BY
-    vRD.ID 
+    vRD.AreaID 
     ,psu.Name
     -- ,psd.code 
     -- ,pss.Name
@@ -246,7 +246,7 @@ GROUP BY
     -- ,vRD.[Status]
     -- ,vRD.Complete
 ORDER BY
-    vRD.ID 
+    vRD.AreaID 
     </CommandText>
       </Query>
       <Fields>
@@ -283,6 +283,23 @@ ORDER BY
     <DataSet Name="Priority">
       <Query>
         <DataSourceName>Kypera_Test2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@District">
+            <Value>=Parameters!District.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Scheme">
+            <Value>=Parameters!Scheme.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Block">
+            <Value>=Parameters!Block.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@From_Date">
+            <Value>=Parameters!From_Date.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@To_Date">
+            <Value>=Parameters!To_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>
 -- DECLARE @District varchar(100);
 -- DECLARE @Scheme varchar(100);
@@ -325,11 +342,11 @@ FROM
 
 WHERE
     vRD.Company = 1
-    --and ((psd.code IN (@District)))
-    --AND (pss.Name IN (@Scheme))
-  -- AND (psbu.Block IN (@Block))
-    --and (vRD.Complete &gt; @From_Date or @From_Date is null)
-   -- and (vRD.Complete &lt; @To_Date or @To_Date is null)
+    and ((psd.code IN (@District)))
+    AND (pss.Name IN (@Scheme))
+  AND (psbu.Block IN (@Block))
+    and (vRD.Complete &gt; @From_Date or @From_Date is null)
+   and (vRD.Complete &lt; @To_Date or @To_Date is null)
     -- ,vRD.contractor
     -- ,vRd.Priority
     -- ,vRD.Trade
@@ -340,7 +357,7 @@ WHERE
     --AND (vRD.Trade IN (@Trade) or @Trade is null)
     --and (vRD.Classification IN (@Classification) or @Classification is null)
     --AND (vRD.[Status] IN (@Status) or @Status is null)
-UNION select null as Priority</CommandText>
+--UNION select null as Priority</CommandText>
       </Query>
       <Fields>
         <Field Name="Priority">
@@ -352,6 +369,23 @@ UNION select null as Priority</CommandText>
     <DataSet Name="Contractor">
       <Query>
         <DataSourceName>Kypera_Test2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@District">
+            <Value>=Parameters!District.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Scheme">
+            <Value>=Parameters!Scheme.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Block">
+            <Value>=Parameters!Block.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@From_Date">
+            <Value>=Parameters!From_Date.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@To_Date">
+            <Value>=Parameters!To_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>SELECT 
     distinct vRD.contractor as Contractor
 
@@ -367,11 +401,11 @@ FROM
 
 WHERE
     vRD.Company = 1
-    --and ((psd.code IN (@District)))
-    --AND (pss.Name IN (@Scheme))
-   --AND (psbu.Block IN (@Block))
-    --and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    --and (vRD.Complete &lt; @To_Date or @To_Date is null)
+    and ((psd.code IN (@District)))
+    AND (pss.Name IN (@Scheme))
+   AND (psbu.Block IN (@Block))
+    and (vRD.Complete &gt; @From_Date or @From_Date is null)
+    and (vRD.Complete &lt; @To_Date or @To_Date is null)
 ORDER BY
     vRd.Contractor</CommandText>
       </Query>
@@ -385,6 +419,23 @@ ORDER BY
     <DataSet Name="Trade">
       <Query>
         <DataSourceName>Kypera_Test2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@District">
+            <Value>=Parameters!District.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Scheme">
+            <Value>=Parameters!Scheme.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Block">
+            <Value>=Parameters!Block.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@From_Date">
+            <Value>=Parameters!From_Date.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@To_Date">
+            <Value>=Parameters!To_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>
 -- DECLARE @District varchar(100);
 -- DECLARE @Scheme varchar(100);
@@ -427,11 +478,11 @@ FROM
 
 WHERE
     vRD.Company = 1
-    --and ((psd.code IN (@District)))
-    --AND (pss.Name IN (@Scheme))
-   --AND (psbu.Block IN (@Block))
-    --and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    --and (vRD.Complete &lt; @To_Date or @To_Date is null)
+    and ((psd.code IN (@District)))
+    AND (pss.Name IN (@Scheme))
+   AND (psbu.Block IN (@Block))
+    and (vRD.Complete &gt; @From_Date or @From_Date is null)
+    and (vRD.Complete &lt; @To_Date or @To_Date is null)
     -- ,vRD.contractor
     -- ,vRd.Priority
     -- ,vRD.Trade
@@ -442,7 +493,7 @@ WHERE
 
     --and (vRD.Classification IN (@Classification) or @Classification is null)
     --AND (vRD.[Status] IN (@Status) or @Status is null)
-UNION select null as Trade</CommandText>
+--UNION select null as Trade</CommandText>
       </Query>
       <Fields>
         <Field Name="Trade">
@@ -454,6 +505,23 @@ UNION select null as Trade</CommandText>
     <DataSet Name="Status">
       <Query>
         <DataSourceName>Kypera_Test2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@District">
+            <Value>=Parameters!District.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Scheme">
+            <Value>=Parameters!Scheme.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Block">
+            <Value>=Parameters!Block.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@From_Date">
+            <Value>=Parameters!From_Date.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@To_Date">
+            <Value>=Parameters!To_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>
 -- DECLARE @District varchar(100);
 -- DECLARE @Scheme varchar(100);
@@ -496,11 +564,11 @@ FROM
 
 WHERE
     vRD.Company = 1
-    --and ((psd.code IN (@District)))
-    --AND (pss.Name IN (@Scheme))
-   --AND (psbu.Block IN (@Block))
-    --and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    --and (vRD.Complete &lt; @To_Date or @To_Date is null)
+    and ((psd.code IN (@District)))
+    AND (pss.Name IN (@Scheme))
+   AND (psbu.Block IN (@Block))
+    and (vRD.Complete &gt; @From_Date or @From_Date is null)
+    and (vRD.Complete &lt; @To_Date or @To_Date is null)
     -- ,vRD.contractor
     -- ,vRd.Priority
     -- ,vRD.Trade
@@ -511,7 +579,7 @@ WHERE
     --AND (vRD.Trade IN (@Trade) or @Trade is null)
     --and (vRD.Classification IN (@Classification) or @Classification is null)
 
-UNION select null as [Status]</CommandText>
+--UNION select null as [Status]</CommandText>
       </Query>
       <Fields>
         <Field Name="Status">
@@ -523,6 +591,23 @@ UNION select null as [Status]</CommandText>
     <DataSet Name="Repair_Type">
       <Query>
         <DataSourceName>Kypera_Test2</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@District">
+            <Value>=Parameters!District.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Scheme">
+            <Value>=Parameters!Scheme.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Block">
+            <Value>=Parameters!Block.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@From_Date">
+            <Value>=Parameters!From_Date.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@To_Date">
+            <Value>=Parameters!To_Date.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>
 -- DECLARE @District varchar(100);
 -- DECLARE @Scheme varchar(100);
@@ -565,11 +650,11 @@ FROM
 
 WHERE
     vRD.Company = 1
-    --and ((psd.code IN (@District)))
-    --AND (pss.Name IN (@Scheme))
-   --AND (psbu.Block IN (@Block))
-    --and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    --and (vRD.Complete &lt; @To_Date or @To_Date is null)
+    and ((psd.code IN (@District)))
+    AND (pss.Name IN (@Scheme))
+   AND (psbu.Block IN (@Block))
+    and (vRD.Complete &gt; @From_Date or @From_Date is null)
+    and (vRD.Complete &lt; @To_Date or @To_Date is null)
     -- ,vRD.contractor
     -- ,vRd.Priority
     -- ,vRD.Trade
@@ -1045,6 +1130,7 @@ ORDER BY
                                   <Value>=Fields!Responsive.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1064,6 +1150,7 @@ ORDER BY
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1080,6 +1167,7 @@ ORDER BY
                                   <Value>=Fields!Vacancy.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1099,6 +1187,7 @@ ORDER BY
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1115,6 +1204,7 @@ ORDER BY
                                   <Value>=Fields!Planned.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1134,6 +1224,7 @@ ORDER BY
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1150,6 +1241,7 @@ ORDER BY
                                   <Value>=Fields!Cyclical.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1169,6 +1261,7 @@ ORDER BY
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1185,6 +1278,7 @@ ORDER BY
                                   <Value>=Fields!ALI.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1204,6 +1298,7 @@ ORDER BY
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1330,6 +1425,7 @@ ORDER BY
                                   <Value>=Sum(Fields!Responsive.Value)</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1349,6 +1445,7 @@ ORDER BY
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1365,6 +1462,7 @@ ORDER BY
                                   <Value>=Sum(Fields!Vacancy.Value)</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1384,6 +1482,7 @@ ORDER BY
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1400,6 +1499,7 @@ ORDER BY
                                   <Value>=Sum(Fields!Planned.Value)</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1419,6 +1519,7 @@ ORDER BY
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1435,6 +1536,7 @@ ORDER BY
                                   <Value>=Sum(Fields!Cyclical.Value)</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1454,6 +1556,7 @@ ORDER BY
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1470,6 +1573,7 @@ ORDER BY
                                   <Value>=Sum(Fields!ALI.Value)</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1489,8 +1593,10 @@ ORDER BY
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -1946,7 +2052,12 @@ ORDER BY
     </ReportParameter>
     <ReportParameter Name="contractor">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Contractor</DataSetName>
+          <ValueField>Contractor</ValueField>
+        </DataSetReference>
+      </DefaultValue>
       <Prompt>Contractor</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -1955,10 +2066,16 @@ ORDER BY
           <LabelField>Contractor</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="Priority">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Priority</DataSetName>
+          <ValueField>Priority</ValueField>
+        </DataSetReference>
+      </DefaultValue>
       <Prompt>Priority</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -1967,10 +2084,16 @@ ORDER BY
           <LabelField>Priority</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="Trade">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Trade</DataSetName>
+          <ValueField>Trade</ValueField>
+        </DataSetReference>
+      </DefaultValue>
       <Prompt>Trade</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -1979,10 +2102,16 @@ ORDER BY
           <LabelField>Trade</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="Classification">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Repair_Type</DataSetName>
+          <ValueField>Repair_Type</ValueField>
+        </DataSetReference>
+      </DefaultValue>
       <Prompt>Repair Type</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -1991,10 +2120,16 @@ ORDER BY
           <LabelField>Repair_Type</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="Status">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Status</DataSetName>
+          <ValueField>Status</ValueField>
+        </DataSetReference>
+      </DefaultValue>
       <Prompt>Status</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -2003,6 +2138,7 @@ ORDER BY
           <LabelField>Status</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
