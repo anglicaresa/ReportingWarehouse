@@ -182,72 +182,128 @@ where
 -- SET @District ='ASA';
 -- SET @Scheme ='BPSC';
 -- SET @Block ='Gro02';
--- SET @From_Date = '20170101';
+-- SET @From_Date = '20181101';
 
+SELECT p.[Property Ref.],p.[Display Name]
+,ISNULL(b.Responsive, 0) as Responsive
+,ISNULL(b.Vacancy, 0) as Vacancy
+,ISNULL(b.Planned, 0) as Planned
+,ISNULL(b.Cyclical, 0) as Cyclical
+,ISNULL(b.ALI, 0) as ALI
+        
 
-SELECT 
-    vRD.AreaID as [Property Ref.]
-    ,psu.Name as [Display Name]
-    -- ,psd.code as District
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
+FROM (
+  SELECT 
+      psu.ID as [Property Ref.]
+      ,psu.Name as [Display Name]
+      -- ,psd.code as District
+      -- ,pss.Name as Scheme
+      -- ,psbu.Block as Block
+      -- ,vRD.contractor
+      -- ,vRd.Priority
+      -- ,vRD.Trade
+      -- ,vRD.Classification as [Repair Type]
+      -- ,vRD.[Status]
+      -- ,vRD.Complete
 
-    ,CAST(SUM(CASE WHEN (vRD.Priority like ('P1%') or vRD.Priority like ('P2%') or vRD.Priority like ('P3%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
-    ,CAST(SUM(CASE WHEN (vRD.Priority like ('P4%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
-    ,CAST(SUM(CASE WHEN (vRD.Priority like ('P6%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
-    ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
-    ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
+      -- ,CAST(SUM(CASE WHEN (vRD.Priority like ('P1%') or vRD.Priority like ('P2%') or vRD.Priority like ('P3%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+      -- ,CAST(SUM(CASE WHEN (vRD.Priority like ('P4%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+      -- ,CAST(SUM(CASE WHEN (vRD.Priority like ('P6%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+      -- ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+      -- ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
 
-FROM 
-    dbo.v_RepairsData as vRD
+  FROM 
     --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
+      dbo.PropertyStructure_Unit as psu  
+      LEFT  JOIN dbo.PropertyStructure_BlockUnit psbu ON psu.Company = psbu.Company AND psu.ID = psbu.Unit
+      LEFT  JOIN dbo.PropertyStructure_Block psb ON psu.Company = psb.Company AND psbu.Block = psb.Code
+      LEFT  JOIN dbo.PropertyStructure_scheme pss ON psu.Company = pss.Company AND psb.Scheme = pss.Code
+      LEFT  JOIN dbo.PropertyStructure_District psd ON psu.Company = psd.Company AND psb.District = psd.Code
+      -- LEFT  JOIN dbo.v_RepairsData as vRD ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
 
+  WHERE
+      -- vRD.Company = 1  and 
+      (psd.code IN (@District))
+      AND (pss.Name IN (@Scheme))
+      AND (psbu.Block IN (@Block) )
+      -- and (vRD.Complete &gt; (@From_Date))
+      -- and (vRD.Complete &lt; @To_Date or @To_Date is null)
+      -- and (vRD.contractor IN (@contractor))
+      -- AND (vRd.Priority IN (@Priority) )
+      -- AND (vRD.Trade IN (@Trade) )
+      -- and (vRD.Classification IN (@Classification))
+      -- AND (vRD.[Status] IN (@Status) )
+  GROUP BY
+      psu.ID
+      ,psu.Name
+      -- ,psd.code 
+      -- ,pss.Name
+      -- ,psbu.Block 
+      -- ,vRD.contractor
+      -- ,vRd.Priority
+      -- ,vRD.Trade
+      -- ,vRD.Classification 
+      -- ,vRD.[Status]
+      -- ,vRD.Complete
+) as p LEFT JOIN
+(
+    SELECT 
+      vRD.AreaID as [Property Ref.]
+      -- ,psu.Name as [Display Name]
+      -- ,psd.code as District
+      -- ,pss.Name as Scheme
+      -- ,psbu.Block as Block
+      -- ,vRD.contractor
+      -- ,vRd.Priority
+      -- ,vRD.Trade
+      -- ,vRD.Classification as [Repair Type]
+      -- ,vRD.[Status]
+      -- ,vRD.Complete
 
-WHERE
-    vRD.Company = 1
-    and (psd.code IN (@District))
-    AND (pss.Name IN (@Scheme))
-    AND (psbu.Block IN (@Block) )
-    and (vRD.Complete &gt; (@From_Date))
-    and (vRD.Complete &lt; @To_Date or @To_Date is null)
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    and (vRD.contractor IN (@contractor))
-    AND (vRd.Priority IN (@Priority) )
-    AND (vRD.Trade IN (@Trade) )
-    and (vRD.Classification IN (@Classification))
-    AND (vRD.[Status] IN (@Status) )
+      ,CAST(SUM(CASE WHEN (vRD.Priority like ('P1%') or vRD.Priority like ('P2%') or vRD.Priority like ('P3%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+      ,CAST(SUM(CASE WHEN (vRD.Priority like ('P4%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+      ,CAST(SUM(CASE WHEN (vRD.Priority like ('P6%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+      ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+      ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
 
+  FROM 
+  dbo.v_RepairsData as vRD
+    --The Property Tree
+      -- dbo.PropertyStructure_Unit as psu  
+      -- LEFT  JOIN dbo.PropertyStructure_BlockUnit psbu ON psu.Company = psbu.Company AND psu.ID = psbu.Unit
+      -- LEFT  JOIN dbo.PropertyStructure_Block psb ON psu.Company = psb.Company AND psbu.Block = psb.Code
+      -- LEFT  JOIN dbo.PropertyStructure_scheme pss ON psu.Company = pss.Company AND psb.Scheme = pss.Code
+      -- LEFT  JOIN dbo.PropertyStructure_District psd ON psu.Company = psd.Company AND psb.District = psd.Code
+      -- LEFT  JOIN dbo.v_RepairsData as vRD ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
 
-GROUP BY
-    vRD.AreaID 
-    ,psu.Name
-    -- ,psd.code 
-    -- ,pss.Name
-    -- ,psbu.Block 
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification 
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-ORDER BY
-    vRD.AreaID 
-    </CommandText>
+  WHERE
+      vRD.Company = 1   
+      -- (psd.code IN (@District))
+      -- AND (pss.Name IN (@Scheme))
+      -- AND (psbu.Block IN (@Block) )
+      and (vRD.Complete &gt; (@From_Date))
+      and (vRD.Complete &lt; @To_Date or @To_Date is null)
+      and (vRD.contractor IN (@contractor))
+      AND (vRd.Priority IN (@Priority) )
+      AND (vRD.Trade IN (@Trade) )
+      and (vRD.Classification IN (@Classification))
+      AND (vRD.[Status] IN (@Status) )
+  GROUP BY
+    vRD.AreaID
+      -- psu.ID
+      -- ,psu.Name
+      -- ,psd.code 
+      -- ,pss.Name
+      -- ,psbu.Block 
+      -- ,vRD.contractor
+      -- ,vRd.Priority
+      -- ,vRD.Trade
+      -- ,vRD.Classification 
+      -- ,vRD.[Status]
+      -- ,vRD.Complete
+
+) as b on p.[Property Ref.] = b.[Property Ref.]
+order BY p.[Property Ref.]</CommandText>
       </Query>
       <Fields>
         <Field Name="Property_Ref_">
@@ -1596,7 +1652,6 @@ ORDER BY
                             <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -2058,6 +2113,7 @@ ORDER BY
           <ValueField>Contractor</ValueField>
         </DataSetReference>
       </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>Contractor</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -2076,6 +2132,7 @@ ORDER BY
           <ValueField>Priority</ValueField>
         </DataSetReference>
       </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>Priority</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -2094,6 +2151,7 @@ ORDER BY
           <ValueField>Trade</ValueField>
         </DataSetReference>
       </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>Trade</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -2112,6 +2170,7 @@ ORDER BY
           <ValueField>Repair_Type</ValueField>
         </DataSetReference>
       </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>Repair Type</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -2130,6 +2189,7 @@ ORDER BY
           <ValueField>Status</ValueField>
         </DataSetReference>
       </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>Status</Prompt>
       <ValidValues>
         <DataSetReference>
