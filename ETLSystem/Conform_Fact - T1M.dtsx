@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - T1M"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="672"
-  DTS:VersionGUID="{E88B6EDA-D84B-438F-838A-BFBCD5C9950A}">
+  DTS:VersionBuild="674"
+  DTS:VersionGUID="{A5A2A033-FAFC-40EA-AB05-922BB312EE39}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">9/5/2018 10:16:59 AM</DTS:VariableValue>
+        DTS:DataType="7">9/6/2018 1:18:34 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">9/5/2018 10:16:59 AM</DTS:VariableValue>
+        DTS:DataType="7">9/6/2018 1:18:34 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">9/5/2018 10:16:59 AM</DTS:VariableValue>
+        DTS:DataType="7">9/6/2018 1:18:34 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -15081,6 +15081,155 @@ where employee_key=? </property>
           </DTS:EventHandlers>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\UserAccessControl"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{ad0d125a-ec21-4fa1-82a4-869ed876ea2b}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="UserAccessControl">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\UserAccessControl\Delete data"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{da644137-a79e-4b1e-b382-2b042838a56b}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Delete data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                  SQLTask:SqlStatementSource="delete from conform.UserAccessControl where control_mode = 0" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\UserAccessControl\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{d3ae5a27-e395-461b-b6c7-58fb52d3c8b4}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.UserAccessControl'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\UserAccessControl\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{0128822f-c257-41e8-bad6-33ec20c3cb1e}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                  SQLTask:SqlStatementSource="&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.UserAccessControl'" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\UserAccessControl\insert data"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{3e8d6c35-3f2c-4a3c-960f-273f8ae27ff4}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="insert data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                  SQLTask:SqlStatementSource="&#xA;--Three levels consists of CEO, GM, and SM&#xA;WITH Manager_id  (id_number) &#xA;AS&#xA;(&#xA;SELECT u.Id_Number FROM &#xA; (&#xA;  SELECT * FROM extract.employee_position_IFT1 ep WHERE ep.Position_Code = 2000000&#xA;  UNION &#xA;  SELECT * FROM extract.employee_position_IFT1 ep WHERE ep.Supervisor_Position = 2000000&#xA;  UNION &#xA;  SELECT * FROM extract.employee_position_IFT1 ep WHERE ep.Supervisor_Position IN (SELECT ep.Position_Code FROM extract.employee_position_IFT1 ep WHERE ep.Supervisor_Position = 2000000)&#xA; ) AS u&#xA; WHERE  u.Is_a_Supervisor = 'Y'&#xA;),&#xA;-- All managers info&#xA; t_UserAccessControl &#xA; ([Portfolio_key] , &#xA;    [Service_stream_key] ,&#xA; [Program_key] ,&#xA; [Employee_key] ,&#xA; [Id_number] ,&#xA; [email] ,&#xA; [Access_program_key] ,&#xA; [control_mode] )&#xA; AS&#xA; (&#xA;   SELECT &#xA;    f.portfolio_key&#xA;    ,f.service_stream_key&#xA;    ,f.program_key&#xA;    ,f.employee_key&#xA;    ,d.id_number&#xA;    ,d.ASA_Email&#xA;    ,0 AS access_program_key&#xA;    , 0 AS control_mode&#xA; &#xA;   FROM conform.employee_dim d INNER JOIN conform.employee_position_fact f&#xA;   ON d.employee_key = f.employee_key&#xA;   WHERE d.current_row_indicator = 'y' AND d.id_number IN (SELECT id_number FROM Manager_id)&#xA;    ),&#xA;--organization level&#xA;org_unit (portfolio_key, service_stream_key,program_key)&#xA;AS&#xA;(&#xA; SELECT DISTINCT epf.portfolio_key,epf.service_stream_key,epf.program_key FROM conform.employee_position_fact epf&#xA; WHERE epf.program_key NOT IN (SELECT program_key FROM conform.program_dim d WHERE d.program_name = 'No Program')&#xA;)&#xA;&#xA;INSERT INTO conform.UserAccessControl (    [Portfolio_key] , &#xA;    [Service_stream_key] ,&#xA; [Program_key] ,&#xA; [Employee_key] ,&#xA; [Id_number] ,&#xA; [email] ,&#xA; [Access_program_key] ,&#xA; [control_mode] )&#xA;-- Managers of Portfolio level which means no program, no service stream&#xA; SELECT &#xA;  c.portfolio_key&#xA;  ,c.service_stream_key&#xA;  ,c.program_key&#xA;  ,c.employee_key&#xA;  ,c.id_number&#xA;  ,c.email&#xA;  ,u.program_key AS access_program_key&#xA;  , 0 AS control_mode&#xA;FROM t_UserAccessControl c INNER JOIN org_unit u ON c.Portfolio_key = u.portfolio_key&#xA;WHERE c.Program_key IN (SELECT program_key FROM conform.program_dim d WHERE d.program_name = 'No Program')&#xA;AND c.Service_stream_key IN (SELECT s.service_stream_key from conform.service_stream_dim s WHERE s.service_stream_name = 'No Service Stream')&#xA;&#xA;UNION&#xA;-- Managers of Service Stream level which means with a service stream but no program&#xA; SELECT &#xA;  c.portfolio_key&#xA;  ,c.service_stream_key&#xA;  ,c.program_key&#xA;  ,c.employee_key&#xA;  ,c.id_number&#xA;  ,c.email&#xA;  ,u.program_key AS access_program_key&#xA;  , 0 AS control_mode&#xA;  &#xA;FROM t_UserAccessControl c INNER JOIN org_unit u ON c.Service_stream_key = u.service_stream_key&#xA;WHERE c.Program_key IN (SELECT program_key FROM conform.program_dim d WHERE d.program_name = 'No Program')&#xA;AND c.Service_stream_key NOT IN (SELECT s.service_stream_key from conform.service_stream_dim s WHERE s.service_stream_name = 'No Service Stream')&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\UserAccessControl.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{558a8767-a48d-492f-8532-e368168c78c6}"
+              DTS:From="Package\Sequence Container - Fact Tables\UserAccessControl\Delete data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\UserAccessControl\insert data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\UserAccessControl.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{eb2251f7-702d-49c6-b94b-fce733f4db19}"
+              DTS:From="Package\Sequence Container - Fact Tables\UserAccessControl\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - Fact Tables\UserAccessControl\Delete data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\UserAccessControl.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{c0739ddf-548d-40e3-94df-11df09eabcad}"
+              DTS:From="Package\Sequence Container - Fact Tables\UserAccessControl\insert data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\UserAccessControl\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\UserAccessControl.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{1f37de18-4327-43f2-928b-784925eea6b8}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{03700190-e14a-4226-88fd-f05a4bb6207f}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\UserAccessControl.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{3c98e269-43e9-41ee-9732-06ced14e1965}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process"
           DTS:CreationName="STOCK:SEQUENCE"
           DTS:Description="Sequence Container"
@@ -15367,6 +15516,14 @@ where employee_key=? </property>
           DTS:ObjectName="Constraint 3"
           DTS:To="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_PROFILE_FACT"
           DTS:Value="2" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 30]"
+          DTS:CreationName=""
+          DTS:DTSID="{0210EF23-1311-473D-87D5-311B9E41039D}"
+          DTS:From="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 30"
+          DTS:To="Package\Sequence Container - Fact Tables\UserAccessControl" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 4]"
           DTS:CreationName=""
@@ -19362,11 +19519,122 @@ where employee_key=? </property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="139,42"
+          Id="Package\Sequence Container - Fact Tables\UserAccessControl\Delete data"
+          TopLeft="99.0587121212121,132.090909090908" />
+        <NodeLayout
+          Size="206,42"
+          Id="Package\Sequence Container - Fact Tables\UserAccessControl\EST - Write Job Finish info"
+          TopLeft="66.0587121212121,351.090909090908" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\UserAccessControl\EST - Write Job Start info"
+          TopLeft="63.9375,15" />
+        <NodeLayout
+          Size="130,42"
+          Id="Package\Sequence Container - Fact Tables\UserAccessControl\insert data"
+          TopLeft="109.604166666667,244.757575757578" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\UserAccessControl.PrecedenceConstraints[Constraint]"
+          TopLeft="171.581439393939,174.090909090908">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,70.6666666666697"
+              Start="0,0"
+              End="0,63.1666666666697">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,63.1666666666697" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\UserAccessControl.PrecedenceConstraints[Constraint 1]"
+          TopLeft="166.498106060606,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,75.090909090908"
+              Start="0,0"
+              End="0,67.590909090908">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,67.590909090908" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\UserAccessControl.PrecedenceConstraints[Constraint 2]"
+          TopLeft="171.831439393939,286.757575757578">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,64.3333333333303"
+              Start="0,0"
+              End="0,56.8333333333303">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,56.8333333333303" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="77"
+          IsExpanded="True"
+          PanelSize="365,462"
+          Size="365,539"
+          Id="Package\Sequence Container - Fact Tables\UserAccessControl"
+          TopLeft="2.34126984127101,13770.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 30]"
+          TopLeft="185.091269841271,13651.3888888889">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,119.1111111111"
+              Start="0,0"
+              End="0,111.6111111111">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,111.6111111111" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="795,13706"
-          Size="795,13749"
+          PanelSize="795,14388"
+          Size="795,14432"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="171.833333333333,1.99999999999818" />
       </GraphLayout>
@@ -21587,6 +21855,18 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\UserAccessControl.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\UserAccessControl.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
