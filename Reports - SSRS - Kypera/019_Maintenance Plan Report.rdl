@@ -28,7 +28,7 @@
     -- ,vRD.Complete
 
 FROM 
-    dbo.v_RepairsData as vRD
+    dbo.Repairs_WorksOrder as vRD
     --The Property Tree
     LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
     LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
@@ -166,8 +166,7 @@ where
             <Value>=Parameters!Status.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>
--- DECLARE @District varchar(100);
+        <CommandText>-- DECLARE @District varchar(100);
 -- DECLARE @Scheme varchar(100);
 -- DECLARE @Block varchar(100);
 -- DECLARE @From_Date DATE;
@@ -190,27 +189,12 @@ SELECT p.[Property Ref.],p.[Display Name]
 ,ISNULL(b.Planned, 0) as Planned
 ,ISNULL(b.Cyclical, 0) as Cyclical
 ,ISNULL(b.ALI, 0) as ALI
-        
+,ISNULL(b.Responsive, 0)+ISNULL(b.Vacancy, 0)+ISNULL(b.Planned, 0)+ISNULL(b.Cyclical, 0)+ISNULL(b.ALI, 0) as Total
 
 FROM (
   SELECT 
       psu.ID as [Property Ref.]
       ,psu.Name as [Display Name]
-      -- ,psd.code as District
-      -- ,pss.Name as Scheme
-      -- ,psbu.Block as Block
-      -- ,vRD.contractor
-      -- ,vRd.Priority
-      -- ,vRD.Trade
-      -- ,vRD.Classification as [Repair Type]
-      -- ,vRD.[Status]
-      -- ,vRD.Complete
-
-      -- ,CAST(SUM(CASE WHEN (vRD.Priority like ('P1%') or vRD.Priority like ('P2%') or vRD.Priority like ('P3%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
-      -- ,CAST(SUM(CASE WHEN (vRD.Priority like ('P4%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
-      -- ,CAST(SUM(CASE WHEN (vRD.Priority like ('P6%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
-      -- ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
-      -- ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
 
   FROM 
     --The Property Tree
@@ -263,14 +247,17 @@ FROM (
       -- ,vRD.[Status]
       -- ,vRD.Complete
 
-      ,CAST(SUM(CASE WHEN (vRD.Priority like ('P1%') or vRD.Priority like ('P2%') or vRD.Priority like ('P3%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
-      ,CAST(SUM(CASE WHEN (vRD.Priority like ('P4%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
-      ,CAST(SUM(CASE WHEN (vRD.Priority like ('P6%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
-      ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
-      ,CAST(SUM(CASE WHEN (vRD.Priority like ('P7%') and (vRD.Classification2='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
+      ,CAST(SUM(CASE WHEN (rp.[Name] like ('P1%') or rp.[Name] like ('P2%') or rp.[Name] like ('P3%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+      ,CAST(SUM(CASE WHEN (rp.[Name] like ('P4%')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+      ,CAST(SUM(CASE WHEN (rp.[Name] like ('P6%') and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+      ,CAST(SUM(CASE WHEN (rp.[Name] like ('P7%') and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+      ,CAST(SUM(CASE WHEN (rp.[Name] like ('P7%') and (Lookup2.Name='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
 
   FROM 
-  dbo.v_RepairsData as vRD
+  dbo.Repairs_WorksOrder as vRD
+  LEFT JOIN dbo.Repairs_Priorities as rp ON  vRD.Company = rp.Company And vRD.Priority = rp.ID  
+   Left JOIN dbo.HomeTeam_LookupValues  as Lookup2 
+ ON vRD.Company = Lookup2.Company AND vRD.Classification2 = Lookup2.ID AND Lookup2.Lookup = 26 
     --The Property Tree
       -- dbo.PropertyStructure_Unit as psu  
       -- LEFT  JOIN dbo.PropertyStructure_BlockUnit psbu ON psu.Company = psbu.Company AND psu.ID = psbu.Unit
@@ -337,6 +324,10 @@ order BY p.[Property Ref.]</CommandText>
           <DataField>ALI</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
+        <Field Name="Total">
+          <DataField>Total</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="Priority">
@@ -380,6 +371,7 @@ order BY p.[Property Ref.]</CommandText>
 
 SELECT 
     distinct vRd.Priority as Priority
+    ,dbo.Repairs_Priorities.Name AS [Name]
     -- ,pss.Name as Scheme
     -- ,psbu.Block as Block
     -- ,vRD.contractor
@@ -390,14 +382,14 @@ SELECT
     -- ,vRD.Complete
 
 FROM 
-    dbo.v_RepairsData as vRD
+    dbo.Repairs_WorksOrder as vRD
     --The Property Tree
     LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
     LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
     LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
     LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
     LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
+    LEFT JOIN dbo.Repairs_Priorities ON  vRD.Company = dbo.Repairs_Priorities.Company And vRD.Priority = dbo.Repairs_Priorities.ID  
 
 WHERE
     vRD.Company = 1
@@ -421,6 +413,10 @@ WHERE
       <Fields>
         <Field Name="Priority">
           <DataField>Priority</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -447,17 +443,20 @@ WHERE
         </QueryParameters>
         <CommandText>SELECT 
     distinct vRD.contractor as Contractor
+    ,dbo.Contractors_contractor.Name AS [Name]
 
 
 FROM 
-    dbo.v_RepairsData as vRD
+    dbo.Repairs_WorksOrder as vRD
     LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
     LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
     LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
     LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
     LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
 
-
+LEFT JOIN dbo.Contractors_contractor 
+ ON vRD.Contractor = dbo.Contractors_contractor.ID AND 
+ vRD.Company = dbo.Contractors_contractor.Company
 WHERE
     vRD.Company = 1
     and ((psd.code IN (@District)))
@@ -471,6 +470,10 @@ ORDER BY
       <Fields>
         <Field Name="Contractor">
           <DataField>Contractor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -516,6 +519,7 @@ ORDER BY
 
 SELECT 
     distinct vRD.Trade as Trade
+    , ISNULL(dbo.HomeTeam_LookupValues.Name, '') AS [Name]
     -- ,pss.Name as Scheme
     -- ,psbu.Block as Block
     -- ,vRD.contractor
@@ -526,13 +530,18 @@ SELECT
     -- ,vRD.Complete
 
 FROM 
-    dbo.v_RepairsData as vRD
+    dbo.Repairs_WorksOrder as vRD
     --The Property Tree
     LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
     LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
     LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
     LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
     LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
+
+
+
+ LEFT JOIN dbo.HomeTeam_LookupValues  
+ ON vRD.Company = dbo.HomeTeam_LookupValues.Company AND vRD.Trade = dbo.HomeTeam_LookupValues.ID AND dbo.HomeTeam_LookupValues.Lookup = 24 
 
 
 WHERE
@@ -557,6 +566,10 @@ WHERE
       <Fields>
         <Field Name="Trade">
           <DataField>Trade</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -599,9 +612,9 @@ WHERE
 -- SET @Block ='Gro02';
 -- SET @From_Date = '20170101';
 
-
 SELECT 
     distinct vRD.[Status] as [Status]
+    ,hts.[Name]
     -- ,pss.Name as Scheme
     -- ,psbu.Block as Block
     -- ,vRD.contractor
@@ -612,7 +625,7 @@ SELECT
     -- ,vRD.Complete
 
 FROM 
-    dbo.v_RepairsData as vRD
+    dbo.Repairs_WorksOrder as vRD
     --The Property Tree
     LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
     LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
@@ -620,6 +633,7 @@ FROM
     LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
     LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
 
+    inner join dbo.HomeTeam_Status hts on hts.ID = vRD.[Status] And hts.HomeTeamModule = 10  
 
 WHERE
     vRD.Company = 1
@@ -643,6 +657,10 @@ WHERE
       <Fields>
         <Field Name="Status">
           <DataField>Status</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -688,6 +706,7 @@ WHERE
 
 SELECT 
     distinct vRD.Classification as [Repair Type]
+ ,Lookup1.Name
     -- ,pss.Name as Scheme
     -- ,psbu.Block as Block
     -- ,vRD.contractor
@@ -698,7 +717,7 @@ SELECT
     -- ,vRD.Complete
 
 FROM 
-    dbo.v_RepairsData as vRD
+    dbo.Repairs_WorksOrder as vRD
     --The Property Tree
     LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
     LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
@@ -706,6 +725,8 @@ FROM
     LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
     LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
 
+ Left JOIN dbo.HomeTeam_LookupValues  as Lookup1 
+ ON vRD.Company = Lookup1.Company AND vRD.Classification = Lookup1.ID AND Lookup1.Lookup = 25 
 
 WHERE
     vRD.Company = 1
@@ -729,6 +750,10 @@ ORDER BY
       <Fields>
         <Field Name="Repair_Type">
           <DataField>Repair Type</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -764,6 +789,9 @@ ORDER BY
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.1825cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -1052,6 +1080,43 @@ ORDER BY
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox206</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Total</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox2</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1362,6 +1427,43 @@ ORDER BY
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Total">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Total.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Total</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -1655,6 +1757,44 @@ ORDER BY
                             <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Sum(Fields!Total.Value)</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
+                          </Style>
+                        </Textbox>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -1663,6 +1803,7 @@ ORDER BY
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -1692,7 +1833,7 @@ ORDER BY
             <Top>0.12761cm</Top>
             <Left>0.44662cm</Left>
             <Height>1.8cm</Height>
-            <Width>28.68995cm</Width>
+            <Width>31.18995cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2122,7 +2263,7 @@ ORDER BY
         <DataSetReference>
           <DataSetName>Contractor</DataSetName>
           <ValueField>Contractor</ValueField>
-          <LabelField>Contractor</LabelField>
+          <LabelField>Name</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
@@ -2141,7 +2282,7 @@ ORDER BY
         <DataSetReference>
           <DataSetName>Priority</DataSetName>
           <ValueField>Priority</ValueField>
-          <LabelField>Priority</LabelField>
+          <LabelField>Name</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
@@ -2160,7 +2301,7 @@ ORDER BY
         <DataSetReference>
           <DataSetName>Trade</DataSetName>
           <ValueField>Trade</ValueField>
-          <LabelField>Trade</LabelField>
+          <LabelField>Name</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
@@ -2179,7 +2320,7 @@ ORDER BY
         <DataSetReference>
           <DataSetName>Repair_Type</DataSetName>
           <ValueField>Repair_Type</ValueField>
-          <LabelField>Repair_Type</LabelField>
+          <LabelField>Name</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
@@ -2198,7 +2339,7 @@ ORDER BY
         <DataSetReference>
           <DataSetName>Status</DataSetName>
           <ValueField>Status</ValueField>
-          <LabelField>Status</LabelField>
+          <LabelField>Name</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
