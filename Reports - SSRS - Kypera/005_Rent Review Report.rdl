@@ -31,92 +31,124 @@
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT
-ot.Name as Tenancy_Type,
-  tr.RentCharges/2 AS [Actual Weekly Rent],
-  case
+    ot.Name as Tenancy_Type,
+    tr.RentCharges/2 AS [Actual Weekly Rent],
+    case
   when (psu.MarketRent &gt; (tr.RentCharges/2)) then 'No' else 'Yes' end as [Paying Market Rent],
-  oo.id,
-  CONVERT(varchar(10), oo.StartDate, 103) AS 'Start_Date',
-  oo.Unit,
-  psbu.Block,
-  pss.Name AS Scheme,
-  psd.Code AS Entity,
-  psd.Name AS DistrictName,
-  oo.SalutationLetter,
-  (SELECT Name FROM HomeTeam_LookupValues WHERE Company = oo.Company AND Lookup = 520 AND ID = oo.FamilyType1) AS Family_Type,
-  (SELECT Name FROM HomeTeam_LookupValues WHERE Company = oo.Company AND Lookup = 11 AND ID = pp.Sex) AS Gender,
-  pp.Age,
-  pp.Forename,
-  pp.Surname,
-  psu.Flat,
-  psu.Number,
-  psu.Street,
-  psu.Town,
-  psu.County,
-  psu.Postcode,
-  psu.MarketRent,
-  psu.LastMainRentIncrease,
-  tr.EffectiveFrom,
-  (SELECT COUNT(People) FROM Occupancies_People WHERE Company = oo.Company AND Occupancy = oo.id AND CurrentPerson = 1) AS Number_Of_Tenants,
-  oct.TotalCharge,
-  CASE
-    WHEN (SELECT t1.Value FROM Peoples_People_UserDefinedFields_Values t1 WHERE oo.Company = t1.Company AND pp.ID = t1.ObjectReference AND t1.UserDefinedField = '53') = '1' THEN 'Yes'
+    oo.id,
+    CONVERT(varchar(10), oo.StartDate, 103) AS 'Start_Date',
+    oo.Unit,
+    psbu.Block,
+    pss.Name AS Scheme,
+    psd.Code AS Entity,
+    psd.Name AS DistrictName,
+    oo.SalutationLetter,
+    (SELECT Name
+    FROM HomeTeam_LookupValues
+    WHERE Company = oo.Company AND Lookup = 520 AND ID = oo.FamilyType1) AS Family_Type,
+    (SELECT Name
+    FROM HomeTeam_LookupValues
+    WHERE Company = oo.Company AND Lookup = 11 AND ID = pp.Sex) AS Gender,
+    pp.Age,
+    pp.Forename,
+    pp.Surname,
+    psu.Flat,
+    psu.Number,
+    psu.Street,
+    psu.Town,
+    psu.County,
+    psu.Postcode,
+    psu.MarketRent,
+    psu.LastMainRentIncrease,
+    tr.EffectiveFrom,
+    (SELECT COUNT(People)
+    FROM Occupancies_People
+    WHERE Company = oo.Company AND Occupancy = oo.id AND CurrentPerson = 1) AS Number_Of_Tenants,
+    oct.TotalCharge,
+    CASE
+    WHEN (SELECT t1.Value
+    FROM Peoples_People_UserDefinedFields_Values t1
+    WHERE oo.Company = t1.Company AND pp.ID = t1.ObjectReference AND t1.UserDefinedField = '53') = '1' THEN 'Yes'
     ELSE 'No'
   END AS Centrelink_Authorisation,
-  CASE
-    WHEN (SELECT t2.Value FROM Peoples_People_UserDefinedFields_Values t2 WHERE oo.Company = t2.Company AND pp.ID = t2.ObjectReference AND t2.UserDefinedField = '74') = '1' THEN 'Yes'
+    CASE
+    WHEN (SELECT t2.Value
+    FROM Peoples_People_UserDefinedFields_Values t2
+    WHERE oo.Company = t2.Company AND pp.ID = t2.ObjectReference AND t2.UserDefinedField = '74') = '1' THEN 'Yes'
         ELSE 'No'
   END AS EVoR,
-  CASE
-    WHEN (SELECT t3.Value FROM Peoples_People_UserDefinedFields_Values t3 WHERE oo.Company = t3.Company AND pp.ID = t3.ObjectReference AND t3.UserDefinedField = '76') = '1' THEN 'Yes'
+    CASE
+    WHEN (SELECT t3.Value
+    FROM Peoples_People_UserDefinedFields_Values t3
+    WHERE oo.Company = t3.Company AND pp.ID = t3.ObjectReference AND t3.UserDefinedField = '76') = '1' THEN 'Yes'
         ELSE 'No'
   END AS CentrePay,
-  CASE
-    WHEN (SELECT t4.Value FROM Peoples_People_UserDefinedFields_Values t4 WHERE oo.Company = t4.Company AND pp.ID = t4.ObjectReference AND t4.UserDefinedField = '75') = '1' THEN 'Yes'
+    CASE
+    WHEN (SELECT t4.Value
+    FROM Peoples_People_UserDefinedFields_Values t4
+    WHERE oo.Company = t4.Company AND pp.ID = t4.ObjectReference AND t4.UserDefinedField = '75') = '1' THEN 'Yes'
         ELSE 'No'
   END AS Income_Confrmation,
-  (SELECT Name FROM HomeTeam_LookupValues
-	 LEFT JOIN Occupancies_Occupancy_UserDefinedFields_Values tud ON tud.Company = oo.Company AND tud.ObjectReference = oo.id AND UserDefinedField = 88
-	 WHERE HomeTeam_LookupValues.Company = oo.Company AND Lookup = 1010 AND ID = tud.Value) AS Payment_Method,
-  tr.RentCharges AS Rent,
---New Added--
-  pp.CentrelinkReferenceNumber,
-  (Select Name From Occupancies_People_Types Where Company = oo.Company And Id = op.Status) As PeopleStatus,
-  psuc.Apartments AS Bedrooms,
-  psuc.FloorLevel,
-  htlv.Name As FamilyMakeup,
-  (Case op.CurrentPerson When 1 Then 'Yes' Else 'No' End) As CurrentPerson,
---New Added--
- (case ooud.Value  when 1 then 'Yes' when 2 then 'No' else ' ' end) as [Payment Arrangement]
+    (SELECT Name
+    FROM HomeTeam_LookupValues
+        LEFT JOIN Occupancies_Occupancy_UserDefinedFields_Values tud ON tud.Company = oo.Company AND tud.ObjectReference = oo.id AND UserDefinedField = 88
+    WHERE HomeTeam_LookupValues.Company = oo.Company AND Lookup = 1010 AND ID = tud.Value) AS Payment_Method,
+    tr.RentCharges AS Rent,
+    --New Added--
+    pp.CentrelinkReferenceNumber,
+    (Select Name
+    From Occupancies_People_Types
+    Where Company = oo.Company And Id = op.Status) As PeopleStatus,
+    psuc.Apartments AS Bedrooms,
+    psuc.FloorLevel,
+    htlv.Name As FamilyMakeup,
+    (Case op.CurrentPerson When 1 Then 'Yes' Else 'No' End) As CurrentPerson,
+    --New Added--
+    (case ooud.Value  when 1 then 'Yes' when 2 then 'No' else ' ' end) as [Payment Arrangement],
+ISNULL(OCRL3.[Amount], 0) as [Amount_of_Additional_Levies],
+(psu.MarketRent  -  (tr.RentCharges/2) - ISNULL(OCRL3.[Amount], 0)) as [Rent_Subsidy],
+    (Case op.[MainTenant] When 1 Then 'Yes' Else 'No' End) As [MainTenant]
 FROM
     Occupancies_Occupancy oo
     INNER JOIN Occupancies_People op ON oo.Company = op.Company AND oo.id = op.Occupancy AND oo.CurrentOccupancy = 1 AND oo.[Type] &lt;&gt; 99 AND oo.Company = 1
     LEFT JOIN Peoples_People pp ON oo.Company = pp.Company AND op.People = pp.ID
     LEFT JOIN PropertyStructure_Unit psu ON oo.Company = psu.Company AND oo.Unit = psu.ID
-	LEFT JOIN PropertyStructure_BlockUnit psbu ON oo.Company = psbu.Company AND oo.Unit = psbu.Unit
-	LEFT JOIN PropertyStructure_Block psb ON oo.Company = psb.Company AND psbu.Block = psb.Code
-	LEFT JOIN PropertyStructure_scheme pss ON oo.Company = pss.Company AND psb.Scheme = pss.Code
-	LEFT JOIN PropertyStructure_District psd ON oo.Company = psd.Company AND psb.District = psd.Code
-	LEFT JOIN (
+    LEFT JOIN PropertyStructure_BlockUnit psbu ON oo.Company = psbu.Company AND oo.Unit = psbu.Unit
+    LEFT JOIN PropertyStructure_Block psb ON oo.Company = psb.Company AND psbu.Block = psb.Code
+    LEFT JOIN PropertyStructure_scheme pss ON oo.Company = pss.Company AND psb.Scheme = pss.Code
+    LEFT JOIN PropertyStructure_District psd ON oo.Company = psd.Company AND psb.District = psd.Code
+    LEFT JOIN (
         SELECT
-            oc.Company,
-            oc.Occupancy,
-            SUM(ISNULL(oc.Amount, 0)) AS RentCharges,
-            (SELECT toc.EffectiveFrom FROM dbo.Occupancies_Charges toc WHERE toc.Charge = 1 AND toc.Occupancy = oc.Occupancy) AS EffectiveFrom
-        FROM
-            Occupancies_Charges oc
-            INNER JOIN Occupancies_ChargeTypes oct ON oc.Company = oct.Company AND oc.Charge = oct.ID AND oct.isRent = 1
-        GROUP BY oc.Company, oc.Occupancy
+        oc.Company,
+        oc.Occupancy,
+        SUM(ISNULL(oc.Amount, 0)) AS RentCharges,
+        (SELECT toc.EffectiveFrom
+        FROM dbo.Occupancies_Charges toc
+        WHERE toc.Charge = 1 AND toc.Occupancy = oc.Occupancy) AS EffectiveFrom
+    FROM
+        Occupancies_Charges oc
+        INNER JOIN Occupancies_ChargeTypes oct ON oc.Company = oct.Company AND oc.Charge = oct.ID AND oct.isRent = 1
+    GROUP BY oc.Company, oc.Occupancy
     ) tr ON oo.Company = tr.Company AND oo.id = tr.Occupancy
     LEFT JOIN Occupancies_ChargeTotals oct ON oo.Company = oct.company AND oo.id = oct.Occupancy
---New Added--
+    --New Added--
     LEFT JOIN PropertyStructure_Unit_Characteristics psuc ON oo.Company = psuc.Company AND oo.Unit = psuc.Unit
     LEFT JOIN Occupancies_Occupancy_UserDefinedFields_Values oouv ON oo.Company = oouv.Company AND oo.id = oouv.ObjectReference AND oouv.UserDefinedField = 148
     LEFT JOIN HomeTeam_LookupValues htlv ON oo.Company = htlv.Company AND oouv.Value = htlv.ID AND htlv.Lookup = 1016
     LEFT JOIN Occupancies_Types ot on oo.[Type] = ot.[Type]
---New Added--
-    LEFT JOIN Occupancies_Occupancy_UserDefinedFields_Values ooud on ooud.ObjectReference=oo.id    AND ooud.UserDefinedField = 132
-
+    --New Added--
+    LEFT JOIN Occupancies_Occupancy_UserDefinedFields_Values ooud on ooud.ObjectReference=oo.id AND ooud.UserDefinedField = 132
+    LEFT JOIN 
+    (SELECT OCRL2.* FROM 
+[Occupancies_CPGRentLevies] OCRL2 INNER JOIN 
+(
+SELECT  [Company]
+      ,[Occupancy]
+      , MAX([ID]) AS [ID]
+  FROM [Occupancies_CPGRentLevies] OCRL
+  group by OCRL.Company, OCRL.Occupancy
+  ) AS OCRL
+  ON OCRL2.Company = OCRL.Company AND OCRL2.Occupancy = OCRL.Occupancy AND OCRL2.ID = OCRL.ID) AS OCRL3 ON oo.company = OCRL3.[Company] and oo.[id] = OCRL3.[Occupancy]
 WHERE
     psd.code IN (@Entity)
     AND pss.Name IN (@Scheme)
@@ -286,6 +318,18 @@ ORDER BY
         </Field>
         <Field Name="Payment_Arrangement">
           <DataField>Payment Arrangement</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Amount_of_Additional_Levies">
+          <DataField>Amount_of_Additional_Levies</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Rent_Subsidy">
+          <DataField>Rent_Subsidy</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="MainTenant">
+          <DataField>MainTenant</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -582,6 +626,15 @@ and dd.Name in (@Scheme)
                 </TablixColumn>
                 <TablixColumn>
                   <Width>4.14042cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -2068,6 +2121,117 @@ and dd.Name in (@Scheme)
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox25">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Main Tenant</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox25</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox29">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Amount of Additional Levies</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox29</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox33">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Rent Subsidy</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox33</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -3480,12 +3644,125 @@ and dd.Name in (@Scheme)
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="MainTenant">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!MainTenant.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>MainTenant</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Amount_of_Additional_Levies">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Amount_of_Additional_Levies.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Amount_of_Additional_Levies</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Rent_Subsidy">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Rent_Subsidy.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Rent_Subsidy</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
+                          </Style>
+                        </Textbox>
+                        <rd:Selected>true</rd:Selected>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -3542,7 +3819,7 @@ and dd.Name in (@Scheme)
             <Top>0.55493cm</Top>
             <Left>0.44662cm</Left>
             <Height>1.2cm</Height>
-            <Width>125.67997cm</Width>
+            <Width>133.17998cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3553,7 +3830,7 @@ and dd.Name in (@Scheme)
         <Height>4.94792in</Height>
         <Style />
       </Body>
-      <Width>51.96331in</Width>
+      <Width>52.6089in</Width>
       <Page>
         <PageHeader>
           <Height>1.39981cm</Height>
