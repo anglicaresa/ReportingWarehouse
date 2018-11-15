@@ -21,6 +21,33 @@
           <QueryParameter Name="@Lease_Start_Date_1">
             <Value>=Parameters!Lease_Start_Date_1.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@Lease_Start_Date_2">
+            <Value>=Parameters!Lease_Start_Date_2.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Lease_End_Date_1">
+            <Value>=Parameters!Lease_End_Date_1.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Lease_End_Date_2">
+            <Value>=Parameters!Lease_End_Date_2.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@RenewExtend_lease_1_date">
+            <Value>=Parameters!RenewExtend_lease_1_date.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@RenewExtend_lease_2_date">
+            <Value>=Parameters!RenewExtend_lease_2_date.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Lease_Renew_Start_Date_1">
+            <Value>=Parameters!Lease_Renew_Start_Date_1.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Lease_Renew_Start_Date_2">
+            <Value>=Parameters!Lease_Renew_Start_Date_2.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Lease_Renew_End_Date_1">
+            <Value>=Parameters!Lease_Renew_End_Date_1.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Lease_Renew_End_Date_2">
+            <Value>=Parameters!Lease_Renew_End_Date_2.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>use Anglicare;
 
@@ -88,8 +115,18 @@ FROM [dbo].[Case_Management_Case] AS cmc
 
 WHERE cmc.[Company] = 1 AND udfv1.[Value] IS NOT NULL 
 AND (@Lease_Start_Date_1 IS NULL OR convert(DATETIME, udfv4.[Value], 103) &gt;= @Lease_Start_Date_1)
---  AND (@ToDate IS NULL OR convert(DATETIME, udfv3.[Value], 103) &lt;= @ToDate)
-ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value])) = '' THEN 1 ELSE 0 END, CONVERT(DATETIME2, udfv3.[Value], 103), cmc.[ID]</CommandText>
+AND (@Lease_Start_Date_2 IS NULL OR convert(DATETIME, udfv11.[Value], 103) &gt;= @Lease_Start_Date_2)
+AND (@Lease_End_Date_1 IS NULL OR convert(DATETIME, udfv5.[Value], 103) &lt;= @Lease_End_Date_1)
+AND (@Lease_End_Date_2 IS NULL OR convert(DATETIME, udfv12.[Value], 103) &lt;= @Lease_End_Date_2)
+AND (@RenewExtend_lease_1_date IS NULL OR convert(DATETIME, udfv6.[Value], 103) &gt;= @RenewExtend_lease_1_date)
+AND (@RenewExtend_lease_2_date IS NULL OR convert(DATETIME, udfv13.[Value], 103) &gt;= @RenewExtend_lease_2_date)
+
+AND (@Lease_Renew_Start_Date_1 IS NULL OR convert(DATETIME, udfv7.[Value], 103) &gt;= @Lease_Renew_Start_Date_1)
+AND (@Lease_Renew_Start_Date_2 IS NULL OR convert(DATETIME, udfv14.[Value], 103) &gt;= @Lease_Renew_Start_Date_2)
+AND (@Lease_Renew_End_Date_1 IS NULL OR convert(DATETIME, udfv8.[Value], 103) &lt;= @Lease_Renew_End_Date_1)
+AND (@Lease_Renew_End_Date_2 IS NULL OR convert(DATETIME, udfv15.[Value], 103) &lt;= @Lease_Renew_End_Date_2)
+
+ORDER BY  cmc.[ID] asc</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -178,7 +215,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                   <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.93267cm</Width>
+                  <Width>7.81663cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>6.60104cm</Width>
@@ -202,7 +239,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                   <Width>7.58cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.09833cm</Width>
+                  <Width>6.945cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>4.74896cm</Width>
@@ -220,7 +257,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                   <Width>7.87105cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>7.28896cm</Width>
+                  <Width>7.79167cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -238,7 +275,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>Case Id</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -273,7 +310,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>HSP ID</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -308,7 +345,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>Client Name</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -343,7 +380,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>LTA 1 Address Street Number</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -378,7 +415,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>LTA 1 Address Suburb</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -413,7 +450,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>Lease Start Date LTA 1</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -448,7 +485,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>Lease End Date LTA 1</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -483,7 +520,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>F03 Renew Extend Lease 1 Date</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -518,7 +555,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>Lease Start Date Renew Lease LTA 1</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -553,7 +590,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>Lease End Date Renew Lease LTA 1</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -588,7 +625,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>LTA 2 Address Street Number</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -623,7 +660,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>LTA 2 Address Suburb</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -658,7 +695,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>Lease Start Date LTA 2</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -693,7 +730,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>Lease End Date LTA 2</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -728,7 +765,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>F03 Renew Extend Lease 2 Date</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -763,7 +800,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>Lease Start Date Renew Lease LTA 2</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -798,7 +835,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                                 <TextRun>
                                   <Value>Lease End Date Renew Lease LTA 2</Value>
                                   <Style>
-                                    <FontSize>13pt</FontSize>
+                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -837,9 +874,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!CaseID.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -871,9 +906,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!HSP_ID.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -905,9 +938,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Client_Name.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -939,9 +970,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!LTA_1_Address___Street_Number.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -973,9 +1002,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!LTA_1_Address___Suburb.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1007,9 +1034,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Lease_Start_Date_LTA_1.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1041,9 +1066,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Lease_End_Date_LTA_1.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1075,9 +1098,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!F03_Renew_Extend_Lease_1_Date.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1109,9 +1130,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Lease_Start_Date_Renew_Lease_LTA_1.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1143,9 +1162,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Lease_End_Date_Renew_Lease_LTA_1.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1177,9 +1194,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!LTA_2_Address___Street_Number.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1211,9 +1226,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!LTA_2_Address___Suburb.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1245,9 +1258,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Lease_Start_Date_LTA_2.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1279,9 +1290,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Lease_End_Date_LTA_2.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1313,9 +1322,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!F03_Renew_Extend_Lease_2_Date.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1347,9 +1354,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Lease_Start_Date_Renew_Lease_LTA_2.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1381,9 +1386,7 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!Lease_End_Date_Renew_Lease_LTA_2.Value</Value>
-                                  <Style>
-                                    <FontSize>14pt</FontSize>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
@@ -1995,9 +1998,9 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>Data</DataSetName>
-            <Top>0.61507cm</Top>
+            <Top>0.19174cm</Top>
             <Height>2.11751cm</Height>
-            <Width>97.05695cm</Width>
+            <Width>101.29028cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2008,10 +2011,10 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
         <Height>2.09375in</Height>
         <Style />
       </Body>
-      <Width>38.2114in</Width>
+      <Width>39.87806in</Width>
       <Page>
         <PageHeader>
-          <Height>3.66959cm</Height>
+          <Height>3.56376cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -2036,20 +2039,6 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
               <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value />
-                      <Style>
-                        <FontSize>16pt</FontSize>
-                        <FontWeight>Bold</FontWeight>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Center</TextAlign>
-                  </Style>
-                </Paragraph>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
@@ -2080,10 +2069,10 @@ ORDER BY CASE WHEN udfv3.[Value] IS NULL THEN 1 WHEN RTRIM(LTRIM(udfv3.[Value]))
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox12</rd:DefaultName>
-              <Top>0.16757cm</Top>
-              <Left>5.41334cm</Left>
-              <Height>3.43146cm</Height>
-              <Width>4.83453cm</Width>
+              <Top>0.45861cm</Top>
+              <Left>5.51917cm</Left>
+              <Height>2.6377cm</Height>
+              <Width>4.7287cm</Width>
               <ZIndex>1</ZIndex>
               <Visibility>
                 <Hidden>=iif(Globals!PageNumber = 1, FALSE, TRUE)</Hidden>
@@ -2123,7 +2112,7 @@ www.anglicaresa.com.au</Value>
               </Paragraphs>
               <rd:DefaultName>Textbox100</rd:DefaultName>
               <Top>0.07056cm</Top>
-              <Left>86.78306cm</Left>
+              <Left>91.24098cm</Left>
               <Height>3.4932cm</Height>
               <Width>9.78472cm</Width>
               <ZIndex>2</ZIndex>
@@ -2149,7 +2138,7 @@ www.anglicaresa.com.au</Value>
                     <TextRun>
                       <Value>LTA Lease Report</Value>
                       <Style>
-                        <FontSize>16pt</FontSize>
+                        <FontSize>28pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                       </Style>
                     </TextRun>
