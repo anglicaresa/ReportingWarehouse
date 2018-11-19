@@ -17,6 +17,7 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('userprofile', 'riskman', 'dbo', 'R
 INSERT INTO [management].[TABLE_DIM] VALUES ('vwsf_preventativecorrectiveaction', 'riskman', 'dbo', 'Riskman', 'ted');
 insert into management.table_dim values('CAbuse_IFR','riskman','dbo','Riskman','ted');
 insert into management.table_dim values('tblContributingFactors_IFR','riskman','dbo','Riskman','ted')
+insert into management.table_dim values('AC_IFR','riskman','dbo','Riskman','ted')
 ------ tables for Feedback module
 insert into management.table_dim values('FBDetail_IFR','riskman','dbo','Riskman','ted')
 insert into management.table_dim values('FBComplainant_IFR','riskman','dbo','Riskman','ted')
@@ -40,6 +41,7 @@ INSERT INTO [management].[TABLE_DIM] VALUES ('userprofile', 'dwh', 'extract_risk
 INSERT INTO [management].[TABLE_DIM] VALUES ('vwsf_preventativecorrectiveaction', 'dwh', 'extract_riskman', 'dwhb', 'AZ-SQLBI01');
 insert into management.table_dim values('CAbuse_IFR','dwh','extract_riskman','dwhb','AZ-SQLBI01');
 insert into management.table_dim values('tblContributingFactors_IFR','dwh','extract_riskman','dwhb','AZ-SQLBI01')
+insert into management.table_dim values('AC_IFR','dwh','extract_riskman','dwhb','AZ-SQLBI01')
 ------ tables for feedback module
 insert into management.table_dim values('FBDetail_IFR','dwh','extract_riskman','dwhb','AZ-SQLBI01')
 insert into management.table_dim values('FBComplainant_IFR','dwh','extract_riskman','dwhb','AZ-SQLBI01')
