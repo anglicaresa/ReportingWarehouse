@@ -168,6 +168,12 @@ where
           <QueryParameter Name="@ExternalRevenueSource">
             <Value>=Parameters!ExternalRevenueSource.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@EFrom_Date">
+            <Value>=Parameters!EFrom_Date.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ETo_Date">
+            <Value>=Parameters!ETo_Date.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>-- DECLARE @District varchar(100);
 -- DECLARE @Scheme varchar(100);
@@ -292,7 +298,9 @@ FROM (
       -- LEFT  JOIN dbo.PropertyStructure_scheme pss ON psu.Company = pss.Company AND psb.Scheme = pss.Code
       -- LEFT  JOIN dbo.PropertyStructure_District psd ON psu.Company = psd.Company AND psb.District = psd.Code
       -- LEFT  JOIN dbo.v_RepairsData as vRD ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-
+  inner join dbo.Repairs_WorksOrder_InvoicesJoin rwij
+  on rwij.WorksOrder = vrd.ID and rwij.Company = vRD.Company
+  inner join dbo.Invoice v on rwij.Invoice = v.ID
   WHERE
       vRD.Company = 1   
       -- (psd.code IN (@District))
@@ -306,6 +314,8 @@ FROM (
       and (vRD.Classification IN (@Classification))
       AND (vRD.[Status] IN (@Status) )
       and  vRD.ExternalRevenue IN (@ExternalRevenueSource)
+      and ((v.ExpectedPaymentDate &gt; @EFrom_Date) or @EFrom_Date is null)
+      and ((v.ExpectedPaymentDate &gt; @ETo_Date) or @ETo_Date is null)
   GROUP BY
     vRD.AreaID
       -- psu.ID
@@ -1334,7 +1344,6 @@ ORDER BY
                             <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -2413,11 +2422,21 @@ ORDER BY
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="EFrom_Date">
+      <DataType>DateTime</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Expected Payment Date From</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ETo_Date">
+      <DataType>DateTime</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Expected Payment Date To</Prompt>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>3</NumberOfColumns>
-      <NumberOfRows>4</NumberOfRows>
+      <NumberOfRows>5</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -2473,6 +2492,16 @@ ORDER BY
           <ColumnIndex>2</ColumnIndex>
           <RowIndex>3</RowIndex>
           <ParameterName>ExternalRevenueSource</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>4</RowIndex>
+          <ParameterName>EFrom_Date</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>4</RowIndex>
+          <ParameterName>ETo_Date</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
