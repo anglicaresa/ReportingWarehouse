@@ -55,6 +55,7 @@ SELECT
   cmc.[ID] AS [CaseID],
   udfv1.[Value] AS [HSP ID],
   cmcp1.[Salutation] AS [Client Name],
+  udfv16.[Value] AS [Tenancy Officer],
   udfv2.[Value] AS [LTA 1 Address - Street/Number],
   udfv3.[Value] AS [LTA 1 Address - Suburb],
   udfv4.[Value] AS [Lease Start Date LTA 1],
@@ -84,6 +85,9 @@ FROM [dbo].[Case_Management_Case] AS cmc
     WHERE cmcp.[PersonType] = 6 AND cmcp.[Client] = 1 AND (cmcp.[Deleted] IS NULL OR cmcp.[Deleted] &lt;&gt; 1)
   ) AS cmcp1 ON cmcp1.[CaseID] = cmc.[ID] AND cmcp1.[Company] = cmc.[Company]
   
+-- -- Tenancy Officer
+ LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv16 ON udfv16.[ObjectReference] = cmc.[ID] AND udfv16.[Company] = cmc.[Company] AND udfv16.[UserDefinedField] = 316
+
 -- -- LTA 1 Address – Street/Number
  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv2 ON udfv2.[ObjectReference] = cmc.[ID] AND udfv2.[Company] = cmc.[Company] AND udfv2.[UserDefinedField] = 384
 -- -- LTA 1 Address - Suburb
@@ -140,6 +144,10 @@ ORDER BY  cmc.[ID] asc</CommandText>
         </Field>
         <Field Name="Client_Name">
           <DataField>Client Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Tenancy_Officer">
+          <DataField>Tenancy Officer</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="LTA_1_Address___Street_Number">
@@ -216,6 +224,9 @@ ORDER BY  cmc.[ID] asc</CommandText>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>7.81663cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>3.82293cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>6.60104cm</Width>
@@ -371,6 +382,41 @@ ORDER BY  cmc.[ID] asc</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="Textbox1">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Tenancy Officer</Value>
+                                  <Style>
+                                    <FontSize>11pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox1</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>PaleTurquoise</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="Textbox10">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -402,6 +448,7 @@ ORDER BY  cmc.[ID] asc</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -962,6 +1009,38 @@ ORDER BY  cmc.[ID] asc</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="Tenancy_Officer">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Tenancy_Officer.Value</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Tenancy_Officer</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="LTA_1_Address___Street_Number">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -990,6 +1069,7 @@ ORDER BY  cmc.[ID] asc</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1513,6 +1593,38 @@ ORDER BY  cmc.[ID] asc</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="Textbox3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox3</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="Textbox13">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -1541,6 +1653,7 @@ ORDER BY  cmc.[ID] asc</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1982,6 +2095,7 @@ ORDER BY  cmc.[ID] asc</CommandText>
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -2000,7 +2114,7 @@ ORDER BY  cmc.[ID] asc</CommandText>
             <DataSetName>Data</DataSetName>
             <Top>0.19174cm</Top>
             <Height>2.11751cm</Height>
-            <Width>101.29028cm</Width>
+            <Width>105.11322cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2011,7 +2125,7 @@ ORDER BY  cmc.[ID] asc</CommandText>
         <Height>2.09375in</Height>
         <Style />
       </Body>
-      <Width>39.87806in</Width>
+      <Width>41.38316in</Width>
       <Page>
         <PageHeader>
           <Height>3.56376cm</Height>
