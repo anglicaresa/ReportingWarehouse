@@ -168,6 +168,12 @@ where
           <QueryParameter Name="@ExternalRevenueSource">
             <Value>=Parameters!ExternalRevenueSource.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@EFrom_Date">
+            <Value>=Parameters!EFrom_Date.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ETo_Date">
+            <Value>=Parameters!ETo_Date.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>-- DECLARE @District varchar(100);
 -- DECLARE @Scheme varchar(100);
@@ -253,21 +259,25 @@ FROM (
         -- 1. Actual Cost of all works orders listed as a Priority P1, P2 or P3 and
         -- a. Excluding any with Code = ALI
       --,CAST(SUM(CASE WHEN ((rp.[Name] like ('P1%') or rp.[Name] like ('P2%') or rp.[Name] like ('P3%')) and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
-      ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+      --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+      ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
         -- 2. Actual Cost of all works orders listed as a Priority P4 and
         -- a. Excluding any with Code = ALI
      -- ,CAST(SUM(CASE WHEN ((rp.[Name] like ('P4%')) and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
-      ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+    --  ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
         -- 3. Planned - Actual cost of all works orders with
         -- a. Priority = P6 and;
         -- b. Excluding any with Code = ALI
       --,CAST(SUM(CASE WHEN (rp.[Name] like ('P6%') and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
-            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+            --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+                        ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
         -- 4. Cyclical - Actual cost of all works orders with
         -- a. Priority = P7 and;
         -- b. Excluding any with Code = ALI
       --,CAST(SUM(CASE WHEN (rp.[Name] like ('P7%') and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
-      ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+    --  ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
         -- 5. ALI - Actual cost of all works orders with
         -- a. Priority = P1, P2, P3, P6, P7 and;
         -- b. Include only if Code = ALI
@@ -278,7 +288,8 @@ FROM (
     --     or rp.[Name] like ('P4%') 
     --     or rp.[Name] like ('P6%') 
     --     or rp.[Name] like ('P7%')) and (Lookup2.Name='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
-,CAST(SUM(CASE WHEN (RWRE.[Name] ='61024 ALI''s' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
+--,CAST(SUM(CASE WHEN (RWRE.[Name] ='61024 ALI''s' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
+,CAST(SUM(CASE WHEN (RWRE.[Name] ='61024 ALI''s' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
   FROM 
   dbo.Repairs_WorksOrder as vRD
   --LEFT JOIN dbo.Repairs_Priorities as rp ON  vRD.Company = rp.Company And vRD.Priority = rp.ID  
@@ -292,13 +303,15 @@ FROM (
       -- LEFT  JOIN dbo.PropertyStructure_scheme pss ON psu.Company = pss.Company AND psb.Scheme = pss.Code
       -- LEFT  JOIN dbo.PropertyStructure_District psd ON psu.Company = psd.Company AND psb.District = psd.Code
       -- LEFT  JOIN dbo.v_RepairsData as vRD ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-
+  inner join dbo.Repairs_WorksOrder_InvoicesJoin rwij
+  on rwij.WorksOrder = vrd.ID and rwij.Company = vRD.Company
+  inner join dbo.Invoice v on rwij.Invoice = v.ID
   WHERE
       vRD.Company = 1   
       -- (psd.code IN (@District))
       -- AND (pss.Name IN (@Scheme))
       -- AND (psbu.Block IN (@Block) )
-      and (vRD.Complete &gt; (@From_Date))
+      and (vRD.Complete &gt;= (@From_Date))
       and (vRD.Complete &lt; @To_Date or @To_Date is null)
       and (vRD.contractor IN (@contractor))
       AND (vRd.Priority IN (@Priority) )
@@ -306,6 +319,8 @@ FROM (
       and (vRD.Classification IN (@Classification))
       AND (vRD.[Status] IN (@Status) )
       and  vRD.ExternalRevenue IN (@ExternalRevenueSource)
+      and ((v.ExpectedPaymentDate &gt;= @EFrom_Date) or @EFrom_Date is null)
+      and ((v.ExpectedPaymentDate &lt; @ETo_Date) or @ETo_Date is null)
   GROUP BY
     vRD.AreaID
       -- psu.ID
@@ -1334,7 +1349,6 @@ ORDER BY
                             <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -2413,11 +2427,21 @@ ORDER BY
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="EFrom_Date">
+      <DataType>DateTime</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Expected Payment Date From</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ETo_Date">
+      <DataType>DateTime</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Expected Payment Date To</Prompt>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>3</NumberOfColumns>
-      <NumberOfRows>4</NumberOfRows>
+      <NumberOfRows>5</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -2473,6 +2497,16 @@ ORDER BY
           <ColumnIndex>2</ColumnIndex>
           <RowIndex>3</RowIndex>
           <ParameterName>ExternalRevenueSource</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>4</RowIndex>
+          <ParameterName>EFrom_Date</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>4</RowIndex>
+          <ParameterName>ETo_Date</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
