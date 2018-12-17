@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - T1M"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="675"
-  DTS:VersionGUID="{D7A3AF98-2AFF-4730-BAA8-54AC979BC8C6}">
+  DTS:VersionBuild="677"
+  DTS:VersionGUID="{1E88A516-900F-433E-8704-EEE6E17AAC52}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/19/2018 10:29:53 AM</DTS:VariableValue>
+        DTS:DataType="7">12/17/2018 3:47:05 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/19/2018 10:29:53 AM</DTS:VariableValue>
+        DTS:DataType="7">12/17/2018 3:47:05 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">11/19/2018 10:29:53 AM</DTS:VariableValue>
+        DTS:DataType="7">12/17/2018 3:47:05 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -13507,7 +13507,7 @@ where employee_key=? </property>
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
-                  SQLTask:SqlStatementSource="declare @lb_key int, @lb_startday int, @lb_endday int;&#xA;  declare c_leavebook cursor for select employee_leave_booked_key,leave_start_date_key,leave_end_date_key from  conform.employee_leave_booked_fact order by employee_leave_booked_key asc;&#xA;  open c_leavebook;&#xA;  fetch next from c_leavebook into @lb_key, @lb_startday, @lb_endday&#xA;  WHILE @@FETCH_STATUS =0&#xA;  BEGIN&#xA;      while @lb_startday&lt;=@lb_endday&#xA;   begin&#xA;     insert into [conform].[employee_leave_booked_txn_fact] &#xA;  select&#xA;  employee_key,&#xA;  @lb_startday,&#xA;  portfolio_key,&#xA;  service_stream_key,&#xA;  program_key,&#xA;  position_key,&#xA;  leave_type_key,&#xA;  manager_key,&#xA;  case&#xA;  when leave_booked&lt;1 then leave_booked&#xA;  else '1'  end as leave_booked,&#xA;  status&#xA;  from   conform.employee_leave_booked_fact   where employee_leave_booked_key=@lb_key;&#xA;  set @lb_startday=@lb_startday+1;&#xA;   end&#xA;&#xA;   fetch next from c_leavebook into @lb_key, @lb_startday, @lb_endday&#xA;  END&#xA;  Close c_leavebook&#xA;  DEALLOCATE  c_leavebook&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="--declare @lb_key int, @lb_startday int, @lb_endday int;&#xA;--  declare c_leavebook cursor for select employee_leave_booked_key,leave_start_date_key,leave_end_date_key from  conform.employee_leave_booked_fact order by employee_leave_booked_key asc;&#xA;--  open c_leavebook;&#xA;--  fetch next from c_leavebook into @lb_key, @lb_startday, @lb_endday&#xA;--  WHILE @@FETCH_STATUS =0&#xA;--  BEGIN&#xA;--      while @lb_startday&lt;=@lb_endday&#xA;--   begin&#xA;--     insert into [conform].[employee_leave_booked_txn_fact] &#xA;--  select&#xA;--  employee_key,&#xA;--  @lb_startday,&#xA;--  portfolio_key,&#xA;--  service_stream_key,&#xA;--  program_key,&#xA;--  position_key,&#xA;--  leave_type_key,&#xA;--  manager_key,&#xA;--  case&#xA;--  when leave_booked&lt;1 then leave_booked&#xA;--  else '1'  end as leave_booked,&#xA;--  status&#xA;--  from   conform.employee_leave_booked_fact   where employee_leave_booked_key=@lb_key;&#xA;--  set @lb_startday=@lb_startday+1;&#xA;--   end&#xA;&#xA;--   fetch next from c_leavebook into @lb_key, @lb_startday, @lb_endday&#xA;--  END&#xA;--  Close c_leavebook&#xA;--  DEALLOCATE  c_leavebook&#xA;&#xA;insert into [conform].[employee_leave_booked_txn_fact]&#xA; select&#xA; employee_key,&#xA; d1.date_key,&#xA; portfolio_key,&#xA; service_stream_key,&#xA; program_key,&#xA; position_key,&#xA; leave_type_key,&#xA; manager_key,&#xA; case&#xA; when leave_booked&lt;1 then leave_booked&#xA; else '1'  end as leave_booked,&#xA; status&#xA; from  conform.employee_leave_booked_fact as f1&#xA; inner  join conform.DATE_DIM as d1 on  d1.date_key &gt;=f1.leave_start_date_key and d1.date_key &lt;=f1.leave_end_date_key" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -15615,7 +15615,7 @@ where employee_key=? </property>
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="512" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="512" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history\Delete current employees"
@@ -15645,7 +15645,7 @@ where employee_key=? </property>
           TopLeft="149.073863636364,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,59.4545454545441"
               Start="0,0"
               End="0,51.9545454545441">
@@ -15667,7 +15667,7 @@ where employee_key=? </property>
           TopLeft="151.801136363636,158.454545454544">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,51.636363636366"
               Start="0,0"
               End="0,44.136363636366">
@@ -15689,7 +15689,7 @@ where employee_key=? </property>
           TopLeft="149.270833333333,346.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,68.3333333333301"
               Start="0,0"
               End="0,60.8333333333301">
@@ -15711,7 +15711,7 @@ where employee_key=? </property>
           TopLeft="148.748106060606,252.09090909091">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,52.666666666668"
               Start="0,0"
               End="0,45.166666666668">
@@ -15733,7 +15733,7 @@ where employee_key=? </property>
           TopLeft="156.498106060606,457.090909090908">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -15778,7 +15778,7 @@ where employee_key=? </property>
           TopLeft="141.08143939394,162.090909090908">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,68.6666666666697"
               Start="0,0"
               End="0,61.1666666666697">
@@ -15800,7 +15800,7 @@ where employee_key=? </property>
           TopLeft="145.498106060606,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,63.0909090909081"
               Start="0,0"
               End="0,55.5909090909081">
@@ -15822,7 +15822,7 @@ where employee_key=? </property>
           TopLeft="140.58143939394,272.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,78.3333333333303"
               Start="0,0"
               End="0,70.8333333333303">
@@ -15863,7 +15863,7 @@ where employee_key=? </property>
           TopLeft="144.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,72.7575757575778"
               Start="0,0"
               End="0,65.2575757575778">
@@ -15885,7 +15885,7 @@ where employee_key=? </property>
           TopLeft="137.831439393939,171.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,91.3333333333302"
               Start="0,0"
               End="0,83.8333333333302">
@@ -15930,7 +15930,7 @@ where employee_key=? </property>
           TopLeft="45.9375,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -15964,7 +15964,7 @@ where employee_key=? </property>
           TopLeft="146.4375,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -15986,7 +15986,7 @@ where employee_key=? </property>
           TopLeft="146.4375,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -16027,7 +16027,7 @@ where employee_key=? </property>
           TopLeft="144.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,72.7575757575778"
               Start="0,0"
               End="0,65.2575757575778">
@@ -16049,7 +16049,7 @@ where employee_key=? </property>
           TopLeft="137.831439393939,171.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,91.3333333333302"
               Start="0,0"
               End="0,83.8333333333302">
@@ -16101,7 +16101,7 @@ where employee_key=? </property>
           TopLeft="148.520833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,75.757575757578"
               Start="0,0"
               End="0,68.257575757578">
@@ -16123,7 +16123,7 @@ where employee_key=? </property>
           TopLeft="150.331439393939,174.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54.33333333333"
               Start="0,0"
               End="0,46.83333333333">
@@ -16164,7 +16164,7 @@ where employee_key=? </property>
           TopLeft="144.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,72.7575757575778"
               Start="0,0"
               End="0,65.2575757575778">
@@ -16186,7 +16186,7 @@ where employee_key=? </property>
           TopLeft="137.831439393939,171.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,91.3333333333302"
               Start="0,0"
               End="0,83.8333333333302">
@@ -16227,7 +16227,7 @@ where employee_key=? </property>
           TopLeft="147.4375,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,41"
               Start="0,0"
               End="0,33.5">
@@ -16249,7 +16249,7 @@ where employee_key=? </property>
           TopLeft="147.4375,140">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,69"
               Start="0,0"
               End="0,61.5">
@@ -16294,7 +16294,7 @@ where employee_key=? </property>
           TopLeft="150.073863636364,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,59.4545454545441"
               Start="0,0"
               End="0,51.9545454545441">
@@ -16316,7 +16316,7 @@ where employee_key=? </property>
           TopLeft="152.801136363636,158.454545454544">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,51.6363636363658"
               Start="0,0"
               End="0,44.1363636363658">
@@ -16338,7 +16338,7 @@ where employee_key=? </property>
           TopLeft="151.892045454545,252.09090909091">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -16411,7 +16411,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,52.3333333333333"
               Start="0,0"
               End="-7.5,52.3333333333333">
@@ -16445,7 +16445,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,156.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,41.0833333333333"
               Start="0,0"
               End="-7.5,41.0833333333333">
@@ -16479,7 +16479,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,218.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,32.25"
               Start="0,0"
               End="0,24.75">
@@ -16501,7 +16501,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,416">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,56.3333333333333"
               Start="0,0"
               End="-7.5,56.3333333333333">
@@ -16535,7 +16535,7 @@ where employee_key=? </property>
           TopLeft="282.090909090909,478">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-6,78.5"
               Start="0,0"
               End="1.5,78.5">
@@ -16569,7 +16569,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,371">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,24"
               Start="0,0"
               End="0,16.5">
@@ -16591,7 +16591,7 @@ where employee_key=? </property>
           TopLeft="158.090909090909,594">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,27"
               Start="0,0"
               End="0,19.5">
@@ -16613,7 +16613,7 @@ where employee_key=? </property>
           TopLeft="37.0909090909091,99.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,45.6666666666667"
               Start="0,0"
               End="-7.5,45.6666666666667">
@@ -16647,7 +16647,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,293">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,36"
               Start="0,0"
               End="0,28.5">
@@ -16669,7 +16669,7 @@ where employee_key=? </property>
           TopLeft="159.590909090909,663">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -16722,7 +16722,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,28">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,53.3333333333333"
               Start="0,0"
               End="-7.5,53.3333333333333">
@@ -16756,7 +16756,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,149.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,41.4166666666667"
               Start="0,0"
               End="-7.5,41.4166666666667">
@@ -16790,7 +16790,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,202.416666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,42.9166666666667"
               Start="0,0"
               End="-7.5,42.9166666666667">
@@ -16824,7 +16824,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,256.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,48.3333333333333"
               Start="0,0"
               End="-7.5,48.3333333333333">
@@ -16858,7 +16858,7 @@ where employee_key=? </property>
           TopLeft="35.3333333333333,92.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,45.6666666666667"
               Start="0,0"
               End="-7.5,45.6666666666667">
@@ -16919,7 +16919,7 @@ where employee_key=? </property>
           TopLeft="35.95,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,51.3333333333333"
               Start="0,0"
               End="-7.5,51.3333333333333">
@@ -16953,7 +16953,7 @@ where employee_key=? </property>
           TopLeft="146.95,168">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,23"
               Start="0,0"
               End="0,15.5">
@@ -16975,7 +16975,7 @@ where employee_key=? </property>
           TopLeft="35.95,212">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="-7.5,60">
@@ -17009,7 +17009,7 @@ where employee_key=? </property>
           TopLeft="35.95,98.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,48.3333333333333"
               Start="0,0"
               End="-7.5,48.3333333333333">
@@ -17066,7 +17066,7 @@ where employee_key=? </property>
           TopLeft="34,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,52.3333333333333"
               Start="0,0"
               End="-7.5,52.3333333333333">
@@ -17100,7 +17100,7 @@ where employee_key=? </property>
           TopLeft="34,99.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,51.4166666666667"
               Start="0,0"
               End="-7.5,51.4166666666667">
@@ -17134,7 +17134,7 @@ where employee_key=? </property>
           TopLeft="34,162.416666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,52.5833333333333"
               Start="0,0"
               End="-7.5,52.5833333333333">
@@ -17168,7 +17168,7 @@ where employee_key=? </property>
           TopLeft="134.5,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,78.75"
               Start="0,0"
               End="0,71.25">
@@ -17213,7 +17213,7 @@ where employee_key=? </property>
           TopLeft="43.4375,37">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,53"
               Start="0,0"
               End="-7.5,53">
@@ -17247,7 +17247,7 @@ where employee_key=? </property>
           TopLeft="143.9375,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,34"
               Start="0,0"
               End="0,26.5">
@@ -17269,7 +17269,7 @@ where employee_key=? </property>
           TopLeft="43.4375,166">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,64"
               Start="0,0"
               End="-7.5,64">
@@ -17326,7 +17326,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17360,7 +17360,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17382,7 +17382,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17427,7 +17427,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17461,7 +17461,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17483,7 +17483,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17528,7 +17528,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17562,7 +17562,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17584,7 +17584,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17629,7 +17629,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17663,7 +17663,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17685,7 +17685,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17730,7 +17730,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17764,7 +17764,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17786,7 +17786,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17831,7 +17831,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17865,7 +17865,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17887,7 +17887,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -17932,7 +17932,7 @@ where employee_key=? </property>
           TopLeft="45.9375,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -17966,7 +17966,7 @@ where employee_key=? </property>
           TopLeft="146.4375,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -17988,7 +17988,7 @@ where employee_key=? </property>
           TopLeft="146.4375,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18033,7 +18033,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -18067,7 +18067,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -18089,7 +18089,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18134,7 +18134,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -18168,7 +18168,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -18190,7 +18190,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18235,7 +18235,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -18269,7 +18269,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -18291,7 +18291,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18336,7 +18336,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,55"
               Start="0,0"
               End="0,47.5">
@@ -18358,7 +18358,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,154">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18380,7 +18380,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,222">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,24.0909090909081"
               Start="0,0"
               End="0,16.5909090909081">
@@ -18425,7 +18425,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -18459,7 +18459,7 @@ where employee_key=? </property>
           TopLeft="141.6875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -18481,7 +18481,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18526,7 +18526,7 @@ where employee_key=? </property>
           TopLeft="41.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,54"
               Start="0,0"
               End="-7.5,54">
@@ -18560,7 +18560,7 @@ where employee_key=? </property>
           TopLeft="138.1875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -18582,7 +18582,7 @@ where employee_key=? </property>
           TopLeft="138.1875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18627,7 +18627,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,31"
               Start="0,0"
               End="0,23.5">
@@ -18649,7 +18649,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,130">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18671,7 +18671,7 @@ where employee_key=? </property>
           TopLeft="161.596590909091,198">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,38.0909090909081"
               Start="0,0"
               End="0,30.5909090909081">
@@ -18696,7 +18696,7 @@ where employee_key=? </property>
           Id="Package\Sequence Container - Fact Tables\SD2 - TIMESHEET_VALICATION_FACT"
           TopLeft="5.50000000000099,7806.5" />
         <NodeLayout
-          Size="201,42"
+          Size="199,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - WORK_PATTERN_FACT\Delete data for Yesterday"
           TopLeft="41.1875,69" />
         <NodeLayout
@@ -18713,30 +18713,30 @@ where employee_key=? </property>
           TopLeft="41.1875,141" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD2 - WORK_PATTERN_FACT.PrecedenceConstraints[Constraint]"
-          TopLeft="41.1875,36">
+          TopLeft="242.1875,36">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,54"
+              StartConnector="{x:Null}"
+              EndConnector="-2,54"
               Start="0,0"
-              End="-7.5,54">
+              End="5.5,54">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="-18.5,0" />
+                    End="18.5,0" />
                   <mssgle:CubicBezierSegment
-                    Point1="-18.5,0"
-                    Point2="-22.5,0"
-                    Point3="-22.5,4" />
+                    Point1="18.5,0"
+                    Point2="22.5,0"
+                    Point3="22.5,4" />
                   <mssgle:LineSegment
-                    End="-22.5,50" />
+                    End="22.5,50" />
                   <mssgle:CubicBezierSegment
-                    Point1="-22.5,50"
-                    Point2="-22.5,54"
-                    Point3="-18.5,54" />
+                    Point1="22.5,50"
+                    Point2="22.5,54"
+                    Point3="18.5,54" />
                   <mssgle:LineSegment
-                    End="-7.5,54" />
+                    End="5.5,54" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -18747,10 +18747,10 @@ where employee_key=? </property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD2 - WORK_PATTERN_FACT.PrecedenceConstraints[Constraint 1]"
-          TopLeft="141.6875,111">
+          TopLeft="141.1875,111">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -18772,7 +18772,7 @@ where employee_key=? </property>
           TopLeft="141.6875,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -18817,7 +18817,7 @@ where employee_key=? </property>
           TopLeft="171.581439393939,174.090909090908">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,70.6666666666697"
               Start="0,0"
               End="0,63.1666666666697">
@@ -18839,7 +18839,7 @@ where employee_key=? </property>
           TopLeft="166.498106060606,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,75.090909090908"
               Start="0,0"
               End="0,67.590909090908">
@@ -18861,7 +18861,7 @@ where employee_key=? </property>
           TopLeft="171.831439393939,286.757575757578">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,64.3333333333303"
               Start="0,0"
               End="0,56.8333333333303">
@@ -18901,7 +18901,7 @@ where employee_key=? </property>
           TopLeft="185.5,1289.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18925,7 +18925,7 @@ where employee_key=? </property>
           TopLeft="185.5,1739.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18949,7 +18949,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,4883.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18973,7 +18973,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,5255.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -18997,7 +18997,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,5664.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19021,7 +19021,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,6073.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19045,7 +19045,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,6482.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19069,7 +19069,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,6891.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19093,7 +19093,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,7300.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19117,7 +19117,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,7746.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19141,7 +19141,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,8147.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19165,7 +19165,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,8404.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19189,7 +19189,7 @@ where employee_key=? </property>
           TopLeft="185.5,2095.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19213,7 +19213,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,8813.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19237,7 +19237,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,9222.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19261,7 +19261,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,9680.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19285,7 +19285,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,10825.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19307,7 +19307,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,11288.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19331,7 +19331,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,11785.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19355,7 +19355,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,10416.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19377,7 +19377,7 @@ where employee_key=? </property>
           TopLeft="185.500000000002,12280.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19399,7 +19399,7 @@ where employee_key=? </property>
           TopLeft="181.750000000001,12775.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19423,7 +19423,7 @@ where employee_key=? </property>
           TopLeft="181.670634920636,13053.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,58.8888888888996"
               Start="0,0"
               End="0,51.3888888888996">
@@ -19445,7 +19445,7 @@ where employee_key=? </property>
           TopLeft="185.5,3690.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19469,7 +19469,7 @@ where employee_key=? </property>
           TopLeft="185.091269841271,13651.3888888889">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,119.1111111111"
               Start="0,0"
               End="0,111.6111111111">
@@ -19491,7 +19491,7 @@ where employee_key=? </property>
           TopLeft="185.5,2468.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19515,7 +19515,7 @@ where employee_key=? </property>
           TopLeft="185.5,2877.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19539,7 +19539,7 @@ where employee_key=? </property>
           TopLeft="185.5,3281.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19563,7 +19563,7 @@ where employee_key=? </property>
           TopLeft="185.5,396.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19587,7 +19587,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,4099.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -19611,7 +19611,7 @@ where employee_key=? </property>
           TopLeft="185.500000000001,4508.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
