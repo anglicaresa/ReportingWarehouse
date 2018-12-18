@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - T1M"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="677"
-  DTS:VersionGUID="{1E88A516-900F-433E-8704-EEE6E17AAC52}">
+  DTS:VersionBuild="680"
+  DTS:VersionGUID="{206F9901-AE78-409A-8525-C5A5FD23D286}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/17/2018 3:47:05 PM</DTS:VariableValue>
+        DTS:DataType="7">12/18/2018 12:24:42 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/17/2018 3:47:05 PM</DTS:VariableValue>
+        DTS:DataType="7">12/18/2018 12:24:42 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/17/2018 3:47:05 PM</DTS:VariableValue>
+        DTS:DataType="7">12/18/2018 12:24:42 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -990,6 +990,156 @@
                   <DTS:ObjectData>
                     <SQLTask:SqlTaskData
                       SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform..employee_timesheet_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_program_fact"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{a22f8dcc-6653-412a-89fc-13b657f5a603}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="labour_turnover_program_fact">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\Delete data for Yesterday"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{d000e09f-3732-475e-b57d-a0f1eacae004}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Delete data for Yesterday"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                  SQLTask:SqlStatementSource="truncate table conform.labour_turnover_program_fact" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{7e66f2cd-1676-414b-9e41-752bc2853c87}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.labour_turnover_program_fact'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{0dda9bc3-aa19-4d05-b689-8d2104f8a9b5}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.labour_turnover_program_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\Get data for yesterday"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{15225907-6491-439d-8859-70783d841e0c}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Get data for yesterday"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                  SQLTask:SqlStatementSource="&#xA;-- insert&#xA;INSERT INTO CONFORM.labour_turnover_program_fact&#xA; select &#xA;t1.month_date_key,&#xA;t1.program_key,&#xA;0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,0,0&#xA;from &#xA; (select t0.month_date_key, d.program_key from &#xA;   ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact as f1 &#xA;    left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;    left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;    where d3.month_key is not null) as t0&#xA;  cross join conform.program_dim d &#xA;where d.current_row_indicator = 'Y' and d.program_code !=99999) as t1&#xA;&#xA;--select * from conform.program_dim d where d.program_code = 99999&#xA;--select * from CONFORM.labour_turnover_program_fact&#xA;&#xA;&#xA;&#xA;--update&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA; ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA; ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA; ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA; ltt.[casual_lost] =t1.casual_count,&#xA; ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_program_fact ltt inner join &#xA;   (select &#xA;     d3.month_key as month_date_key,&#xA;     f1.program_key,&#xA;     sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;     sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;     sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;     from conform.employee_termination_fact as f1 &#xA;     left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;     left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;     where d3.month_key is not null&#xA;     group by  d3.month_key,f1.program_key&#xA;    ) as t1&#xA;    on ltt.program_key = t1.program_key&#xA;    and ltt.month_date_key = t1.month_date_key&#xA;    &#xA;--select * from CONFORM.labour_turnover_program_fact&#xA;&#xA;declare @t_month int =  (select min(month_date_key) from CONFORM.labour_turnover_program_fact );&#xA;&#xA;--month's key&#xA;declare @month_key_t int = &#xA;(&#xA; select month_key from conform.month_dim d where d.year = year(getdate())&#xA; and d.month_number = month(getdate())&#xA;);&#xA;&#xA;&#xA;declare @t_date_key int;&#xA;&#xA;while @t_month &lt;= @month_key_t&#xA;begin &#xA;&#xA; set  @t_date_key =  &#xA;   (select d.date_key from &#xA;   conform.date_dim d inner join conform.month_dim m &#xA;   on d.year=m.year and d.month_no = m.month_number and d.day_of_month =1&#xA;   and m.month_key = @t_month);&#xA; --update service stream part&#xA; --all employee part&#xA; update ltt&#xA; set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;  ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;  ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;  ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;  ltt.[casual_total] =t2.casual_count,&#xA;  ltt.[total] =t2.total_count&#xA; from&#xA; CONFORM.labour_turnover_program_fact ltt inner join &#xA;      (&#xA;     select &#xA;     t2.program_key,&#xA;     sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;     sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;     sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;     from conform.all_employees_report_fact t2&#xA;     where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;     and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;     group by program_key&#xA;    ) as t2&#xA;     on ltt.program_key = t2.program_key&#xA;     and ltt.month_date_key = @t_month;&#xA;&#xA;  set @t_month = @t_month+1;&#xA;end;&#xA;&#xA;--update report part   &#xA;update ltt&#xA;set &#xA;   permanent_ft_turnover = case when ltt.permanent_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_ft_lost)/convert(decimal(10,2),ltt.permanent_ft_total) end,&#xA;   &#xA;   permanent_pt_turnover = case when ltt.permanent_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_pt_lost)/convert(decimal(10,2),ltt.permanent_pt_total) end,&#xA;   &#xA;   contract_ft_turnover = case when ltt.contract_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_ft_lost)/convert(decimal(10,2),ltt.contract_ft_total) end,&#xA;   &#xA;   contract_pt_turnover = case when ltt.contract_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_pt_lost)/convert(decimal(10,2),ltt.contract_pt_total) end,&#xA;   &#xA;   casual_turnover = case when ltt.casual_total=0 then 0.0000 else  convert(decimal(10,2),ltt.casual_lost)/convert(decimal(10,2),ltt.casual_total) end,&#xA;   &#xA;   total_turnover = case when ltt.total=0 then 0.0000 else  convert(decimal(10,2),ltt.total_lost)/convert(decimal(10,2),ltt.total) end&#xA;&#xA;from CONFORM.labour_turnover_program_fact ltt&#xA; --select * from CONFORM.labour_turnover_program_fact ltt&#xA;--update [last_year_monthly] which equals to month key minus 12&#xA;&#xA;--select nlf.month_date_key ,nlf.total_turnover,nlf.portfolio_key,nlf.service_stream_key,f.total_turnover as old_turnover,f.old_month_key,f.n_m_d&#xA;update nlf&#xA;set nlf.[last_year_monthly]= f.total_turnover&#xA;from conform.labour_turnover_program_fact nlf&#xA;inner join&#xA;(select (f.month_date_key + 12) as old_month_key,f.month_date_key as n_m_d ,f.total_turnover,f.program_key&#xA;from conform.LABOUR_TURNOVER_program_FACT f) as f&#xA;on nlf.month_date_key = f.old_month_key&#xA;and nlf.program_key = f.program_key&#xA;--update yearly turnover which is the sum of last 12 months turnover&#xA;&#xA;declare @month_key_min int = &#xA;(&#xA; select min(month_date_key) +12 from conform.labour_turnover_program_fact&#xA;);&#xA;&#xA;declare @month_key_max int = &#xA;(&#xA; select max(month_date_key) from conform.labour_turnover_program_fact&#xA;);&#xA;&#xA;while (@month_key_min &lt;= @month_key_max)&#xA;begin&#xA;  update nlf&#xA;  set &#xA;    nlf.[yearly] = f.total_turnover&#xA;  from conform.labour_turnover_program_fact nlf&#xA;  inner join &#xA;  (select f.program_key,sum(total_turnover) as total_turnover &#xA;  from conform.labour_turnover_program_fact f &#xA;  where f.month_date_key &gt;(@month_key_min-12) and f.month_date_key&lt;=@month_key_min group by f.program_key) as f&#xA;  on nlf.program_key = f.program_key&#xA;  and nlf.month_date_key = @month_key_min;&#xA;&#xA;  set @month_key_min = @month_key_min + 1;&#xA;end;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_program_fact.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{f249928f-ba73-4ac3-b387-cebd4799bf34}"
+              DTS:From="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\Delete data for Yesterday" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_program_fact.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{2a9ee459-e71e-4664-b8a8-64a80dc0dd4e}"
+              DTS:From="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\Delete data for Yesterday"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\Get data for yesterday" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_program_fact.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{1ead03c8-ead3-45cd-b617-2879fa00287f}"
+              DTS:From="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\Get data for yesterday"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_program_fact.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{9900dbd9-205b-44e4-9262-74932215696e}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{b1a86b35-d54b-468b-b575-6cd3d7e2432e}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_program_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{001c9f05-971c-457c-bb39-2a5988a43cf7}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{E4661892-78A4-47B9-B275-D69170B9B938}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_leave_taken_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_leave_taken_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4   &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_leave_taken_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
                       <SQLTask:ParameterBinding
                         SQLTask:ParameterName="0"
                         SQLTask:DtsVariableName="System::ErrorDescription"
@@ -15525,6 +15675,14 @@ where employee_key=? </property>
           DTS:ObjectName="Constraint 30"
           DTS:To="Package\Sequence Container - Fact Tables\UserAccessControl" />
         <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 31]"
+          DTS:CreationName=""
+          DTS:DTSID="{2F5BA7E1-BE72-4E09-A1F5-E8D789F273F5}"
+          DTS:From="Package\Sequence Container - Fact Tables\UserAccessControl"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 31"
+          DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_program_fact" />
+        <DTS:PrecedenceConstraint
           DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 4]"
           DTS:CreationName=""
           DTS:DTSID="{FD1157D7-7719-4780-A0DF-3713EE8FB62F}"
@@ -19630,11 +19788,146 @@ where employee_key=? </property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\Delete data for Yesterday"
+          TopLeft="41.1875,69" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\EST - Write Job Finish info"
+          TopLeft="41.1875,209" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\EST - Write Job Start info"
+          TopLeft="41.1875,15" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\Get data for yesterday"
+          TopLeft="41.1875,141" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact.PrecedenceConstraints[Constraint]"
+          TopLeft="41.1875,36">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="0,54"
+              Start="0,0"
+              End="-7.5,54">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-18.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-18.5,0"
+                    Point2="-22.5,0"
+                    Point3="-22.5,4" />
+                  <mssgle:LineSegment
+                    End="-22.5,50" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-22.5,50"
+                    Point2="-22.5,54"
+                    Point3="-18.5,54" />
+                  <mssgle:LineSegment
+                    End="-7.5,54" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact.PrecedenceConstraints[Constraint 1]"
+          TopLeft="141.6875,111">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="0,30"
+              Start="0,0"
+              End="0,22.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="141.6875,183">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="0,26"
+              Start="0,0"
+              End="0,18.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="795,14389"
-          Size="795,14432"
+          PanelSize="345,306"
+          Size="345,349"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact"
+          TopLeft="27.841269841271,14370.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 31]"
+          TopLeft="184.841269841271,14309.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{x:Null}"
+              EndConnector="15.5,61"
+              Start="0,0"
+              End="15.5,53.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26.5"
+                    Point2="0,30.5"
+                    Point3="4,30.5" />
+                  <mssgle:LineSegment
+                    End="11.5,30.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="11.5,30.5"
+                    Point2="15.5,30.5"
+                    Point3="15.5,34.5" />
+                  <mssgle:LineSegment
+                    End="15.5,53.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="795,14774"
+          Size="795,14818"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="171.833333333333,1.99999999999818" />
       </GraphLayout>
@@ -19776,7 +20069,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - Delete">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="343,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - Delete\OLE DB Source - Get data from employee_position_fact"
@@ -19794,7 +20087,7 @@ where employee_key=? </property>
           TopLeft="508.25,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="0,50.5">
@@ -19818,7 +20111,7 @@ where employee_key=? </property>
           TopLeft="508,285">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,90"
               Start="0,0"
               End="0,82.5">
@@ -19887,7 +20180,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - New or Update">
     <LayoutInfo>
       <GraphLayout
-        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="165,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\DFT - New or Update\Derived Column 1"
@@ -19937,7 +20230,7 @@ where employee_key=? </property>
           TopLeft="526,128">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="104,76"
               Start="0,0"
               End="104,68.5">
@@ -19973,7 +20266,7 @@ where employee_key=? </property>
           TopLeft="462.5,320">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-87.8333333333333,47"
               Start="0,0"
               End="-87.8333333333333,39.5">
@@ -20009,7 +20302,7 @@ where employee_key=? </property>
           TopLeft="272.5,240">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="80,127"
               Start="0,0"
               End="80,119.5">
@@ -20045,7 +20338,7 @@ where employee_key=? </property>
           TopLeft="437.5,236">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="25,42"
               Start="0,0"
               End="25,34.5">
@@ -20081,7 +20374,7 @@ where employee_key=? </property>
           TopLeft="269.5,49">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-8.5,46"
               Start="0,0"
               End="-8.5,38.5">
@@ -20117,7 +20410,7 @@ where employee_key=? </property>
           TopLeft="354,409">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,52"
               Start="0,0"
               End="0,44.5">
@@ -20141,7 +20434,7 @@ where employee_key=? </property>
           TopLeft="261,137">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="11.5,61"
               Start="0,0"
               End="11.5,53.5">
@@ -20177,7 +20470,7 @@ where employee_key=? </property>
           TopLeft="323,116">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="120,-9"
               Start="0,0"
               End="112.5,-9">
@@ -20213,7 +20506,7 @@ where employee_key=? </property>
           TopLeft="352.5,503">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,51"
               Start="0,0"
               End="0,43.5">
@@ -20237,7 +20530,7 @@ where employee_key=? </property>
           TopLeft="349.5,596">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="206.5,42"
               Start="0,0"
               End="206.5,34.5">
@@ -20338,7 +20631,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT\DFT - Delete">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="360,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT\DFT - Delete\OLE DB Source - Get data from employee_recruitment_fact"
@@ -20356,7 +20649,7 @@ where employee_key=? </property>
           TopLeft="516.25,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="0,50.5">
@@ -20380,7 +20673,7 @@ where employee_key=? </property>
           TopLeft="511.75,285">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,90"
               Start="0,0"
               End="0,82.5">
@@ -20449,7 +20742,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT\DFT - New or Update">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="152,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT\DFT - New or Update\OLE DB Source"
@@ -20475,7 +20768,7 @@ where employee_key=? </property>
           TopLeft="482,219">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-39,109"
               Start="0,0"
               End="-39,101.5">
@@ -20511,7 +20804,7 @@ where employee_key=? </property>
           TopLeft="185,116">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,55"
               Start="0,0"
               End="0,47.5">
@@ -20535,7 +20828,7 @@ where employee_key=? </property>
           TopLeft="187,213">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-17,114"
               Start="0,0"
               End="-17,106.5">
@@ -20571,7 +20864,7 @@ where employee_key=? </property>
           TopLeft="249,195">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="150,0"
               Start="0,0"
               End="142.5,0">
@@ -20652,7 +20945,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_TERMINATION_FACT\DFT - INSERT NEW RECORDS">
     <LayoutInfo>
       <GraphLayout
-        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="167,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_TERMINATION_FACT\DFT - INSERT NEW RECORDS\Data Conversion 3 1"
@@ -20722,7 +21015,7 @@ where employee_key=? </property>
           TopLeft="662.5,586.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-77.8333333333334,55"
               Start="0,0"
               End="-77.8333333333334,47.5">
@@ -20758,7 +21051,7 @@ where employee_key=? </property>
           TopLeft="331,519.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="188.333333333333,122"
               Start="0,0"
               End="188.333333333333,114.5">
@@ -20794,7 +21087,7 @@ where employee_key=? </property>
           TopLeft="470.5,270.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-114.166666666667,46"
               Start="0,0"
               End="-114.166666666667,38.5">
@@ -20830,7 +21123,7 @@ where employee_key=? </property>
           TopLeft="170.5,265.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="123.166666666667,51"
               Start="0,0"
               End="123.166666666667,43.5">
@@ -20866,7 +21159,7 @@ where employee_key=? </property>
           TopLeft="657.5,449.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,30"
               Start="0,0"
               End="0,22.5">
@@ -20890,7 +21183,7 @@ where employee_key=? </property>
           TopLeft="474,100.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,47"
               Start="0,0"
               End="0,39.5">
@@ -20914,7 +21207,7 @@ where employee_key=? </property>
           TopLeft="165.25,100.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,38"
               Start="0,0"
               End="0,30.5">
@@ -20938,7 +21231,7 @@ where employee_key=? </property>
           TopLeft="552,683.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="9,39.333333333333"
               Start="0,0"
               End="9,31.833333333333">
@@ -20974,7 +21267,7 @@ where employee_key=? </property>
           TopLeft="325.25,358.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,38"
               Start="0,0"
               End="0,30.5">
@@ -20998,7 +21291,7 @@ where employee_key=? </property>
           TopLeft="561,765">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-20,41"
               Start="0,0"
               End="-20,33.5">
@@ -21034,7 +21327,7 @@ where employee_key=? </property>
           TopLeft="544.75,848">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,36"
               Start="0,0"
               End="0,28.5">
@@ -21058,7 +21351,7 @@ where employee_key=? </property>
           TopLeft="659.5,521.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,22.9999999999999"
               Start="0,0"
               End="0,15.4999999999999">
@@ -21082,7 +21375,7 @@ where employee_key=? </property>
           TopLeft="328.25,438.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,39"
               Start="0,0"
               End="0,31.5">
@@ -21106,7 +21399,7 @@ where employee_key=? </property>
           TopLeft="472.25,189.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,39"
               Start="0,0"
               End="0,31.5">
@@ -21130,7 +21423,7 @@ where employee_key=? </property>
           TopLeft="168.5,180.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,39"
               Start="0,0"
               End="0,31.5">
@@ -21152,7 +21445,7 @@ where employee_key=? </property>
         <AnnotationLayout
           Text="need to change : just extract the data for yesterday from source table"
           ParentId="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_TERMINATION_FACT\DFT - INSERT NEW RECORDS"
-          FontInfo="{assembly:Null}"
+          FontInfo="{x:Null}"
           Size="548,NaN"
           Id="c81b5dd9-8947-47e6-aea6-2b1fd830cc98"
           TopLeft="658,106" />
@@ -21208,7 +21501,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - PROBATION_MONITORING_FACT\DFT - Delete">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="348,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - PROBATION_MONITORING_FACT\DFT - Delete\OLE DB Command - Delete from employee_position_fact"
@@ -21226,7 +21519,7 @@ where employee_key=? </property>
           TopLeft="515.25,183">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="0,50.5">
@@ -21250,7 +21543,7 @@ where employee_key=? </property>
           TopLeft="511.75,285">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,90"
               Start="0,0"
               End="0,82.5">
@@ -21319,7 +21612,7 @@ where employee_key=? </property>
     design-time-name="Package\Sequence Container - Fact Tables\SD1 - PROBATION_MONITORING_FACT\DFT - New or Update">
     <LayoutInfo>
       <GraphLayout
-        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="300,43"
           Id="Package\Sequence Container - Fact Tables\SD1 - PROBATION_MONITORING_FACT\DFT - New or Update\OLE DB Source  - EMPLOYEE_TEMP"
@@ -21361,7 +21654,7 @@ where employee_key=? </property>
           TopLeft="493.5,388">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-102.833333333333,50"
               Start="0,0"
               End="-102.833333333333,42.5">
@@ -21397,7 +21690,7 @@ where employee_key=? </property>
           TopLeft="280.5,311">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="89.5,127"
               Start="0,0"
               End="89.5,119.5">
@@ -21433,7 +21726,7 @@ where employee_key=? </property>
           TopLeft="269,110">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="8.5,51"
               Start="0,0"
               End="8.5,43.5">
@@ -21469,7 +21762,7 @@ where employee_key=? </property>
           TopLeft="491.75,312">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,33"
               Start="0,0"
               End="0,25.5">
@@ -21493,7 +21786,7 @@ where employee_key=? </property>
           TopLeft="370,480">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="-15.5,90"
               Start="0,0"
               End="-15.5,82.5">
@@ -21529,7 +21822,7 @@ where employee_key=? </property>
           TopLeft="279,203">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,66"
               Start="0,0"
               End="0,58.5">
@@ -21553,7 +21846,7 @@ where employee_key=? </property>
           TopLeft="335,182">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="308,0"
               Start="0,0"
               End="300.5,0">
@@ -21577,7 +21870,7 @@ where employee_key=? </property>
           TopLeft="774.5,203">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{assembly:Null}"
+              StartConnector="{x:Null}"
               EndConnector="0,79"
               Start="0,0"
               End="0,71.5">
@@ -21867,6 +22160,18 @@ where employee_key=? </property>
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\labour_turnover_program_fact.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>
