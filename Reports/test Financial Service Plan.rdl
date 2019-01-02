@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="Comcare_Production">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>Data Source=devsql-1\uat;Initial Catalog=ComCareUAT</ConnectString>
+        <IntegratedSecurity>true</IntegratedSecurity>
+      </ConnectionProperties>
+      <rd:SecurityType>Integrated</rd:SecurityType>
+      <rd:DataSourceID>ef4c02cd-f2d1-4cd2-8d51-5e3095285e17</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="ServicePlan">
+      <Query>
+        <DataSourceName>Comcare_Production</DataSourceName>
+        <CommandText>SELECT FSP_Service_Plan.* ,
+FS_Blob.Blob_Data,
+	FS_Blob_Type.Mime_type
+FROM FSP_Service_Plan 
+LEFT JOIN FS_Blob ON FS_Blob.FS_Blob_ID = FSP_Service_Plan.Signature_FS_Blob_ID
+LEFT JOIN FS_Blob_Type ON FS_Blob.Blob_type_ID = fs_blob_type.blob_type_Id
+WHERE Service_Plan_ID = @ServicePlanID</CommandText>
+      </Query>
+    </DataSet>
+  </DataSets>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>17.48467in</Height>
+        <Style />
+      </Body>
+      <Width>6.60874in</Width>
+      <Page>
+        <PageHeader>
+          <Height>3.13495cm</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Line Name="Line2">
+              <Top>3.05162cm</Top>
+              <Left>0.04974cm</Left>
+              <Height>0cm</Height>
+              <Width>16.4338cm</Width>
+              <Style>
+                <Border>
+                  <Style>Solid</Style>
+                  <Width>0.5pt</Width>
+                </Border>
+              </Style>
+            </Line>
+          </ReportItems>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageHeader>
+        <PageFooter>
+          <Height>1.50671cm</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Line Name="Line1">
+              <Top>0.15678cm</Top>
+              <Height>0cm</Height>
+              <Width>16.51cm</Width>
+              <Style>
+                <Border>
+                  <Style>Solid</Style>
+                  <Width>0.5pt</Width>
+                </Border>
+              </Style>
+            </Line>
+          </ReportItems>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageFooter>
+        <PageHeight>29.7cm</PageHeight>
+        <PageWidth>21cm</PageWidth>
+        <LeftMargin>2cm</LeftMargin>
+        <RightMargin>2cm</RightMargin>
+        <TopMargin>2cm</TopMargin>
+        <BottomMargin>2cm</BottomMargin>
+        <ColumnSpacing>0.13cm</ColumnSpacing>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="ServicePlanID">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>F521B189-2A07-4D87-BF81-E778DF017E6E</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Service PLan ID</Prompt>
+    </ReportParameter>
+  </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>1</NumberOfColumns>
+      <NumberOfRows>1</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>ServicePlanID</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
+  <Code>Private bOddRow As Boolean
+Private OddColor As String = "LightSteelBlue"
+Private EvenColor As String = "White"
+
+'*************************************************************************
+' -- Call from BackGroundColor property of all detail row textboxes
+' -- Set Toggle True for first item, False for others.
+'*************************************************************************
+Function AlternateColor(ByVal Toggle As Boolean) As String
+	
+	If Toggle Then bOddRow = Not bOddRow
+    If bOddRow Then
+        Return OddColor
+    Else
+        Return EvenColor
+    End If
+End Function
+
+' -- Useful for restarting the color. Use on top left cell.
+Function RestartColor() As String
+	bOddRow = True
+	Return OddColor
+End Function</Code>
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>1ea57e6b-c341-453f-8923-e68d58ef604f</rd:ReportID>
+</Report>
