@@ -260,24 +260,28 @@ FROM (
         -- a. Excluding any with Code = ALI
       --,CAST(SUM(CASE WHEN ((rp.[Name] like ('P1%') or rp.[Name] like ('P2%') or rp.[Name] like ('P3%')) and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
       --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
-      ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+      --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+      ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN v.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
         -- 2. Actual Cost of all works orders listed as a Priority P4 and
         -- a. Excluding any with Code = ALI
      -- ,CAST(SUM(CASE WHEN ((rp.[Name] like ('P4%')) and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
     --  ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
-            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+        --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+        ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN v.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
         -- 3. Planned - Actual cost of all works orders with
         -- a. Priority = P6 and;
         -- b. Excluding any with Code = ALI
       --,CAST(SUM(CASE WHEN (rp.[Name] like ('P6%') and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
             --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
-                        ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+            --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN V.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
         -- 4. Cyclical - Actual cost of all works orders with
         -- a. Priority = P7 and;
         -- b. Excluding any with Code = ALI
       --,CAST(SUM(CASE WHEN (rp.[Name] like ('P7%') and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
     --  ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
-            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+    --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN V.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
         -- 5. ALI - Actual cost of all works orders with
         -- a. Priority = P1, P2, P3, P6, P7 and;
         -- b. Include only if Code = ALI
@@ -303,9 +307,8 @@ FROM (
       -- LEFT  JOIN dbo.PropertyStructure_scheme pss ON psu.Company = pss.Company AND psb.Scheme = pss.Code
       -- LEFT  JOIN dbo.PropertyStructure_District psd ON psu.Company = psd.Company AND psb.District = psd.Code
       -- LEFT  JOIN dbo.v_RepairsData as vRD ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-  inner join dbo.Repairs_WorksOrder_InvoicesJoin rwij
-  on rwij.WorksOrder = vrd.ID and rwij.Company = vRD.Company
-  inner join dbo.Invoice v on rwij.Invoice = v.ID
+  inner join dbo.Repairs_WorksOrder_InvoicesJoin rwij  on rwij.WorksOrder = vrd.ID and rwij.Company = vRD.Company
+ inner join dbo.Invoice v on rwij.Invoice = v.ID
   WHERE
       vRD.Company = 1   
       -- (psd.code IN (@District))
