@@ -170,7 +170,7 @@ where
  --SET @District ='ASA';
  --SET @Scheme ='BPSC';
  --SET @Block ='Gro02';
--- SET @From_Date = '20181101';
+ --SET @From_Date = '20181101';
 
 SELECT 
 		p.[Property Ref.]
@@ -183,31 +183,48 @@ SELECT
 		,v.[Value] as [Date Inspection Conducted]
 
 		,hw.ReplacementYear as [Hot Water System Component Renewal Year]
-		,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =150 and Company = 1) as [Hot Water System Component Cost]
+		,(case when(hw.ReplacementYear&gt;0) then (  SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =150 and Company = 1) else 0 end) 
+		as [Hot Water System Component Cost]
 
 		,pe.ReplacementYear as [Paintwork Exterior Component Renewal Year]
-		,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =214 and Company = 1)  as [Paintwork Exterior Component Cost]
+		--,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =214 and Company = 1)  
+		,(case when(pe.ReplacementYear&gt;0) then (  SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =214 and Company = 1) else 0 end) 
+		as [Paintwork Exterior Component Cost]
 
 		,pin.ReplacementYear as [Paintwork Interior Component Renewal Year]
-		,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =213 and Company = 1)   as [Paintwork Interior Component Cost]
+		--,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =213 and Company = 1)   
+		,(case when(pin.ReplacementYear&gt;0) then (  SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =213 and Company = 1) else 0 end) 
+		as [Paintwork Interior Component Cost]
 
 		,fc.ReplacementYear as [Flooring (Complete) Component Renewal Year]
-		,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =48 and Company = 1)   as [Flooring (Complete) Component Cost]
+		--,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =48 and Company = 1)   
+		,(case when(fc.ReplacementYear&gt;0) then (  SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =48 and Company = 1) else 0 end) 
+		as [Flooring (Complete) Component Cost]
 
 		,kc.ReplacementYear as [Kitchen (Complete) Component Renewal Year]
-		,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =69 and Company = 1)   as [Kitchen (Complete) Component Cost]
+		--,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =69 and Company = 1)   
+		,(case when(kc.ReplacementYear&gt;0) then (  SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =69 and Company = 1) else 0 end) 
+		as [Kitchen (Complete) Component Cost]
 
 		,bc.ReplacementYear as [Bathroom (Complete) Component Renewal Year]
-		,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =191 and Company = 1)  as [Bathroom (Complete) Component Cost]
+		--,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =191 and Company = 1)  
+	,(case when(bc.ReplacementYear&gt;0) then (  SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =191 and Company = 1) else 0 end) 
+		as [Bathroom (Complete) Component Cost]
 
 		,usc.ReplacementYear as [Upright Stove Component  Renewal Year]
-		,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =80 and Company = 1)   as [Upright Stove Component Cost]
+	--	,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =80 and Company = 1)   
+	,(case when(usc.ReplacementYear&gt;0) then (  SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =80 and Company = 1) else 0 end) 
+		as [Upright Stove Component Cost]
 
 		,ssc.ReplacementYear as [Side-by-side Stove Component Renewal Year]
-		,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =81 and Company = 1)   as [Side-by-side Stove Component Cost]
+		--,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =81 and Company = 1)   
+			,(case when(ssc.ReplacementYear&gt;0) then (  SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =81 and Company = 1) else 0 end) 
+		as [Side-by-side Stove Component Cost]
 
 		,so.ReplacementYear as [Separate Oven &amp; Cooktop Component Renewal Year]
-		,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =160 and Company = 1)   as [Separate Oven &amp; Cooktop Component Cost]
+	--	,(SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =160 and Company = 1)  
+		,(case when(so.ReplacementYear&gt;0) then (  SELECT 	[ReplacementCost] FROM [dbo].[PropertyStructure_ComponentType]  where id =160 and Company = 1) else 0 end) 
+		 as [Separate Oven &amp; Cooktop Component Cost]
 
 FROM (
 	  SELECT 
@@ -2501,7 +2518,6 @@ FROM (
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
