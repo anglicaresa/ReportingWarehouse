@@ -1,88 +1,110 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="Kypera_Test2">
-      <ConnectionProperties>
-        <DataProvider>SQL</DataProvider>
-        <ConnectString>Data Source=appsql-3;Initial Catalog=KH_Test</ConnectString>
-        <IntegratedSecurity>true</IntegratedSecurity>
-      </ConnectionProperties>
+    <DataSource Name="KH_test">
+      <DataSourceReference>/DataSources/Kypera</DataSourceReference>
       <rd:SecurityType>Integrated</rd:SecurityType>
-      <rd:DataSourceID>41657426-83f5-44eb-9a4e-da55f50984a9</rd:DataSourceID>
+      <rd:DataSourceID>76efc458-cfc6-4958-82bd-ddcd99f1104a</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="District">
+    <DataSet Name="entity">
       <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
-        <CommandText>SELECT 
-    distinct psd.code  as [District]
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
+        <DataSourceName>KH_test</DataSourceName>
+        <CommandText>select 
+distinct
+ee.code as Entity
+from anglicare.dbo.PropertyStructure_Unit as a
+  left join anglicare.dbo.HomeTeam_LookupValues as b on a.PropertyType=b.id and b.lookup =31
+  left join anglicare.dbo.HomeTeam_LookupValues as c on a.PropertyStyle=c.id and c.lookup =113
+  left join anglicare.dbo.HomeTeam_LookupValues as n
+	  on a.PropertySource = n.id and n.lookup ='116' and n.deleted =0
+  left join 
+	(select a.landlord ,a.occupancy, b.id as occupancyid,b.unit as propertyid ,
+		c.name as LandlordName,
+		c.address,
+		c.ContactForename as ContactFirstName,
+		c.ContactSurname as ContacLastName,
+		c.TelephoneNumber as PhoneNumber,
+		c.MobileNumber as MobileNumber,
+		c.EmailAddress as EmailAddress,
+		c.CreatedOn as CreateDate,
+		c.notes as Notes,
+		ISNULL(i.Amount,0) as FortnightlyRentCharge
 
-FROM 
-    dbo.Repairs_WorksOrder as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
-
-WHERE
-    vRD.Company = 1
-    -- and (psd.code IN (@District) or @District is null)
-    -- AND (pss.Name IN (@Scheme) or @Scheme is null)
-    -- AND (psbu.Block IN (@Block) or @Block is null)
-
-ORDER BY
-    psd.code</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+		from Anglicare.dbo.Leasehold_Agreement as a 
+			left join Anglicare.dbo.Occupancies_Occupancy as b on a.Occupancy =b.id 
+			left join Anglicare.dbo.leasehold_landlord as c on c.id =a.Landlord
+			left Join Anglicare.dbo.Occupancies_Charges as i on a.Occupancy = i.occupancy and i.charge = 1
+		) as mm on a.id =mm.propertyid
+left join 
+    anglicare.dbo.PropertyStructure_BlockUnit as bb on a.ID = bb.Unit 
+	--Block Level
+	left join 
+	anglicare.dbo.PropertyStructure_Block as cc on bb.block = cc.Code
+	--District Level
+	left join
+	anglicare.dbo.PropertyStructure_District as ee on cc.District = ee.Code
+	--Scheme Level
+	left join 
+	anglicare.dbo.PropertyStructure_scheme as dd on cc.Scheme = dd.Code
+where a.issold ='0' and a.isDemolished ='0' 
+</CommandText>
       </Query>
       <Fields>
-        <Field Name="District">
-          <DataField>District</DataField>
+        <Field Name="Entity">
+          <DataField>Entity</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
     <DataSet Name="Scheme">
       <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
+        <DataSourceName>KH_test</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@District">
-            <Value>=Parameters!District.Value</Value>
+          <QueryParameter Name="@Entity">
+            <Value>=Parameters!Entity.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT  
-       distinct PSS.[Name] as Scheme
-		
-FROM [Anglicare].dbo.Repairs_WorksOrder AS WO
-     LEFT JOIN (SELECT worksorder, max(unit) as unit from [Anglicare].dbo.Repairs_WorksOrder_UnitJoin GROUP BY  worksorder) AS A ON WO.ID=A.WorksOrder
-	 --Block Unit
-     INNER JOIN [Anglicare].dbo.PropertyStructure_BlockUnit AS B ON B.Unit=A.Unit
-	 --Unit
-     INNER JOIN  [Anglicare].dbo.PropertyStructure_Block AS PSB ON PSB.Code=B.Block   
+        <CommandText>select 
+distinct dd.Name as Scheme
+from anglicare.dbo.PropertyStructure_Unit as a
+  left join anglicare.dbo.HomeTeam_LookupValues as b on a.PropertyType=b.id and b.lookup =31
+  left join anglicare.dbo.HomeTeam_LookupValues as c on a.PropertyStyle=c.id and c.lookup =113
+  left join anglicare.dbo.HomeTeam_LookupValues as n
+	  on a.PropertySource = n.id and n.lookup ='116' and n.deleted =0
+  left join 
+	(select a.landlord ,a.occupancy, b.id as occupancyid,b.unit as propertyid ,
+		c.name as LandlordName,
+		c.address,
+		c.ContactForename as ContactFirstName,
+		c.ContactSurname as ContacLastName,
+		c.TelephoneNumber as PhoneNumber,
+		c.MobileNumber as MobileNumber,
+		c.EmailAddress as EmailAddress,
+		c.CreatedOn as CreateDate,
+		c.notes as Notes,
+		ISNULL(i.Amount,0) as FortnightlyRentCharge
+
+		from Anglicare.dbo.Leasehold_Agreement as a 
+			left join Anglicare.dbo.Occupancies_Occupancy as b on a.Occupancy =b.id 
+			left join Anglicare.dbo.leasehold_landlord as c on c.id =a.Landlord
+			left Join Anglicare.dbo.Occupancies_Charges as i on a.Occupancy = i.occupancy and i.charge = 1
+		) as mm on a.id =mm.propertyid
+left join 
+    anglicare.dbo.PropertyStructure_BlockUnit as bb on a.ID = bb.Unit 
+	--Block Level
+	left join 
+	anglicare.dbo.PropertyStructure_Block as cc on bb.block = cc.Code
 	--District Level
-	INNER join anglicare.dbo.PropertyStructure_District as PSD on PSB.District = PSD.Code
+	left join
+	anglicare.dbo.PropertyStructure_District as ee on cc.District = ee.Code
 	--Scheme Level
-	INNER join anglicare.dbo.PropertyStructure_scheme as PSS on PSB.Scheme = PSS.Code
-	
-	 left join [Anglicare].dbo.Repairs_WorksOrder_Completed_With_ContractorDetails as woc on wo.id=woc.worksorderid
-     left join [Anglicare].dbo.Repairs_Priorities as pri on wo.priority = pri.id
-	 left join [Anglicare].dbo.HomeTeam_LookupValues as lookupt on wo.classification=lookupt.id and lookupt.[lookup] =25 
-	 left join [Anglicare].dbo.Security_User as users on wo.owner =users.[User]
-where 
- PSD.code in (@District)</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+	left join 
+	anglicare.dbo.PropertyStructure_scheme as dd on cc.Scheme = dd.Code
+where a.issold ='0' and a.isDemolished ='0' 
+and ee.code in (@Entity)</CommandText>
       </Query>
       <Fields>
         <Field Name="Scheme">
@@ -93,36 +115,56 @@ where
     </DataSet>
     <DataSet Name="Block">
       <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
+        <DataSourceName>KH_test</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@District">
-            <Value>=Parameters!District.Value</Value>
+          <QueryParameter Name="@Entity">
+            <Value>=Parameters!Entity.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@Scheme">
             <Value>=Parameters!Scheme.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT  
-       distinct B.[Block] as Block
-		
-FROM [Anglicare].dbo.Repairs_WorksOrder AS WO
-     LEFT JOIN (SELECT worksorder, max(unit) as unit from [Anglicare].dbo.Repairs_WorksOrder_UnitJoin GROUP BY  worksorder) AS A ON WO.ID=A.WorksOrder
-	 --Block Unit
-     INNER JOIN [Anglicare].dbo.PropertyStructure_BlockUnit AS B ON B.Unit=A.Unit
-	 --Unit
-     INNER JOIN  [Anglicare].dbo.PropertyStructure_Block AS PSB ON PSB.Code=B.Block   
+        <CommandText>select 
+distinct bb.Block
+from anglicare.dbo.PropertyStructure_Unit as a
+  left join anglicare.dbo.HomeTeam_LookupValues as b on a.PropertyType=b.id and b.lookup =31
+  left join anglicare.dbo.HomeTeam_LookupValues as c on a.PropertyStyle=c.id and c.lookup =113
+  left join anglicare.dbo.HomeTeam_LookupValues as n
+	  on a.PropertySource = n.id and n.lookup ='116' and n.deleted =0
+  left join 
+	(select a.landlord ,a.occupancy, b.id as occupancyid,b.unit as propertyid ,
+		c.name as LandlordName,
+		c.address,
+		c.ContactForename as ContactFirstName,
+		c.ContactSurname as ContacLastName,
+		c.TelephoneNumber as PhoneNumber,
+		c.MobileNumber as MobileNumber,
+		c.EmailAddress as EmailAddress,
+		c.CreatedOn as CreateDate,
+		c.notes as Notes,
+		ISNULL(i.Amount,0) as FortnightlyRentCharge
+
+		from Anglicare.dbo.Leasehold_Agreement as a 
+			left join Anglicare.dbo.Occupancies_Occupancy as b on a.Occupancy =b.id 
+			left join Anglicare.dbo.leasehold_landlord as c on c.id =a.Landlord
+			left Join Anglicare.dbo.Occupancies_Charges as i on a.Occupancy = i.occupancy and i.charge = 1
+		) as mm on a.id =mm.propertyid
+
+	left join 
+    anglicare.dbo.PropertyStructure_BlockUnit as bb on a.ID = bb.Unit 
+	--Block Level
+	left join 
+	anglicare.dbo.PropertyStructure_Block as cc on bb.block = cc.Code
 	--District Level
-	INNER join anglicare.dbo.PropertyStructure_District as PSD on PSB.District = PSD.Code
+	left join
+	anglicare.dbo.PropertyStructure_District as ee on cc.District = ee.Code
 	--Scheme Level
-	INNER join anglicare.dbo.PropertyStructure_scheme as PSS on PSB.Scheme = PSS.Code
-	
-	 left join [Anglicare].dbo.Repairs_WorksOrder_Completed_With_ContractorDetails as woc on wo.id=woc.worksorderid
-     left join [Anglicare].dbo.Repairs_Priorities as pri on wo.priority = pri.id
-	 left join [Anglicare].dbo.HomeTeam_LookupValues as lookupt on wo.classification=lookupt.id and lookupt.[lookup] =25 
-	 left join [Anglicare].dbo.Security_User as users on wo.owner =users.[User]
-where 
- PSD.code in (@District)
- and PSS.[Name] in (@Scheme)</CommandText>
+	left join 
+	anglicare.dbo.PropertyStructure_scheme as dd on cc.Scheme = dd.Code
+where a.issold ='0' and a.isDemolished ='0' 
+and ee.code in (@Entity)
+and dd.Name in (@Scheme)
+</CommandText>
       </Query>
       <Fields>
         <Field Name="Block">
@@ -131,12 +173,12 @@ where
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="MaintenancePlan">
+    <DataSet Name="Data">
       <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
+        <DataSourceName>KH_test</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@District">
-            <Value>=Parameters!District.Value</Value>
+          <QueryParameter Name="@Entity">
+            <Value>=Parameters!Entity.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@Scheme">
             <Value>=Parameters!Scheme.Value</Value>
@@ -144,691 +186,122 @@ where
           <QueryParameter Name="@Block">
             <Value>=Parameters!Block.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@From_Date">
-            <Value>=Parameters!From_Date.Value</Value>
+          <QueryParameter Name="@ToDate">
+            <Value>=Parameters!ToDate.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@To_Date">
-            <Value>=Parameters!To_Date.Value</Value>
+          <QueryParameter Name="@CurrentPerson">
+            <Value>=Parameters!CurrentPerson.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@contractor">
-            <Value>=Parameters!contractor.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Priority">
-            <Value>=Parameters!Priority.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Trade">
-            <Value>=Parameters!Trade.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Classification">
-            <Value>=Parameters!Classification.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Status">
-            <Value>=Parameters!Status.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ExternalRevenueSource">
-            <Value>=Parameters!ExternalRevenueSource.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@EFrom_Date">
-            <Value>=Parameters!EFrom_Date.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ETo_Date">
-            <Value>=Parameters!ETo_Date.Value</Value>
+          <QueryParameter Name="@FromDate">
+            <Value>=Parameters!FromDate.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>-- DECLARE @District varchar(100);
--- DECLARE @Scheme varchar(100);
--- DECLARE @Block varchar(100);
--- DECLARE @From_Date DATE;
--- DECLARE @To_Date DATE;
-
--- DECLARE @contractor varchar(100);
--- DECLARE @Priority varchar(100);
--- DECLARE @Trade varchar(100);
--- DECLARE @Classification varchar(100);
--- DECLARE @Status varchar(100);
-
--- SET @District ='ASA';
--- SET @Scheme ='BPSC';
--- SET @Block ='Gro02';
--- SET @From_Date = '20181101';
-
-SELECT p.[Property Ref.],p.[Display Name]
-,ISNULL(b.Responsive, 0) as Responsive
-,ISNULL(b.Vacancy, 0) as Vacancy
-,ISNULL(b.Planned, 0) as Planned
-,ISNULL(b.Cyclical, 0) as Cyclical
-,ISNULL(b.ALI, 0) as ALI
-,ISNULL(b.Responsive, 0)+ISNULL(b.Vacancy, 0)+ISNULL(b.Planned, 0)+ISNULL(b.Cyclical, 0)+ISNULL(b.ALI, 0) as Total
-
-FROM (
-  SELECT 
-      psu.ID as [Property Ref.]
-      ,psu.Name as [Display Name]
-
-  FROM 
-    --The Property Tree
-      dbo.PropertyStructure_Unit as psu  
-      LEFT  JOIN dbo.PropertyStructure_BlockUnit psbu ON psu.Company = psbu.Company AND psu.ID = psbu.Unit
-      LEFT  JOIN dbo.PropertyStructure_Block psb ON psu.Company = psb.Company AND psbu.Block = psb.Code
-      LEFT  JOIN dbo.PropertyStructure_scheme pss ON psu.Company = pss.Company AND psb.Scheme = pss.Code
-      LEFT  JOIN dbo.PropertyStructure_District psd ON psu.Company = psd.Company AND psb.District = psd.Code
-      -- LEFT  JOIN dbo.v_RepairsData as vRD ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-
-  WHERE
-      -- vRD.Company = 1  and 
-      (psd.code IN (@District))
-      AND (pss.Name IN (@Scheme))
-      AND (psbu.Block IN (@Block) )
-      and (psu.isSold =0 or psu.isSold is null) 
-      and (psu.isDemolished = 0 or psu.isDemolished is null)
-      and (psu.isRelinquished = 0 or psu.isRelinquished is null)
-      -- and (vRD.Complete &gt; (@From_Date))
-      -- and (vRD.Complete &lt; @To_Date or @To_Date is null)
-      -- and (vRD.contractor IN (@contractor))
-      -- AND (vRd.Priority IN (@Priority) )
-      -- AND (vRD.Trade IN (@Trade) )
-      -- and (vRD.Classification IN (@Classification))
-      -- AND (vRD.[Status] IN (@Status) )
-  GROUP BY
-      psu.ID
-      ,psu.Name
-      -- ,psd.code 
-      -- ,pss.Name
-      -- ,psbu.Block 
-      -- ,vRD.contractor
-      -- ,vRd.Priority
-      -- ,vRD.Trade
-      -- ,vRD.Classification 
-      -- ,vRD.[Status]
-      -- ,vRD.Complete
-) as p LEFT JOIN
-(
-    SELECT 
-      vRD.AreaID as [Property Ref.]
-      -- ,psu.Name as [Display Name]
-      -- ,psd.code as District
-      -- ,pss.Name as Scheme
-      -- ,psbu.Block as Block
-      -- ,vRD.contractor
-      -- ,vRd.Priority
-      -- ,vRD.Trade
-      -- ,vRD.Classification as [Repair Type]
-      -- ,vRD.[Status]
-      -- ,vRD.Complete
-
-        -- 1. Actual Cost of all works orders listed as a Priority P1, P2 or P3 and
-        -- a. Excluding any with Code = ALI
-      --,CAST(SUM(CASE WHEN ((rp.[Name] like ('P1%') or rp.[Name] like ('P2%') or rp.[Name] like ('P3%')) and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
-      --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
-      --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
-      ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN v.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
-        -- 2. Actual Cost of all works orders listed as a Priority P4 and
-        -- a. Excluding any with Code = ALI
-     -- ,CAST(SUM(CASE WHEN ((rp.[Name] like ('P4%')) and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
-    --  ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
-        --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
-        ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN v.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
-        -- 3. Planned - Actual cost of all works orders with
-        -- a. Priority = P6 and;
-        -- b. Excluding any with Code = ALI
-      --,CAST(SUM(CASE WHEN (rp.[Name] like ('P6%') and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
-            --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
-            --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
-            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN V.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
-        -- 4. Cyclical - Actual cost of all works orders with
-        -- a. Priority = P7 and;
-        -- b. Excluding any with Code = ALI
-      --,CAST(SUM(CASE WHEN (rp.[Name] like ('P7%') and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
-    --  ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
-    --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
-            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN V.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
-        -- 5. ALI - Actual cost of all works orders with
-        -- a. Priority = P1, P2, P3, P6, P7 and;
-        -- b. Include only if Code = ALI
-    --   ,CAST(SUM(CASE WHEN ((
-    --        rp.[Name] like ('P1%') 
-    --     or rp.[Name] like ('P2%') 
-    --     or rp.[Name] like ('P3%') 
-    --     or rp.[Name] like ('P4%') 
-    --     or rp.[Name] like ('P6%') 
-    --     or rp.[Name] like ('P7%')) and (Lookup2.Name='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
---,CAST(SUM(CASE WHEN (RWRE.[Name] ='61024 ALI''s' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
-,CAST(SUM(CASE WHEN (RWRE.[Name] ='61024 ALI''s' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
-  FROM 
-  dbo.Repairs_WorksOrder as vRD
-  --LEFT JOIN dbo.Repairs_Priorities as rp ON  vRD.Company = rp.Company And vRD.Priority = rp.ID  
-  LEFT JOIN [dbo].[Repairs_WorksOrder_Revenue_External] as RWRE on vRD.ExternalRevenue = RWRE.[ID]
-   Left JOIN dbo.HomeTeam_LookupValues  as Lookup2 
- ON vRD.Company = Lookup2.Company AND vRD.Classification2 = Lookup2.ID AND Lookup2.Lookup = 26 
-    --The Property Tree
-      -- dbo.PropertyStructure_Unit as psu  
-      -- LEFT  JOIN dbo.PropertyStructure_BlockUnit psbu ON psu.Company = psbu.Company AND psu.ID = psbu.Unit
-      -- LEFT  JOIN dbo.PropertyStructure_Block psb ON psu.Company = psb.Company AND psbu.Block = psb.Code
-      -- LEFT  JOIN dbo.PropertyStructure_scheme pss ON psu.Company = pss.Company AND psb.Scheme = pss.Code
-      -- LEFT  JOIN dbo.PropertyStructure_District psd ON psu.Company = psd.Company AND psb.District = psd.Code
-      -- LEFT  JOIN dbo.v_RepairsData as vRD ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-  inner join dbo.Repairs_WorksOrder_InvoicesJoin rwij  on rwij.WorksOrder = vrd.ID and rwij.Company = vRD.Company
- inner join dbo.Invoice v on rwij.Invoice = v.ID
-  WHERE
-      vRD.Company = 1   
-      -- (psd.code IN (@District))
-      -- AND (pss.Name IN (@Scheme))
-      -- AND (psbu.Block IN (@Block) )
-      and (vRD.Complete &gt;= (@From_Date))
-      and (vRD.Complete &lt; @To_Date or @To_Date is null)
-      and (vRD.contractor IN (@contractor))
-      AND (vRd.Priority IN (@Priority) )
-      AND (vRD.Trade IN (@Trade) )
-      and (vRD.Classification IN (@Classification))
-      AND (vRD.[Status] IN (@Status) )
-      and  vRD.ExternalRevenue IN (@ExternalRevenueSource)
-      and ((v.ExpectedPaymentDate &gt;= @EFrom_Date) or @EFrom_Date is null)
-      and ((v.ExpectedPaymentDate &lt; @ETo_Date) or @ETo_Date is null)
-  GROUP BY
-    vRD.AreaID
-      -- psu.ID
-      -- ,psu.Name
-      -- ,psd.code 
-      -- ,pss.Name
-      -- ,psbu.Block 
-      -- ,vRD.contractor
-      -- ,vRd.Priority
-      -- ,vRD.Trade
-      -- ,vRD.Classification 
-      -- ,vRD.[Status]
-      -- ,vRD.Complete
-
-) as b on p.[Property Ref.] = b.[Property Ref.]
-order BY p.[Property Ref.]</CommandText>
+        <CommandText>SELECT DISTINCT
+                         Occupancies_Occupancy.Unit, bb.Block, dd.Name AS Scheme, ee.Code AS Entity, ee.Name AS DistrictName, PropertyStructure_Unit.Flat, PropertyStructure_Unit.Number, PropertyStructure_Unit.Street,
+                         PropertyStructure_Unit.Town, PropertyStructure_Unit.County, PropertyStructure_Unit.Postcode, PropertyStructure_Unit_Characteristics.Apartments AS HabitableRooms,
+                         PropertyStructure_Unit_Status.ID AS UnitStatusCode, PropertyStructure_Unit_Status.Name AS UnitStatus, HomeTeam_LookupValuesPropStyle.Name AS PropertyStyle, PropertyStructure_Unit.MarketRent,
+                         PropertyStructure_Unit.LastMainRentIncrease,
+                         htlv.Name As FamilyMakeup,
+                         (Case op.CurrentPerson When 1 Then 'Yes' Else 'No' End) As CurrentPerson
+FROM            Occupancies_Occupancy INNER JOIN
+                         PropertyStructure_Unit ON Occupancies_Occupancy.Company = PropertyStructure_Unit.Company AND Occupancies_Occupancy.Unit = PropertyStructure_Unit.ID LEFT OUTER JOIN
+                         PropertyStructure_Unit_Characteristics ON PropertyStructure_Unit_Characteristics.Company = PropertyStructure_Unit.Company AND
+                         PropertyStructure_Unit_Characteristics.Unit = PropertyStructure_Unit.ID LEFT OUTER JOIN
+                         HomeTeam_LookupValues AS HomeTeam_LookupValuesPropStyle ON PropertyStructure_Unit.Company = HomeTeam_LookupValuesPropStyle.Company AND
+                         PropertyStructure_Unit.PropertyStyle = HomeTeam_LookupValuesPropStyle.ID AND HomeTeam_LookupValuesPropStyle.Lookup = 113 LEFT OUTER JOIN
+                         PropertyStructure_Unit_Status ON PropertyStructure_Unit.Company = PropertyStructure_Unit_Status.Company AND PropertyStructure_Unit.CurrentStatus = PropertyStructure_Unit_Status.ID LEFT OUTER JOIN
+                         PropertyStructure_BlockUnit AS bb ON PropertyStructure_Unit.ID = bb.Unit LEFT OUTER JOIN
+                         PropertyStructure_Block AS cc ON bb.Block = cc.Code LEFT OUTER JOIN
+                         PropertyStructure_District AS ee ON cc.District = ee.Code LEFT OUTER JOIN
+                         PropertyStructure_scheme AS dd ON cc.Scheme = dd.Code
+                         Left Join Occupancies_People op On Occupancies_Occupancy.Company = op.Company And Occupancies_Occupancy.id = op.Occupancy
+                         Left Join Occupancies_Occupancy_UserDefinedFields_Values oouv On Occupancies_Occupancy.Company = oouv.Company And Occupancies_Occupancy.id = oouv.ObjectReference And oouv.UserDefinedField = 148
+                         Left Join HomeTeam_LookupValues htlv On Occupancies_Occupancy.Company = htlv.Company And oouv.Value = htlv.ID And htlv.Lookup = 1016
+WHERE        (ee.Code IN (@Entity)) AND (dd.Name IN (@Scheme)) AND (bb.Block IN (@Block)) And op.CurrentPerson in (@CurrentPerson) AND (PropertyStructure_Unit.DateRelinquished IS NULL OR
+                         PropertyStructure_Unit.DateRelinquished &lt;= @ToDate AND PropertyStructure_Unit.DateRelinquished &gt; @FromDate)
+GROUP BY Occupancies_Occupancy.id, Occupancies_Occupancy.StartDate, Occupancies_Occupancy.EndDate, Occupancies_Occupancy.Unit, bb.Block, dd.Name, ee.Code, ee.Name, Occupancies_Occupancy.Salutation,
+                         Occupancies_Occupancy.SalutationLetter, PropertyStructure_Unit.Number, PropertyStructure_Unit.Flat, PropertyStructure_Unit.Street, PropertyStructure_Unit.Town, PropertyStructure_Unit.County,
+                         PropertyStructure_Unit.Postcode, PropertyStructure_Unit_Characteristics.Apartments, PropertyStructure_Unit_Status.ID, PropertyStructure_Unit_Status.Name, HomeTeam_LookupValuesPropStyle.Name,
+                         PropertyStructure_Unit.MarketRent, PropertyStructure_Unit.LastMainRentIncrease, htlv.Name, op.CurrentPerson
+ORDER BY Occupancies_Occupancy.Unit
+</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
-        <Field Name="Property_Ref_">
-          <DataField>Property Ref.</DataField>
+        <Field Name="Unit">
+          <DataField>Unit</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Display_Name">
-          <DataField>Display Name</DataField>
+        <Field Name="Block">
+          <DataField>Block</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Responsive">
-          <DataField>Responsive</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+        <Field Name="Scheme">
+          <DataField>Scheme</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Vacancy">
-          <DataField>Vacancy</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+        <Field Name="Entity">
+          <DataField>Entity</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Planned">
-          <DataField>Planned</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+        <Field Name="DistrictName">
+          <DataField>DistrictName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Cyclical">
-          <DataField>Cyclical</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+        <Field Name="Flat">
+          <DataField>Flat</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ALI">
-          <DataField>ALI</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+        <Field Name="Number">
+          <DataField>Number</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Total">
-          <DataField>Total</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+        <Field Name="Street">
+          <DataField>Street</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Priority">
-      <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@District">
-            <Value>=Parameters!District.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Scheme">
-            <Value>=Parameters!Scheme.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Block">
-            <Value>=Parameters!Block.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@From_Date">
-            <Value>=Parameters!From_Date.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@To_Date">
-            <Value>=Parameters!To_Date.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>
--- DECLARE @District varchar(100);
--- DECLARE @Scheme varchar(100);
--- DECLARE @Block varchar(100);
--- DECLARE @From_Date DATE;
--- DECLARE @To_Date DATE;
-
--- DECLARE @contractor varchar(100);
--- DECLARE @Priority varchar(100);
--- DECLARE @Trade varchar(100);
--- DECLARE @Classification varchar(100);
--- DECLARE @Status varchar(100);
-
--- SET @District ='ASA';
--- SET @Scheme ='BPSC';
--- SET @Block ='Gro02';
--- SET @From_Date = '20170101';
-
-
-SELECT 
-    distinct vRd.Priority as Priority
-    ,dbo.Repairs_Priorities.Name AS [Name]
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-
-FROM 
-    dbo.Repairs_WorksOrder as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-    LEFT JOIN dbo.Repairs_Priorities ON  vRD.Company = dbo.Repairs_Priorities.Company And vRD.Priority = dbo.Repairs_Priorities.ID  
-
-WHERE
-    vRD.Company = 1
-    and ((psd.code IN (@District)))
-    AND (pss.Name IN (@Scheme))
-  AND (psbu.Block IN (@Block))
-    and (vRD.Complete &gt; @From_Date or @From_Date is null)
-   and (vRD.Complete &lt; @To_Date or @To_Date is null)
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    --and (vRD.contractor IN (@contractor) or @contractor is null)
-    --AND (vRd.Priority IN (@Priority) or @Priority is null)
-    --AND (vRD.Trade IN (@Trade) or @Trade is null)
-    --and (vRD.Classification IN (@Classification) or @Classification is null)
-    --AND (vRD.[Status] IN (@Status) or @Status is null)
---UNION select null as Priority</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Priority">
-          <DataField>Priority</DataField>
+        <Field Name="Town">
+          <DataField>Town</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="County">
+          <DataField>County</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Postcode">
+          <DataField>Postcode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="HabitableRooms">
+          <DataField>HabitableRooms</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Contractor">
-      <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@District">
-            <Value>=Parameters!District.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Scheme">
-            <Value>=Parameters!Scheme.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Block">
-            <Value>=Parameters!Block.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@From_Date">
-            <Value>=Parameters!From_Date.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@To_Date">
-            <Value>=Parameters!To_Date.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>SELECT 
-    distinct vRD.contractor as Contractor
-    ,dbo.Contractors_contractor.Name AS [Name]
-
-
-FROM 
-    dbo.Repairs_WorksOrder as vRD
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
-LEFT JOIN dbo.Contractors_contractor 
- ON vRD.Contractor = dbo.Contractors_contractor.ID AND 
- vRD.Company = dbo.Contractors_contractor.Company
-WHERE
-    vRD.Company = 1
-    and ((psd.code IN (@District)))
-    AND (pss.Name IN (@Scheme))
-   AND (psbu.Block IN (@Block))
-    and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    and (vRD.Complete &lt; @To_Date or @To_Date is null)
-ORDER BY
-    vRd.Contractor</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Contractor">
-          <DataField>Contractor</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Trade">
-      <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@District">
-            <Value>=Parameters!District.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Scheme">
-            <Value>=Parameters!Scheme.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Block">
-            <Value>=Parameters!Block.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@From_Date">
-            <Value>=Parameters!From_Date.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@To_Date">
-            <Value>=Parameters!To_Date.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>
--- DECLARE @District varchar(100);
--- DECLARE @Scheme varchar(100);
--- DECLARE @Block varchar(100);
--- DECLARE @From_Date DATE;
--- DECLARE @To_Date DATE;
-
--- DECLARE @contractor varchar(100);
--- DECLARE @Priority varchar(100);
--- DECLARE @Trade varchar(100);
--- DECLARE @Classification varchar(100);
--- DECLARE @Status varchar(100);
-
--- SET @District ='ASA';
--- SET @Scheme ='BPSC';
--- SET @Block ='Gro02';
--- SET @From_Date = '20170101';
-
-
-SELECT 
-    distinct vRD.Trade as Trade
-    , ISNULL(dbo.HomeTeam_LookupValues.Name, '') AS [Name]
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-
-FROM 
-    dbo.Repairs_WorksOrder as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
-
-
- LEFT JOIN dbo.HomeTeam_LookupValues  
- ON vRD.Company = dbo.HomeTeam_LookupValues.Company AND vRD.Trade = dbo.HomeTeam_LookupValues.ID AND dbo.HomeTeam_LookupValues.Lookup = 24 
-
-
-WHERE
-    vRD.Company = 1
-    and ((psd.code IN (@District)))
-    AND (pss.Name IN (@Scheme))
-   AND (psbu.Block IN (@Block))
-    and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    and (vRD.Complete &lt; @To_Date or @To_Date is null)
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    --and (vRD.contractor IN (@contractor) or @contractor is null)
-    --AND (vRd.Priority IN (@Priority) or @Priority is null)
-
-    --and (vRD.Classification IN (@Classification) or @Classification is null)
-    --AND (vRD.[Status] IN (@Status) or @Status is null)
---UNION select null as Trade</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Trade">
-          <DataField>Trade</DataField>
+        <Field Name="UnitStatusCode">
+          <DataField>UnitStatusCode</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
+        <Field Name="UnitStatus">
+          <DataField>UnitStatus</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Status">
-      <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@District">
-            <Value>=Parameters!District.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Scheme">
-            <Value>=Parameters!Scheme.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Block">
-            <Value>=Parameters!Block.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@From_Date">
-            <Value>=Parameters!From_Date.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@To_Date">
-            <Value>=Parameters!To_Date.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>
--- DECLARE @District varchar(100);
--- DECLARE @Scheme varchar(100);
--- DECLARE @Block varchar(100);
--- DECLARE @From_Date DATE;
--- DECLARE @To_Date DATE;
-
--- DECLARE @contractor varchar(100);
--- DECLARE @Priority varchar(100);
--- DECLARE @Trade varchar(100);
--- DECLARE @Classification varchar(100);
--- DECLARE @Status varchar(100);
-
--- SET @District ='ASA';
--- SET @Scheme ='BPSC';
--- SET @Block ='Gro02';
--- SET @From_Date = '20170101';
-
-SELECT 
-    distinct vRD.[Status] as [Status]
-    ,hts.[Name]
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-
-FROM 
-    dbo.Repairs_WorksOrder as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
-    inner join dbo.HomeTeam_Status hts on hts.ID = vRD.[Status] And hts.HomeTeamModule = 10  
-
-WHERE
-    vRD.Company = 1
-    and ((psd.code IN (@District)))
-    AND (pss.Name IN (@Scheme))
-   AND (psbu.Block IN (@Block))
-    and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    and (vRD.Complete &lt; @To_Date or @To_Date is null)
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-   -- and (vRD.contractor IN (@contractor) or @contractor is null)
-    --AND (vRd.Priority IN (@Priority) or @Priority is null)
-    --AND (vRD.Trade IN (@Trade) or @Trade is null)
-    --and (vRD.Classification IN (@Classification) or @Classification is null)
-
---UNION select null as [Status]</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Status">
-          <DataField>Status</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
+        <Field Name="PropertyStyle">
+          <DataField>PropertyStyle</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Repair_Type">
-      <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@District">
-            <Value>=Parameters!District.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Scheme">
-            <Value>=Parameters!Scheme.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Block">
-            <Value>=Parameters!Block.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@From_Date">
-            <Value>=Parameters!From_Date.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@To_Date">
-            <Value>=Parameters!To_Date.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>
--- DECLARE @District varchar(100);
--- DECLARE @Scheme varchar(100);
--- DECLARE @Block varchar(100);
--- DECLARE @From_Date DATE;
--- DECLARE @To_Date DATE;
-
--- DECLARE @contractor varchar(100);
--- DECLARE @Priority varchar(100);
--- DECLARE @Trade varchar(100);
--- DECLARE @Classification varchar(100);
--- DECLARE @Status varchar(100);
-
--- SET @District ='ASA';
--- SET @Scheme ='BPSC';
--- SET @Block ='Gro02';
--- SET @From_Date = '20170101';
-
-
-SELECT 
-    distinct vRD.Classification as [Repair Type]
- ,Lookup1.Name
-    -- ,pss.Name as Scheme
-    -- ,psbu.Block as Block
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    -- ,vRD.Complete
-
-FROM 
-    dbo.Repairs_WorksOrder as vRD
-    --The Property Tree
-    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
-    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
-    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
-    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
-    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
-
- Left JOIN dbo.HomeTeam_LookupValues  as Lookup1 
- ON vRD.Company = Lookup1.Company AND vRD.Classification = Lookup1.ID AND Lookup1.Lookup = 25 
-
-WHERE
-    vRD.Company = 1
-    and ((psd.code IN (@District)))
-    AND (pss.Name IN (@Scheme))
-   AND (psbu.Block IN (@Block))
-    and (vRD.Complete &gt; @From_Date or @From_Date is null)
-    and (vRD.Complete &lt; @To_Date or @To_Date is null)
-    -- ,vRD.contractor
-    -- ,vRd.Priority
-    -- ,vRD.Trade
-    -- ,vRD.Classification as [Repair Type]
-    -- ,vRD.[Status]
-    --and (vRD.contractor IN (@contractor) or @contractor is null)
-    --AND (vRd.Priority IN (@Priority) or @Priority is null)
-    --AND (vRD.Trade IN (@Trade) or @Trade is null)
-   -- AND (vRD.[Status] IN (@Status) or @Status is null)
-ORDER BY
-    vRd.Classification</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Repair_Type">
-          <DataField>Repair Type</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+        <Field Name="MarketRent">
+          <DataField>MarketRent</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
+        <Field Name="LastMainRentIncrease">
+          <DataField>LastMainRentIncrease</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="FamilyMakeup">
+          <DataField>FamilyMakeup</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="ExternalRevenueSource">
-      <Query>
-        <DataSourceName>Kypera_Test2</DataSourceName>
-        <CommandText>SELECT  
-      [ID]
-      ,[Name]
-    
-  FROM [dbo].[Repairs_WorksOrder_Revenue_External]
-  where Company =1
-  and [Name] in 
-  (
-  '61028 Responsive Maintenance'
-  ,'61029 Vacancy Maintenance'
-  ,'61026 Planned Capital Maint'
-  ,'61025 Cyclical Maintenance'
-  ,'61024 ALI''s'
-  )</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="ID">
-          <DataField>ID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
+        <Field Name="CurrentPerson">
+          <DataField>CurrentPerson</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -838,32 +311,47 @@ ORDER BY
     <ReportSection>
       <Body>
         <ReportItems>
-          <Tablix Name="TablixMaintenance">
+          <Tablix Name="Tablix2">
             <TablixBody>
               <TablixColumns>
+                <TablixColumn>
+                  <Width>2.11192cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.85103cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.4692cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>5cm</Width>
+                </TablixColumn>
                 <TablixColumn>
                   <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.4793cm</Width>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>8.69625cm</Width>
+                  <Width>1.92156cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.60246cm</Width>
+                  <Width>3.00693cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.08208cm</Width>
+                  <Width>4.06651cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.42604cm</Width>
+                  <Width>1.95485cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.72132cm</Width>
+                  <Width>3.50667cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.1825cm</Width>
+                  <Width>1.92156cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>3.65688cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.5cm</Width>
@@ -875,70 +363,29 @@ ORDER BY
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox24">
+                        <Textbox Name="Textbox17">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Row No.</Value>
+                                  <Value>Property ID</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox24</rd:DefaultName>
+                          <rd:DefaultName>Textbox17</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox197">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Property Ref </Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox197</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -956,17 +403,14 @@ ORDER BY
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Display Name</Value>
+                                  <Value>Flat</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox1</rd:DefaultName>
@@ -975,7 +419,6 @@ ORDER BY
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -986,33 +429,29 @@ ORDER BY
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox199">
+                        <Textbox Name="Textbox3">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Responsive</Value>
+                                  <Value>Number</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox199</rd:DefaultName>
+                          <rd:DefaultName>Textbox3</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1023,33 +462,29 @@ ORDER BY
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox200">
+                        <Textbox Name="Textbox5">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Vacancy</Value>
+                                  <Value>Street</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox200</rd:DefaultName>
+                          <rd:DefaultName>Textbox5</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1060,33 +495,29 @@ ORDER BY
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox203">
+                        <Textbox Name="Textbox7">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Planned</Value>
+                                  <Value>Town</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox203</rd:DefaultName>
+                          <rd:DefaultName>Textbox7</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1097,33 +528,29 @@ ORDER BY
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox205">
+                        <Textbox Name="Textbox9">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Cyclical</Value>
+                                  <Value>State</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox205</rd:DefaultName>
+                          <rd:DefaultName>Textbox9</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1134,33 +561,29 @@ ORDER BY
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox206">
+                        <Textbox Name="Textbox11">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>ALI</Value>
+                                  <Value>Postcode</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox206</rd:DefaultName>
+                          <rd:DefaultName>Textbox11</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1171,441 +594,29 @@ ORDER BY
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox2">
+                        <Textbox Name="Textbox15">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Total</Value>
+                                  <Value>Habitable Rooms</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
-                                    <Color>White</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox2</rd:DefaultName>
+                          <rd:DefaultName>Textbox15</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>CornflowerBlue</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                  </TablixCells>
-                </TablixRow>
-                <TablixRow>
-                  <Height>0.6cm</Height>
-                  <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox25">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=RowNumber("MaintenancePlan")</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>0;(0)</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox25</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Property_Ref_">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Property_Ref_.Value</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Property_Ref_</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Display_Name">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Display_Name.Value</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Display_Name</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Responsive">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Responsive.Value</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Responsive</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Vacancy">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Vacancy.Value</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Vacancy</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Planned">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Planned.Value</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Planned</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Cyclical">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Cyclical.Value</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Cyclical</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="ALI">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!ALI.Value</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>ALI</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Total">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Total.Value</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Total</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                  </TablixCells>
-                </TablixRow>
-                <TablixRow>
-                  <Height>0.6cm</Height>
-                  <TablixCells>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox26">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Total:</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox26</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox17">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Count(Fields!Property_Ref_.Value)</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox17</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1623,15 +634,14 @@ ORDER BY
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>Unit Style</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox18</rd:DefaultName>
@@ -1640,48 +650,10 @@ ORDER BY
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox19">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Sum(Fields!Responsive.Value)</Value>
-                                  <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox19</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                            </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1695,16 +667,14 @@ ORDER BY
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Vacancy.Value)</Value>
+                                  <Value>Unit Status</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox20</rd:DefaultName>
@@ -1713,160 +683,595 @@ ORDER BY
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox21">
+                        <Textbox Name="Textbox25">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Planned.Value)</Value>
+                                  <Value>District Name</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox21</rd:DefaultName>
+                          <rd:DefaultName>Textbox25</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox22">
+                        <Textbox Name="Textbox27">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Cyclical.Value)</Value>
+                                  <Value>Scheme</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox22</rd:DefaultName>
+                          <rd:DefaultName>Textbox27</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox23">
+                        <Textbox Name="Textbox2">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!ALI.Value)</Value>
+                                  <Value>Family Makeup</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox23</rd:DefaultName>
+                          <rd:DefaultName>Textbox2</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox4">
+                        <Textbox Name="Textbox6">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Sum(Fields!Total.Value)</Value>
+                                  <Value>Current Person</Value>
                                   <Style>
-                                    <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <TextAlign>Right</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox4</rd:DefaultName>
+                          <rd:DefaultName>Textbox6</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
                               <Style>Solid</Style>
                             </Border>
-                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
                             <PaddingBottom>2pt</PaddingBottom>
-                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.52063cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Unit">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Unit.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Unit</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Flat">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Flat.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Flat</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Number">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Number.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Number</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Street">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Street.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Street</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Town">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Town.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Town</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="County">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!County.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>County</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Postcode">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Postcode.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Postcode</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="HabitableRooms">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!HabitableRooms.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>HabitableRooms</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="PropertyStyle">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!PropertyStyle.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>PropertyStyle</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="UnitStatus">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!UnitStatus.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>UnitStatus</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="DistrictName">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!DistrictName.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>DistrictName</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Scheme">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Scheme.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Scheme</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="FamilyMakeup">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!FamilyMakeup.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>FamilyMakeup</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="CurrentPerson">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!CurrentPerson.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>CurrentPerson</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1886,6 +1291,11 @@ ORDER BY
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -1894,20 +1304,14 @@ ORDER BY
                   <KeepWithGroup>After</KeepWithGroup>
                 </TablixMember>
                 <TablixMember>
-                  <Group Name="Details2" />
-                </TablixMember>
-                <TablixMember>
-                  <KeepWithGroup>Before</KeepWithGroup>
+                  <Group Name="Details" />
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <RepeatColumnHeaders>true</RepeatColumnHeaders>
-            <FixedColumnHeaders>true</FixedColumnHeaders>
-            <DataSetName>MaintenancePlan</DataSetName>
-            <Top>0.12761cm</Top>
-            <Left>0.44662cm</Left>
-            <Height>1.8cm</Height>
-            <Width>31.18995cm</Width>
+            <DataSetName>Data</DataSetName>
+            <Top>0.61507cm</Top>
+            <Height>1.12063cm</Height>
+            <Width>36.96711cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1915,16 +1319,33 @@ ORDER BY
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>4.94792in</Height>
+        <Height>1in</Height>
         <Style />
       </Body>
-      <Width>47.05283in</Width>
+      <Width>14.55398in</Width>
       <Page>
         <PageHeader>
-          <Height>1.39981cm</Height>
+          <Height>3.64154cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
+            <Image Name="AnglicareSA">
+              <Source>Embedded</Source>
+              <Value>AnglicareSA1</Value>
+              <Sizing>FitProportional</Sizing>
+              <Top>0.13952cm</Top>
+              <Left>0.20204cm</Left>
+              <Height>1.01493cm</Height>
+              <Width>5.17363cm</Width>
+              <Visibility>
+                <Hidden>=iif(Globals!PageNumber = 1, FALSE, TRUE)</Hidden>
+              </Visibility>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+              </Style>
+            </Image>
             <Textbox Name="Textbox12">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
@@ -1932,24 +1353,69 @@ ORDER BY
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Maintenance Report</Value>
+                      <Value />
                       <Style>
-                        <FontSize>20pt</FontSize>
+                        <FontSize>16pt</FontSize>
                         <FontWeight>Bold</FontWeight>
-                        <Color>CornflowerBlue</Color>
                       </Style>
                     </TextRun>
                   </TextRuns>
                   <Style>
-                    <TextAlign>Right</TextAlign>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>ANGLICARE HOUSING SERVICES </Value>
+                      <Style>
+                        <FontSize>16pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Property </Value>
+                      <Style>
+                        <FontSize>20pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Center</TextAlign>
                   </Style>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox12</rd:DefaultName>
-              <Top>0.40252cm</Top>
-              <Left>16.02537cm</Left>
-              <Height>0.99729cm</Height>
-              <Width>7.63226cm</Width>
+              <Top>0.13952cm</Top>
+              <Left>5.41334cm</Left>
+              <Height>2.86702cm</Height>
+              <Width>9.7672cm</Width>
+              <ZIndex>1</ZIndex>
+              <Visibility>
+                <Hidden>=iif(Globals!PageNumber = 1, FALSE, TRUE)</Hidden>
+              </Visibility>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -1960,21 +1426,161 @@ ORDER BY
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
-            <Image Name="AnglicareSA">
-              <Source>Embedded</Source>
-              <Value>AnglicareSA1</Value>
-              <Sizing>FitProportional</Sizing>
-              <Top>0.3496cm</Top>
-              <Left>0.31433cm</Left>
-              <Height>0.93556cm</Height>
-              <Width>5.78625cm</Width>
-              <ZIndex>1</ZIndex>
+            <Textbox Name="Textbox100">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>15 Ridgeway Road</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value />
+                      <Style>
+                        <FontSize>4pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>EDINBURGH NORTH SA 5113</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value />
+                      <Style>
+                        <FontSize>4pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>ABN: 69 187 578 153</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value />
+                      <Style>
+                        <FontSize>4pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>PHONE: (08) 8209 6660</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value />
+                      <Style>
+                        <FontSize>4pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>FAX: (08) 8209 6636</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value />
+                      <Style>
+                        <FontSize>4pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>EMAIL: anglicaresahousing@anglicaresa.com.au</Value>
+                      <Style />
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox100</rd:DefaultName>
+              <Top>0.14834cm</Top>
+              <Left>13.64243cm</Left>
+              <Height>3.4932cm</Height>
+              <Width>9.78472cm</Width>
+              <ZIndex>2</ZIndex>
+              <Visibility>
+                <Hidden>=iif(Globals!PageNumber = 1, FALSE, TRUE)</Hidden>
+              </Visibility>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
               </Style>
-            </Image>
+            </Textbox>
           </ReportItems>
           <Style>
             <Border>
@@ -1983,7 +1589,7 @@ ORDER BY
           </Style>
         </PageHeader>
         <PageFooter>
-          <Height>0.99619cm</Height>
+          <Height>1.80351cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -2278,14 +1884,14 @@ ORDER BY
     </ReportSection>
   </ReportSections>
   <ReportParameters>
-    <ReportParameter Name="District">
+    <ReportParameter Name="Entity">
       <DataType>String</DataType>
-      <Prompt>District</Prompt>
+      <Prompt>Entity</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>District</DataSetName>
-          <ValueField>District</ValueField>
-          <LabelField>District</LabelField>
+          <DataSetName>entity</DataSetName>
+          <ValueField>Entity</ValueField>
+          <LabelField>Entity</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
@@ -2314,206 +1920,32 @@ ORDER BY
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
-    <ReportParameter Name="From_Date">
+    <ReportParameter Name="FromDate">
       <DataType>DateTime</DataType>
       <Prompt>From Date</Prompt>
     </ReportParameter>
-    <ReportParameter Name="To_Date">
+    <ReportParameter Name="ToDate">
       <DataType>DateTime</DataType>
-      <Nullable>true</Nullable>
       <Prompt>To Date</Prompt>
     </ReportParameter>
-    <ReportParameter Name="contractor">
+    <ReportParameter Name="CurrentPerson">
       <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>Contractor</DataSetName>
-          <ValueField>Contractor</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>Contractor</Prompt>
+      <Prompt>CurrentPerson</Prompt>
       <ValidValues>
-        <DataSetReference>
-          <DataSetName>Contractor</DataSetName>
-          <ValueField>Contractor</ValueField>
-          <LabelField>Name</LabelField>
-        </DataSetReference>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Yes</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>No</Label>
+          </ParameterValue>
+        </ParameterValues>
       </ValidValues>
       <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="Priority">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>Priority</DataSetName>
-          <ValueField>Priority</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>Priority</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Priority</DataSetName>
-          <ValueField>Priority</ValueField>
-          <LabelField>Name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="Trade">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>Trade</DataSetName>
-          <ValueField>Trade</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>Trade</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Trade</DataSetName>
-          <ValueField>Trade</ValueField>
-          <LabelField>Name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="Classification">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>Repair_Type</DataSetName>
-          <ValueField>Repair_Type</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>Repair Type</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Repair_Type</DataSetName>
-          <ValueField>Repair_Type</ValueField>
-          <LabelField>Name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="Status">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>Status</DataSetName>
-          <ValueField>Status</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>Status</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Status</DataSetName>
-          <ValueField>Status</ValueField>
-          <LabelField>Name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="ExternalRevenueSource">
-      <DataType>String</DataType>
-      <Prompt>External Revenue Source</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>ExternalRevenueSource</DataSetName>
-          <ValueField>ID</ValueField>
-          <LabelField>Name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="EFrom_Date">
-      <DataType>DateTime</DataType>
-      <Nullable>true</Nullable>
-      <Prompt>Expected Payment Date From</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="ETo_Date">
-      <DataType>DateTime</DataType>
-      <Nullable>true</Nullable>
-      <Prompt>Expected Payment Date To</Prompt>
     </ReportParameter>
   </ReportParameters>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>3</NumberOfColumns>
-      <NumberOfRows>5</NumberOfRows>
-      <CellDefinitions>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>District</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>Scheme</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>Block</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>From_Date</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>To_Date</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>Priority</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>contractor</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>Trade</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>Classification</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>Status</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>ExternalRevenueSource</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>4</RowIndex>
-          <ParameterName>EFrom_Date</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>4</RowIndex>
-          <ParameterName>ETo_Date</ParameterName>
-        </CellDefinition>
-      </CellDefinitions>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <EmbeddedImages>
     <EmbeddedImage Name="AnglicareSA1">
       <MIMEType>image/png</MIMEType>
@@ -2528,6 +1960,7 @@ H+DpolMcN3edLaSZtpkBTF8dmmuSlW1e2G681ueA9VCHSI1PBrGNltErwPtGdMRLWOB/mftt7BNbpTb3
 mgxQ68nES4w8EeHn0nMQOdZm6J2Pra05otPU8UQJf6gf4PJDGRnqq+EjR4eh7pPWWXxv2kZuYe20Mg/QAUnXWQXukJP8XrB5ilNNZUkE8NGr88cLX4EMAwMDg/8vMErPwMCgXsEoPQMDg3oFo/QMDAzqFYzSMzAwqFcwSs/AwKBewSg9AwODegWj9AwMDOoVjNIzMDCoVzBKz8DAoF7BKD0DA4N6BMb+D3aKccgymFwuAAAAAElFTkSuQmCC</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
+  <Language>en-AU</Language>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportServerUrl>http://appsql-3/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>addc8011-5b78-4269-ac1b-759bf2618de5</rd:ReportID>
