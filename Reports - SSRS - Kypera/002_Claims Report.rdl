@@ -23,11 +23,11 @@
           <QueryParameter Name="@FromDate">
             <Value>=Parameters!FromDate.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ClaimsFromDate">
-            <Value>=Parameters!ClaimsFromDate.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@ToDate">
             <Value>=Parameters!ToDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ClaimsFromDate">
+            <Value>=Parameters!ClaimsFromDate.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@ClaimsToDate">
             <Value>=Parameters!ClaimsToDate.Value</Value>
@@ -57,7 +57,8 @@
   udfv44.[Value] AS [F04ADate],  CAST(udfv45.[Value] AS money) AS [F04AAmount],  udfv46.[Value] AS [F04AClaimed],
   udfv47.[Value] AS [C01Date],  CAST(udfv48.[Value] AS money) AS [C01Amount],  udfv49.[Value] AS [C01Claimed],
   udfv50.[Value] AS [C02Date],  CAST(udfv51.[Value] AS money) AS [C02Amount],  udfv52.[Value] AS [C02Claimed],
-  udfv53.[Value] AS [C03Date],  CAST(udfv54.[Value] AS money) AS [C03Amount],  udfv55.[Value] AS [C03Claimed]
+  udfv53.[Value] AS [C03Date],  CAST(udfv54.[Value] AS money) AS [C03Amount],  udfv55.[Value] AS [C03Claimed],
+  udfv56.[Value] AS [F04BHGDate],CAST(udfv58.[Value] AS money) AS [F04BHGAmount], udfv57.[Value] AS [F04BHGClaimed]
 FROM [dbo].[Case_Management_Case] AS cmc
 -- HSP ID
   LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv1 ON udfv1.[ObjectReference] = cmc.[ID] AND udfv1.[Company] = cmc.[Company] AND udfv1.[UserDefinedField] = 233
@@ -207,6 +208,14 @@ FROM [dbo].[Case_Management_Case] AS cmc
   LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv55 ON udfv55.[ObjectReference] = cmc.[ID] AND udfv55.[Company] = cmc.[Company] AND udfv55.[UserDefinedField] = 281
 -- Arrival Flight Confirmed
   LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS afc ON afc.[ObjectReference] = cmc.[ID] AND afc.[Company] = cmc.[Company] AND afc.[UserDefinedField] = 235
+-- F04 BHG Date
+ LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv56 ON udfv56.[ObjectReference] = cmc.[ID] AND udfv56.[Company] = cmc.[Company] AND udfv56.[UserDefinedField] = 381
+-- F04 BHG Claimed
+ LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv57 ON udfv57.[ObjectReference] = cmc.[ID] AND udfv57.[Company] = cmc.[Company] AND udfv57.[UserDefinedField] = 383
+-- F04 BHG $ Amount
+ LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv58 ON udfv58.[ObjectReference] = cmc.[ID] AND udfv58.[Company] = cmc.[Company] AND udfv58.[UserDefinedField] = 382
+
+
 
 WHERE cmc.[Company] = 1 AND udfv1.[Value] IS NOT NULL
   AND cmc.[Program] IN (@Program)
@@ -229,7 +238,9 @@ WHERE cmc.[Company] = 1 AND udfv1.[Value] IS NOT NULL
     OR ((@ClaimsFromDate IS NULL OR convert(DATETIME, udfv46.[Value], 103) &gt;= @ClaimsFromDate) AND (@ClaimsToDate IS NULL OR convert(DATETIME, udfv46.[Value], 103) &lt;= @ClaimsToDate))
     OR ((@ClaimsFromDate IS NULL OR convert(DATETIME, udfv49.[Value], 103) &gt;= @ClaimsFromDate) AND (@ClaimsToDate IS NULL OR convert(DATETIME, udfv49.[Value], 103) &lt;= @ClaimsToDate))
     OR ((@ClaimsFromDate IS NULL OR convert(DATETIME, udfv52.[Value], 103) &gt;= @ClaimsFromDate) AND (@ClaimsToDate IS NULL OR convert(DATETIME, udfv52.[Value], 103) &lt;= @ClaimsToDate))
-  OR ((@ClaimsFromDate IS NULL OR convert(DATETIME, udfv55.[Value], 103) &gt;= @ClaimsFromDate) AND (@ClaimsToDate IS NULL OR convert(DATETIME, udfv55.[Value], 103) &lt;= @ClaimsToDate))
+    OR ((@ClaimsFromDate IS NULL OR convert(DATETIME, udfv55.[Value], 103) &gt;= @ClaimsFromDate) AND (@ClaimsToDate IS NULL OR convert(DATETIME, udfv55.[Value], 103) &lt;= @ClaimsToDate))
+    OR ((@ClaimsFromDate IS NULL OR convert(DATETIME, udfv56.[Value], 103) &gt;= @ClaimsFromDate) AND (@ClaimsToDate IS NULL OR convert(DATETIME, udfv56.[Value], 103) &lt;= @ClaimsToDate))
+    OR ((@ClaimsFromDate IS NULL OR convert(DATETIME, udfv57.[Value], 103) &gt;= @ClaimsFromDate) AND (@ClaimsToDate IS NULL OR convert(DATETIME, udfv57.[Value], 103) &lt;= @ClaimsToDate))
   )</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
@@ -246,12 +257,12 @@ WHERE cmc.[Company] = 1 AND udfv1.[Value] IS NOT NULL
           <DataField>ClientName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="VisaType">
-          <DataField>VisaType</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="Program">
           <DataField>Program</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="VisaType">
+          <DataField>VisaType</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Band">
@@ -464,6 +475,18 @@ WHERE cmc.[Company] = 1 AND udfv1.[Value] IS NOT NULL
         </Field>
         <Field Name="C03Claimed">
           <DataField>C03Claimed</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="F04BHGDate">
+          <DataField>F04BHGDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="F04BHGAmount">
+          <DataField>F04BHGAmount</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="F04BHGClaimed">
+          <DataField>F04BHGClaimed</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -1540,169 +1563,178 @@ GROUP BY udfv2.[Name]</CommandText>
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.60921cm</Width>
+                  <Width>1.61149cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.60934cm</Width>
+                  <Width>1.61162cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.38837cm</Width>
+                  <Width>5.39065cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.82523cm</Width>
+                  <Width>5.82751cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.86585cm</Width>
+                  <Width>2.86813cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.62693cm</Width>
+                  <Width>2.62921cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.7195cm</Width>
+                  <Width>2.72178cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.02472cm</Width>
+                  <Width>6.027cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.7388cm</Width>
+                  <Width>6.74108cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.63798cm</Width>
+                  <Width>6.64026cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.17896cm</Width>
+                  <Width>6.18124cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.92218cm</Width>
+                  <Width>6.92446cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.93771cm</Width>
+                  <Width>6.93999cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.11396cm</Width>
+                  <Width>4.11624cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.85479cm</Width>
+                  <Width>4.85707cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.6825cm</Width>
+                  <Width>4.68478cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.97625cm</Width>
+                  <Width>2.97853cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.69062cm</Width>
+                  <Width>3.6929cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.29375cm</Width>
+                  <Width>3.29603cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5cm</Width>
+                  <Width>2.50228cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.26729cm</Width>
+                  <Width>3.26957cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.02917cm</Width>
+                  <Width>3.03145cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.41042cm</Width>
+                  <Width>5.4127cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.15125cm</Width>
+                  <Width>6.15353cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.91312cm</Width>
+                  <Width>5.9154cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5cm</Width>
+                  <Width>2.50228cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.84396cm</Width>
+                  <Width>2.84624cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5cm</Width>
+                  <Width>2.50228cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5cm</Width>
+                  <Width>2.50228cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.94979cm</Width>
+                  <Width>2.95207cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.92333cm</Width>
+                  <Width>2.92561cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5cm</Width>
+                  <Width>2.50228cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.05562cm</Width>
+                  <Width>3.0579cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.84396cm</Width>
+                  <Width>2.84624cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.5cm</Width>
+                  <Width>2.50228cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.10854cm</Width>
+                  <Width>3.11082cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.92333cm</Width>
+                  <Width>2.92561cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.74896cm</Width>
+                  <Width>4.75124cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.48979cm</Width>
+                  <Width>5.49207cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.27813cm</Width>
+                  <Width>5.28041cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.69604cm</Width>
+                  <Width>4.69832cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.48979cm</Width>
+                  <Width>5.49207cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.25167cm</Width>
+                  <Width>5.25395cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.39958cm</Width>
+                  <Width>3.40186cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.14042cm</Width>
+                  <Width>4.1427cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.87583cm</Width>
+                  <Width>3.87811cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.675cm</Width>
+                  <Width>5.67728cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.44229cm</Width>
+                  <Width>6.44457cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.20417cm</Width>
+                  <Width>6.20645cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.93958cm</Width>
+                  <Width>5.94186cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.68042cm</Width>
+                  <Width>6.6827cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.37521cm</Width>
+                  <Width>6.37749cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>5.91313cm</Width>
+                  <Width>5.91541cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.68042cm</Width>
+                  <Width>6.6827cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>6.46875cm</Width>
+                  <Width>6.47103cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.50228cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>3.37773cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>3.66417cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -3524,6 +3556,105 @@ GROUP BY udfv2.[Name]</CommandText>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>F04 BHG Date</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox5">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>F04 BHG $ Amount</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox5</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox88">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>F04 BHG Claimed</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox88</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -5321,6 +5452,103 @@ GROUP BY udfv2.[Name]</CommandText>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="F04BHGDate">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!F04BHGDate.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>F04BHGDate</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="F04BHGAmount">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!F04BHGAmount.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>0.00</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>F04BHGAmount</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="F04BHGClaimed">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!F04BHGClaimed.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>F04BHGClaimed</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -7086,12 +7314,111 @@ GROUP BY udfv2.[Name]</CommandText>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox6">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox6</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox11">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox11</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox118">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox118</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -7165,7 +7492,7 @@ GROUP BY udfv2.[Name]</CommandText>
             <DataSetName>Data</DataSetName>
             <Top>0.93257cm</Top>
             <Height>1.72063cm</Height>
-            <Width>243.86561cm</Width>
+            <Width>253.53519cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -10521,7 +10848,7 @@ GROUP BY udfv2.[Name]</CommandText>
         <Height>3.5887in</Height>
         <Style />
       </Body>
-      <Width>96.12116in</Width>
+      <Width>99.817in</Width>
       <Page>
         <PageHeader>
           <Height>3.64154cm</Height>
