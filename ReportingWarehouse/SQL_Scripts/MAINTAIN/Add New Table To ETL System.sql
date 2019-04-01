@@ -106,10 +106,15 @@ END
 S
 --For RiskMan Insert table for extract process
 DECLARE @t_table VARCHAR(MAX)='Restrictive_IFR';
-
+--extract
 INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'dwh', 'extract_riskman', 'dwhb', 'AZ-SQLBI01');
+--source
 INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'riskman', 'dbo', 'Riskman', 'ted');
-
+DECLARE @t_table VARCHAR(MAX)='Restrictive_IFR_fact';
+--conform
+INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'dwh', 'conform_riskman', 'dwhb', 'AZ-SQLBI01');
+--delivery
+INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'dwh', 'riskman', 'dwhf_riskman', 'AZ-SQLBI01');
 s
 --For RiskMan extract process
 DECLARE @t_table VARCHAR(MAX)='Restrictive_IFR';
@@ -121,3 +126,5 @@ values
 (select table_key from [management].[table_dim] where table_name = @t_table and [schema] = 'extract_riskman' and [system] = 'dwh'), 
 1,1,'daily');
 s
+
+select * from [management].[TABLE_DIM]
