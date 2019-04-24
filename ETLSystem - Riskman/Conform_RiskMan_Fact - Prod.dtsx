@@ -7,13 +7,13 @@
   DTS:CreatorName="ANGLICARE-SA\jshen"
   DTS:DTSID="{AA555C63-8CC9-4F34-A8A3-1A1A46657B87}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="14.0.3002.107"
+  DTS:LastModifiedProductVersion="14.0.3002.101"
   DTS:LocaleID="3081"
   DTS:ObjectName="Conform_RiskMan_Fact - Prod"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="653"
-  DTS:VersionGUID="{56472FDD-B141-41D3-9A21-57CE89067BE5}">
+  DTS:VersionBuild="660"
+  DTS:VersionGUID="{4F5358FF-A941-4C61-9EAB-D55BC6126A5D}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -92,7 +92,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/7/2018 3:23:40 PM</DTS:VariableValue>
+        DTS:DataType="7">4/16/2019 3:23:56 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -139,7 +139,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/7/2018 3:23:40 PM</DTS:VariableValue>
+        DTS:DataType="7">4/16/2019 3:23:56 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -150,7 +150,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/7/2018 3:23:40 PM</DTS:VariableValue>
+        DTS:DataType="7">4/16/2019 3:23:56 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -696,7 +696,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{ABF0B8AA-626A-4E12-B1A3-D4CDDCF59D62}"
-                  SQLTask:SqlStatementSource="use dwhb &#xA;&#xA; --------------------------Step1: populate basic information------------------------------------------------------------&#xA; insert into conform_riskman.feedback_fact&#xA; ([ID],&#xA;Base_id,&#xA;[DisplayID],&#xA;IncidentInvolved,&#xA;person_key,&#xA;portfolio_key,&#xA;service_stream_key,&#xA;program_key,&#xA;closed_date_key,&#xA;incident_date_key,&#xA;notified_date_key,&#xA;age,&#xA;severity,&#xA;status,&#xA;location,&#xA;detail,&#xA;AdditionalRef,&#xA;[Site],&#xA;[Incident_Location],&#xA;[Outcome],&#xA;InvestigationFinding,&#xA;[Comment]&#xA; &#xA; )&#xA; select &#xA;  t1.id&#xA; ,t1.BaseID&#xA; ,t1.DisplayID&#xA; ,t1.IncidentInvolved&#xA; ,(select person_key from conform_riskman.person_dim where given_name='No Person' and current_row_indicator='Y') --default person_key&#xA; ,(select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='No Portfolio' and current_row_indicator='Y') -- default_portfolio_key&#xA; ,( select service_stream_key from conform_riskman.service_stream_dim where service_stream_name='No Service Stream' and current_row_indicator='Y') --default service_stream_key&#xA; ,(select program_key from conform_riskman.program_dim where program_name='No Program' and current_row_indicator='Y') --default_program_key&#xA; ,ISNULL((select date_key from conform_riskman.date_dim where full_date = t1.DateClosed),(select date_key from conform_riskman.date_dim where full_date = '1800-01-01 00:00:00.000'))&#xA; ,ISNULL((select date_key from conform_riskman.date_dim where full_date = t1.IncidentDate) ,(select date_key from conform_riskman.date_dim where full_date = '1800-01-01 00:00:00.000'))&#xA; ,ISNULL((select date_key from conform_riskman.date_dim where full_date = t1.NotificationDate)  ,(select date_key from conform_riskman.date_dim where full_date = '1800-01-01 00:00:00.000'))&#xA; , t1.Age&#xA; , t1.Outcome&#xA; , t1.Status&#xA;,left(t1.incident_location,50)&#xA;,t1.Detail&#xA;,t1.AdditionalRef&#xA;,t1.Site&#xA;,t1.Incident_Location&#xA;,t1.Outcome&#xA;,t1.InvestigationsFinding&#xA;,t1.Comment&#xA;&#xA; from extract_riskman.IncidentsForReview  as t1&#xA; inner join&#xA; (select BaseID,max(SequenceNo) as SequenceNo&#xA; from extract_riskman.IncidentsForReview&#xA; where SubModule='RMFeedback'&#xA; group by  BaseID&#xA; ) as t2&#xA; on  t1.baseid = t2.baseid &#xA; and t1.SequenceNo=t2.SequenceNo&#xA; and t1.SubModule='RMFeedback'&#xA;&#xA; --------------------------Step2: get other information------------------------------------------------------------&#xA;  update t1&#xA; set   t1.FBModeRecieved=t2.FBModeReceived&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;&#xA; update t1&#xA; set   t1.FBRelateClient=(case t2.FBRelateClient  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;  update t1&#xA; set   t1.FBRelateStaff=(case t2.FBRelateStaff  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;&#xA;  update t1&#xA; set   t1.FBAssocInc=(case t2.FBAssocInc  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;&#xA;&#xA;   update t1&#xA; set   t1.FBCompStatus=t2.FBCompStatus&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.FBComplainant_IFR as t2  on t1.id=t2.FBComplainant_ID&#xA;&#xA;    update t1&#xA; set   t1.FBCompStatusOther=t2.FBCompStatusOther&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.FBComplainant_IFR as t2  on t1.id=t2.FBComplainant_ID&#xA;&#xA;&#xA; &#xA;    update t1&#xA; set   t1.[FBCompAnon]=(case t2.[FBCompAnon]  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.FBComplainant_IFR as t2  on t1.id=t2.FBComplainant_ID&#xA;&#xA;     update t1&#xA; set   t1.[FBCompRelationship]=t2.[FBCompRelationship]&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.FBComplainant_IFR as t2  on t1.id=t2.FBComplainant_ID&#xA;&#xA;&#xA;   update t1&#xA; set   t1.[FBAckDate]=t2.[FBAckDate]&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;    update t1&#xA; set   t1.FBFirstFormalDate=t2.FBFirstFormalDate&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;     update t1&#xA; set   t1.FBIsClosed=(case t2.FBIsClosed  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail1_IFR] as t2  on t1.id=t2.FBDetail1_ID&#xA;&#xA;&#xA;     update t1&#xA; set   t1.FBOutcome=t2.FBOutcome&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBInvestigation_IFR] as t2  on t1.id=t2.FBInvestigation_ID&#xA;&#xA;&#xA;      update t1&#xA; set   t1.FBObjectives=t2.FBObjectives&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBInvestigation_IFR] as t2  on t1.id=t2.FBInvestigation_ID&#xA;&#xA;&#xA; &#xA;      update t1&#xA; set   t1.FBExtAgency=(case t2.FBExtAgency  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBInvestigation_IFR] as t2  on t1.id=t2.FBInvestigation_ID&#xA;&#xA;&#xA;&#xA;       update t1&#xA; set   t1.FBExtAgencyName=t2.FBExtAgencyName&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBInvestigation_IFR] as t2  on t1.id=t2.FBInvestigation_ID&#xA;&#xA;&#xA;&#xA;        update t1&#xA; set   t1.FBCompFirstName=t2.FBCompFirstName, t1.FBCompSurname = t2.FBCompSurname&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[vwReg_RMFeedback] as t2  on t1.id=t2.id &#xA; and t2.IncidentInvolved ='Complaint' ;&#xA;&#xA; --------------------------Step3: Update KEYs------------------------------------------------------------&#xA; update t1&#xA; set   t1.person_key=t2.person_key&#xA; from conform_riskman.Feedback_Fact as t1&#xA; inner join&#xA; (select  f1.id, d1.person_key&#xA;  from  extract_riskman.IncidentsForReview as f1&#xA;  inner join conform_riskman.person_dim as d1&#xA;  on left(f1.firstname,50) =d1.given_name&#xA;  and left(f1.surname,50) =d1.family_name&#xA;  and f1.SubModule='RMFeedback'&#xA;  ---and f1.DateOfBirth=d1.date_of_birth&#xA;  )  as t2&#xA;  on t1.id=t2.ID&#xA;&#xA;&#xA;-------------------------------------------------------------------------------------------------------------Org mapping using four ways-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;---------------------------------------------------------------------------------WAY1: using  ANGCARE_IFR.CustService---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;&#xA;--changed by JS at 23/05/2017 based on table- ANGCARE_IFR.CustService&#xA;---Step1: update CustomerSite type = program&#xA;update t1&#xA;   set   t1.program_key=t2.program_key&#xA;   from   conform_riskman.Feedback_Fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid,f2.program_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;  inner join extract_riskman.ANGCARE_IFR as f3 on f1.id =f3.ANGCARE_ID and f1.SubModule='RMFeedback'&#xA;  inner join  conform_riskman.program_mapping as f2&#x9;    on f3.CustService=f2.value1&#xA;  where f2.program_key is not null  and  f2.mapping_type='Program' and f2.system='Riskman' and f2.table1='ANGCARE_IFR'&#xA;  and f1.SubModule='RMFeedback'&#xA;&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;where  t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y' and program_name ='No Program')&#xA;&#xA;&#xA;&#xA;&#xA;----update service_stream_key and portfolio_key&#xA;&#xA;update k&#xA; set   k.service_stream_key=i.service_stream_key, k.portfolio_key=i.portfolio_key&#xA; from   conform_riskman.feedback_fact as k&#xA; inner join&#xA;(&#xA;select &#xA; n1.feedback_key,&#xA; n1.program_name,&#xA; n1.service_stream_name,&#xA; n1.portfolio_name,&#xA; dd1.service_stream_key,&#xA; dd2.portfolio_key&#xA;&#xA;&#xA;from&#xA;(&#xA;select   g2.feedback_key,f2.program_name,f2.service_stream_name,f2.portfolio_name&#xA;from &#xA;(&#xA;select  f1.feedback_key, g1.program_name&#xA;from conform_riskman.feedback_fact as f1&#xA;inner join conform_riskman.program_dim as g1 on f1.program_key=g1.program_key and g1.current_row_indicator='Y'&#xA;) as g2&#xA;inner join &#xA;&#xA;&#xA;(&#xA;--get all org based on names&#xA;select distinct t1.program_code,t1.service_stream_code,t2.portfolio_code , d1.program_name  ,d2.service_stream_name ,d3.portfolio_name ,d1.program_key,d2.service_stream_key,d3.portfolio_key&#xA;from conform.program_temp  as t1&#xA;inner join conform.service_stream_temp as t2   on t1.service_stream_code=t2.service_stream_code&#xA;inner join conform.program_dim as d1 on t1.program_code=d1.program_code and d1.current_row_indicator='Y'&#xA;inner join conform.service_stream_dim as d2 on t1.service_stream_code=d2.service_stream_code and d1.current_row_indicator='Y'&#xA;inner join conform.portfolio_dim as d3 on t2.portfolio_code=d3.portfolio_code and d1.current_row_indicator='Y'&#xA;)  as f2 on g2.program_name=f2.program_name&#xA;) as n1&#xA;inner join conform_riskman.service_stream_dim as dd1 on dd1.service_stream_name=n1.service_stream_name and dd1.current_row_indicator='Y'&#xA;inner join conform_riskman.portfolio_dim as dd2 on dd2.portfolio_name=n1.portfolio_name and dd1.current_row_indicator='Y'&#xA;) as i &#xA;on k.feedback_key=i.feedback_key&#xA;&#xA;&#xA;&#xA;----------Step2: update CustomerSite type = Service Stream&#xA;&#xA; update t1&#xA;   set   t1.portfolio_key= (case t2.program_name&#xA;                           when   'Community Services' then (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Community Services')&#xA;                           when 'Community Engagement' then   (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Aboriginal Services')&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   when 'Residental Aged Care' then   (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Active Living')&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   end&#x9;),&#xA;                         &#xA;        t1.service_stream_key= t2.service_stream_key,&#xA;&#x9;&#x9;t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y'  and program_name ='No Program')  &#xA;    &#xA;   from   conform_riskman.Feedback_Fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid ,f2.*&#x9;,d1.service_stream_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;  inner join extract_riskman.ANGCARE_IFR as f3 on f1.id =f3.ANGCARE_ID&#xA;  inner join  conform_riskman.program_mapping as f2&#x9;    on f3.CustService=f2.value1&#xA;  inner join conform_riskman.service_stream_dim as d1 on d1.service_stream_name=f2.program_name&#x9;  and d1.current_row_indicator='Y'&#xA;  where f2.mapping_type='Service Stream' and f2.system='Riskman' and f2.table1='ANGCARE_IFR'&#xA;  and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;&#xA;&#xA;&#xA;----------Step3: update CustomerSite type = Portfolio&#xA;&#xA;&#xA; &#x9;update t1&#xA;   set   t1.portfolio_key=t2.portfolio_key ,&#xA;        t1.service_stream_key= (select service_stream_key from conform_riskman.service_stream_dim where current_row_indicator='Y'  and service_stream_name ='No Service Stream')  ,&#xA;&#x9;&#x9;t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y'  and program_name ='No Program')  &#xA;    &#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid ,f2.*&#x9;,d1.portfolio_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;  inner join extract_riskman.ANGCARE_IFR as f3 on f1.id =f3.ANGCARE_ID&#xA;  inner join  conform_riskman.program_mapping as f2&#x9;    on f3.CustService=f2.value1&#xA;  inner join conform_riskman.portfolio_dim as d1 on d1.portfolio_name=f2.program_name and d1.current_row_indicator='Y'&#xA;  where f2.mapping_type='Portfolio'&#x9;  and f2.system='Riskman' and f2.table1='ANGCARE_IFR'&#xA;  and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;&#xA;&#xA;&#xA;----------------------------------------WAY2: using  IncidentsForReview.EmployeeSite -----------------------------------------------------------------------------------------------------------------------------------------------------&#xA;&#xA;---Step1: update CustomerSite type = program&#xA;update t1&#xA;   set   t1.program_key=t2.program_key&#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid,f2.program_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;   inner join  conform_riskman.program_mapping as f2&#x9;    on f1.EmployeeSite=f2.value1&#xA;  where f2.program_key is not null  and  f2.mapping_type='Program' and f2.system='Riskman' and f2.table1='IncidentsForReview'&#xA;  and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;where  t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y' and program_name ='No Program')&#xA;&#xA;&#xA;----update service_stream_key and portfolio_key&#xA;&#xA;update k&#xA; set   k.service_stream_key=i.service_stream_key, k.portfolio_key=i.portfolio_key&#xA; from   conform_riskman.feedback_fact as k&#xA; inner join&#xA;(&#xA;select &#xA; n1.feedback_key,&#xA; n1.program_name,&#xA; n1.service_stream_name,&#xA; n1.portfolio_name,&#xA; dd1.service_stream_key,&#xA; dd2.portfolio_key&#xA;&#xA;&#xA;from&#xA;(&#xA;select   g2.feedback_key,f2.program_name,f2.service_stream_name,f2.portfolio_name&#xA;from &#xA;(&#xA;select  f1.feedback_key, g1.program_name&#xA;from conform_riskman.feedback_fact as f1&#xA;inner join conform_riskman.program_dim as g1 on f1.program_key=g1.program_key and g1.current_row_indicator='Y'&#xA;) as g2&#xA;inner join &#xA;&#xA;&#xA;(&#xA;--get all org based on names&#xA;select distinct t1.program_code,t1.service_stream_code,t2.portfolio_code , d1.program_name  ,d2.service_stream_name ,d3.portfolio_name ,d1.program_key,d2.service_stream_key,d3.portfolio_key&#xA;from conform.program_temp  as t1&#xA;inner join conform.service_stream_temp as t2   on t1.service_stream_code=t2.service_stream_code&#xA;inner join conform.program_dim as d1 on t1.program_code=d1.program_code and d1.current_row_indicator='Y'&#xA;inner join conform.service_stream_dim as d2 on t1.service_stream_code=d2.service_stream_code and d1.current_row_indicator='Y'&#xA;inner join conform.portfolio_dim as d3 on t2.portfolio_code=d3.portfolio_code and d1.current_row_indicator='Y'&#xA;)  as f2 on g2.program_name=f2.program_name&#xA;) as n1&#xA;inner join conform_riskman.service_stream_dim as dd1 on dd1.service_stream_name=n1.service_stream_name and dd1.current_row_indicator='Y'&#xA;inner join conform_riskman.portfolio_dim as dd2 on dd2.portfolio_name=n1.portfolio_name and dd1.current_row_indicator='Y'&#xA;) as i &#xA;on k.feedback_key=i.feedback_key&#xA;&#xA;&#xA;&#xA;----------Step2: update CustomerSite type = Service Stream&#xA;&#xA; update t1&#xA;   set   t1.portfolio_key= (case t2.program_name&#xA;                           when   'Community Services' then (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Community Services')&#xA;                           when 'Community Engagement' then   (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Aboriginal Services')&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   when 'Residental Aged Care' then   (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Active Living')&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   end&#x9;),&#xA;                         &#xA;        t1.service_stream_key= t2.service_stream_key,&#xA;&#x9;&#x9;t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y'  and program_name ='No Program')  &#xA;    &#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid ,f2.*&#x9;,d1.service_stream_key&#xA;   from extract_riskman.IncidentsForReview  as f1&#xA;   inner join  conform_riskman.program_mapping as f2&#x9;    on f1.EmployeeSite=f2.value1&#xA;  inner join conform_riskman.service_stream_dim as d1 on d1.service_stream_name=f2.program_name&#x9;  and d1.current_row_indicator='Y'&#xA;  where f2.mapping_type='Service Stream' and f2.system='Riskman' and f2.table1='ANGCARE_IFR'&#xA;  and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;&#xA;&#xA;&#xA;----------Step3: update CustomerSite type = Portfolio&#xA;&#xA;&#xA; &#x9;update t1&#xA;   set   t1.portfolio_key=t2.portfolio_key ,&#xA;        t1.service_stream_key= (select service_stream_key from conform_riskman.service_stream_dim where current_row_indicator='Y'  and service_stream_name ='No Service Stream')  ,&#xA;&#x9;&#x9;t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y'  and program_name ='No Program')  &#xA;    &#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid ,f2.*&#x9;,d1.portfolio_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;   inner join  conform_riskman.program_mapping as f2&#x9;    on f1.EmployeeSite=f2.value1&#xA;  inner join conform_riskman.portfolio_dim as d1 on d1.portfolio_name=f2.program_name and d1.current_row_indicator='Y'&#xA;  where f2.mapping_type='Portfolio'&#x9;  and f2.system='Riskman' and f2.table1='ANGCARE_IFR'&#xA;    and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;&#xA;-------------------------------------------------------WAY3: CustomerSite------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;   update t1&#xA;   set   t1.program_key=t2.program_key&#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid,f2.program_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;  inner join  conform_riskman.program_mapping as f2&#xA;  on f1.Incident_Location=f2.value1&#xA;  where  f2.table1='IncidentsForReview' and f2.name1='CustomerSite' and  f2.value1 is not null&#xA;and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA; where   t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y' and program_name ='No Program')&#xA;&#xA;  &#xA;&#xA; update k&#xA; set   k.service_stream_key=i.service_stream_key, k.portfolio_key=i.portfolio_key&#xA; from   conform_riskman.feedback_fact as k&#xA; inner join&#xA;(&#xA;select &#xA; n1.feedback_key,&#xA; n1.program_name,&#xA; n1.service_stream_name,&#xA; n1.portfolio_name,&#xA; dd1.service_stream_key,&#xA; dd2.portfolio_key&#xA;&#xA;&#xA;from&#xA;(&#xA;select   g2.feedback_key,f2.program_name,f2.service_stream_name,f2.portfolio_name&#xA;from &#xA;(&#xA;select  f1.feedback_key, g1.program_name&#xA;from conform_riskman.feedback_fact as f1&#xA;inner join conform_riskman.program_dim as g1 on f1.program_key=g1.program_key and g1.current_row_indicator='Y'&#xA;) as g2&#xA;inner join &#xA;&#xA;&#xA;(&#xA;--get all org based on names&#xA;select distinct t1.program_code,t1.service_stream_code,t2.portfolio_code , d1.program_name  ,d2.service_stream_name ,d3.portfolio_name ,d1.program_key,d2.service_stream_key,d3.portfolio_key&#xA;from conform.program_temp  as t1&#xA;inner join conform.service_stream_temp as t2   on t1.service_stream_code=t2.service_stream_code&#xA;inner join conform.program_dim as d1 on t1.program_code=d1.program_code and d1.current_row_indicator='Y'&#xA;inner join conform.service_stream_dim as d2 on t1.service_stream_code=d2.service_stream_code and d1.current_row_indicator='Y'&#xA;inner join conform.portfolio_dim as d3 on t2.portfolio_code=d3.portfolio_code and d1.current_row_indicator='Y'&#xA;)  as f2 on g2.program_name=f2.program_name&#xA;) as n1&#xA;inner join conform_riskman.service_stream_dim as dd1 on dd1.service_stream_name=n1.service_stream_name and dd1.current_row_indicator='Y'&#xA;inner join conform_riskman.portfolio_dim as dd2 on dd2.portfolio_name=n1.portfolio_name and dd1.current_row_indicator='Y'&#xA;) as i &#xA;on k.feedback_key=i.feedback_key&#xA;&#xA;&#xA;&#xA;-------------------------------------------------------WAY4: incident_location------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;   update t1&#xA;   set   t1.program_key=t2.program_key&#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid,f2.program_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;  inner join  conform_riskman.program_mapping as f2&#xA;  on f1.Incident_Location=f2.value1&#xA;  where  f2.table1='IncidentsForReview' and f2.name1='Incident_Location' and  f2.value1 is not null&#xA;  and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA; where   t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y' and program_name ='No Program')&#xA;&#xA;  &#xA;&#xA; update k&#xA; set   k.service_stream_key=i.service_stream_key, k.portfolio_key=i.portfolio_key&#xA; from   conform_riskman.feedback_fact as k&#xA; inner join&#xA;(&#xA;select &#xA; n1.feedback_key,&#xA; n1.program_name,&#xA; n1.service_stream_name,&#xA; n1.portfolio_name,&#xA; dd1.service_stream_key,&#xA; dd2.portfolio_key&#xA;&#xA;&#xA;from&#xA;(&#xA;select   g2.feedback_key,f2.program_name,f2.service_stream_name,f2.portfolio_name&#xA;from &#xA;(&#xA;select  f1.feedback_key, g1.program_name&#xA;from conform_riskman.feedback_fact as f1&#xA;inner join conform_riskman.program_dim as g1 on f1.program_key=g1.program_key and g1.current_row_indicator='Y'&#xA;) as g2&#xA;inner join &#xA;&#xA;&#xA;(&#xA;--get all org based on names&#xA;select distinct t1.program_code,t1.service_stream_code,t2.portfolio_code , d1.program_name  ,d2.service_stream_name ,d3.portfolio_name ,d1.program_key,d2.service_stream_key,d3.portfolio_key&#xA;from conform.program_temp  as t1&#xA;inner join conform.service_stream_temp as t2   on t1.service_stream_code=t2.service_stream_code&#xA;inner join conform.program_dim as d1 on t1.program_code=d1.program_code and d1.current_row_indicator='Y'&#xA;inner join conform.service_stream_dim as d2 on t1.service_stream_code=d2.service_stream_code and d1.current_row_indicator='Y'&#xA;inner join conform.portfolio_dim as d3 on t2.portfolio_code=d3.portfolio_code and d1.current_row_indicator='Y'&#xA;)  as f2 on g2.program_name=f2.program_name&#xA;) as n1&#xA;inner join conform_riskman.service_stream_dim as dd1 on dd1.service_stream_name=n1.service_stream_name and dd1.current_row_indicator='Y'&#xA;inner join conform_riskman.portfolio_dim as dd2 on dd2.portfolio_name=n1.portfolio_name and dd1.current_row_indicator='Y'&#xA;) as i &#xA;on k.feedback_key=i.feedback_key&#xA;&#xA;&#xA;--Add in 12 June by FW&#xA;--Update Employee_key column&#xA;&#xA; update t1&#xA; set   t1.employee_key=t2.employee_key&#xA; from conform_riskman.Feedback_Fact as t1&#xA; inner join&#xA; (&#xA;&#x9;&#x9;  select distinct fff.id,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; fff.employee_key&#xA;&#x9;&#x9; from &#xA;&#x9;&#x9; (&#xA;&#x9;&#x9;  select  distinct  g1.id, d1.employee_key&#xA;&#x9;&#x9;&#x9;  from  extract_riskman.IncidentsForReview as g1&#xA;&#x9;&#x9;&#x9;  inner join   conform_riskman.employee_dim as d1 &#xA;&#x9;&#x9;&#x9;  on  g1.username = d1.AD_UserID&#x9; &#xA;&#x9;&#x9;   union&#xA;&#x9;&#x9;&#x9;  select  distinct  g1.id, d1.employee_key&#xA;&#x9;&#x9;&#x9;  from  extract_riskman.IncidentsForReview as g1&#xA;&#x9;&#x9;&#x9;  inner join   conform_riskman.employee_dim as d1 &#xA;&#x9;&#x9;&#x9;  on  g1.username = d1.user_id&#xA;&#x9;&#x9;   union&#xA;&#x9;&#x9;&#x9;&#x9;select f1.id,f3.employee_key &#xA;&#x9;&#x9;&#x9;&#x9;from  extract_riskman.IncidentsForReview  as f1&#xA;&#x9;&#x9;&#x9;&#x9;inner join extract_riskman.UserProfile as f2  on f1.username =f2.username &#xA;&#x9;&#x9;&#x9;&#x9;inner join conform_riskman.employee_dim as f3 on f2.LDAP_Username=f3.AD_UserID&#xA;&#x9;&#x9; ) as fff&#xA;&#x9;) as t2&#xA;  on t1.id=t2.ID;&#xA;  &#xA;  --if not found just fill with NO_EMPLOYEE_KEY&#xA;   update t1&#xA; set   t1.employee_key=(select employee_key from conform_riskman.employee_dim&#x9;where given_name='-' and current_row_indicator='Y') &#xA; from conform_riskman.Feedback_Fact as t1&#xA; where t1.employee_key is null;&#xA;&#xA;&#xA;&#xA;-------------step4:  populate  Feedbak_issue_fact tables ---------------------------&#xA;insert into conform_riskman.Feedback_Issue_Fact&#xA;select&#xA;Displayid&#xA;,f.FBIssueId&#xA;,f.FBIssueGroup&#xA;,f.FBIssue&#xA;,f.FBIssueNotes&#xA;from extract_riskman.vwReg_RMFeedback r inner join extract_riskman.vwSF_FBIssue f on r.FBIssuePrevRECID=f.Keydata&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="use dwhb &#xA;&#xA; --------------------------Step1: populate basic information------------------------------------------------------------&#xA; insert into conform_riskman.feedback_fact&#xA; ([ID],&#xA;Base_id,&#xA;[DisplayID],&#xA;IncidentInvolved,&#xA;person_key,&#xA;portfolio_key,&#xA;service_stream_key,&#xA;program_key,&#xA;closed_date_key,&#xA;incident_date_key,&#xA;notified_date_key,&#xA;age,&#xA;severity,&#xA;status,&#xA;location,&#xA;detail,&#xA;AdditionalRef,&#xA;[Site],&#xA;[Incident_Location],&#xA;[Outcome],&#xA;InvestigationFinding,&#xA;[Comment]&#xA; &#xA; )&#xA; select &#xA;  t1.id&#xA; ,t1.BaseID&#xA; ,t1.DisplayID&#xA; ,t1.IncidentInvolved&#xA; ,(select person_key from conform_riskman.person_dim where given_name='No Person' and current_row_indicator='Y') --default person_key&#xA; ,(select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='No Portfolio' and current_row_indicator='Y') -- default_portfolio_key&#xA; ,( select service_stream_key from conform_riskman.service_stream_dim where service_stream_name='No Service Stream' and current_row_indicator='Y') --default service_stream_key&#xA; ,(select program_key from conform_riskman.program_dim where program_name='No Program' and current_row_indicator='Y') --default_program_key&#xA; ,ISNULL((select date_key from conform_riskman.date_dim where full_date = t1.DateClosed),(select date_key from conform_riskman.date_dim where full_date = '1800-01-01 00:00:00.000'))&#xA; ,ISNULL((select date_key from conform_riskman.date_dim where full_date = t1.IncidentDate) ,(select date_key from conform_riskman.date_dim where full_date = '1800-01-01 00:00:00.000'))&#xA; ,ISNULL((select date_key from conform_riskman.date_dim where full_date = t1.NotificationDate)  ,(select date_key from conform_riskman.date_dim where full_date = '1800-01-01 00:00:00.000'))&#xA; , t1.Age&#xA; , t1.Outcome&#xA; , t1.Status&#xA;,left(t1.incident_location,50)&#xA;,t1.Detail&#xA;,t1.AdditionalRef&#xA;,t1.Site&#xA;,t1.Incident_Location&#xA;,t1.Outcome&#xA;,t1.InvestigationsFinding&#xA;,t1.Comment&#xA;&#xA; from extract_riskman.IncidentsForReview  as t1&#xA; inner join&#xA; (select BaseID,max(SequenceNo) as SequenceNo&#xA; from extract_riskman.IncidentsForReview&#xA; where SubModule='RMFeedback'&#xA; group by  BaseID&#xA; ) as t2&#xA; on  t1.baseid = t2.baseid &#xA; and t1.SequenceNo=t2.SequenceNo&#xA; and t1.SubModule='RMFeedback'&#xA;&#xA; --------------------------Step2: get other information------------------------------------------------------------&#xA;  update t1&#xA; set   t1.FBModeRecieved=t2.FBModeReceived&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;&#xA; update t1&#xA; set   t1.FBRelateClient=(case t2.FBRelateClient  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;  update t1&#xA; set   t1.FBRelateStaff=(case t2.FBRelateStaff  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;&#xA;  update t1&#xA; set   t1.FBAssocInc=(case t2.FBAssocInc  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;&#xA;&#xA;   update t1&#xA; set   t1.FBCompStatus=t2.FBCompStatus&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.FBComplainant_IFR as t2  on t1.id=t2.FBComplainant_ID&#xA;&#xA;    update t1&#xA; set   t1.FBCompStatusOther=t2.FBCompStatusOther&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.FBComplainant_IFR as t2  on t1.id=t2.FBComplainant_ID&#xA;&#xA;&#xA; &#xA;    update t1&#xA; set   t1.[FBCompAnon]=(case t2.[FBCompAnon]  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.FBComplainant_IFR as t2  on t1.id=t2.FBComplainant_ID&#xA;&#xA;     update t1&#xA; set   t1.[FBCompRelationship]=t2.[FBCompRelationship]&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.FBComplainant_IFR as t2  on t1.id=t2.FBComplainant_ID&#xA;&#xA;&#xA;   update t1&#xA; set   t1.[FBAckDate]=t2.[FBAckDate]&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;    update t1&#xA; set   t1.FBFirstFormalDate=t2.FBFirstFormalDate&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail_IFR] as t2  on t1.id=t2.FBDetail_ID&#xA;&#xA;     update t1&#xA; set   t1.FBIsClosed=(case t2.FBIsClosed  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBDetail1_IFR] as t2  on t1.id=t2.FBDetail1_ID&#xA;&#xA;&#xA;     update t1&#xA; set   t1.FBOutcome=t2.FBOutcome&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBInvestigation_IFR] as t2  on t1.id=t2.FBInvestigation_ID&#xA;&#xA;&#xA;      update t1&#xA; set   t1.FBObjectives=t2.FBObjectives&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBInvestigation_IFR] as t2  on t1.id=t2.FBInvestigation_ID&#xA;&#xA;&#xA; &#xA;      update t1&#xA; set   t1.FBExtAgency=(case t2.FBExtAgency  when '0' then 'No' when '1' then 'Yes' else  'No' end)&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBInvestigation_IFR] as t2  on t1.id=t2.FBInvestigation_ID&#xA;&#xA;&#xA;&#xA;       update t1&#xA; set   t1.FBExtAgencyName=t2.FBExtAgencyName&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[FBInvestigation_IFR] as t2  on t1.id=t2.FBInvestigation_ID&#xA;&#xA;&#xA;&#xA;        update t1&#xA; set   t1.FBCompFirstName=t2.FBCompFirstName, t1.FBCompSurname = t2.FBCompSurname&#xA; from  conform_riskman.feedback_fact as t1&#xA; inner join extract_riskman.[vwReg_RMFeedback] as t2  on t1.id=t2.id &#xA; and t2.IncidentInvolved ='Complaint' ;&#xA;&#xA; --------------------------Step3: Update KEYs------------------------------------------------------------&#xA; update t1&#xA; set   t1.person_key=t2.person_key&#xA; from conform_riskman.Feedback_Fact as t1&#xA; inner join&#xA; (select  f1.id, d1.person_key&#xA;  from  extract_riskman.IncidentsForReview as f1&#xA;  inner join conform_riskman.person_dim as d1&#xA;  on left(f1.firstname,50) =d1.given_name&#xA;  and left(f1.surname,50) =d1.family_name&#xA;  and f1.SubModule='RMFeedback'&#xA;  ---and f1.DateOfBirth=d1.date_of_birth&#xA;  )  as t2&#xA;  on t1.id=t2.ID&#xA;&#xA;&#xA;-------------------------------------------------------------------------------------------------------------Org mapping using four ways-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;---------------------------------------------------------------------------------WAY1: using  ANGCARE_IFR.CustService---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;&#xA;--changed by JS at 23/05/2017 based on table- ANGCARE_IFR.CustService&#xA;---Step1: update CustomerSite type = program&#xA;update t1&#xA;   set   t1.program_key=t2.program_key&#xA;   from   conform_riskman.Feedback_Fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid,f2.program_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;  inner join extract_riskman.ANGCARE_IFR as f3 on f1.id =f3.ANGCARE_ID and f1.SubModule='RMFeedback'&#xA;  inner join  conform_riskman.program_mapping as f2&#x9;    on f3.CustService=f2.value1&#xA;  where f2.program_key is not null  and  f2.mapping_type='Program' and f2.system='Riskman' and f2.table1='ANGCARE_IFR'&#xA;  and f1.SubModule='RMFeedback'&#xA;&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;where  t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y' and program_name ='No Program')&#xA;&#xA;&#xA;&#xA;&#xA;----update service_stream_key and portfolio_key&#xA;&#xA;update k&#xA; set   k.service_stream_key=i.service_stream_key, k.portfolio_key=i.portfolio_key&#xA; from   conform_riskman.feedback_fact as k&#xA; inner join&#xA;(&#xA;select &#xA; n1.feedback_key,&#xA; n1.program_name,&#xA; n1.service_stream_name,&#xA; n1.portfolio_name,&#xA; dd1.service_stream_key,&#xA; dd2.portfolio_key&#xA;&#xA;&#xA;from&#xA;(&#xA;select   g2.feedback_key,f2.program_name,f2.service_stream_name,f2.portfolio_name&#xA;from &#xA;(&#xA;select  f1.feedback_key, g1.program_name&#xA;from conform_riskman.feedback_fact as f1&#xA;inner join conform_riskman.program_dim as g1 on f1.program_key=g1.program_key and g1.current_row_indicator='Y'&#xA;) as g2&#xA;inner join &#xA;&#xA;&#xA;(&#xA;--get all org based on names&#xA;select distinct t1.program_code,t1.service_stream_code,t2.portfolio_code , d1.program_name  ,d2.service_stream_name ,d3.portfolio_name ,d1.program_key,d2.service_stream_key,d3.portfolio_key&#xA;from conform.program_temp  as t1&#xA;inner join conform.service_stream_temp as t2   on t1.service_stream_code=t2.service_stream_code&#xA;inner join conform.program_dim as d1 on t1.program_code=d1.program_code and d1.current_row_indicator='Y'&#xA;inner join conform.service_stream_dim as d2 on t1.service_stream_code=d2.service_stream_code and d1.current_row_indicator='Y'&#xA;inner join conform.portfolio_dim as d3 on t2.portfolio_code=d3.portfolio_code and d1.current_row_indicator='Y'&#xA;)  as f2 on g2.program_name=f2.program_name&#xA;) as n1&#xA;inner join conform_riskman.service_stream_dim as dd1 on dd1.service_stream_name=n1.service_stream_name and dd1.current_row_indicator='Y'&#xA;inner join conform_riskman.portfolio_dim as dd2 on dd2.portfolio_name=n1.portfolio_name and dd1.current_row_indicator='Y'&#xA;) as i &#xA;on k.feedback_key=i.feedback_key&#xA;&#xA;&#xA;&#xA;----------Step2: update CustomerSite type = Service Stream&#xA;&#xA; update t1&#xA;   set   t1.portfolio_key= (case t2.program_name&#xA;                           when   'Community Services' then (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Community Services')&#xA;                           when 'Community Engagement' then   (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Aboriginal Services')&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   when 'Residental Aged Care' then   (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Active Living')&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   end&#x9;),&#xA;                         &#xA;        t1.service_stream_key= t2.service_stream_key,&#xA;&#x9;&#x9;t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y'  and program_name ='No Program')  &#xA;    &#xA;   from   conform_riskman.Feedback_Fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid ,f2.*&#x9;,d1.service_stream_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;  inner join extract_riskman.ANGCARE_IFR as f3 on f1.id =f3.ANGCARE_ID&#xA;  inner join  conform_riskman.program_mapping as f2&#x9;    on f3.CustService=f2.value1&#xA;  inner join conform_riskman.service_stream_dim as d1 on d1.service_stream_name=f2.program_name&#x9;  and d1.current_row_indicator='Y'&#xA;  where f2.mapping_type='Service Stream' and f2.system='Riskman' and f2.table1='ANGCARE_IFR'&#xA;  and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;&#xA;&#xA;&#xA;----------Step3: update CustomerSite type = Portfolio&#xA;&#xA;&#xA; &#x9;update t1&#xA;   set   t1.portfolio_key=t2.portfolio_key ,&#xA;        t1.service_stream_key= (select service_stream_key from conform_riskman.service_stream_dim where current_row_indicator='Y'  and service_stream_name ='No Service Stream')  ,&#xA;&#x9;&#x9;t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y'  and program_name ='No Program')  &#xA;    &#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid ,f2.*&#x9;,d1.portfolio_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;  inner join extract_riskman.ANGCARE_IFR as f3 on f1.id =f3.ANGCARE_ID&#xA;  inner join  conform_riskman.program_mapping as f2&#x9;    on f3.CustService=f2.value1&#xA;  inner join conform_riskman.portfolio_dim as d1 on d1.portfolio_name=f2.program_name and d1.current_row_indicator='Y'&#xA;  where f2.mapping_type='Portfolio'&#x9;  and f2.system='Riskman' and f2.table1='ANGCARE_IFR'&#xA;  and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;&#xA;&#xA;&#xA;----------------------------------------WAY2: using  IncidentsForReview.EmployeeSite -----------------------------------------------------------------------------------------------------------------------------------------------------&#xA;&#xA;---Step1: update CustomerSite type = program&#xA;update t1&#xA;   set   t1.program_key=t2.program_key&#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid,f2.program_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;   inner join  conform_riskman.program_mapping as f2&#x9;    on f1.EmployeeSite=f2.value1&#xA;  where f2.program_key is not null  and  f2.mapping_type='Program' and f2.system='Riskman' and f2.table1='IncidentsForReview'&#xA;  and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;where  t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y' and program_name ='No Program')&#xA;&#xA;&#xA;----update service_stream_key and portfolio_key&#xA;&#xA;update k&#xA; set   k.service_stream_key=i.service_stream_key, k.portfolio_key=i.portfolio_key&#xA; from   conform_riskman.feedback_fact as k&#xA; inner join&#xA;(&#xA;select &#xA; n1.feedback_key,&#xA; n1.program_name,&#xA; n1.service_stream_name,&#xA; n1.portfolio_name,&#xA; dd1.service_stream_key,&#xA; dd2.portfolio_key&#xA;&#xA;&#xA;from&#xA;(&#xA;select   g2.feedback_key,f2.program_name,f2.service_stream_name,f2.portfolio_name&#xA;from &#xA;(&#xA;select  f1.feedback_key, g1.program_name&#xA;from conform_riskman.feedback_fact as f1&#xA;inner join conform_riskman.program_dim as g1 on f1.program_key=g1.program_key and g1.current_row_indicator='Y'&#xA;) as g2&#xA;inner join &#xA;&#xA;&#xA;(&#xA;--get all org based on names&#xA;select distinct t1.program_code,t1.service_stream_code,t2.portfolio_code , d1.program_name  ,d2.service_stream_name ,d3.portfolio_name ,d1.program_key,d2.service_stream_key,d3.portfolio_key&#xA;from conform.program_temp  as t1&#xA;inner join conform.service_stream_temp as t2   on t1.service_stream_code=t2.service_stream_code&#xA;inner join conform.program_dim as d1 on t1.program_code=d1.program_code and d1.current_row_indicator='Y'&#xA;inner join conform.service_stream_dim as d2 on t1.service_stream_code=d2.service_stream_code and d1.current_row_indicator='Y'&#xA;inner join conform.portfolio_dim as d3 on t2.portfolio_code=d3.portfolio_code and d1.current_row_indicator='Y'&#xA;)  as f2 on g2.program_name=f2.program_name&#xA;) as n1&#xA;inner join conform_riskman.service_stream_dim as dd1 on dd1.service_stream_name=n1.service_stream_name and dd1.current_row_indicator='Y'&#xA;inner join conform_riskman.portfolio_dim as dd2 on dd2.portfolio_name=n1.portfolio_name and dd1.current_row_indicator='Y'&#xA;) as i &#xA;on k.feedback_key=i.feedback_key&#xA;&#xA;&#xA;&#xA;----------Step2: update CustomerSite type = Service Stream&#xA;&#xA; update t1&#xA;   set   t1.portfolio_key= (case t2.program_name&#xA;                           when   'Community Services' then (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Community Services')&#xA;                           when 'Community Engagement' then   (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Aboriginal Services')&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   when 'Residental Aged Care' then   (select portfolio_key from conform_riskman.portfolio_dim where portfolio_name='Active Living')&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   end&#x9;),&#xA;                         &#xA;        t1.service_stream_key= t2.service_stream_key,&#xA;&#x9;&#x9;t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y'  and program_name ='No Program')  &#xA;    &#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid ,f2.*&#x9;,d1.service_stream_key&#xA;   from extract_riskman.IncidentsForReview  as f1&#xA;   inner join  conform_riskman.program_mapping as f2&#x9;    on f1.EmployeeSite=f2.value1&#xA;  inner join conform_riskman.service_stream_dim as d1 on d1.service_stream_name=f2.program_name&#x9;  and d1.current_row_indicator='Y'&#xA;  where f2.mapping_type='Service Stream' and f2.system='Riskman' and f2.table1='ANGCARE_IFR'&#xA;  and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;&#xA;&#xA;&#xA;----------Step3: update CustomerSite type = Portfolio&#xA;&#xA;&#xA; &#x9;update t1&#xA;   set   t1.portfolio_key=t2.portfolio_key ,&#xA;        t1.service_stream_key= (select service_stream_key from conform_riskman.service_stream_dim where current_row_indicator='Y'  and service_stream_name ='No Service Stream')  ,&#xA;&#x9;&#x9;t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y'  and program_name ='No Program')  &#xA;    &#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid ,f2.*&#x9;,d1.portfolio_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;   inner join  conform_riskman.program_mapping as f2&#x9;    on f1.EmployeeSite=f2.value1&#xA;  inner join conform_riskman.portfolio_dim as d1 on d1.portfolio_name=f2.program_name and d1.current_row_indicator='Y'&#xA;  where f2.mapping_type='Portfolio'&#x9;  and f2.system='Riskman' and f2.table1='ANGCARE_IFR'&#xA;    and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA;&#xA;-------------------------------------------------------WAY3: CustomerSite------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;   update t1&#xA;   set   t1.program_key=t2.program_key&#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid,f2.program_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;  inner join  conform_riskman.program_mapping as f2&#xA;  on f1.Incident_Location=f2.value1&#xA;  where  f2.table1='IncidentsForReview' and f2.name1='CustomerSite' and  f2.value1 is not null&#xA;and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA; where   t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y' and program_name ='No Program')&#xA;&#xA;  &#xA;&#xA; update k&#xA; set   k.service_stream_key=i.service_stream_key, k.portfolio_key=i.portfolio_key&#xA; from   conform_riskman.feedback_fact as k&#xA; inner join&#xA;(&#xA;select &#xA; n1.feedback_key,&#xA; n1.program_name,&#xA; n1.service_stream_name,&#xA; n1.portfolio_name,&#xA; dd1.service_stream_key,&#xA; dd2.portfolio_key&#xA;&#xA;&#xA;from&#xA;(&#xA;select   g2.feedback_key,f2.program_name,f2.service_stream_name,f2.portfolio_name&#xA;from &#xA;(&#xA;select  f1.feedback_key, g1.program_name&#xA;from conform_riskman.feedback_fact as f1&#xA;inner join conform_riskman.program_dim as g1 on f1.program_key=g1.program_key and g1.current_row_indicator='Y'&#xA;) as g2&#xA;inner join &#xA;&#xA;&#xA;(&#xA;--get all org based on names&#xA;select distinct t1.program_code,t1.service_stream_code,t2.portfolio_code , d1.program_name  ,d2.service_stream_name ,d3.portfolio_name ,d1.program_key,d2.service_stream_key,d3.portfolio_key&#xA;from conform.program_temp  as t1&#xA;inner join conform.service_stream_temp as t2   on t1.service_stream_code=t2.service_stream_code&#xA;inner join conform.program_dim as d1 on t1.program_code=d1.program_code and d1.current_row_indicator='Y'&#xA;inner join conform.service_stream_dim as d2 on t1.service_stream_code=d2.service_stream_code and d1.current_row_indicator='Y'&#xA;inner join conform.portfolio_dim as d3 on t2.portfolio_code=d3.portfolio_code and d1.current_row_indicator='Y'&#xA;)  as f2 on g2.program_name=f2.program_name&#xA;) as n1&#xA;inner join conform_riskman.service_stream_dim as dd1 on dd1.service_stream_name=n1.service_stream_name and dd1.current_row_indicator='Y'&#xA;inner join conform_riskman.portfolio_dim as dd2 on dd2.portfolio_name=n1.portfolio_name and dd1.current_row_indicator='Y'&#xA;) as i &#xA;on k.feedback_key=i.feedback_key&#xA;&#xA;&#xA;&#xA;-------------------------------------------------------WAY4: incident_location------------------------------------------------------------------------------------------------------------------------------------------------------------&#xA;   update t1&#xA;   set   t1.program_key=t2.program_key&#xA;   from   conform_riskman.feedback_fact as t1&#xA;   inner join&#xA;   (&#xA;&#xA;  select f1.id,f1.baseid,f2.program_key&#xA;  from extract_riskman.IncidentsForReview  as f1&#xA;  inner join  conform_riskman.program_mapping as f2&#xA;  on f1.Incident_Location=f2.value1&#xA;  where  f2.table1='IncidentsForReview' and f2.name1='Incident_Location' and  f2.value1 is not null&#xA;  and f1.SubModule='RMFeedback'&#xA; ) as t2&#xA; on t1.id =t2.id &#xA; and t1.base_id=t2.BaseID&#xA; where   t1.program_key=(select program_key from conform_riskman.program_dim where current_row_indicator='Y' and program_name ='No Program')&#xA;&#xA;  &#xA;&#xA; update k&#xA; set   k.service_stream_key=i.service_stream_key, k.portfolio_key=i.portfolio_key&#xA; from   conform_riskman.feedback_fact as k&#xA; inner join&#xA;(&#xA;select &#xA; n1.feedback_key,&#xA; n1.program_name,&#xA; n1.service_stream_name,&#xA; n1.portfolio_name,&#xA; dd1.service_stream_key,&#xA; dd2.portfolio_key&#xA;&#xA;&#xA;from&#xA;(&#xA;select   g2.feedback_key,f2.program_name,f2.service_stream_name,f2.portfolio_name&#xA;from &#xA;(&#xA;select  f1.feedback_key, g1.program_name&#xA;from conform_riskman.feedback_fact as f1&#xA;inner join conform_riskman.program_dim as g1 on f1.program_key=g1.program_key and g1.current_row_indicator='Y'&#xA;) as g2&#xA;inner join &#xA;&#xA;&#xA;(&#xA;--get all org based on names&#xA;select distinct t1.program_code,t1.service_stream_code,t2.portfolio_code , d1.program_name  ,d2.service_stream_name ,d3.portfolio_name ,d1.program_key,d2.service_stream_key,d3.portfolio_key&#xA;from conform.program_temp  as t1&#xA;inner join conform.service_stream_temp as t2   on t1.service_stream_code=t2.service_stream_code&#xA;inner join conform.program_dim as d1 on t1.program_code=d1.program_code and d1.current_row_indicator='Y'&#xA;inner join conform.service_stream_dim as d2 on t1.service_stream_code=d2.service_stream_code and d1.current_row_indicator='Y'&#xA;inner join conform.portfolio_dim as d3 on t2.portfolio_code=d3.portfolio_code and d1.current_row_indicator='Y'&#xA;)  as f2 on g2.program_name=f2.program_name&#xA;) as n1&#xA;inner join conform_riskman.service_stream_dim as dd1 on dd1.service_stream_name=n1.service_stream_name and dd1.current_row_indicator='Y'&#xA;inner join conform_riskman.portfolio_dim as dd2 on dd2.portfolio_name=n1.portfolio_name and dd1.current_row_indicator='Y'&#xA;) as i &#xA;on k.feedback_key=i.feedback_key&#xA;&#xA;&#xA;--Add in 12 June by FW&#xA;--Update Employee_key column&#xA;&#xA; update t1&#xA; set   t1.employee_key=t2.employee_key&#xA; from conform_riskman.Feedback_Fact as t1&#xA; inner join&#xA; (&#xA;&#x9;&#x9;  select distinct fff.id,&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9; fff.employee_key&#xA;&#x9;&#x9; from &#xA;&#x9;&#x9; (&#xA;&#x9;&#x9;  select  distinct  g1.id, d1.employee_key&#xA;&#x9;&#x9;&#x9;  from  extract_riskman.IncidentsForReview as g1&#xA;&#x9;&#x9;&#x9;  inner join   conform_riskman.employee_dim as d1 &#xA;&#x9;&#x9;&#x9;  on  g1.username = d1.AD_UserID&#x9; &#xA;&#x9;&#x9;   union&#xA;&#x9;&#x9;&#x9;  select  distinct  g1.id, d1.employee_key&#xA;&#x9;&#x9;&#x9;  from  extract_riskman.IncidentsForReview as g1&#xA;&#x9;&#x9;&#x9;  inner join   conform_riskman.employee_dim as d1 &#xA;&#x9;&#x9;&#x9;  on  g1.username = d1.user_id&#xA;&#x9;&#x9;   union&#xA;&#x9;&#x9;&#x9;&#x9;select f1.id,f3.employee_key &#xA;&#x9;&#x9;&#x9;&#x9;from  extract_riskman.IncidentsForReview  as f1&#xA;&#x9;&#x9;&#x9;&#x9;inner join extract_riskman.UserProfile as f2  on f1.username =f2.username &#xA;&#x9;&#x9;&#x9;&#x9;inner join conform_riskman.employee_dim as f3 on f2.LDAP_Username=f3.AD_UserID&#xA;&#x9;&#x9; ) as fff&#xA;&#x9;) as t2&#xA;  on t1.id=t2.ID;&#xA;  &#xA;  --if not found just fill with NO_EMPLOYEE_KEY&#xA;   update t1&#xA; set   t1.employee_key=(select employee_key from conform_riskman.employee_dim&#x9;where given_name='-' and current_row_indicator='Y') &#xA; from conform_riskman.Feedback_Fact as t1&#xA; where t1.employee_key is null;&#xA;&#xA;&#xA;&#xA;-------------step4:  populate  Feedbak_issue_fact tables ---------------------------&#xA;insert into conform_riskman.Feedback_Issue_Fact&#xA;select&#xA;Displayid&#xA;,f.FBIssueId&#xA;,f.FBIssueGroup&#xA;,f.FBIssue&#xA;,f.FBIssueNotes&#xA;from extract_riskman.vwReg_RMFeedback r inner join extract_riskman.vwSF_FBIssue f on r.FBIssuePrevRECID=f.Keydata&#xA;&#xA;---update the location from [vwReg_RMFeedback_Posted_All]  which believe is the right location by FW@2019-04-16&#xA;&#xA;  update f&#xA;  set f.[location] = v.Incident_Location&#xA;  FROM extract_riskman.[vwReg_RMFeedback_Posted_All] v&#xA;  inner join conform_riskman.feedback_fact f on  f.displayid=v.DisplayID and f.base_id = v.BaseID --and f.location is null" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -1201,6 +1201,156 @@
           </DTS:EventHandlers>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{c622067c-9bf7-4996-8165-c7d7b6864a68}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SD1 - Restrictive_IFR_fact">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\Delete Existing Data"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{f433f16c-d503-40ca-ade2-d8287168ea4a}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Delete Existing Data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{ABF0B8AA-626A-4E12-B1A3-D4CDDCF59D62}"
+                  SQLTask:SqlStatementSource="truncate table conform_riskman.[Restrictive_IFR_fact];&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\EST - Write Job Finish info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{21324d18-320a-4376-bbd6-de86d72c18e1}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Finish info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{ABF0B8AA-626A-4E12-B1A3-D4CDDCF59D62}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,2&#xA;,GETDATE() ,&#xA;4,&#xA;'Finish updating FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_riskman.Restrictive_IFR_fact'&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\EST - Write Job Start info"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{89a0190d-497c-4a16-828d-f4c7c5615715}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="EST - Write Job Start info"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2016; © 2015 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{ABF0B8AA-626A-4E12-B1A3-D4CDDCF59D62}"
+                  SQLTask:SqlStatementSource="INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,1&#xA;,GETDATE() ,&#xA;4,&#xA;'Start to update FACT table'&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform_riskman.Restrictive_IFR_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\Populate new data"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{6f6e0096-7585-4ab4-a07d-3702d96c3b09}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Populate new data"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{ABF0B8AA-626A-4E12-B1A3-D4CDDCF59D62}"
+                  SQLTask:SqlStatementSource=" insert into [conform_riskman].[Restrictive_IFR_fact]&#xA; select * from [extract_riskman].[Restrictive_IFR];" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{f990880c-7a10-4990-ba2a-6a2a7e9944b9}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\EST - Write Job Start info"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\Delete Existing Data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{f9f1ad56-a208-4fe7-8302-9311b34170c8}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\Delete Existing Data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\Populate new data" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{a71304d2-07aa-4d05-b01f-7c645ed23ece}"
+              DTS:From="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\Populate new data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\EST - Write Job Finish info" />
+          </DTS:PrecedenceConstraints>
+          <DTS:EventHandlers>
+            <DTS:EventHandler
+              DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact.EventHandlers[OnError]"
+              DTS:CreationName="OnError"
+              DTS:DTSID="{aeb69a69-5497-4df8-bcf9-6e86e93f07eb}"
+              DTS:EventID="244"
+              DTS:EventName="OnError"
+              DTS:LocaleID="-1">
+              <DTS:Variables>
+                <DTS:Variable
+                  DTS:CreationName=""
+                  DTS:Description="The propagate property of the event"
+                  DTS:DTSID="{5e64da26-175d-4e5a-8e47-a5a674c6cba1}"
+                  DTS:IncludeInDebugDump="6789"
+                  DTS:Namespace="System"
+                  DTS:ObjectName="Propagate">
+                  <DTS:VariableValue
+                    DTS:DataType="11">-1</DTS:VariableValue>
+                </DTS:Variable>
+              </DTS:Variables>
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{3b952ccf-5ed8-444b-b76e-7694517c1f7b}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Execute SQL Task - Catch Error Details">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{ABF0B8AA-626A-4E12-B1A3-D4CDDCF59D62}"
+                      SQLTask:SqlStatementSource="-- insert into management.ERROR_EVENT_DETAIL_FACT table&#xA;&#xA;insert into management.ERROR_EVENT_DETAIL_FACT&#xA;SELECT &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,T2.TABLE_KEY&#xA;,T2.TABLE_KEY&#xA;,?&#xA;,' '&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;&#xA;-- insert into [management].ETL_PROCESS_FACT with 'Failed'&#xA;INSERT INTO [management].ETL_PROCESS_FACT&#xA;SELECT  &#xA;(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch')&#xA;, T2.TABLE_KEY&#xA;,3&#xA;,GETDATE() &#xA;,4&#xA;,'Update Fact Table'    &#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA; -- insert into management.ERROR_EVENT_FACT table&#xA;insert into management.ERROR_EVENT_FACT&#xA;SELECT &#xA;(SELECT batch_key FROM management.BATCH_DIM WHERE BATCH_TYPE='batch') &#xA;,(SELECT DATE_KEY FROM management.DATE_DIM WHERE CONVERT(DATE,FULL_DATE)=CONVERT(DATE,GETDATE()) )&#xA;,convert(varchar, getdate(),21)&#xA;, 'HIGH'&#xA;,4&#xA;FROM  management.TABLE_DIM T2&#xA;WHERE T2.[SCHEMA]+'.'+T2.TABLE_NAME='conform.employee_termination_fact'&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                      <SQLTask:ParameterBinding
+                        SQLTask:ParameterName="0"
+                        SQLTask:DtsVariableName="System::ErrorDescription"
+                        SQLTask:ParameterDirection="Input"
+                        SQLTask:DataType="130"
+                        SQLTask:ParameterSize="-1" />
+                    </SQLTask:SqlTaskData>
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+            </DTS:EventHandler>
+          </DTS:EventHandlers>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT"
           DTS:CreationName="STOCK:SEQUENCE"
           DTS:Description="Sequence Container"
@@ -1613,6 +1763,14 @@
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 8"
           DTS:To="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 9]"
+          DTS:CreationName=""
+          DTS:DTSID="{8C4011C0-3383-4730-9EF7-67FA87B78B1D}"
+          DTS:From="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 9"
+          DTS:To="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
   </DTS:Executables>
@@ -2250,6 +2408,95 @@
           TopLeft="10.5000000000001,3134" />
         <NodeLayout
           Size="271,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\Delete Existing Data"
+          TopLeft="31.75,91" />
+        <NodeLayout
+          Size="271,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\EST - Write Job Finish info"
+          TopLeft="32.75,256" />
+        <NodeLayout
+          Size="271,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\EST - Write Job Start info"
+          TopLeft="30.75,15" />
+        <NodeLayout
+          Size="269,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\Populate new data"
+          TopLeft="29.75,158" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact.PrecedenceConstraints[Constraint]"
+          TopLeft="166.75,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34"
+              Start="0,0"
+              End="0,26.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact.PrecedenceConstraints[Constraint 1]"
+          TopLeft="165.75,133">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,25"
+              Start="0,0"
+              End="0,17.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,17.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="166.25,200">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,56"
+              Start="0,0"
+              End="0,48.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,48.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="409,353"
+          Size="409,396"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact"
+          TopLeft="5.50000000000006,4046" />
+        <NodeLayout
+          Size="271,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\Delete Existing Data"
           TopLeft="31.75,91" />
         <NodeLayout
@@ -2646,11 +2893,33 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 9]"
+          TopLeft="210,3986">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="470,4041"
-          Size="470,4084"
+          PanelSize="470,4497"
+          Size="470,4540"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="34.5,1" />
       </GraphLayout>
@@ -2736,6 +3005,18 @@
         <NodeLayout
           Size="264,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
+          TopLeft="448,222" />
+      </GraphLayout>
+    </LayoutInfo>
+  </DtsEventHandler>
+  <DtsEventHandler
+    design-time-name="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact.EventHandlers[OnError]">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
+        <NodeLayout
+          Size="264,42"
+          Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact.EventHandlers[OnError]\Execute SQL Task - Catch Error Details"
           TopLeft="448,222" />
       </GraphLayout>
     </LayoutInfo>

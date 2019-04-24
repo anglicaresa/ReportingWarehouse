@@ -92,13 +92,43 @@ BEGIN
         (select package_key from [management].[package_dim] where package_name = 'DELIVERY' and sub_system = 'Delivery system'),2,'daily');
 END
 
+
+--select * from [management].[table_dim] where table_name = 'vwSF_SkinTear' and [schema] = 'dbo' and [system] = 'riskman'
+
+--table_key	table_name	system	schema	database	server
+--649	vwSF_SkinTear	riskman	dbo	Riskman	ted
+
+
+--select * from [management].[table_dim] where table_name = 'vwSF_SkinTear' and [schema] = 'extract_riskman' and [system] = 'dwh'
+
+--table_key	table_name	system	schema	database	server
+--648	vwSF_SkinTear	dwh	extract_riskman	dwhb	AZ-SQLBI01
+S
+--For RiskMan Insert table for extract process
+DECLARE @t_table VARCHAR(MAX)='vwReg_RMFeedback_Posted_All';
+--extract
+INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'dwh', 'extract_riskman', 'dwhb', 'AZ-SQLBI01');
+--source
+INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'riskman', 'dbo', 'Riskman', 'ted');
+
+
+DECLARE @t_table VARCHAR(MAX)='Restrictive_IFR_fact';
+--conform
+INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'dwh', 'conform_riskman', 'dwhb', 'AZ-SQLBI01');
+--delivery
+INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'dwh', 'riskman', 'dwhf_riskman', 'AZ-SQLBI01');
+s
 --For RiskMan extract process
+DECLARE @t_table VARCHAR(MAX)='vwReg_RMFeedback_Posted_All';
+insert into [management].[job_control] 
+(source_table_key,job_enabled_flag,destination_table_key,package_key,[priority],[frequency])
+values 
+((select table_key from [management].[table_dim] where table_name = @t_table and [schema] = 'dbo' and [system] = 'riskman'),
+'YES', 
+(select table_key from [management].[table_dim] where table_name = @t_table and [schema] = 'extract_riskman' and [system] = 'dwh'), 
+1,1,'daily');
+
+
 s
-	    insert into [management].[job_control] 
-		(source_table_key,job_enabled_flag,destination_table_key,package_key,[priority],[frequency])
-		values 
-        ((select table_key from [management].[table_dim] where table_name = 'vwSF_SkinTear' and [schema] = 'dbo' and [system] = 'riskman'),
-        'YES', 
-        (select table_key from [management].[table_dim] where table_name = 'vwSF_SkinTear' and [schema] = 'extract_riskman' and [system] = 'dwh'), 
-        1,1,'daily');
-s
+
+select * from [management].[TABLE_DIM] order by table_key desc;
