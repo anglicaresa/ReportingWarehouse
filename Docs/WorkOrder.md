@@ -28,23 +28,45 @@
       - [Display:](#display-5)
       - [List:](#list-5)
   - [P3 Priority & Response Date is blank](#p3-priority--response-date-is-blank)
-    - [Request 10 Green](#request-10-green)
+    - [Request 10 P3-Green](#request-10-p3-green)
       - [Display:](#display-6)
       - [List:](#list-6)
-    - [Request 11 Yellow](#request-11-yellow)
-    - [Request 12 Red](#request-12-red)
+    - [Request 11 P3-Yellow](#request-11-p3-yellow)
+      - [Display:](#display-7)
+      - [List:](#list-7)
+    - [Request 12 P3-Red](#request-12-p3-red)
+      - [Display:](#display-8)
+      - [List:](#list-8)
   - [P1 Priority & Complete Date is blank](#p1-priority--complete-date-is-blank)
-    - [Request 13 Green](#request-13-green)
-    - [Request 14 Yellow](#request-14-yellow)
+    - [Request 13 P1-Green](#request-13-p1-green)
+      - [Display:](#display-9)
+      - [List:](#list-9)
+    - [Request 14 P1-Yellow](#request-14-p1-yellow)
+      - [Display:](#display-10)
+      - [List:](#list-10)
     - [Request 15 Red](#request-15-red)
+      - [Display:](#display-11)
+      - [List:](#list-11)
   - [P2 Priority & Complete Date is blank](#p2-priority--complete-date-is-blank)
     - [Request 16 Green](#request-16-green)
-    - [Request 17 Yellow](#request-17-yellow)
+      - [Display:](#display-12)
+      - [List:](#list-12)
+    - [Request 17 P2-Yellow](#request-17-p2-yellow)
+      - [Display:](#display-13)
+      - [List:](#list-13)
     - [Request 18 Red](#request-18-red)
+      - [Display:](#display-14)
+      - [List:](#list-14)
   - [P3 Priority & Complete Date is blank](#p3-priority--complete-date-is-blank)
-    - [Request 19 Green](#request-19-green)
+    - [Request 19 P3-Green](#request-19-p3-green)
+      - [Display:](#display-15)
+      - [List:](#list-15)
     - [Request 20 Yellow](#request-20-yellow)
+      - [Display:](#display-16)
+      - [List:](#list-16)
     - [Request 21 Red](#request-21-red)
+      - [Display:](#display-17)
+      - [List:](#list-17)
   - [Date view create statements:](#date-view-create-statements)
 
 ## Current priority in Kypera database
@@ -374,7 +396,7 @@ AND WO.Notified >'2016-07-01'
 
 ## P3 Priority & Response Date is blank
 
-### Request 10 Green
+### Request 10 P3-Green
 #### Display:
 ```sql
 Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in <6 working days P3 Response.' 
@@ -393,7 +415,7 @@ Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id
 --Inner Join dbo.CurrentMinus18HourWorkOrder as ch on ch.ID = WO.id
 Inner Join dbo.CurrentMinus6DayWorkOrder as ch2 on ch2.ID = WO.id
 Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') And WO.ResponseDate Is Null
-AND WO.Notified >= ch2.dateM
+AND WO.Notified > ch2.dateM
 -- AND WO.Notified < ch.dateM
 -- AND WO.Notified >'2016-07-01'
 ```
@@ -415,24 +437,488 @@ Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id
 --Inner Join dbo.CurrentMinus18HourWorkOrder as ch on ch.ID = WO.id
 Inner Join dbo.CurrentMinus6DayWorkOrder as ch2 on ch2.ID = WO.id
 Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') And WO.ResponseDate Is Null
-AND WO.Notified >= ch2.dateM
+AND WO.Notified > ch2.dateM
 -- AND WO.Notified < ch.dateM
 -- AND WO.Notified >'2016-07-01'
 ```
-### Request 11 Yellow
-### Request 12 Red
+### Request 11 P3-Yellow
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in 6 – 8 working days P3 Response.' 
+
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus8DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus6DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') And WO.ResponseDate Is Null
+AND WO.Notified <= ch2.dateM
+ AND WO.Notified >= ch.dateM
+-- AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus8DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus6DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') And WO.ResponseDate Is Null
+AND WO.Notified <= ch2.dateM
+ AND WO.Notified >= ch.dateM
+-- AND WO.Notified >'2016-07-01'
+```
+### Request 12 P3-Red
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in >8 working days P3 Response.' 
+
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus8DayWorkOrder as ch on ch.ID = WO.id
+--Inner Join dbo.CurrentMinus6DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') And WO.ResponseDate Is Null
+--AND WO.Notified < ch2.dateM
+AND WO.Notified < ch.dateM
+ AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus8DayWorkOrder as ch on ch.ID = WO.id
+--Inner Join dbo.CurrentMinus6DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') And WO.ResponseDate Is Null
+--AND WO.Notified < ch2.dateM
+AND WO.Notified < ch.dateM
+AND WO.Notified >'2016-07-01'
+```
 ## P1 Priority & Complete Date is blank
-### Request 13 Green
-### Request 14 Yellow
+### Request 13 P1-Green
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in <3 Days P1 Completion.' 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus3DayWorkOrder as ch on ch.ID = WO.id
+--Inner Join dbo.CurrentMinus6DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P1 - Emergency') and wo.complete is null
+--AND WO.Notified < ch2.dateM
+AND WO.Notified > ch.dateM
+-- AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus3DayWorkOrder as ch on ch.ID = WO.id
+--Inner Join dbo.CurrentMinus6DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P1 - Emergency') and wo.complete is null
+--AND WO.Notified < ch2.dateM
+AND WO.Notified > ch.dateM
+-- AND WO.Notified >'2016-07-01'
+```
+### Request 14 P1-Yellow
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in 3 - 4 Days P1 Completion.' 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus3DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus4DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P1 - Emergency') and wo.complete is null
+AND WO.Notified >= ch2.dateM
+AND WO.Notified <= ch.dateM
+-- AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus3DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus4DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P1 - Emergency') and wo.complete is null
+AND WO.Notified >= ch2.dateM
+AND WO.Notified <= ch.dateM
+-- AND WO.Notified >'2016-07-01'
+```
 ### Request 15 Red
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in >4 Days P1 Completion.' 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus3DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus4DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P1 - Emergency') and wo.complete is null
+AND WO.Notified < ch2.dateM
+--AND WO.Notified <= ch.dateM
+AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus3DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus4DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P1 - Emergency') and wo.complete is null
+AND WO.Notified < ch2.dateM
+--AND WO.Notified <= ch.dateM
+AND WO.Notified >'2016-07-01'
+```
 ## P2 Priority & Complete Date is blank
 ### Request 16 Green
-### Request 17 Yellow
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in <4 Days P2 Completion.' 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+--Inner Join dbo.CurrentMinus3DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus4DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P2 - Urgent') and wo.complete is null
+AND WO.Notified > ch2.dateM
+--AND WO.Notified <= ch.dateM
+--AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+--Inner Join dbo.CurrentMinus3DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus4DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P2 - Urgent') and wo.complete is null
+AND WO.Notified > ch2.dateM
+--AND WO.Notified <= ch.dateM
+--AND WO.Notified >'2016-07-01'
+```
+### Request 17 P2-Yellow
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in 4 - 6 Days P2 Completion.' 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus6DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus4DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P2 - Urgent') and wo.complete is null
+AND WO.Notified <= ch2.dateM
+AND WO.Notified >= ch.dateM
+--AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus6DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus4DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P2 - Urgent') and wo.complete is null
+AND WO.Notified <= ch2.dateM
+AND WO.Notified >= ch.dateM
+--AND WO.Notified >'2016-07-01'
+```
 ### Request 18 Red
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in >6 Days P2 Completion.' 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus6DayWorkOrder as ch on ch.ID = WO.id
+--Inner Join dbo.CurrentMinus4DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P2 - Urgent') and wo.complete is null
+--AND WO.Notified < ch2.dateM
+AND WO.Notified < ch.dateM
+AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus6DayWorkOrder as ch on ch.ID = WO.id
+--Inner Join dbo.CurrentMinus4DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P2 - Urgent') and wo.complete is null
+--AND WO.Notified < ch2.dateM
+AND WO.Notified < ch.dateM
+AND WO.Notified >'2016-07-01'
+```
 ## P3 Priority & Complete Date is blank
-### Request 19 Green
+### Request 19 P3-Green
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in <15 Days P3 Completion.' 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus15DayWorkOrder as ch on ch.ID = WO.id
+--Inner Join dbo.CurrentMinus18DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') and wo.complete is null
+--AND WO.Notified < ch2.dateM
+AND WO.Notified > ch.dateM
+--AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus15DayWorkOrder as ch on ch.ID = WO.id
+--Inner Join dbo.CurrentMinus18DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') and wo.complete is null
+--AND WO.Notified < ch2.dateM
+AND WO.Notified > ch.dateM
+--AND WO.Notified >'2016-07-01'
+```
 ### Request 20 Yellow
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in 15 - 18 Days P3 Completion.' 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus15DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus18DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') and wo.complete is null
+AND WO.Notified >= ch2.dateM
+AND WO.Notified <= ch.dateM
+--AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+Inner Join dbo.CurrentMinus15DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus18DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') and wo.complete is null
+AND WO.Notified >= ch2.dateM
+AND WO.Notified <= ch.dateM
+--AND WO.Notified >'2016-07-01'
+```
 ### Request 21 Red
+#### Display:
+```sql
+Select Cast(Count(Distinct (WO.ID)) As VarChar) + ' works order in >18 Days P3 Completion.' 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+--Inner Join dbo.CurrentMinus15DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus18DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') and wo.complete is null
+AND WO.Notified < ch2.dateM
+--AND WO.Notified <= ch.dateM
+AND WO.Notified >'2016-07-01'
+```
+#### List:
+```sql
+Select Distinct (WO.ID) 
+From dbo.Repairs_WorksOrder As WO 
+Left Join 
+(
+	Select dbo.Repairs_WorksOrder_UnitJoin.WorksOrder, Max(dbo.Repairs_WorksOrder_UnitJoin.Unit) As unit 
+	From dbo.Repairs_WorksOrder_UnitJoin 
+	Group By dbo.Repairs_WorksOrder_UnitJoin.WorksOrder
+) As A On WO.ID = A.WorksOrder 
+Inner Join dbo.PropertyStructure_BlockUnit As B On B.Unit = A.unit 
+Inner Join dbo.PropertyStructure_Block As PSB On PSB.Code = B.Block 
+Left Join dbo.Repairs_Priorities As pri On WO.Priority = pri.id 
+Left Join dbo.HomeTeam_LookupValues As lookupt On WO.Classification = lookupt.id And lookupt.lookup = 25 
+--Inner Join dbo.CurrentMinus15DayWorkOrder as ch on ch.ID = WO.id
+Inner Join dbo.CurrentMinus18DayWorkOrder as ch2 on ch2.ID = WO.id
+Where PSB.District In ('ASA', 'LAW') And pri.Name In ('P3 - Routine') and wo.complete is null
+AND WO.Notified < ch2.dateM
+--AND WO.Notified <= ch.dateM
+AND WO.Notified >'2016-07-01'
+```
 ## Date view create statements:
 Kypera system doesn't support date calculation in the work tray setting part. So the following views need to be created before creating the work tray using the following views.
 >The following view is used as dattime mark for the worktray sql statements to use.
