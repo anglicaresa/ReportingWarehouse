@@ -1,0 +1,1698 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="4/12/2019 11:15:16 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="W10PC0SHE8A"
+  DTS:CreatorName="ANGLICARE-SA\frank.wang"
+  DTS:DTSID="{1EC91843-6124-433E-8D9D-EF21CFD0F993}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.3002.101"
+  DTS:LocaleID="3081"
+  DTS:ObjectName="Extract_PMO"
+  DTS:PackageType="5"
+  DTS:VersionBuild="22"
+  DTS:VersionGUID="{E4A424D9-F527-4966-8052-982687AEDDB9}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DWHB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{DE32B932-3301-4BA1-8299-117C1106803A}"
+      DTS:ObjectName="DWHB">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Package::DEV]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Project]"
+      DTS:CreationName="EXCEL"
+      DTS:DTSID="{8C69928F-0F26-4BCA-B92F-E5727E7BEA43}"
+      DTS:ObjectName="Project">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.16.0;Data Source=\\fstorage4\ASAIntegration\PMO\Project.xlsx;Extended Properties=&quot;EXCEL 12.0 XML;HDR=YES&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Project Register -2]"
+      DTS:CreationName="EXCEL"
+      DTS:DTSID="{46C406D3-4D2F-490B-8851-2839A92B3886}"
+      DTS:ObjectName="Project Register -2">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\fstorage4\ASAIntegration\PMO\Project Register -2.xlsx;Extended Properties=&quot;EXCEL 12.0 XML;HDR=YES&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="8"
+      DTS:DTSID="{04496152-E9E0-4EF8-9377-3C278D8266E0}"
+      DTS:ObjectName="DEV">
+      <DTS:Property
+        DTS:DataType="8"
+        DTS:Name="ParameterValue">Data Source=devsql-1\whouse;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;</DTS:Property>
+    </DTS:PackageParameter>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="8"
+      DTS:DTSID="{51F3B6A3-7EC6-4E85-8F55-54228F80B629}"
+      DTS:ObjectName="PROD">
+      <DTS:Property
+        DTS:DataType="8"
+        DTS:Name="ParameterValue">Data Source=az-sqlbi01;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Load owssvr table"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{AB8B737D-27EF-4FE9-BA3A-512FF225704B}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load owssvr table">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Load owssvr table\Load Project excel file"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{50266AF9-86CE-458F-977C-EF43AD1BD3AF}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load Project excel file"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="OLE DB Destination"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[extract_PMO].[owssvr]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[DWHB]"
+                      connectionManagerRefId="Package.ConnectionManagers[DWHB]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[ID]"
+                          cachedDataType="r8"
+                          cachedName="ID"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ID]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[ID]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Name]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project Name"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Name]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Name]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Description]"
+                          cachedDataType="nText"
+                          cachedName="Project Description"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Description]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Description]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Manager]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project Manager"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Manager]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Manager]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Portfolio]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Portfolio"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Portfolio]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Portfolio]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Stage]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project Stage"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Stage]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Stage]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Budget Amount]"
+                          cachedDataType="cy"
+                          cachedName="Budget Amount"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Budget Amount]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Budget Amount]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Proposed Completion date]"
+                          cachedDataType="date"
+                          cachedName="Proposed Completion date"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Proposed Completion date]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Proposed Completion date]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Budget Type]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Budget Type"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Budget Type]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Budget Type]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project site link]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project site link"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project site link]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project site link]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Item Type]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Item Type"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Item Type]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Item Type]" />
+                        <inputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Path]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Path"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Path]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Path]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ID]"
+                          dataType="i4"
+                          name="ID" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Name]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Name" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Description]"
+                          dataType="nText"
+                          name="Project Description" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Manager]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Manager" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Portfolio]"
+                          dataType="wstr"
+                          length="255"
+                          name="Portfolio" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Stage]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Stage" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Budget Amount]"
+                          dataType="cy"
+                          name="Budget Amount" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Proposed Completion date]"
+                          dataType="dbTimeStamp"
+                          name="Proposed Completion date" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Budget Type]"
+                          dataType="wstr"
+                          length="255"
+                          name="Budget Type" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project site link]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project site link" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Item Type]"
+                          dataType="wstr"
+                          length="255"
+                          name="Item Type" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Path]"
+                          dataType="wstr"
+                          length="255"
+                          name="Path" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load owssvr table\Load Project excel file\Project excel file"
+                  componentClassID="Microsoft.ExcelSource"
+                  contactInfo="Excel Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                  description="Excel Source"
+                  name="Project excel file"
+                  usesDispositions="true"
+                  version="1">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">'owssvr (1)$'</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">0</property>
+                    <property
+                      dataType="System.String"
+                      description="The mapping from parameters in the SQL command to variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load owssvr table\Load Project excel file\Project excel file.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[Project]"
+                      connectionManagerRefId="Package.ConnectionManagers[Project]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output]"
+                      name="Excel Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[ID]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[ID]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[ID]"
+                          name="ID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Name]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Project Name]"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Name]"
+                          name="Project Name"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Description]"
+                          dataType="nText"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Project Description]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Description]"
+                          name="Project Description"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Manager]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Project Manager]"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Manager]"
+                          name="Project Manager"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Portfolio]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Portfolio]"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Portfolio]"
+                          name="Portfolio"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Stage]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Project Stage]"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project Stage]"
+                          name="Project Stage"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Budget Amount]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Budget Amount]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Budget Amount]"
+                          name="Budget Amount"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Proposed Completion date]"
+                          dataType="date"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Proposed Completion date]"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Proposed Completion date]"
+                          name="Proposed Completion date"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Budget Type]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Budget Type]"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Budget Type]"
+                          name="Budget Type"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project site link]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Project site link]"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Project site link]"
+                          name="Project site link"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Item Type]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Item Type]"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Item Type]"
+                          name="Item Type"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Path]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Path]"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].Columns[Path]"
+                          name="Path"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[ID]"
+                          dataType="r8"
+                          name="ID" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Project Name]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Name" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Project Description]"
+                          dataType="nText"
+                          name="Project Description" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Project Manager]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Manager" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Portfolio]"
+                          dataType="wstr"
+                          length="255"
+                          name="Portfolio" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Project Stage]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Stage" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Budget Amount]"
+                          dataType="cy"
+                          name="Budget Amount" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Proposed Completion date]"
+                          dataType="date"
+                          name="Proposed Completion date" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Budget Type]"
+                          dataType="wstr"
+                          length="255"
+                          name="Budget Type" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Project site link]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project site link" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Item Type]"
+                          dataType="wstr"
+                          length="255"
+                          name="Item Type" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output].ExternalColumns[Path]"
+                          dataType="wstr"
+                          length="255"
+                          name="Path" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output]"
+                      isErrorOut="true"
+                      name="Excel Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[ID]"
+                          dataType="r8"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[ID]"
+                          name="ID" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Project Name]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Project Name]"
+                          name="Project Name" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Project Description]"
+                          dataType="nText"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Project Description]"
+                          name="Project Description" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Project Manager]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Project Manager]"
+                          name="Project Manager" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Portfolio]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Portfolio]"
+                          name="Portfolio" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Project Stage]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Project Stage]"
+                          name="Project Stage" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Budget Amount]"
+                          dataType="cy"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Budget Amount]"
+                          name="Budget Amount" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Proposed Completion date]"
+                          dataType="date"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Proposed Completion date]"
+                          name="Proposed Completion date" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Budget Type]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Budget Type]"
+                          name="Budget Type" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Project site link]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Project site link]"
+                          name="Project site link" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Item Type]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Item Type]"
+                          name="Item Type" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Path]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[Path]"
+                          name="Path" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Load owssvr table\Load Project excel file.Paths[Excel Source Output]"
+                  endId="Package\Load owssvr table\Load Project excel file\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Excel Source Output"
+                  startId="Package\Load owssvr table\Load Project excel file\Project excel file.Outputs[Excel Source Output]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load owssvr table\Truncate current table"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{CDB67D1F-50F2-4766-8E08-CA0497C71BE3}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Truncate current table"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{DE32B932-3301-4BA1-8299-117C1106803A}"
+              SQLTask:SqlStatementSource="Truncate table [extract_PMO].[owssvr]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load owssvr table.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{FA6C5E17-62E9-4031-8296-E3C0CB8AB2AB}"
+          DTS:From="Package\Load owssvr table\Truncate current table"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Load owssvr table\Load Project excel file" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load owssvr2 table"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{C07F2038-6ADB-4A1F-B922-52865BBF2D5F}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load owssvr2 table">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Load owssvr2 table\Load Project Register 2"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{312217AA-634C-422D-95EC-AE798531DBD1}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load Project Register 2"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source"
+                  componentClassID="Microsoft.ExcelSource"
+                  contactInfo="Excel Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                  description="Excel Source"
+                  name="Excel Source"
+                  usesDispositions="true"
+                  version="1">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">owssvr$</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">0</property>
+                    <property
+                      dataType="System.String"
+                      description="The mapping from parameters in the SQL command to variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[Project Register -2]"
+                      connectionManagerRefId="Package.ConnectionManagers[Project Register -2]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output]"
+                      name="Excel Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Name]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Name]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Name]"
+                          name="Project Name"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Overall Health]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Overall Health]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Overall Health]"
+                          name="Overall Health"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Manager]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Manager]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Manager]"
+                          name="Project Manager"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Sponsor]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Sponsor]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Sponsor]"
+                          name="Project Sponsor"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Classification]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Classification]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Classification]"
+                          name="Project Classification"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Stage]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Stage]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Stage]"
+                          name="Project Stage"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Budget Amount]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Budget Amount]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Budget Amount]"
+                          name="Budget Amount"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Proposed Completion date]"
+                          dataType="date"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Proposed Completion date]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Proposed Completion date]"
+                          name="Proposed Completion date"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Proposed Go Live Date]"
+                          dataType="date"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Proposed Go Live Date]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Proposed Go Live Date]"
+                          name="Proposed Go Live Date"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Status (must be updated Monthly)]"
+                          dataType="nText"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Status (must be updated Monthly)]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Status (must be updated Monthly)]"
+                          name="Project Status (must be updated Monthly)"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project on Budget]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project on Budget]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project on Budget]"
+                          name="Project on Budget"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project on Time]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project on Time]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project on Time]"
+                          name="Project on Time"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Risk]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Risk]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Risk]"
+                          name="Project Risk"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Modified]"
+                          dataType="date"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Modified]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Modified]"
+                          name="Modified"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Item Type]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Item Type]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Item Type]"
+                          name="Item Type"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Path]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Path]"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Path]"
+                          name="Path"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Name]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Name" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Overall Health]"
+                          dataType="wstr"
+                          length="255"
+                          name="Overall Health" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Manager]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Manager" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Sponsor]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Sponsor" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Classification]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Classification" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Stage]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Stage" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Budget Amount]"
+                          dataType="cy"
+                          name="Budget Amount" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Proposed Completion date]"
+                          dataType="date"
+                          name="Proposed Completion date" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Proposed Go Live Date]"
+                          dataType="date"
+                          name="Proposed Go Live Date" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Status (must be updated Monthly)]"
+                          dataType="nText"
+                          name="Project Status (must be updated Monthly)" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project on Budget]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project on Budget" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project on Time]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project on Time" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Project Risk]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Risk" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Modified]"
+                          dataType="date"
+                          name="Modified" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Item Type]"
+                          dataType="wstr"
+                          length="255"
+                          name="Item Type" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].ExternalColumns[Path]"
+                          dataType="wstr"
+                          length="255"
+                          name="Path" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output]"
+                      isErrorOut="true"
+                      name="Excel Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Name]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Name]"
+                          name="Project Name" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Overall Health]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Overall Health]"
+                          name="Overall Health" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Manager]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Manager]"
+                          name="Project Manager" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Sponsor]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Sponsor]"
+                          name="Project Sponsor" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Classification]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Classification]"
+                          name="Project Classification" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Stage]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Stage]"
+                          name="Project Stage" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Budget Amount]"
+                          dataType="cy"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Budget Amount]"
+                          name="Budget Amount" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Proposed Completion date]"
+                          dataType="date"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Proposed Completion date]"
+                          name="Proposed Completion date" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Proposed Go Live Date]"
+                          dataType="date"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Proposed Go Live Date]"
+                          name="Proposed Go Live Date" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Status (must be updated Monthly)]"
+                          dataType="nText"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Status (must be updated Monthly)]"
+                          name="Project Status (must be updated Monthly)" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project on Budget]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project on Budget]"
+                          name="Project on Budget" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project on Time]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project on Time]"
+                          name="Project on Time" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Risk]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Project Risk]"
+                          name="Project Risk" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Modified]"
+                          dataType="date"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Modified]"
+                          name="Modified" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Item Type]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Item Type]"
+                          name="Item Type" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Path]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[Path]"
+                          name="Path" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="OLE DB Destination"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[extract_PMO].[owssvr2]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[DWHB]"
+                      connectionManagerRefId="Package.ConnectionManagers[DWHB]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Name]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project Name"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Name]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Name]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Overall Health]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Overall Health"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Overall Health]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Overall Health]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Manager]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project Manager"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Manager]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Manager]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Sponsor]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project Sponsor"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Sponsor]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Sponsor]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Classification]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project Classification"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Classification]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Classification]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Stage]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project Stage"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Stage]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Stage]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Budget Amount]"
+                          cachedDataType="cy"
+                          cachedName="Budget Amount"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Budget Amount]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Budget Amount]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Proposed Completion date]"
+                          cachedDataType="date"
+                          cachedName="Proposed Completion date"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Proposed Completion date]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Proposed Completion date]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Proposed Go Live Date]"
+                          cachedDataType="date"
+                          cachedName="Proposed Go Live Date"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Proposed Go Live Date]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Proposed Go Live Date]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Status (must be updated Monthly)]"
+                          cachedDataType="nText"
+                          cachedName="Project Status (must be updated Monthly)"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Status (must be updated Monthly)]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Status (must be updated Monthly)]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project on Budget]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project on Budget"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project on Budget]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project on Budget]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project on Time]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project on Time"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project on Time]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project on Time]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Project Risk]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Project Risk"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Risk]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Project Risk]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Modified]"
+                          cachedDataType="date"
+                          cachedName="Modified"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Modified]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Modified]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Item Type]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Item Type"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Item Type]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Item Type]" />
+                        <inputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Path]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Path"
+                          externalMetadataColumnId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Path]"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output].Columns[Path]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Name]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Name" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Overall Health]"
+                          dataType="wstr"
+                          length="255"
+                          name="Overall Health" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Manager]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Manager" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Sponsor]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Sponsor" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Classification]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Classification" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Stage]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Stage" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Budget Amount]"
+                          dataType="cy"
+                          name="Budget Amount" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Proposed Completion date]"
+                          dataType="dbTimeStamp"
+                          name="Proposed Completion date" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Proposed Go Live Date]"
+                          dataType="dbTimeStamp"
+                          name="Proposed Go Live Date" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Status (must be updated Monthly)]"
+                          dataType="nText"
+                          name="Project Status (must be updated Monthly)" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project on Budget]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project on Budget" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project on Time]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project on Time" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Project Risk]"
+                          dataType="wstr"
+                          length="255"
+                          name="Project Risk" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Modified]"
+                          dataType="dbTimeStamp"
+                          name="Modified" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Item Type]"
+                          dataType="wstr"
+                          length="255"
+                          name="Item Type" />
+                        <externalMetadataColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Path]"
+                          dataType="wstr"
+                          length="255"
+                          name="Path" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Load owssvr2 table\Load Project Register 2.Paths[Excel Source Output]"
+                  endId="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Excel Source Output"
+                  startId="Package\Load owssvr2 table\Load Project Register 2\Excel Source.Outputs[Excel Source Output]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load owssvr2 table\Truncate current table"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{ABFB258E-EFA1-4A1B-9983-EA96E755EE1C}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Truncate current table"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{DE32B932-3301-4BA1-8299-117C1106803A}"
+              SQLTask:SqlStatementSource="Truncate table [extract_PMO].[owssvr2]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load owssvr2 table.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{C4A70439-177E-4CE1-A45D-0ADD4110B135}"
+          DTS:From="Package\Load owssvr2 table\Truncate current table"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Load owssvr2 table\Load Project Register 2" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{97E4F8BA-AEBE-43FF-8F95-0B3B490D92B1}"
+      DTS:From="Package\Load owssvr table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Load owssvr2 table" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="186,42"
+          Id="Package\Load owssvr table\Load Project excel file"
+          TopLeft="47,99" />
+        <NodeLayout
+          Size="186,42"
+          Id="Package\Load owssvr table\Truncate current table"
+          TopLeft="49,29" />
+        <EdgeLayout
+          Id="Package\Load owssvr table.PrecedenceConstraints[Constraint]"
+          TopLeft="141,71">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,28"
+              Start="0,0"
+              End="0,20.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="333,211"
+          Size="333,254"
+          Id="Package\Load owssvr table"
+          TopLeft="182,128" />
+        <NodeLayout
+          Size="194,42"
+          Id="Package\Load owssvr2 table\Load Project Register 2"
+          TopLeft="54,146" />
+        <NodeLayout
+          Size="186,42"
+          Id="Package\Load owssvr2 table\Truncate current table"
+          TopLeft="64,53" />
+        <EdgeLayout
+          Id="Package\Load owssvr2 table.PrecedenceConstraints[Constraint]"
+          TopLeft="154,95">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,51"
+              Start="0,0"
+              End="0,43.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,43.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="331,263"
+          Size="331,306"
+          Id="Package\Load owssvr2 table"
+          TopLeft="182,418" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="348,382">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36"
+              Start="0,0"
+              End="0,28.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Load owssvr table\Load Project excel file">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="177,42"
+          Id="Package\Load owssvr table\Load Project excel file\OLE DB Destination"
+          TopLeft="324,316" />
+        <NodeLayout
+          Size="159,42"
+          Id="Package\Load owssvr table\Load Project excel file\Project excel file"
+          TopLeft="337,193" />
+        <EdgeLayout
+          Id="Package\Load owssvr table\Load Project excel file.Paths[Excel Source Output]"
+          TopLeft="414.5,235">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,81"
+              Start="0,0"
+              End="0,73.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,73.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load owssvr table\Load Project excel file\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load owssvr table\Load Project excel file\Project excel file">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Load owssvr2 table\Load Project Register 2">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="144,42"
+          Id="Package\Load owssvr2 table\Load Project Register 2\Excel Source"
+          TopLeft="309,244" />
+        <NodeLayout
+          Size="177,42"
+          Id="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination"
+          TopLeft="296,381" />
+        <EdgeLayout
+          Id="Package\Load owssvr2 table\Load Project Register 2.Paths[Excel Source Output]"
+          TopLeft="382.75,286">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,95"
+              Start="0,0"
+              End="0,87.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,87.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load owssvr2 table\Load Project Register 2\Excel Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load owssvr2 table\Load Project Register 2\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
