@@ -11,8 +11,8 @@
   DTS:LocaleID="3081"
   DTS:ObjectName="Conform_PMO"
   DTS:PackageType="5"
-  DTS:VersionBuild="23"
-  DTS:VersionGUID="{E577A9BA-5E11-474A-98C1-59B082A8C95D}">
+  DTS:VersionBuild="24"
+  DTS:VersionGUID="{BE574BB5-C3EB-447A-8C9E-25F8426C18D5}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:PackageParameters>
@@ -60,7 +60,7 @@
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{DE32B932-3301-4BA1-8299-117C1106803A}"
+              SQLTask:Connection="{F32AC200-FDAF-406D-B1AA-81D3B9956A8D}"
               SQLTask:SqlStatementSource="&#xA;--insert original date&#xA;insert into [conform_PMO].[project_health](&#xA;&#x9;&#x9;[Portfolio]&#xA;      ,[Project_Name]&#xA;&#x9;  ,[Overall_Health]&#xA;      ,[Project_Sponsor]&#xA;      ,[Project_Manager]&#xA;      ,[Start_Date]&#xA;      ,[Complete_Date]&#xA;&#x9;  ,[Project_Type]&#xA;      ,[Project_Phases]&#xA;      ,[Project_Phases_Init]&#xA;      ,[Project_Phases_Plan]&#xA;      ,[Project_Phases_Implem]&#xA;      ,[Project_Phases_Review]&#xA;      ,[Project_Phases_Hold]&#xA;      ,[Project_Health_Budget]&#xA;      ,[Project_Health_Time]&#xA;      ,[Project_Health_Risk]&#xA;&#x9;  )&#xA;&#x9;  --select o1.[Portfolio],o1.[Project Name],o2.[Overall Health], o2.[Project Sponsor],o2.[Project manager],null,o2.[Proposed Completion date],o2.[Project Classification],o2.[Project Stage]&#xA;&#x9;  --,0,0,0,0,0,0,0,0&#xA;&#x9;  -- FROM [extract_PMO].[owssvr] o1 inner join  [extract_PMO].[owssvr2] o2 on o1.[Project Name] = o2.[Project Name];&#xA;&#xA;&#x9;   SELECT s.[Portfolio],s.[Project Name],s.[Overall Health], s.[Project Sponsor],s.[Project manager],s.[Proposed Start Date],s.[Proposed Completion date],s.[Project Classification],s.[Project Stage]&#xA;&#x9;   ,0,0,0,0,0,0,0,0&#xA;&#x9;   FROM [extract_PMO].owssvrExport s;&#xA;&#xA;--update Project Phases&#xA;update t&#xA;set &#xA;t.[Project_Phases_Init] = (case when SUBSTRING([Project_Phases],1,1) = '1' then 1 else 0 end),&#xA;t.[Project_Phases_Plan] = (case when SUBSTRING([Project_Phases],1,1) = '2' then 1 else 0 end),&#xA;t.[Project_Phases_Implem] = (case when SUBSTRING([Project_Phases],1,1) = '3' then 1 else 0 end),&#xA;t.[Project_Phases_Review] = (case when SUBSTRING([Project_Phases],1,1) = '4' then 1 else 0 end),&#xA;t.[Project_Phases_Hold] = (case when SUBSTRING([Project_Phases],1,1) = '5' then 1 else 0 end)&#xA;&#xA;from  [conform_PMO].[project_health] t;&#xA;&#xA;--update Project Health, three columns&#xA;update t&#xA;set &#xA;t.[Project_Health_Budget] = (case when o2.[Project on Budget] = 'On Track - No Issues' then 1 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   when o2.[Project on Budget] = 'Cautionary Issues' then 2 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;    when o2.[Project on Budget] = 'Definite Issues' then 3 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;when o2.[Project on Budget] = 'Not started' then 4 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else 0 end),&#xA;t.[Project_Health_Time] = (case when o2.[Project on Time] = 'On Track - No Issues' then 1 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   when o2.[Project on Time] = 'Cautionary Issues' then 2 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;    when o2.[Project on Time] = 'Definite Issues' then 3 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;when o2.[Project on Time] = 'Not started' then 4 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else 0 end),&#xA;t.[Project_Health_Risk] =(case when o2.[Project Risk] = 'On Track - No Issues' then 1 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;   when o2.[Project Risk] = 'Cautionary Issues' then 2 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;    when o2.[Project Risk] = 'Definite Issues' then 3 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;when o2.[Project Risk] = 'Not started' then 4 &#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else 0 end)&#xA;&#xA;&#x9;   FROM [conform_PMO].[project_health] as  t inner join  [extract_PMO].owssvrExport o2 on t.[Project_Name] = o2.[Project Name]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
@@ -77,7 +77,7 @@
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{DE32B932-3301-4BA1-8299-117C1106803A}"
+              SQLTask:Connection="{F32AC200-FDAF-406D-B1AA-81D3B9956A8D}"
               SQLTask:SqlStatementSource="truncate table [conform_PMO].[project_health]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
