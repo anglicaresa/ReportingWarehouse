@@ -8,15 +8,25 @@
   DTS:Description="SSIS Package Description"
   DTS:DTSID="{CD3E754A-589A-47C6-8AE6-3AE1125730C3}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="14.0.3002.101"
+  DTS:LastModifiedProductVersion="15.0.1300.371"
   DTS:LocaleID="3081"
   DTS:MaxErrorCount="0"
   DTS:ObjectName="Extract_PMO"
-  DTS:VersionBuild="5"
-  DTS:VersionGUID="{BB823BA6-6877-4B32-8C71-E4A12F3739B7}">
+  DTS:VersionBuild="9"
+  DTS:VersionGUID="{69234E2F-32B1-4415-8227-507C79F9F2AD}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DWHB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{AEFEDF2D-BFC7-4812-A369-4AFB466FCAF4}"
+      DTS:ObjectName="DWHB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=az-sqlbi01;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
     <DTS:ConnectionManager
       DTS:refId="Package.ConnectionManagers[SourceConnectionExcel]"
       DTS:CreationName="EXCEL"
@@ -24,7 +34,7 @@
       DTS:ObjectName="SourceConnectionExcel">
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.16.0;Data Source=\\fstorage4\ASAIntegration\PMO\Project Register for export.xlsx;Extended Properties=&quot;EXCEL 12.0 XML;HDR=YES&quot;;" />
+          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\fstorage4\ASAIntegration\PMO\Project Register for export.xlsx;Extended Properties=&quot;EXCEL 12.0 XML;HDR=YES&quot;;" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -72,7 +82,7 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                 <property
                   dataType="System.Int32"
                   description="Specifies the column code page to use when code page information is unavailable from the data source."
@@ -106,8 +116,8 @@
               <connections>
                 <connection
                   refId="Package\Data Flow Task 1\Destination - owssvrExport.Connections[OleDbConnection]"
-                  connectionManagerID="{F32AC200-FDAF-406D-B1AA-81D3B9956A8D}:external"
-                  connectionManagerRefId="Project.ConnectionManagers[DWHB]"
+                  connectionManagerID="Package.ConnectionManagers[DWHB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DWHB]"
                   description="The OLE DB runtime connection used to access the database."
                   name="OleDbConnection" />
               </connections>
@@ -522,7 +532,7 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
@@ -1210,7 +1220,7 @@
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
-          SQLTask:Connection="{F32AC200-FDAF-406D-B1AA-81D3B9956A8D}"
+          SQLTask:Connection="{AEFEDF2D-BFC7-4812-A369-4AFB466FCAF4}"
           SQLTask:SqlStatementSource="DROP TABLE [extract_PMO].[owssvrExport];" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
@@ -1227,7 +1237,7 @@
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
-          SQLTask:Connection="{F32AC200-FDAF-406D-B1AA-81D3B9956A8D}"
+          SQLTask:Connection="{AEFEDF2D-BFC7-4812-A369-4AFB466FCAF4}"
           SQLTask:SqlStatementSource="CREATE TABLE [extract_PMO].[owssvrExport] (&#xA;[Project Name] nvarchar(255),&#xA;[Overall Health] nvarchar(255),&#xA;[Project Manager] nvarchar(255),&#xA;[Project Sponsor] nvarchar(255),&#xA;[Project Classification] nvarchar(255),&#xA;[Project Category] nvarchar(255),&#xA;[Project Stage] nvarchar(255),&#xA;[Proposed Start Date] datetime,&#xA;[Proposed Completion date] datetime,&#xA;[Project on Budget] nvarchar(255),&#xA;[Project on Time] nvarchar(255),&#xA;[Project Risk] nvarchar(255),&#xA;[Project Status (must be updated Monthly)] nvarchar(255),&#xA;[Modified] datetime,&#xA;[Proposed Go Live Date] datetime,&#xA;[Brief Project Description] nvarchar(255),&#xA;[Budget - Expenditure to Date] nvarchar(255),&#xA;[Budget Amount] money,&#xA;[Budget source] nvarchar(255),&#xA;[Budget Type] nvarchar(255),&#xA;[Category] nvarchar(255),&#xA;[Mandatory when finalising your project - Have you completed your] nvarchar(255),&#xA;[Portfolio] nvarchar(255),&#xA;[Priority] nvarchar(255),&#xA;[Priority2] numeric(38,0),&#xA;[Project Close] nvarchar(255),&#xA;[Related Projects] nvarchar(max),&#xA;[Strategic Plan Alignment (SPA)] nvarchar(255),&#xA;[Item Type] nvarchar(255),&#xA;[Path] nvarchar(255)&#xA;)&#xA;GO&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
