@@ -7,13 +7,13 @@
   DTS:CreatorName="ANGLICARE-SA\jshen"
   DTS:DTSID="{5FA94F71-2E88-4D1F-AD41-E6C059E9CA08}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="14.0.3002.101"
+  DTS:LastModifiedProductVersion="14.0.3002.107"
   DTS:LocaleID="3081"
   DTS:ObjectName="Conform_RiskMan_Dim - DEV"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="433"
-  DTS:VersionGUID="{78791AB6-5CEF-4F1F-B4D5-8754E2D5A948}">
+  DTS:VersionBuild="435"
+  DTS:VersionGUID="{EDD70E4B-98EB-4D10-9940-FE8EE46D38E7}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -137,7 +137,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">6/20/2018 10:38:27 AM</DTS:VariableValue>
+        DTS:DataType="7">5/15/2019 9:37:16 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -148,7 +148,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">6/20/2018 10:38:27 AM</DTS:VariableValue>
+        DTS:DataType="7">5/15/2019 9:37:16 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -228,7 +228,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{0BAF67A3-BBEE-4703-9088-BD5128BBE5F7}"
-                  SQLTask:SqlStatementSource="------------------------------------------populate action_dim table -------------&#xA;/*------------------------older version---------------&#xA;&#xA;IF OBJECT_ID('tempdb..#action_temp') IS NOT NULL drop table #action_temp;&#xA;&#xA;create table #action_temp&#xA;(batchid int,&#xA; pca varchar(255),&#xA; spca varchar(500),&#xA; due_date date,&#xA; com_date date&#xA; )&#xA;&#xA; create clustered index idx_riskman_temp_batchid on #action_temp(batchid);&#x9;&#x9; &#xA;&#xA; IF OBJECT_ID('tempdb..#action_temp_pca') IS NOT NULL drop table  #action_temp_pca&#xA;create table  #action_temp_pca&#xA;(batchid int,&#xA; action varchar(255)&#xA; )&#xA; &#xA; create clustered index idx_riskman_temp_pca_batchid on #action_temp_pca(batchid);&#x9;&#x9; &#xA;&#xA;IF OBJECT_ID('tempdb..#action_temp_spca') IS NOT NULL  drop table #action_temp_spca &#xA; create table  #action_temp_spca &#xA;(batchid int,&#xA; action varchar(500)&#xA; )&#xA;  create clustered index idx_riskman_temp_spca_batchid on #action_temp_spca(batchid);&#x9;&#x9;&#xA;&#xA;IF OBJECT_ID('tempdb..#action_temp_ddate') IS NOT NULL  drop table #action_temp_ddate&#xA; create table #action_temp_ddate &#xA;(batchid int,&#xA; vdate datetime&#xA; )&#xA;   create clustered index idx_riskman_temp_ddadte_batchid on #action_temp_ddate(batchid);&#x9;&#x9;&#xA;&#xA;&#xA;IF OBJECT_ID('tempdb..#action_temp_cdate') IS NOT NULL    drop table  #action_temp_cdate &#xA;  create table #action_temp_cdate &#xA;(batchid int,&#xA; vdate datetime&#xA; )&#xA;&#xA; create clustered index idx_riskman_temp_cdadte_batchid on #action_temp_cdate(batchid);&#x9;&#x9;&#xA; &#xA; --populate preventative_corrective_action&#xA; insert into #action_temp_pca&#xA; select distinct BatchID, left(ValueString,255)&#xA; from extract_riskman.FRM_DATA &#xA; where fieldname ='PCAPrevCorAct'&#xA;&#xA; --populate specific_preventative_corrective_action&#xA; insert into #action_temp_spca&#xA; select distinct BatchID, left(ValueString,500)&#xA; from extract_riskman.FRM_DATA &#xA; where fieldname ='PCAPrevCorActOth'&#xA; &#xA;  --populate action_due_date&#xA; insert into #action_temp_ddate&#xA; select distinct BatchID,  ValueDate&#xA; from extract_riskman.FRM_DATA &#xA; where fieldname ='PCAActImpDate'&#xA;     &#xA; --populate action_completed_date&#xA; insert into #action_temp_cdate&#xA; select distinct BatchID,  ValueDate&#xA; from extract_riskman.FRM_DATA &#xA;  where fieldname ='PCAActComDate'&#xA;&#xA;&#xA; --populate preventative_corrective_action&#xA; insert into #action_temp (batchid, pca)&#xA; select distinct BatchID, action&#xA; from #action_temp_pca&#xA;&#xA; --populate specific_preventative_corrective_action&#xA; update t1&#xA; set t1.spca = t2.action&#xA; from #action_temp as t1&#xA; inner join #action_temp_spca &#x9;as t2 on t1.batchid=t2.BatchID&#xA; &#xA;  --populate action_due_date&#xA; update t1&#xA; set t1.due_date = convert(date,t2.vdate)&#xA; from #action_temp as t1&#xA; inner join #action_temp_ddate  t2 on t1.batchid=t2.BatchID &#xA;&#xA;   --populate action_completed_date&#xA; update t1&#xA; set t1.com_date = convert(date,t2.vdate)&#xA; from #action_temp as t1&#xA; inner join #action_temp_cdate  t2 on t1.batchid=t2.BatchID &#xA; where t2.vdate is not null&#xA;&#xA;&#xA;&#xA;  ---create new ones&#xA;insert into conform_riskman.ACTION_DIM&#xA;select &#xA;      distinct &#xA;      d1.pca,&#xA;&#x9;  d1.spca,&#xA;&#x9;  d1.due_date,&#xA;&#x9;  d1.com_date&#xA;      ,'N'&#xA;      ,'NEW'&#xA;      ,GETDATE()&#xA;      ,NULL&#xA;      ,'Y'&#xA;&#xA;from  #action_temp as d1&#xA;inner join&#xA;  (select pca,spca,due_date&#xA;   from #action_temp&#xA;   except&#xA;   select  preventative_corrective_action, specific_preventative_corrective_action,action_due_date&#xA;   from conform_riskman.ACTION_DIM   where current_row_indicator='Y' &#xA;   ) as t1  &#xA;   on   d1.pca=t1.pca&#xA;      and d1.spca=t1.spca&#xA;&#x9;  and d1.due_date=t1.due_date&#xA;&#xA;&#xA;--update action_completed_date&#xA;update &#x9;d1&#xA;set  d1.action_completed_date=t1.com_date&#xA;from  conform_riskman.ACTION_DIM as d1&#xA;inner join #action_temp as t1&#xA;on &#x9;d1.preventative_corrective_action=t1.pca&#xA;  and d1.specific_preventative_corrective_action=t1.spca&#xA;  and d1.action_due_date=t1.due_date&#xA;  where t1.com_date is not null&#xA;&#xA;&#xA;&#xA;--update expired ones&#xA;update d1&#xA;set  d1.current_row_indicator='N',&#xA;     d1.row_expiration_date=getdate(),&#xA;  d1.change_reason_code='U',&#xA;  d1.change_reason_description='Update'&#xA;from   conform_riskman.ACTION_DIM as d1&#xA;where d1.preventative_corrective_action not in (select pca from   #action_temp)&#xA;and preventative_corrective_action&lt;&gt;'No Action Type'&#xA;*/&#xA;&#xA;&#xA;&#xA;------------------------------new method changed by JS at 20/06/2017-------------------------------------------------------------------------------------------------------------------------------------&#xA;------------------------------Get information from VIEW: vwSF_PreventativeCorrectiveAction&#xA;--get new ones&#xA;insert into  conform_riskman.action_dim&#x9;&#xA;select &#x9; t1.pcaprevcoract,&#xA;         t1.pcaprevcoractoth,&#xA;&#x9;&#x9; t1.pcaactimpdate,&#xA;&#x9;&#x9; t1.pcaactcomdate&#xA;&#x9;&#x9;   ,'N'&#xA;      ,'NEW'&#xA;      ,GETDATE()&#xA;      ,NULL&#xA;      ,'Y'&#x9;&#xA;&#x9;  ,t2.CH_ID&#xA;from  extract_riskman.vwSF_PreventativeCorrectiveAction   as t1&#xA;inner join &#x9; extract_riskman.CH_IFR as t2&#xA;on t1.keydata = t2.PCAPrevRECID&#xA;where t2.ch_id in &#xA;(  select distinct f2.ch_id &#xA;   from  extract_riskman.vwSF_PreventativeCorrectiveAction   as f1&#xA;   inner join &#x9; extract_riskman.CH_IFR as f2&#xA;   on f1.keydata = f2.PCAPrevRECID&#xA;   except&#xA;   select ch_id &#xA;   from conform_riskman.action_dim where current_row_indicator='Y'&#xA;)&#xA;&#xA;--update complete date&#xA;update t1&#xA;set t1.action_due_date=t2.pcaactimpdate, t1.action_completed_date=t2.pcaactcomdate&#xA;from conform_riskman.action_dim as t1&#xA;inner join &#xA;(&#xA;&#x9;   select  f2.ch_id ,&#xA;&#x9;     f1.pcaactimpdate,&#xA;&#x9;&#x9; f1.pcaactcomdate&#xA;   from  extract_riskman.vwSF_PreventativeCorrectiveAction   as f1&#xA;   inner join &#x9; extract_riskman.CH_IFR as f2&#xA;   on f1.keydata = f2.PCAPrevRECID&#xA;&#xA;)&#x9;as t2&#xA;on t1.ch_id =t2.ch_id&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;--check NO Action Type &#xA;if( (select count(*) from conform_riskman.ACTION_DIM  where current_row_indicator='Y' and preventative_corrective_action='No Action Type' ) =0 )&#xA;begin&#xA;&#x9;   insert into  conform_riskman.ACTION_DIM &#xA;&#x9;   values&#xA;&#x9;   ('No Action Type','No Action Type',null,null,'N','NEW',getdate(),null,'Y',0)&#xA;end&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="------------------------------------------populate action_dim table -------------&#xA;/*------------------------older version---------------&#xA;&#xA;IF OBJECT_ID('tempdb..#action_temp') IS NOT NULL drop table #action_temp;&#xA;&#xA;create table #action_temp&#xA;(batchid int,&#xA; pca varchar(255),&#xA; spca varchar(500),&#xA; due_date date,&#xA; com_date date&#xA; )&#xA;&#xA; create clustered index idx_riskman_temp_batchid on #action_temp(batchid);&#x9;&#x9; &#xA;&#xA; IF OBJECT_ID('tempdb..#action_temp_pca') IS NOT NULL drop table  #action_temp_pca&#xA;create table  #action_temp_pca&#xA;(batchid int,&#xA; action varchar(255)&#xA; )&#xA; &#xA; create clustered index idx_riskman_temp_pca_batchid on #action_temp_pca(batchid);&#x9;&#x9; &#xA;&#xA;IF OBJECT_ID('tempdb..#action_temp_spca') IS NOT NULL  drop table #action_temp_spca &#xA; create table  #action_temp_spca &#xA;(batchid int,&#xA; action varchar(500)&#xA; )&#xA;  create clustered index idx_riskman_temp_spca_batchid on #action_temp_spca(batchid);&#x9;&#x9;&#xA;&#xA;IF OBJECT_ID('tempdb..#action_temp_ddate') IS NOT NULL  drop table #action_temp_ddate&#xA; create table #action_temp_ddate &#xA;(batchid int,&#xA; vdate datetime&#xA; )&#xA;   create clustered index idx_riskman_temp_ddadte_batchid on #action_temp_ddate(batchid);&#x9;&#x9;&#xA;&#xA;&#xA;IF OBJECT_ID('tempdb..#action_temp_cdate') IS NOT NULL    drop table  #action_temp_cdate &#xA;  create table #action_temp_cdate &#xA;(batchid int,&#xA; vdate datetime&#xA; )&#xA;&#xA; create clustered index idx_riskman_temp_cdadte_batchid on #action_temp_cdate(batchid);&#x9;&#x9;&#xA; &#xA; --populate preventative_corrective_action&#xA; insert into #action_temp_pca&#xA; select distinct BatchID, left(ValueString,255)&#xA; from extract_riskman.FRM_DATA &#xA; where fieldname ='PCAPrevCorAct'&#xA;&#xA; --populate specific_preventative_corrective_action&#xA; insert into #action_temp_spca&#xA; select distinct BatchID, left(ValueString,500)&#xA; from extract_riskman.FRM_DATA &#xA; where fieldname ='PCAPrevCorActOth'&#xA; &#xA;  --populate action_due_date&#xA; insert into #action_temp_ddate&#xA; select distinct BatchID,  ValueDate&#xA; from extract_riskman.FRM_DATA &#xA; where fieldname ='PCAActImpDate'&#xA;     &#xA; --populate action_completed_date&#xA; insert into #action_temp_cdate&#xA; select distinct BatchID,  ValueDate&#xA; from extract_riskman.FRM_DATA &#xA;  where fieldname ='PCAActComDate'&#xA;&#xA;&#xA; --populate preventative_corrective_action&#xA; insert into #action_temp (batchid, pca)&#xA; select distinct BatchID, action&#xA; from #action_temp_pca&#xA;&#xA; --populate specific_preventative_corrective_action&#xA; update t1&#xA; set t1.spca = t2.action&#xA; from #action_temp as t1&#xA; inner join #action_temp_spca &#x9;as t2 on t1.batchid=t2.BatchID&#xA; &#xA;  --populate action_due_date&#xA; update t1&#xA; set t1.due_date = convert(date,t2.vdate)&#xA; from #action_temp as t1&#xA; inner join #action_temp_ddate  t2 on t1.batchid=t2.BatchID &#xA;&#xA;   --populate action_completed_date&#xA; update t1&#xA; set t1.com_date = convert(date,t2.vdate)&#xA; from #action_temp as t1&#xA; inner join #action_temp_cdate  t2 on t1.batchid=t2.BatchID &#xA; where t2.vdate is not null&#xA;&#xA;&#xA;&#xA;  ---create new ones&#xA;insert into conform_riskman.ACTION_DIM&#xA;select &#xA;      distinct &#xA;      d1.pca,&#xA;&#x9;  d1.spca,&#xA;&#x9;  d1.due_date,&#xA;&#x9;  d1.com_date&#xA;      ,'N'&#xA;      ,'NEW'&#xA;      ,GETDATE()&#xA;      ,NULL&#xA;      ,'Y'&#xA;&#xA;from  #action_temp as d1&#xA;inner join&#xA;  (select pca,spca,due_date&#xA;   from #action_temp&#xA;   except&#xA;   select  preventative_corrective_action, specific_preventative_corrective_action,action_due_date&#xA;   from conform_riskman.ACTION_DIM   where current_row_indicator='Y' &#xA;   ) as t1  &#xA;   on   d1.pca=t1.pca&#xA;      and d1.spca=t1.spca&#xA;&#x9;  and d1.due_date=t1.due_date&#xA;&#xA;&#xA;--update action_completed_date&#xA;update &#x9;d1&#xA;set  d1.action_completed_date=t1.com_date&#xA;from  conform_riskman.ACTION_DIM as d1&#xA;inner join #action_temp as t1&#xA;on &#x9;d1.preventative_corrective_action=t1.pca&#xA;  and d1.specific_preventative_corrective_action=t1.spca&#xA;  and d1.action_due_date=t1.due_date&#xA;  where t1.com_date is not null&#xA;&#xA;&#xA;&#xA;--update expired ones&#xA;update d1&#xA;set  d1.current_row_indicator='N',&#xA;     d1.row_expiration_date=getdate(),&#xA;  d1.change_reason_code='U',&#xA;  d1.change_reason_description='Update'&#xA;from   conform_riskman.ACTION_DIM as d1&#xA;where d1.preventative_corrective_action not in (select pca from   #action_temp)&#xA;and preventative_corrective_action&lt;&gt;'No Action Type'&#xA;*/&#xA;&#xA;&#xA;&#xA;------------------------------new method changed by JS at 20/06/2017-------------------------------------------------------------------------------------------------------------------------------------&#xA;------------------------------Get information from VIEW: vwSF_PreventativeCorrectiveAction&#xA;--get new ones&#xA;insert into  conform_riskman.action_dim&#x9;&#xA;select &#x9; t1.pcaprevcoract,&#xA;         t1.pcaprevcoractoth,&#xA;&#x9;&#x9; t1.pcaactimpdate,&#xA;&#x9;&#x9; t1.pcaactcomdate&#xA;&#x9;&#x9;   ,'N'&#xA;      ,'NEW'&#xA;      ,GETDATE()&#xA;      ,NULL&#xA;      ,'Y'&#x9;&#xA;&#x9;  ,t2.CH_ID,&#xA;&#x9;  NULL,&#xA;&#x9;  NULL&#xA;from  extract_riskman.vwSF_PreventativeCorrectiveAction   as t1&#xA;inner join &#x9; extract_riskman.CH_IFR as t2&#xA;on t1.keydata = t2.PCAPrevRECID&#xA;where t2.ch_id in &#xA;(  select distinct f2.ch_id &#xA;   from  extract_riskman.vwSF_PreventativeCorrectiveAction   as f1&#xA;   inner join &#x9; extract_riskman.CH_IFR as f2&#xA;   on f1.keydata = f2.PCAPrevRECID&#xA;   except&#xA;   select ch_id &#xA;   from conform_riskman.action_dim where current_row_indicator='Y'&#xA;)&#xA;&#xA;--update complete date&#xA;update t1&#xA;set t1.action_due_date=t2.pcaactimpdate, t1.action_completed_date=t2.pcaactcomdate,&#xA;t1.PCAPrevCorActCompleted= t2.PCAPrevCorActCompleted,&#xA;t1.PCAPrevCorActNotCompleted=t2.PCAPrevCorActNotCompleted&#xA;from conform_riskman.action_dim as t1&#xA;inner join &#xA;(&#xA;&#x9;   select  f2.ch_id ,&#xA;&#x9;     f1.pcaactimpdate,&#xA;&#x9;&#x9; f1.pcaactcomdate,&#xA;&#x9;&#x9; f1.PCAPrevCorActCompleted,&#xA;&#x9;&#x9; f1.PCAPrevCorActNotCompleted&#xA;   from  extract_riskman.vwSF_PreventativeCorrectiveAction   as f1&#xA;   inner join &#x9; extract_riskman.CH_IFR as f2&#xA;   on f1.keydata = f2.PCAPrevRECID&#xA;&#xA;)&#x9;as t2&#xA;on t1.ch_id =t2.ch_id&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;--check NO Action Type &#xA;if( (select count(*) from conform_riskman.ACTION_DIM  where current_row_indicator='Y' and preventative_corrective_action='No Action Type' ) =0 )&#xA;begin&#xA;&#x9;   insert into  conform_riskman.ACTION_DIM &#xA;&#x9;   values&#xA;&#x9;   ('No Action Type','No Action Type',null,null,'N','NEW',getdate(),null,'Y',0,null,null)&#xA;end&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -994,7 +994,7 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="299,47"
           Id="Package\Sequence Container - DIM TABLES\Action_Dim\EST - Write Job Finish Information"
@@ -1012,7 +1012,7 @@
           TopLeft="184.25,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -1034,7 +1034,7 @@
           TopLeft="183.75,149">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,27.5"
               Start="0,0"
               End="0,20">
@@ -1075,7 +1075,7 @@
           TopLeft="184.25,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -1097,7 +1097,7 @@
           TopLeft="183.75,149">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,27.5"
               Start="0,0"
               End="0,20">
@@ -1138,7 +1138,7 @@
           TopLeft="184.25,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -1160,7 +1160,7 @@
           TopLeft="183.75,149">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,27.5"
               Start="0,0"
               End="0,20">
@@ -1201,7 +1201,7 @@
           TopLeft="184.25,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -1223,7 +1223,7 @@
           TopLeft="183.75,149">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,27.5"
               Start="0,0"
               End="0,20">
@@ -1264,7 +1264,7 @@
           TopLeft="184.25,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -1286,7 +1286,7 @@
           TopLeft="183.75,149">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,27.5"
               Start="0,0"
               End="0,20">
@@ -1327,7 +1327,7 @@
           TopLeft="184.25,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -1349,7 +1349,7 @@
           TopLeft="183.75,149">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,27.5"
               Start="0,0"
               End="0,20">
@@ -1390,7 +1390,7 @@
           TopLeft="184.25,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -1412,7 +1412,7 @@
           TopLeft="183.75,149">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,27.5"
               Start="0,0"
               End="0,20">
@@ -1453,7 +1453,7 @@
           TopLeft="184.25,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -1475,7 +1475,7 @@
           TopLeft="183.75,149">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,27.5"
               Start="0,0"
               End="0,20">
@@ -1516,7 +1516,7 @@
           TopLeft="184.25,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -1538,7 +1538,7 @@
           TopLeft="183.75,149">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,27.5"
               Start="0,0"
               End="0,20">
@@ -1567,7 +1567,7 @@
           TopLeft="195.5,326.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1591,7 +1591,7 @@
           TopLeft="195.5,707.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1615,7 +1615,7 @@
           TopLeft="195.5,1088.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1639,7 +1639,7 @@
           TopLeft="195.5,1469.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1663,7 +1663,7 @@
           TopLeft="195.5,1850.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1687,7 +1687,7 @@
           TopLeft="195.5,2231.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -1711,7 +1711,7 @@
           TopLeft="195.5,2612.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
