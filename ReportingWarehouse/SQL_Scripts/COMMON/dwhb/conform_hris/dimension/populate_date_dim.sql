@@ -117,3 +117,39 @@
   update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Labour Day' where month_no = 10 and year = 2016 and day_of_month = 3
   update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Proclamation Day' where month_no = 12 and year = 2016 and day_of_month = 27
   
+     -- year specific: 2017
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Adelaide Cup Day' where month_no = 3 and year = 2017 and day_of_month = 13
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Good Friday' where month_no = 4 and year = 2017 and day_of_month = 14
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Easter Saturday' where month_no = 4 and year = 2017 and day_of_month = 15
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Easter Monday' where month_no = 4 and year = 2017 and day_of_month = 17
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Queens Birthday' where month_no = 6 and year = 2017 and day_of_month = 12
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Labour Day' where month_no = 10 and year = 2017 and day_of_month = 2
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Proclamation Day' where month_no = 12 and year = 2017 and day_of_month = 26
+  
+       -- year specific: 2018
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Adelaide Cup Day' where month_no = 3 and year = 2018 and day_of_month = 12
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Good Friday' where month_no = 3 and year = 2018 and day_of_month = 30
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Easter Saturday' where month_no = 3 and year = 2018 and day_of_month = 31
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Easter Monday' where month_no = 4 and year = 2018 and day_of_month = 2
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Queens Birthday' where month_no = 6 and year = 2018 and day_of_month = 11
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Labour Day' where month_no = 10 and year = 2018 and day_of_month = 1
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Proclamation Day' where month_no = 12 and year = 2018 and day_of_month = 26
+  
+         -- year specific: 2019
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Adelaide Cup Day' where month_no = 3 and year = 2019 and day_of_month = 11
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Good Friday' where month_no = 4 and year = 2019 and day_of_month = 19
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Easter Saturday' where month_no = 4 and year = 2019 and day_of_month = 20
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Easter Monday' where month_no = 4 and year = 2019 and day_of_month = 22
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Queens Birthday' where month_no = 6 and year = 2019 and day_of_month = 10
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Labour Day' where month_no = 10 and year = 2019 and day_of_month = 7
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Proclamation Day' where month_no = 12 and year = 2019 and day_of_month = 26
+  
+  -- year specific: 2020
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Adelaide Cup Day' where month_no = 3 and year = 2020 and day_of_month = 9
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Good Friday' where month_no = 4 and year = 2020 and day_of_month = 10
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Easter Saturday' where month_no = 4 and year = 2020 and day_of_month = 11
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Easter Monday' where month_no = 4 and year = 2020 and day_of_month = 13
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Queens Birthday' where month_no = 6 and year = 2020 and day_of_month = 8
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Labour Day' where month_no = 10 and year = 2020 and day_of_month = 5
+  update conform.date_dim set is_public_holiday = 'Yes', public_holiday_name = 'Proclamation Day' where month_no = 12 and year = 2020 and day_of_month = 28
+  
