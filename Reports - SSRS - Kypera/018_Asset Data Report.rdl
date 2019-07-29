@@ -177,7 +177,10 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
     WHEN ooudf1.[Value] = 15 AND psuc.[Apartments] &gt;= 7 THEN 'Yes'  --Single + 4
     ELSE 'No'
   END) AS [UnderOccupancy]
-
+  --· Site Value Amount
+  ,hud.[Value] as [Site Value Amount]
+	--· Group Household ID
+  ,hud2.[Value] as [Group Household ID]
 FROM [dbo].[PropertyStructure_Unit] AS psu
   LEFT JOIN [dbo].[PropertyStructure_Unit_Status] AS psus ON psus.[ID] = psu.[CurrentStatus] AND psus.[Company] = psu.[Company]
   LEFT JOIN [dbo].[PropertyStructure_Unit_Characteristics] AS psuc ON psuc.[Unit] = psu.[ID] AND psuc.[Company] = psu.[Company]
@@ -241,7 +244,10 @@ FROM [dbo].[PropertyStructure_Unit] AS psu
   LEFT JOIN [dbo].[PropertyStructure_scheme] AS pss ON pss.[Code] = psb.[Scheme] AND pss.[Company] = psb.[Company]
 
   LEFT JOIN [dbo].[HomeTeam_LookupValues] AS lvp ON lvp.[ID] = psu.[PropertySubType] AND lvp.[Company] = psu.[Company] AND lvp.[Deleted] = 0 AND lvp.[Lookup] = 112
-
+  --· Site Value Amount
+  LEFT JOIN [dbo].[PropertyStructure_Unit_UserDefinedFields_Values] AS hud ON psu.Company = hud.Company AND psu.ID = hud.ObjectReference AND hud.UserDefinedField = 104
+	--· Group Household ID
+	LEFT JOIN [dbo].[PropertyStructure_Unit_UserDefinedFields_Values] AS hud2 ON psu.Company = hud2.Company AND psu.ID = hud2.ObjectReference AND hud2.UserDefinedField = 379
 WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 AND psu.[Company] = 1
   AND psd.[Code] IN (@District)
   AND pss.[Name] IN (@Scheme)
@@ -254,9 +260,21 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
           <DataField>PropertyRef</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Age">
-          <DataField>Age</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+        <Field Name="Flat">
+          <DataField>Flat</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Number">
+          <DataField>Number</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Street">
+          <DataField>Street</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Town">
+          <DataField>Town</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Postcode">
           <DataField>Postcode</DataField>
@@ -278,13 +296,13 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
           <DataField>PeopleCount</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Flat">
-          <DataField>Flat</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="FamilyMakeup">
           <DataField>FamilyMakeup</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Age">
+          <DataField>Age</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Disability">
           <DataField>Disability</DataField>
@@ -294,20 +312,12 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
           <DataField>Indigenous</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="Number">
-          <DataField>Number</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="PropertyType">
           <DataField>PropertyType</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="PropertyStyle">
           <DataField>PropertyStyle</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Street">
-          <DataField>Street</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="AreaOffice">
@@ -324,10 +334,6 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
         </Field>
         <Field Name="ConditionCode">
           <DataField>ConditionCode</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Town">
-          <DataField>Town</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="WeeklyMarketRent">
@@ -384,6 +390,14 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
         </Field>
         <Field Name="UnderOccupancy">
           <DataField>UnderOccupancy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Site_Value_Amount">
+          <DataField>Site Value Amount</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Group_Household_ID">
+          <DataField>Group Household ID</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -533,6 +547,12 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.76458cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -1661,6 +1681,72 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox7">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Site Value Amount</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox7</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox32">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Group Household ID</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox32</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -2756,6 +2842,75 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>UnderOccupancy</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Site_Value_Amount">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Site_Value_Amount.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>'$'0.00</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Site_Value_Amount</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                            <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
+                          </Style>
+                        </Textbox>
+                        <rd:Selected>true</rd:Selected>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Group_Household_ID">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Group_Household_ID.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Group_Household_ID</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -3875,6 +4030,70 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox24">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox24</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox38">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox38</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -4972,12 +5191,78 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox28">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox28</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox40">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox40</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -5034,7 +5319,7 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
             <Top>0.66799cm</Top>
             <Left>0.06135cm</Left>
             <Height>2.32063cm</Height>
-            <Width>103.24325cm</Width>
+            <Width>108.24325cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -5046,7 +5331,7 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
         <Height>4.82292in</Height>
         <Style />
       </Body>
-      <Width>40.75098in</Width>
+      <Width>42.63961in</Width>
       <Page>
         <PageHeader>
           <Height>3.64154cm</Height>
