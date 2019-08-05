@@ -109,7 +109,9 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
         <CommandText>
 select 
 oo.id as [Tenancy Ref],oo.Salutation,oo.SalutationLetter as [Letter Salutation]
-,psu.id as [Property Ref],psu.[name] as [Address Line 1],psu.Town as [Suburd],psu.Postcode,psu.HousingOfficer
+,psu.id as [Property Ref],psu.[name] as [Address Line 1],psu.Town as [Suburd],psu.Postcode
+--,psu.HousingOfficer
+,su.FullName as HousingOfficer
 ,pp.Forename,pp.Surname
 ,bd.name as [Billing Details Name],bd.Flat+' ' + bd.Number +' '+ bd.Street as [Billing Details Flat Number Stree]
   ,bd.Town as [Billing Details Town/Suburb],bd.PostCode as [Billing Details Postcode]
@@ -140,6 +142,7 @@ on oo.Company = sundry.Company and oo.id = sundry.Occupancy
   LEFT JOIN [dbo].[PropertyStructure_scheme] AS pss ON pss.[Code] = psb.[Scheme] AND pss.[Company] = psb.[Company]
 
   LEFT JOIN [dbo].[HomeTeam_LookupValues] AS lvp ON lvp.[ID] = psu.[PropertySubType] AND lvp.[Company] = psu.[Company] AND lvp.[Deleted] = 0 AND lvp.[Lookup] = 112
+  LEFT JOIN [dbo].[Security_User] su on psu.HousingOfficer = su.[User]
   
 where oo.Company = 1 and (oo.EndDate is null or oo.EndDate &gt; getdate())
 and op.MainTenant = 1 and op.CurrentPerson = 1
@@ -181,7 +184,7 @@ order by psu.id;</CommandText>
         </Field>
         <Field Name="HousingOfficer">
           <DataField>HousingOfficer</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Forename">
           <DataField>Forename</DataField>
@@ -1227,7 +1230,6 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                             <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
