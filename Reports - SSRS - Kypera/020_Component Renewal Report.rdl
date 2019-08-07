@@ -171,7 +171,15 @@ where
  --SET @Scheme ='BPSC';
  --SET @Block ='Gro02';
  --SET @From_Date = '20181101';
-
+with cte2
+AS(
+	select tt2.* from [dbo].[PropertyStructure_Component] tt2
+	inner join (
+	select tt.AreaID,tt.ComponentType,tt.Company,max(tt.LastUpdateOn) as tlastUpdateon
+	from [dbo].[PropertyStructure_Component] tt
+	group by tt.AreaID,tt.ComponentType,tt.Company
+	) as cte1 on tt2.AreaID = cte1.AreaID and tt2.ComponentType= cte1.ComponentType and tt2.Company = cte1.Company and tt2.lastUpdateon=cte1.tlastupdateon
+)
 SELECT 
 		p.[Property Ref.]
 		,p.flat
@@ -270,15 +278,15 @@ inner JOIN dbo.HomeTeam_LookupValues  as [Lookup]
  inner join [dbo].[PropertyStructure_Unit_UserDefinedFields_Values] v 
 			on p.[Property Ref.] = v.ObjectReference and v.UserDefinedField = 123  
 			and ( (@From_Date is null) or ( TRY_CAST( v.Value as date) &gt;= @From_Date))   and ( (@To_Date is null) or (TRY_CAST( v.Value as date) &lt; @To_Date) )
-left join [dbo].[PropertyStructure_Component] as hw on p.[Property Ref.] = hw.[AreaID] and hw.ComponentType = 150 and hw.Company = 1
-left join [dbo].[PropertyStructure_Component] as pe on p.[Property Ref.] = pe.[AreaID] and pe.ComponentType = 214 and pe.Company = 1
-left join [dbo].[PropertyStructure_Component] as pin on p.[Property Ref.] = pin.[AreaID] and pin.ComponentType = 213 and pin.Company = 1
-left join [dbo].[PropertyStructure_Component] as fc on p.[Property Ref.] = fc.[AreaID] and fc.ComponentType = 48 and fc.Company = 1
-left join [dbo].[PropertyStructure_Component] as kc on p.[Property Ref.] = kc.[AreaID] and kc.ComponentType = 69 and kc.Company = 1
-left join [dbo].[PropertyStructure_Component] as bc on p.[Property Ref.] = bc.[AreaID] and bc.ComponentType = 191 and bc.Company = 1
-left join [dbo].[PropertyStructure_Component] as usc on p.[Property Ref.] = usc.[AreaID] and usc.ComponentType = 80 and usc.Company = 1
-left join [dbo].[PropertyStructure_Component] as ssc on p.[Property Ref.] = ssc.[AreaID] and ssc.ComponentType = 81 and ssc.Company = 1
-left join [dbo].[PropertyStructure_Component] as so on p.[Property Ref.] = so.[AreaID] and so.ComponentType = 160 and so.Company = 1
+	left join cte2 as hw on p.[Property Ref.] = hw.[AreaID] and hw.ComponentType = 150 and hw.Company = 1
+	left join cte2 as pe on p.[Property Ref.] = pe.[AreaID] and pe.ComponentType = 214 and pe.Company = 1
+	left join cte2 as pin on p.[Property Ref.] = pin.[AreaID] and pin.ComponentType = 213 and pin.Company = 1
+	left join cte2 as fc on p.[Property Ref.] = fc.[AreaID] and fc.ComponentType = 48 and fc.Company = 1
+	left join cte2 as kc on p.[Property Ref.] = kc.[AreaID] and kc.ComponentType = 69 and kc.Company = 1
+	left join cte2 as bc on p.[Property Ref.] = bc.[AreaID] and bc.ComponentType = 191 and bc.Company = 1
+	left join cte2 as usc on p.[Property Ref.] = usc.[AreaID] and usc.ComponentType = 80 and usc.Company = 1
+	left join cte2 as ssc on p.[Property Ref.] = ssc.[AreaID] and ssc.ComponentType = 81 and ssc.Company = 1
+	left join cte2 as so on p.[Property Ref.] = so.[AreaID] and so.ComponentType = 160 and so.Company = 1
 order BY p.[Property Ref.]</CommandText>
       </Query>
       <Fields>
