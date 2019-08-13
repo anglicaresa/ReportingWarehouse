@@ -1,0 +1,516 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner"><AutoRefresh>0</AutoRefresh><DataSources><DataSource Name="Kypera_Test2"><ConnectionProperties><DataProvider>SQL</DataProvider><ConnectString>Data Source=appsql-3;Initial Catalog=KH_Test</ConnectString><IntegratedSecurity>true</IntegratedSecurity></ConnectionProperties><rd:SecurityType>Integrated</rd:SecurityType><rd:DataSourceID>41657426-83f5-44eb-9a4e-da55f50984a9</rd:DataSourceID></DataSource></DataSources><DataSets><DataSet Name="District"><Query><DataSourceName>Kypera_Test2</DataSourceName><CommandText>SELECT 
+    distinct psd.code  as [District]
+    -- ,pss.Name as Scheme
+    -- ,psbu.Block as Block
+    -- ,vRD.contractor
+    -- ,vRd.Priority
+    -- ,vRD.Trade
+    -- ,vRD.Classification as [Repair Type]
+    -- ,vRD.[Status]
+    -- ,vRD.Complete
+
+FROM 
+    dbo.Repairs_WorksOrder as vRD
+    --The Property Tree
+    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
+    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
+    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
+    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
+    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
+
+
+WHERE
+    vRD.Company = 1
+    -- and (psd.code IN (@District) or @District is null)
+    -- AND (pss.Name IN (@Scheme) or @Scheme is null)
+    -- AND (psbu.Block IN (@Block) or @Block is null)
+
+ORDER BY
+    psd.code</CommandText><rd:UseGenericDesigner>true</rd:UseGenericDesigner></Query><Fields><Field Name="District"><DataField>District</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="Scheme"><Query><DataSourceName>Kypera_Test2</DataSourceName><QueryParameters><QueryParameter Name="@District"><Value>=Parameters!District.Value</Value></QueryParameter></QueryParameters><CommandText>SELECT  
+       distinct PSS.[Name] as Scheme
+		
+FROM [Anglicare].dbo.Repairs_WorksOrder AS WO
+     LEFT JOIN (SELECT worksorder, max(unit) as unit from [Anglicare].dbo.Repairs_WorksOrder_UnitJoin GROUP BY  worksorder) AS A ON WO.ID=A.WorksOrder
+	 --Block Unit
+     INNER JOIN [Anglicare].dbo.PropertyStructure_BlockUnit AS B ON B.Unit=A.Unit
+	 --Unit
+     INNER JOIN  [Anglicare].dbo.PropertyStructure_Block AS PSB ON PSB.Code=B.Block   
+	--District Level
+	INNER join anglicare.dbo.PropertyStructure_District as PSD on PSB.District = PSD.Code
+	--Scheme Level
+	INNER join anglicare.dbo.PropertyStructure_scheme as PSS on PSB.Scheme = PSS.Code
+	
+	 left join [Anglicare].dbo.Repairs_WorksOrder_Completed_With_ContractorDetails as woc on wo.id=woc.worksorderid
+     left join [Anglicare].dbo.Repairs_Priorities as pri on wo.priority = pri.id
+	 left join [Anglicare].dbo.HomeTeam_LookupValues as lookupt on wo.classification=lookupt.id and lookupt.[lookup] =25 
+	 left join [Anglicare].dbo.Security_User as users on wo.owner =users.[User]
+where 
+ PSD.code in (@District)</CommandText><rd:UseGenericDesigner>true</rd:UseGenericDesigner></Query><Fields><Field Name="Scheme"><DataField>Scheme</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="Block"><Query><DataSourceName>Kypera_Test2</DataSourceName><QueryParameters><QueryParameter Name="@District"><Value>=Parameters!District.Value</Value></QueryParameter><QueryParameter Name="@Scheme"><Value>=Parameters!Scheme.Value</Value></QueryParameter></QueryParameters><CommandText>SELECT  
+       distinct B.[Block] as Block
+		
+FROM [Anglicare].dbo.Repairs_WorksOrder AS WO
+     LEFT JOIN (SELECT worksorder, max(unit) as unit from [Anglicare].dbo.Repairs_WorksOrder_UnitJoin GROUP BY  worksorder) AS A ON WO.ID=A.WorksOrder
+	 --Block Unit
+     INNER JOIN [Anglicare].dbo.PropertyStructure_BlockUnit AS B ON B.Unit=A.Unit
+	 --Unit
+     INNER JOIN  [Anglicare].dbo.PropertyStructure_Block AS PSB ON PSB.Code=B.Block   
+	--District Level
+	INNER join anglicare.dbo.PropertyStructure_District as PSD on PSB.District = PSD.Code
+	--Scheme Level
+	INNER join anglicare.dbo.PropertyStructure_scheme as PSS on PSB.Scheme = PSS.Code
+	
+	 left join [Anglicare].dbo.Repairs_WorksOrder_Completed_With_ContractorDetails as woc on wo.id=woc.worksorderid
+     left join [Anglicare].dbo.Repairs_Priorities as pri on wo.priority = pri.id
+	 left join [Anglicare].dbo.HomeTeam_LookupValues as lookupt on wo.classification=lookupt.id and lookupt.[lookup] =25 
+	 left join [Anglicare].dbo.Security_User as users on wo.owner =users.[User]
+where 
+ PSD.code in (@District)
+ and PSS.[Name] in (@Scheme)</CommandText></Query><Fields><Field Name="Block"><DataField>Block</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="MaintenancePlan"><Query><DataSourceName>Kypera_Test2</DataSourceName><QueryParameters><QueryParameter Name="@District"><Value>=Parameters!District.Value</Value></QueryParameter><QueryParameter Name="@Scheme"><Value>=Parameters!Scheme.Value</Value></QueryParameter><QueryParameter Name="@Block"><Value>=Parameters!Block.Value</Value></QueryParameter><QueryParameter Name="@From_Date"><Value>=Parameters!From_Date.Value</Value></QueryParameter><QueryParameter Name="@To_Date"><Value>=Parameters!To_Date.Value</Value></QueryParameter><QueryParameter Name="@contractor"><Value>=Parameters!contractor.Value</Value></QueryParameter><QueryParameter Name="@Priority"><Value>=Parameters!Priority.Value</Value></QueryParameter><QueryParameter Name="@Trade"><Value>=Parameters!Trade.Value</Value></QueryParameter><QueryParameter Name="@Classification"><Value>=Parameters!Classification.Value</Value></QueryParameter><QueryParameter Name="@Status"><Value>=Parameters!Status.Value</Value></QueryParameter><QueryParameter Name="@ExternalRevenueSource"><Value>=Parameters!ExternalRevenueSource.Value</Value></QueryParameter><QueryParameter Name="@EFrom_Date"><Value>=Parameters!EFrom_Date.Value</Value></QueryParameter><QueryParameter Name="@ETo_Date"><Value>=Parameters!ETo_Date.Value</Value></QueryParameter></QueryParameters><CommandText>-- DECLARE @District varchar(100);
+-- DECLARE @Scheme varchar(100);
+-- DECLARE @Block varchar(100);
+-- DECLARE @From_Date DATE;
+-- DECLARE @To_Date DATE;
+
+-- DECLARE @contractor varchar(100);
+-- DECLARE @Priority varchar(100);
+-- DECLARE @Trade varchar(100);
+-- DECLARE @Classification varchar(100);
+-- DECLARE @Status varchar(100);
+
+-- SET @District ='ASA';
+-- SET @Scheme ='BPSC';
+-- SET @Block ='Gro02';
+-- SET @From_Date = '20181101';
+
+SELECT p.[Property Ref.],p.[Display Name]
+,ISNULL(b.Responsive, 0) as Responsive
+,ISNULL(b.Vacancy, 0) as Vacancy
+,ISNULL(b.Planned, 0) as Planned
+,ISNULL(b.Cyclical, 0) as Cyclical
+,ISNULL(b.ALI, 0) as ALI
+,ISNULL(b.Responsive, 0)+ISNULL(b.Vacancy, 0)+ISNULL(b.Planned, 0)+ISNULL(b.Cyclical, 0)+ISNULL(b.ALI, 0) as Total
+
+FROM (
+  SELECT 
+      psu.ID as [Property Ref.]
+      ,psu.Name as [Display Name]
+
+  FROM 
+    --The Property Tree
+      dbo.PropertyStructure_Unit as psu  
+      LEFT  JOIN dbo.PropertyStructure_BlockUnit psbu ON psu.Company = psbu.Company AND psu.ID = psbu.Unit
+      LEFT  JOIN dbo.PropertyStructure_Block psb ON psu.Company = psb.Company AND psbu.Block = psb.Code
+      LEFT  JOIN dbo.PropertyStructure_scheme pss ON psu.Company = pss.Company AND psb.Scheme = pss.Code
+      LEFT  JOIN dbo.PropertyStructure_District psd ON psu.Company = psd.Company AND psb.District = psd.Code
+      -- LEFT  JOIN dbo.v_RepairsData as vRD ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
+
+  WHERE
+      -- vRD.Company = 1  and 
+      (psd.code IN (@District))
+      AND (pss.Name IN (@Scheme))
+      AND (psbu.Block IN (@Block) )
+      and (psu.isSold =0 or psu.isSold is null) 
+      and (psu.isDemolished = 0 or psu.isDemolished is null)
+      and (psu.isRelinquished = 0 or psu.isRelinquished is null)
+      -- and (vRD.Complete &gt; (@From_Date))
+      -- and (vRD.Complete &lt; @To_Date or @To_Date is null)
+      -- and (vRD.contractor IN (@contractor))
+      -- AND (vRd.Priority IN (@Priority) )
+      -- AND (vRD.Trade IN (@Trade) )
+      -- and (vRD.Classification IN (@Classification))
+      -- AND (vRD.[Status] IN (@Status) )
+  GROUP BY
+      psu.ID
+      ,psu.Name
+      -- ,psd.code 
+      -- ,pss.Name
+      -- ,psbu.Block 
+      -- ,vRD.contractor
+      -- ,vRd.Priority
+      -- ,vRD.Trade
+      -- ,vRD.Classification 
+      -- ,vRD.[Status]
+      -- ,vRD.Complete
+) as p LEFT JOIN
+(
+    SELECT 
+      vRD.AreaID as [Property Ref.]
+      -- ,psu.Name as [Display Name]
+      -- ,psd.code as District
+      -- ,pss.Name as Scheme
+      -- ,psbu.Block as Block
+      -- ,vRD.contractor
+      -- ,vRd.Priority
+      -- ,vRD.Trade
+      -- ,vRD.Classification as [Repair Type]
+      -- ,vRD.[Status]
+      -- ,vRD.Complete
+
+        -- 1. Actual Cost of all works orders listed as a Priority P1, P2 or P3 and
+        -- a. Excluding any with Code = ALI
+      --,CAST(SUM(CASE WHEN ((rp.[Name] like ('P1%') or rp.[Name] like ('P2%') or rp.[Name] like ('P3%')) and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+      --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+      --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+      ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61028 Responsive Maintenance' ) THEN v.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Responsive]
+        -- 2. Actual Cost of all works orders listed as a Priority P4 and
+        -- a. Excluding any with Code = ALI
+     -- ,CAST(SUM(CASE WHEN ((rp.[Name] like ('P4%')) and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+    --  ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+        --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+        ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61029 Vacancy Maintenance' ) THEN v.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Vacancy]
+        -- 3. Planned - Actual cost of all works orders with
+        -- a. Priority = P6 and;
+        -- b. Excluding any with Code = ALI
+      --,CAST(SUM(CASE WHEN (rp.[Name] like ('P6%') and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+            --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+            --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61026 Planned Capital Maint' ) THEN V.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Planned]
+        -- 4. Cyclical - Actual cost of all works orders with
+        -- a. Priority = P7 and;
+        -- b. Excluding any with Code = ALI
+      --,CAST(SUM(CASE WHEN (rp.[Name] like ('P7%') and (Lookup2.Name!='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+    --  ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+    --,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+            ,CAST(SUM(CASE WHEN (RWRE.[Name] ='61025 Cyclical Maintenance' ) THEN V.Goods ELSE 0 END) AS DECIMAL(10,2)) as [Cyclical]
+        -- 5. ALI - Actual cost of all works orders with
+        -- a. Priority = P1, P2, P3, P6, P7 and;
+        -- b. Include only if Code = ALI
+    --   ,CAST(SUM(CASE WHEN ((
+    --        rp.[Name] like ('P1%') 
+    --     or rp.[Name] like ('P2%') 
+    --     or rp.[Name] like ('P3%') 
+    --     or rp.[Name] like ('P4%') 
+    --     or rp.[Name] like ('P6%') 
+    --     or rp.[Name] like ('P7%')) and (Lookup2.Name='ALI')) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
+--,CAST(SUM(CASE WHEN (RWRE.[Name] ='61024 ALI''s' ) THEN vRD.ActualCost ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
+,CAST(SUM(CASE WHEN (RWRE.[Name] ='61024 ALI''s' ) THEN vRD.GoodsTotal ELSE 0 END) AS DECIMAL(10,2)) as [ALI]
+  FROM 
+  dbo.Repairs_WorksOrder as vRD
+  --LEFT JOIN dbo.Repairs_Priorities as rp ON  vRD.Company = rp.Company And vRD.Priority = rp.ID  
+  LEFT JOIN [dbo].[Repairs_WorksOrder_Revenue_External] as RWRE on vRD.ExternalRevenue = RWRE.[ID]
+   Left JOIN dbo.HomeTeam_LookupValues  as Lookup2 
+ ON vRD.Company = Lookup2.Company AND vRD.Classification2 = Lookup2.ID AND Lookup2.Lookup = 26 
+    --The Property Tree
+      -- dbo.PropertyStructure_Unit as psu  
+      -- LEFT  JOIN dbo.PropertyStructure_BlockUnit psbu ON psu.Company = psbu.Company AND psu.ID = psbu.Unit
+      -- LEFT  JOIN dbo.PropertyStructure_Block psb ON psu.Company = psb.Company AND psbu.Block = psb.Code
+      -- LEFT  JOIN dbo.PropertyStructure_scheme pss ON psu.Company = pss.Company AND psb.Scheme = pss.Code
+      -- LEFT  JOIN dbo.PropertyStructure_District psd ON psu.Company = psd.Company AND psb.District = psd.Code
+      -- LEFT  JOIN dbo.v_RepairsData as vRD ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
+  inner join dbo.Repairs_WorksOrder_InvoicesJoin rwij  on rwij.WorksOrder = vrd.ID and rwij.Company = vRD.Company
+ inner join dbo.Invoice v on rwij.Invoice = v.ID
+  WHERE
+      vRD.Company = 1   
+      -- (psd.code IN (@District))
+      -- AND (pss.Name IN (@Scheme))
+      -- AND (psbu.Block IN (@Block) )
+      and (vRD.Complete &gt;= (@From_Date))
+      and (vRD.Complete &lt; @To_Date or @To_Date is null)
+      and (vRD.contractor IN (@contractor))
+      AND (vRd.Priority IN (@Priority) )
+      AND (vRD.Trade IN (@Trade) )
+      and (vRD.Classification IN (@Classification))
+      AND (vRD.[Status] IN (@Status) )
+      and  vRD.ExternalRevenue IN (@ExternalRevenueSource)
+      and ((v.ExpectedPaymentDate &gt;= @EFrom_Date) or @EFrom_Date is null)
+      and ((v.ExpectedPaymentDate &lt; @ETo_Date) or @ETo_Date is null)
+  GROUP BY
+    vRD.AreaID
+      -- psu.ID
+      -- ,psu.Name
+      -- ,psd.code 
+      -- ,pss.Name
+      -- ,psbu.Block 
+      -- ,vRD.contractor
+      -- ,vRd.Priority
+      -- ,vRD.Trade
+      -- ,vRD.Classification 
+      -- ,vRD.[Status]
+      -- ,vRD.Complete
+
+) as b on p.[Property Ref.] = b.[Property Ref.]
+order BY p.[Property Ref.]</CommandText></Query><Fields><Field Name="Property_Ref_"><DataField>Property Ref.</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="Display_Name"><DataField>Display Name</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="Responsive"><DataField>Responsive</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field><Field Name="Vacancy"><DataField>Vacancy</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field><Field Name="Planned"><DataField>Planned</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field><Field Name="Cyclical"><DataField>Cyclical</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field><Field Name="ALI"><DataField>ALI</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field><Field Name="Total"><DataField>Total</DataField><rd:TypeName>System.Decimal</rd:TypeName></Field></Fields></DataSet><DataSet Name="Priority"><Query><DataSourceName>Kypera_Test2</DataSourceName><QueryParameters><QueryParameter Name="@District"><Value>=Parameters!District.Value</Value></QueryParameter><QueryParameter Name="@Scheme"><Value>=Parameters!Scheme.Value</Value></QueryParameter><QueryParameter Name="@Block"><Value>=Parameters!Block.Value</Value></QueryParameter><QueryParameter Name="@From_Date"><Value>=Parameters!From_Date.Value</Value></QueryParameter><QueryParameter Name="@To_Date"><Value>=Parameters!To_Date.Value</Value></QueryParameter></QueryParameters><CommandText>
+-- DECLARE @District varchar(100);
+-- DECLARE @Scheme varchar(100);
+-- DECLARE @Block varchar(100);
+-- DECLARE @From_Date DATE;
+-- DECLARE @To_Date DATE;
+
+-- DECLARE @contractor varchar(100);
+-- DECLARE @Priority varchar(100);
+-- DECLARE @Trade varchar(100);
+-- DECLARE @Classification varchar(100);
+-- DECLARE @Status varchar(100);
+
+-- SET @District ='ASA';
+-- SET @Scheme ='BPSC';
+-- SET @Block ='Gro02';
+-- SET @From_Date = '20170101';
+
+
+SELECT 
+    distinct vRd.Priority as Priority
+    ,dbo.Repairs_Priorities.Name AS [Name]
+    -- ,pss.Name as Scheme
+    -- ,psbu.Block as Block
+    -- ,vRD.contractor
+    -- ,vRd.Priority
+    -- ,vRD.Trade
+    -- ,vRD.Classification as [Repair Type]
+    -- ,vRD.[Status]
+    -- ,vRD.Complete
+
+FROM 
+    dbo.Repairs_WorksOrder as vRD
+    --The Property Tree
+    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
+    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
+    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
+    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
+    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
+    LEFT JOIN dbo.Repairs_Priorities ON  vRD.Company = dbo.Repairs_Priorities.Company And vRD.Priority = dbo.Repairs_Priorities.ID  
+
+WHERE
+    vRD.Company = 1
+    and ((psd.code IN (@District)))
+    AND (pss.Name IN (@Scheme))
+  AND (psbu.Block IN (@Block))
+    and (vRD.Complete &gt; @From_Date or @From_Date is null)
+   and (vRD.Complete &lt; @To_Date or @To_Date is null)
+    -- ,vRD.contractor
+    -- ,vRd.Priority
+    -- ,vRD.Trade
+    -- ,vRD.Classification as [Repair Type]
+    -- ,vRD.[Status]
+    --and (vRD.contractor IN (@contractor) or @contractor is null)
+    --AND (vRd.Priority IN (@Priority) or @Priority is null)
+    --AND (vRD.Trade IN (@Trade) or @Trade is null)
+    --and (vRD.Classification IN (@Classification) or @Classification is null)
+    --AND (vRD.[Status] IN (@Status) or @Status is null)
+--UNION select null as Priority</CommandText></Query><Fields><Field Name="Priority"><DataField>Priority</DataField><rd:TypeName>System.Int32</rd:TypeName></Field><Field Name="Name"><DataField>Name</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="Contractor"><Query><DataSourceName>Kypera_Test2</DataSourceName><QueryParameters><QueryParameter Name="@District"><Value>=Parameters!District.Value</Value></QueryParameter><QueryParameter Name="@Scheme"><Value>=Parameters!Scheme.Value</Value></QueryParameter><QueryParameter Name="@Block"><Value>=Parameters!Block.Value</Value></QueryParameter><QueryParameter Name="@From_Date"><Value>=Parameters!From_Date.Value</Value></QueryParameter><QueryParameter Name="@To_Date"><Value>=Parameters!To_Date.Value</Value></QueryParameter></QueryParameters><CommandText>SELECT 
+    distinct vRD.contractor as Contractor
+    ,dbo.Contractors_contractor.Name AS [Name]
+
+
+FROM 
+    dbo.Repairs_WorksOrder as vRD
+    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
+    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
+    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
+    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
+    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
+
+LEFT JOIN dbo.Contractors_contractor 
+ ON vRD.Contractor = dbo.Contractors_contractor.ID AND 
+ vRD.Company = dbo.Contractors_contractor.Company
+WHERE
+    vRD.Company = 1
+    and ((psd.code IN (@District)))
+    AND (pss.Name IN (@Scheme))
+   AND (psbu.Block IN (@Block))
+    and (vRD.Complete &gt; @From_Date or @From_Date is null)
+    and (vRD.Complete &lt; @To_Date or @To_Date is null)
+ORDER BY
+    vRd.Contractor</CommandText></Query><Fields><Field Name="Contractor"><DataField>Contractor</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="Name"><DataField>Name</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="Trade"><Query><DataSourceName>Kypera_Test2</DataSourceName><QueryParameters><QueryParameter Name="@District"><Value>=Parameters!District.Value</Value></QueryParameter><QueryParameter Name="@Scheme"><Value>=Parameters!Scheme.Value</Value></QueryParameter><QueryParameter Name="@Block"><Value>=Parameters!Block.Value</Value></QueryParameter><QueryParameter Name="@From_Date"><Value>=Parameters!From_Date.Value</Value></QueryParameter><QueryParameter Name="@To_Date"><Value>=Parameters!To_Date.Value</Value></QueryParameter></QueryParameters><CommandText>
+-- DECLARE @District varchar(100);
+-- DECLARE @Scheme varchar(100);
+-- DECLARE @Block varchar(100);
+-- DECLARE @From_Date DATE;
+-- DECLARE @To_Date DATE;
+
+-- DECLARE @contractor varchar(100);
+-- DECLARE @Priority varchar(100);
+-- DECLARE @Trade varchar(100);
+-- DECLARE @Classification varchar(100);
+-- DECLARE @Status varchar(100);
+
+-- SET @District ='ASA';
+-- SET @Scheme ='BPSC';
+-- SET @Block ='Gro02';
+-- SET @From_Date = '20170101';
+
+
+SELECT 
+    distinct vRD.Trade as Trade
+    , ISNULL(dbo.HomeTeam_LookupValues.Name, '') AS [Name]
+    -- ,pss.Name as Scheme
+    -- ,psbu.Block as Block
+    -- ,vRD.contractor
+    -- ,vRd.Priority
+    -- ,vRD.Trade
+    -- ,vRD.Classification as [Repair Type]
+    -- ,vRD.[Status]
+    -- ,vRD.Complete
+
+FROM 
+    dbo.Repairs_WorksOrder as vRD
+    --The Property Tree
+    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
+    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
+    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
+    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
+    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
+
+
+
+ LEFT JOIN dbo.HomeTeam_LookupValues  
+ ON vRD.Company = dbo.HomeTeam_LookupValues.Company AND vRD.Trade = dbo.HomeTeam_LookupValues.ID AND dbo.HomeTeam_LookupValues.Lookup = 24 
+
+
+WHERE
+    vRD.Company = 1
+    and ((psd.code IN (@District)))
+    AND (pss.Name IN (@Scheme))
+   AND (psbu.Block IN (@Block))
+    and (vRD.Complete &gt; @From_Date or @From_Date is null)
+    and (vRD.Complete &lt; @To_Date or @To_Date is null)
+    -- ,vRD.contractor
+    -- ,vRd.Priority
+    -- ,vRD.Trade
+    -- ,vRD.Classification as [Repair Type]
+    -- ,vRD.[Status]
+    --and (vRD.contractor IN (@contractor) or @contractor is null)
+    --AND (vRd.Priority IN (@Priority) or @Priority is null)
+
+    --and (vRD.Classification IN (@Classification) or @Classification is null)
+    --AND (vRD.[Status] IN (@Status) or @Status is null)
+--UNION select null as Trade</CommandText></Query><Fields><Field Name="Trade"><DataField>Trade</DataField><rd:TypeName>System.Int32</rd:TypeName></Field><Field Name="Name"><DataField>Name</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="Status"><Query><DataSourceName>Kypera_Test2</DataSourceName><QueryParameters><QueryParameter Name="@District"><Value>=Parameters!District.Value</Value></QueryParameter><QueryParameter Name="@Scheme"><Value>=Parameters!Scheme.Value</Value></QueryParameter><QueryParameter Name="@Block"><Value>=Parameters!Block.Value</Value></QueryParameter><QueryParameter Name="@From_Date"><Value>=Parameters!From_Date.Value</Value></QueryParameter><QueryParameter Name="@To_Date"><Value>=Parameters!To_Date.Value</Value></QueryParameter></QueryParameters><CommandText>
+-- DECLARE @District varchar(100);
+-- DECLARE @Scheme varchar(100);
+-- DECLARE @Block varchar(100);
+-- DECLARE @From_Date DATE;
+-- DECLARE @To_Date DATE;
+
+-- DECLARE @contractor varchar(100);
+-- DECLARE @Priority varchar(100);
+-- DECLARE @Trade varchar(100);
+-- DECLARE @Classification varchar(100);
+-- DECLARE @Status varchar(100);
+
+-- SET @District ='ASA';
+-- SET @Scheme ='BPSC';
+-- SET @Block ='Gro02';
+-- SET @From_Date = '20170101';
+
+SELECT 
+    distinct vRD.[Status] as [Status]
+    ,hts.[Name]
+    -- ,pss.Name as Scheme
+    -- ,psbu.Block as Block
+    -- ,vRD.contractor
+    -- ,vRd.Priority
+    -- ,vRD.Trade
+    -- ,vRD.Classification as [Repair Type]
+    -- ,vRD.[Status]
+    -- ,vRD.Complete
+
+FROM 
+    dbo.Repairs_WorksOrder as vRD
+    --The Property Tree
+    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
+    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
+    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
+    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
+    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
+
+    inner join dbo.HomeTeam_Status hts on hts.ID = vRD.[Status] And hts.HomeTeamModule = 10  
+
+WHERE
+    vRD.Company = 1
+    and ((psd.code IN (@District)))
+    AND (pss.Name IN (@Scheme))
+   AND (psbu.Block IN (@Block))
+    and (vRD.Complete &gt; @From_Date or @From_Date is null)
+    and (vRD.Complete &lt; @To_Date or @To_Date is null)
+    -- ,vRD.contractor
+    -- ,vRd.Priority
+    -- ,vRD.Trade
+    -- ,vRD.Classification as [Repair Type]
+    -- ,vRD.[Status]
+   -- and (vRD.contractor IN (@contractor) or @contractor is null)
+    --AND (vRd.Priority IN (@Priority) or @Priority is null)
+    --AND (vRD.Trade IN (@Trade) or @Trade is null)
+    --and (vRD.Classification IN (@Classification) or @Classification is null)
+
+--UNION select null as [Status]</CommandText></Query><Fields><Field Name="Status"><DataField>Status</DataField><rd:TypeName>System.Int32</rd:TypeName></Field><Field Name="Name"><DataField>Name</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="Repair_Type"><Query><DataSourceName>Kypera_Test2</DataSourceName><QueryParameters><QueryParameter Name="@District"><Value>=Parameters!District.Value</Value></QueryParameter><QueryParameter Name="@Scheme"><Value>=Parameters!Scheme.Value</Value></QueryParameter><QueryParameter Name="@Block"><Value>=Parameters!Block.Value</Value></QueryParameter><QueryParameter Name="@From_Date"><Value>=Parameters!From_Date.Value</Value></QueryParameter><QueryParameter Name="@To_Date"><Value>=Parameters!To_Date.Value</Value></QueryParameter></QueryParameters><CommandText>
+-- DECLARE @District varchar(100);
+-- DECLARE @Scheme varchar(100);
+-- DECLARE @Block varchar(100);
+-- DECLARE @From_Date DATE;
+-- DECLARE @To_Date DATE;
+
+-- DECLARE @contractor varchar(100);
+-- DECLARE @Priority varchar(100);
+-- DECLARE @Trade varchar(100);
+-- DECLARE @Classification varchar(100);
+-- DECLARE @Status varchar(100);
+
+-- SET @District ='ASA';
+-- SET @Scheme ='BPSC';
+-- SET @Block ='Gro02';
+-- SET @From_Date = '20170101';
+
+
+SELECT 
+    distinct vRD.Classification as [Repair Type]
+ ,Lookup1.Name
+    -- ,pss.Name as Scheme
+    -- ,psbu.Block as Block
+    -- ,vRD.contractor
+    -- ,vRd.Priority
+    -- ,vRD.Trade
+    -- ,vRD.Classification as [Repair Type]
+    -- ,vRD.[Status]
+    -- ,vRD.Complete
+
+FROM 
+    dbo.Repairs_WorksOrder as vRD
+    --The Property Tree
+    LEFT JOIN dbo.PropertyStructure_Unit psu ON vRD.Company = psu.Company AND vRD.AreaID = psu.ID
+    LEFT JOIN dbo.PropertyStructure_BlockUnit psbu ON vRD.Company = psbu.Company AND vRD.AreaID = psbu.Unit
+    LEFT JOIN dbo.PropertyStructure_Block psb ON vRD.Company = psb.Company AND psbu.Block = psb.Code
+    LEFT JOIN dbo.PropertyStructure_scheme pss ON vRD.Company = pss.Company AND psb.Scheme = pss.Code
+    LEFT JOIN dbo.PropertyStructure_District psd ON vRD.Company = psd.Company AND psb.District = psd.Code
+
+ Left JOIN dbo.HomeTeam_LookupValues  as Lookup1 
+ ON vRD.Company = Lookup1.Company AND vRD.Classification = Lookup1.ID AND Lookup1.Lookup = 25 
+
+WHERE
+    vRD.Company = 1
+    and ((psd.code IN (@District)))
+    AND (pss.Name IN (@Scheme))
+   AND (psbu.Block IN (@Block))
+    and (vRD.Complete &gt; @From_Date or @From_Date is null)
+    and (vRD.Complete &lt; @To_Date or @To_Date is null)
+    -- ,vRD.contractor
+    -- ,vRd.Priority
+    -- ,vRD.Trade
+    -- ,vRD.Classification as [Repair Type]
+    -- ,vRD.[Status]
+    --and (vRD.contractor IN (@contractor) or @contractor is null)
+    --AND (vRd.Priority IN (@Priority) or @Priority is null)
+    --AND (vRD.Trade IN (@Trade) or @Trade is null)
+   -- AND (vRD.[Status] IN (@Status) or @Status is null)
+ORDER BY
+    vRd.Classification</CommandText></Query><Fields><Field Name="Repair_Type"><DataField>Repair Type</DataField><rd:TypeName>System.Int32</rd:TypeName></Field><Field Name="Name"><DataField>Name</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="ExternalRevenueSource"><Query><DataSourceName>Kypera_Test2</DataSourceName><CommandText>SELECT  
+      [ID]
+      ,[Name]
+    
+  FROM [KH_Train].[dbo].[Repairs_WorksOrder_Revenue_External]
+  where Company =1
+  and [Name] in 
+  (
+  '61028 Responsive Maintenance'
+  ,'61029 Vacancy Maintenance'
+  ,'61026 Planned Capital Maint'
+  ,'61025 Cyclical Maintenance'
+  ,'61024 ALI''s'
+  )</CommandText></Query><Fields><Field Name="ID"><DataField>ID</DataField><rd:TypeName>System.Int32</rd:TypeName></Field><Field Name="Name"><DataField>Name</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet></DataSets><ReportSections><ReportSection><Body><ReportItems><Tablix Name="TablixMaintenance"><TablixBody><TablixColumns><TablixColumn><Width>2.5cm</Width></TablixColumn><TablixColumn><Width>2.4793cm</Width></TablixColumn><TablixColumn><Width>8.69625cm</Width></TablixColumn><TablixColumn><Width>3.60246cm</Width></TablixColumn><TablixColumn><Width>3.08208cm</Width></TablixColumn><TablixColumn><Width>3.42604cm</Width></TablixColumn><TablixColumn><Width>2.72132cm</Width></TablixColumn><TablixColumn><Width>2.1825cm</Width></TablixColumn><TablixColumn><Width>2.5cm</Width></TablixColumn></TablixColumns><TablixRows><TablixRow><Height>0.6cm</Height><TablixCells><TablixCell><CellContents><Textbox Name="Textbox24"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Row No.</Value><Style><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox24</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>CornflowerBlue</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox197"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Property Ref </Value><Style><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox197</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>CornflowerBlue</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox1"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Display Name</Value><Style><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox1</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>CornflowerBlue</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox199"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Responsive</Value><Style><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox199</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>CornflowerBlue</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox200"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Vacancy</Value><Style><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox200</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>CornflowerBlue</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox203"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Planned</Value><Style><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox203</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>CornflowerBlue</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox205"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Cyclical</Value><Style><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox205</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>CornflowerBlue</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox206"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>ALI</Value><Style><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox206</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>CornflowerBlue</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox2"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Total</Value><Style><FontSize>9pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox2</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>CornflowerBlue</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell></TablixCells></TablixRow><TablixRow><Height>0.6cm</Height><TablixCells><TablixCell><CellContents><Textbox Name="Textbox25"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=RowNumber("MaintenancePlan")</Value><Style><FontSize>9pt</FontSize><Format>0;(0)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox25</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Property_Ref_"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Property_Ref_.Value</Value><Style><FontSize>9pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Property_Ref_</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Display_Name"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Display_Name.Value</Value><Style><FontSize>9pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Display_Name</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Responsive"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Responsive.Value</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Responsive</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Vacancy"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Vacancy.Value</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Vacancy</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Planned"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Planned.Value</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Planned</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Cyclical"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Cyclical.Value</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Cyclical</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="ALI"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!ALI.Value</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>ALI</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Total"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Total.Value</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Total</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell></TablixCells></TablixRow><TablixRow><Height>0.6cm</Height><TablixCells><TablixCell><CellContents><Textbox Name="Textbox26"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Total:</Value><Style><FontSize>9pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox26</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox17"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Count(Fields!Property_Ref_.Value)</Value><Style><FontSize>9pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox17</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox18"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value /><Style><FontSize>9pt</FontSize></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox18</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox19"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Sum(Fields!Responsive.Value)</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox19</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox20"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Sum(Fields!Vacancy.Value)</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox20</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox21"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Sum(Fields!Planned.Value)</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox21</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox22"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Sum(Fields!Cyclical.Value)</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox22</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox23"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Sum(Fields!ALI.Value)</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox23</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell><TablixCell><CellContents><Textbox Name="Textbox4"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Sum(Fields!Total.Value)</Value><Style><FontSize>9pt</FontSize><Format>'$'0.00;('$'0.00)</Format></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox4</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom><rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture></Style></Textbox></CellContents></TablixCell></TablixCells></TablixRow></TablixRows></TablixBody><TablixColumnHierarchy><TablixMembers><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /><TablixMember /></TablixMembers></TablixColumnHierarchy><TablixRowHierarchy><TablixMembers><TablixMember><KeepWithGroup>After</KeepWithGroup></TablixMember><TablixMember><Group Name="Details2" /></TablixMember><TablixMember><KeepWithGroup>Before</KeepWithGroup></TablixMember></TablixMembers></TablixRowHierarchy><RepeatColumnHeaders>true</RepeatColumnHeaders><FixedColumnHeaders>true</FixedColumnHeaders><DataSetName>MaintenancePlan</DataSetName><Top>0.12761cm</Top><Left>0.44662cm</Left><Height>1.8cm</Height><Width>31.18995cm</Width><Style><Border><Style>None</Style></Border></Style></Tablix></ReportItems><Height>4.94792in</Height><Style /></Body><Width>47.05283in</Width><Page><PageHeader><Height>1.39981cm</Height><PrintOnFirstPage>true</PrintOnFirstPage><PrintOnLastPage>true</PrintOnLastPage><ReportItems><Textbox Name="Textbox12"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Maintenance Report</Value><Style><FontSize>20pt</FontSize><FontWeight>Bold</FontWeight><Color>CornflowerBlue</Color></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox12</rd:DefaultName><Top>0.40252cm</Top><Left>16.02537cm</Left><Height>0.99729cm</Height><Width>7.63226cm</Width><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Image Name="AnglicareSA"><Source>Embedded</Source><Value>AnglicareSA1</Value><Sizing>FitProportional</Sizing><Top>0.3496cm</Top><Left>0.31433cm</Left><Height>0.93556cm</Height><Width>5.78625cm</Width><ZIndex>1</ZIndex><Style><Border><Style>None</Style></Border></Style></Image></ReportItems><Style><Border><Style>None</Style></Border></Style></PageHeader><PageFooter><Height>0.99619cm</Height><PrintOnFirstPage>true</PrintOnFirstPage><PrintOnLastPage>true</PrintOnLastPage><ReportItems><Textbox Name="Textbox46"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Label>Report ExecuteTime</Label><Value>=Globals!ExecutionTime</Value><Style><Color>CornflowerBlue</Color></Style></TextRun></TextRuns><Style><TextAlign>Left</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox46</rd:DefaultName><Top>0.15806cm</Top><Left>4.57287cm</Left><Height>0.6cm</Height><Width>5.675cm</Width><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Textbox Name="Textbox47"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Report ExecuteTime:</Value><Style><Color>CornflowerBlue</Color></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Textbox47</rd:DefaultName><Top>0.17639cm</Top><Left>0.44662cm</Left><Height>0.6cm</Height><Width>3.94986cm</Width><ZIndex>1</ZIndex><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Textbox Name="Textbox48"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Page:</Value><Style><Color>CornflowerBlue</Color></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Textbox47</rd:DefaultName><Top>0.15806cm</Top><Left>24.36025cm</Left><Height>0.6cm</Height><Width>1.36699cm</Width><ZIndex>2</ZIndex><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Textbox Name="Textbox49"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Label>CurrentPageNumber</Label><Value>=Globals!OverallPageNumber</Value><Style><Color>CornflowerBlue</Color></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox46</rd:DefaultName><Top>0.15806cm</Top><Left>25.72724cm</Left><Height>0.6cm</Height><Width>1.38875cm</Width><ZIndex>3</ZIndex><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Textbox Name="Textbox50"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>/</Value><Style><FontWeight>Bold</FontWeight><Color>CornflowerBlue</Color></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Textbox47</rd:DefaultName><Top>0.15806cm</Top><Left>27.39821cm</Left><Height>0.6cm</Height><Width>0.44095cm</Width><ZIndex>4</ZIndex><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Textbox Name="Textbox51"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Label>TotalPageNumber</Label><Value>=Globals!OverallTotalPages</Value><Style><Color>CornflowerBlue</Color></Style></TextRun></TextRuns><Style><TextAlign>Left</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox46</rd:DefaultName><Top>0.15806cm</Top><Left>27.98909cm</Left><Height>0.6cm</Height><Width>3.39958cm</Width><ZIndex>5</ZIndex><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Textbox Name="Textbox53"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Label>Report ExecuteTime</Label><Value>=User!UserID</Value><Style><Color>CornflowerBlue</Color></Style></TextRun></TextRuns><Style><TextAlign>Left</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox46</rd:DefaultName><Top>0.19809cm</Top><Left>14.52634cm</Left><Height>0.6cm</Height><Width>8.47958cm</Width><ZIndex>6</ZIndex><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Textbox Name="Textbox54"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Printed By:</Value><Style><Color>CornflowerBlue</Color></Style></TextRun></TextRuns><Style><TextAlign>Right</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox47</rd:DefaultName><Top>0.19809cm</Top><Left>12.53682cm</Left><Height>0.6cm</Height><Width>1.89533cm</Width><ZIndex>7</ZIndex><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></ReportItems><Style><Border><Style>None</Style></Border></Style></PageFooter><PageHeight>21cm</PageHeight><PageWidth>29.7cm</PageWidth><InteractiveHeight>50cm</InteractiveHeight><InteractiveWidth>29.7cm</InteractiveWidth><LeftMargin>2cm</LeftMargin><RightMargin>2cm</RightMargin><TopMargin>2cm</TopMargin><BottomMargin>2cm</BottomMargin><ColumnSpacing>0.13cm</ColumnSpacing><Style /></Page></ReportSection></ReportSections><ReportParameters><ReportParameter Name="District"><DataType>String</DataType><Prompt>District</Prompt><ValidValues><DataSetReference><DataSetName>District</DataSetName><ValueField>District</ValueField><LabelField>District</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="Scheme"><DataType>String</DataType><Prompt>Scheme</Prompt><ValidValues><DataSetReference><DataSetName>Scheme</DataSetName><ValueField>Scheme</ValueField><LabelField>Scheme</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="Block"><DataType>String</DataType><Prompt>Block</Prompt><ValidValues><DataSetReference><DataSetName>Block</DataSetName><ValueField>Block</ValueField><LabelField>Block</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="From_Date"><DataType>DateTime</DataType><Prompt>From Date</Prompt></ReportParameter><ReportParameter Name="To_Date"><DataType>DateTime</DataType><Nullable>true</Nullable><Prompt>To Date</Prompt></ReportParameter><ReportParameter Name="contractor"><DataType>String</DataType><DefaultValue><DataSetReference><DataSetName>Contractor</DataSetName><ValueField>Contractor</ValueField></DataSetReference></DefaultValue><AllowBlank>true</AllowBlank><Prompt>Contractor</Prompt><ValidValues><DataSetReference><DataSetName>Contractor</DataSetName><ValueField>Contractor</ValueField><LabelField>Name</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="Priority"><DataType>String</DataType><DefaultValue><DataSetReference><DataSetName>Priority</DataSetName><ValueField>Priority</ValueField></DataSetReference></DefaultValue><AllowBlank>true</AllowBlank><Prompt>Priority</Prompt><ValidValues><DataSetReference><DataSetName>Priority</DataSetName><ValueField>Priority</ValueField><LabelField>Name</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="Trade"><DataType>String</DataType><DefaultValue><DataSetReference><DataSetName>Trade</DataSetName><ValueField>Trade</ValueField></DataSetReference></DefaultValue><AllowBlank>true</AllowBlank><Prompt>Trade</Prompt><ValidValues><DataSetReference><DataSetName>Trade</DataSetName><ValueField>Trade</ValueField><LabelField>Name</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="Classification"><DataType>String</DataType><DefaultValue><DataSetReference><DataSetName>Repair_Type</DataSetName><ValueField>Repair_Type</ValueField></DataSetReference></DefaultValue><AllowBlank>true</AllowBlank><Prompt>Repair Type</Prompt><ValidValues><DataSetReference><DataSetName>Repair_Type</DataSetName><ValueField>Repair_Type</ValueField><LabelField>Name</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="Status"><DataType>String</DataType><DefaultValue><DataSetReference><DataSetName>Status</DataSetName><ValueField>Status</ValueField></DataSetReference></DefaultValue><AllowBlank>true</AllowBlank><Prompt>Status</Prompt><ValidValues><DataSetReference><DataSetName>Status</DataSetName><ValueField>Status</ValueField><LabelField>Name</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="ExternalRevenueSource"><DataType>String</DataType><Prompt>External Revenue Source</Prompt><ValidValues><DataSetReference><DataSetName>ExternalRevenueSource</DataSetName><ValueField>ID</ValueField><LabelField>Name</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="EFrom_Date"><DataType>DateTime</DataType><Nullable>true</Nullable><Prompt>Expected Payment Date From</Prompt></ReportParameter><ReportParameter Name="ETo_Date"><DataType>DateTime</DataType><Nullable>true</Nullable><Prompt>Expected Payment Date To</Prompt></ReportParameter></ReportParameters><EmbeddedImages><EmbeddedImage Name="AnglicareSA1"><MIMEType>image/png</MIMEType><ImageData>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</ImageData></EmbeddedImage></EmbeddedImages><rd:ReportUnitType>Cm</rd:ReportUnitType><rd:ReportServerUrl>http://appsql-3/ReportServer</rd:ReportServerUrl><rd:ReportID>addc8011-5b78-4269-ac1b-759bf2618de5</rd:ReportID></Report>
