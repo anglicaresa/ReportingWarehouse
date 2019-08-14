@@ -107,10 +107,12 @@ S
 --For RiskMan Insert table for extract process
 DECLARE @t_table VARCHAR(MAX)='vwReg_RMFeedback_Posted_All';
 --extract
-INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'dwh', 'extract_riskman', 'dwhb', 'AZ-SQLBI01');
+INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'dwh', 'extract_riskman', 'dwhb', 'devsql-1');
 --source
 INSERT INTO [management].[TABLE_DIM] VALUES (@t_table, 'riskman', 'dbo', 'Riskman', 'ted');
 
+select * from [management].[TABLE_DIM] t where t.[system] = 'riskman'
+select * from [management].[TABLE_DIM] t where t.[system] = 'dwh' and t.[schema] = 'extract_riskman'
 
 DECLARE @t_table VARCHAR(MAX)='Restrictive_IFR_fact';
 --conform
