@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Dim - T1M"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="407"
-  DTS:VersionGUID="{29E06793-0615-48DD-B7C3-C2A733EC46F2}">
+  DTS:VersionBuild="408"
+  DTS:VersionGUID="{70076F67-3124-47BA-8C4A-29601B0708E9}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -137,7 +137,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">10/2/2019 10:25:00 AM</DTS:VariableValue>
+        DTS:DataType="7">10/18/2019 12:02:11 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -148,7 +148,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">10/2/2019 10:25:00 AM</DTS:VariableValue>
+        DTS:DataType="7">10/18/2019 12:02:11 PM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -14955,7 +14955,7 @@ TRADE_CODE
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{9FC39675-C87A-4844-9FDD-AE90312F13EC}"
-                  SQLTask:SqlStatementSource="insert into conform.position_dim  &#xA;  select distinct t1.JOB_POS_TITLE as POSITION_NAME,&#xA;                  t1.POSITION_CODE,&#xA;&#x9;&#x9;&#x9;&#x9;--  t1.POSITION_TYPE_IND,&#xA;&#x9;&#x9;&#x9;&#x9;  left(t2.code_descr,20) as CONTRACT_TYPE,&#xA;&#x9;&#x9;&#x9;&#x9;  t1.EMPL_COND_AWARD,&#xA;&#x9;&#x9;&#x9;&#x9;  t1.EMPL_COND_GRADE,&#xA;&#x9;&#x9;&#x9;&#x9;  t1.EMPL_COND_LEVEL,&#xA;&#x9;&#x9;&#x9;&#x9; -- t1.WORK_LOCATION,&#xA;&#x9;&#x9;&#x9;&#x9;  left(t3.code_descr,50) AS WORK_LOCATION ,&#xA;&#x9;&#x9;&#x9;&#x9;  'N',&#xA;&#x9;&#x9;&#x9;&#x9;  'NEW',getdate(),&#xA;&#x9;&#x9;&#x9;&#x9;  null,&#xA;&#x9;&#x9;&#x9;&#x9;  'Y',&#xA;                                                               TRADE_CODE,&#xA;&#x9;&#x9;&#x9;               null,&#xA;                                                              null&#xA;  from extract.HRHMN_EMPL_JOB_POS as t1&#xA;  left join extract.hrstc_code as t2 on t1.POSITION_TYPE_IND=t2.code_id COLLATE DATABASE_DEFAULT and t2.code_type='EMPLOYEE_TYPE' &#xA;  left join extract.hrstc_code as t3 on t1.WORK_LOCATION=t3.code_id COLLATE DATABASE_DEFAULT  and t3.code_type='LOCATION'&#xA;  inner join&#xA;  (&#xA;  select distinct t1.JOB_POS_TITLE  COLLATE DATABASE_DEFAULT as JOB_POS_TITLE,&#xA;                  t1.POSITION_CODE COLLATE DATABASE_DEFAULT as POSITION_CODE,&#xA;&#x9;&#x9;     &#x9;  t1.EMPL_COND_AWARD COLLATE DATABASE_DEFAULT as EMPL_COND_AWARD,&#xA;&#x9;&#x9;&#x9;&#x9;  t1.EMPL_COND_GRADE COLLATE DATABASE_DEFAULT as EMPL_COND_GRADE,&#xA;&#x9;&#x9;&#x9;&#x9;  t1.EMPL_COND_LEVEL COLLATE DATABASE_DEFAULT as EMPL_COND_LEVEL&#xA;  from extract.HRHMN_EMPL_JOB_POS as t1&#xA;  inner join &#xA;  (select  id_number,position_code,max(effective_date) as effectvie_date&#xA;  from &#x9;extract.HRHMN_EMPL_JOB_POS &#xA;  group by id_number,position_code) as f1 on t1.id_number =f1.id_number and t1.position_code=f1.position_code and t1.effective_date=f1.effectvie_date&#xA;  where len(t1.JOB_POS_TITLE)&lt;&gt;0&#xA;  and (end_date ='1900-01-01 00:00:00.000' or t1.end_date&gt;=getdate())&#xA;   and  t1.id_number not in (select id_number from [extract].[HRHMN_EMPLTERM_DTL]) -- exclude termiante employee&#xA;----added at 17/05/2017 by JS&#xA;  and t1.POSITION_CODE  not in (  select distinct t1.hierarchy_code&#xA;   from  extract.HRSYS_HIERARCH_ITM&#x9;  as t1&#xA;   inner join  &#x9;extract.HRSYS_HIERARCH_CTL as t2&#xA;   on t1. hierarchy_code =t2.hierarchy_code&#xA;   and  t1.hierarchy_type='POSITION' &#xA;   and t2.status&lt;&gt;'A'  )&#xA;  except&#xA;  select position_name,position_code, condition,grade,[level] &#xA;  from conform.position_dim&#xA;  where current_row_indicator='Y'&#xA;  ) as ttt&#xA;  on t1.JOB_POS_TITLE=ttt.JOB_POS_TITLE and t1.POSITION_CODE=ttt.POSITION_CODE and t1.EMPL_COND_AWARD=ttt.EMPL_COND_AWARD and t1.EMPL_COND_GRADE=ttt.EMPL_COND_GRADE and t1.EMPL_COND_LEVEL=ttt.EMPL_COND_LEVEL&#xA;where t1.end_date ='1900-01-01 00:00:00.000' or t1.end_date&gt;=getdate() &#xA;and t1.id_number not in (select id_number from [extract].[HRHMN_EMPLTERM_DTL])  -- exclude termiante employee&#xA;&#xA;&#xA;&#xA;-- codes for vacant positions&#xA;&#xA; insert into conform.position_dim &#xA;  select &#xA;  ff.vacant_position_name,&#xA;  ff.vacant_position_code,&#xA;  ff.empl_type_code,&#xA;  ff.condition,&#xA;  ff.max_grade,&#xA;  ff.max_grade,&#xA; left(fff.code_descr,50) AS WORK_LOCATION ,&#xA;  'N',&#xA;  'NEW',&#xA;  getdate(),&#xA;  null,&#xA;  'Y',&#xA;   ff.TRADE_CODE,&#xA;ff.empl_class,&#xA;null&#xA;  from &#xA;  (  select t1.hierarchy_code as vacant_position_code,t2.hierarchy_descr as vacant_position_name, t1.parent_node as manager_position,t3.empl_type_code,t3.empl_class,t3.work_location,t3.trade_code,t3.org_unit_code,t3.position_supervsr,&#xA;&#x9;t3.empl_cond_award as condition, t3.max_empl_cond_grade as max_grade,t3.max_empl_cond_level as max_level&#xA;from extract.HRSYS_HIERARCH_ITM as t1&#xA;inner join  extract.[HRSYS_HIERARCH_CTL] as t2  on t1.hierarchy_code=t2.hierarchy_code and t2.hierarchy_type='POSITION' and t2.status='A'&#xA;inner join extract.hrsys_hiereff_mst as t3 on t1.hierarchy_code=t3.hierarchy_code and t3.status='OPEN'&#xA;  where t1.hierarchy_type='POSITION'&#xA;  and t1.parent_type ='POSITION'&#xA;  and t1.hierarchy_code in &#xA;  (  select hierarchy_code from extract.[HRSYS_HIERARCH_CTL] where hierarchy_type='POSITION' and status='A'&#xA;  and hierarchy_code not in &#xA;  (select distinct position_code from extract.HRHMN_EMPL_JOB_POS)&#xA;  )) as ff&#xA; left join extract.hrstc_code as fff on ff.WORK_LOCATION=fff.code_id COLLATE DATABASE_DEFAULT  and fff.code_type='LOCATION'&#xA;inner join&#xA;(&#xA;&#xA; select t1.hierarchy_code as vacant_position_code,t2.hierarchy_descr as vacant_position_name,t3.trade_code, left(t4.code_descr,50) AS WORK_LOCATION&#xA;from extract.HRSYS_HIERARCH_ITM as t1&#xA;inner join  extract.[HRSYS_HIERARCH_CTL] as t2  on t1.hierarchy_code=t2.hierarchy_code and t2.hierarchy_type='POSITION' and t2.status='A'&#xA;inner join extract.hrsys_hiereff_mst as t3 on t1.hierarchy_code=t3.hierarchy_code and t3.status='OPEN'&#xA;left join extract.hrstc_code as t4 on t3.WORK_LOCATION=t4.code_id COLLATE DATABASE_DEFAULT  and t4.code_type='LOCATION'&#xA;  where t1.hierarchy_type='POSITION'&#xA;  and t1.parent_type ='POSITION'&#xA;  and t1.hierarchy_code in &#xA;  (  select hierarchy_code from extract.[HRSYS_HIERARCH_CTL] where hierarchy_type='POSITION' and status='A'&#xA;  and hierarchy_code not in &#xA;  (select distinct position_code from extract.HRHMN_EMPL_JOB_POS)&#xA;  )&#xA; except&#xA; select position_code,position_name,trade_code,work_location&#xA;  from conform.position_dim&#xA;  where current_row_indicator='Y'    &#xA;) as tt&#xA;on ff.vacant_position_code=tt.vacant_position_code&#xA;and ff.vacant_position_name=tt.vacant_position_name&#xA;and ff.trade_code=tt.trade_code&#xA;and  left(fff.code_descr,50)=tt.WORK_LOCATION&#xA;&#xA;&#xA;&#xA;&#xA;/*----------------------------removed at 08/02/2017 by JS--------------------------------------------------------------------------------------&#xA;&#xA;  update t1&#xA;  set t1.contract_type=t2.empl_type_code,&#xA;      t1.position_class=t2.EMPL_CLASS&#xA;  from [conform].[position_dim] as t1&#xA;  inner join [extract].[hrsys_hiereff_mst]  as t2 on t1.position_code=t2.hierarchy_code and t2.hierarchy_type ='POSITION'&#xA;&#xA;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;&#xA;--------------------------------------------added at 08/02/2017 by JS get employee type inforamtion from employee job details --------------------------&#xA;  update d1&#xA;  set d1.contract_type=d2.empl_type_code,&#xA;      d1.position_class=d2.empl_class&#xA;  from [conform].[position_dim] as d1&#xA;inner join&#xA;(&#xA;select tt1.id_number,tt1.effective_date,tt1.position_code,tt1.job_pos_title,tt1.end_date,tt2.empl_type_code,tt2.empl_class,tt2.end_date as end_date2&#xA;from extract.hrhmn_empl_job_pos as tt1&#xA;inner join&#xA;(&#xA;select t1.id_number,t1.job_dtl_title,t1.empl_type_code,t1.empl_class,t1.effective_date,t1.end_date&#xA;from  extract.hrhmn_empl_job_ctl as t1&#xA;inner join&#xA;(&#xA;select id_number,max(effective_date) as max_eff_date&#xA;from  extract.hrhmn_empl_job_ctl&#xA;where (end_date ='9999-12-31 00:00:00.000' or end_date&gt;=getdate() )&#xA;group by  id_number&#xA;) as t2&#xA;on t1.id_number = t2.id_number &#xA;and t1.effective_date = t2.max_eff_date&#xA;) as tt2&#xA;on tt1.id_number =tt2.id_number &#xA;and tt1.job_pos_title= tt2.job_dtl_title&#xA;and tt1.effective_date = tt2.effective_date&#xA;where (tt1.end_date ='1900-01-01 00:00:00.000' or tt1.end_date&gt;=getdate() )&#xA;) as d2&#xA;on d1.position_code =d2.position_code &#xA;where d1.current_row_indicator='Y'&#xA;and d2.id_number not in (select id_number from [extract].[HRHMN_EMPLTERM_DTL])&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA; update t1&#xA;  set t1.contract_type=t2.code_descr&#xA;  from [conform].[position_dim] as t1&#xA;  inner join [extract].[hrstc_code] as t2 on t1.contract_type=t2.code_id and t2.code_type='EMPLOYEE_TYPE';&#xA;&#xA;  update t1&#xA;  set t1.position_class=left(t2.code_descr,10)&#xA;  from [conform].[position_dim] as t1&#xA;  inner join [extract].[hrstc_code] as t2 on t1.position_class=t2.code_id and t2.code_type='EMPL_CLASS';&#xA;&#xA;&#xA; update t1&#xA;  set t1.ts_fmt_name=t2.TS_FMT_NAME&#xA;  from  [conform].[position_dim] as t1&#xA;  inner join  extract.HRHMN_EMPL_JOB_POS as t2&#xA;  on  t1.position_name=t2.JOB_POS_TITLE COLLATE DATABASE_DEFAULT&#xA;   and t1.POSITION_CODE=t2.POSITION_CODE COLLATE DATABASE_DEFAULT &#xA;   and t1.condition=t2.EMPL_COND_AWARD  COLLATE DATABASE_DEFAULT &#xA;   and t1.grade=t2.EMPL_COND_GRADE COLLATE DATABASE_DEFAULT&#xA;    and t1.level=t2.EMPL_COND_LEVEL COLLATE DATABASE_DEFAULT&#xA;&#x9;and t1.trade_code=t2.TRADE_CODE COLLATE DATABASE_DEFAULT&#xA;&#x9;and t1.current_row_indicator='Y' ;&#xA;&#xA;&#xA;--update expired positon added at 08/02/2017 by JS&#xA;/*&#xA;  update t1&#xA;  set t1.current_row_indicator='N', t1.row_expiration_date=t2.end_date&#xA;  from   conform.position_dim as t1&#xA;  inner join&#xA;  (  select f1.* from  extract.HRHMN_EMPL_JOB_POS as f1&#xA;     inner join (select position_code,max(effective_date) as effective_date&#xA;&#x9; &#x9;&#x9;&#x9;  from  extract.HRHMN_EMPL_JOB_POS&#xA;&#x9;&#x9;&#x9;&#x9;  group by &#x9;position_code)&#x9;as &#x9; f2&#x9; on f1.position_code=f2.position_code and f1.effective_date=f2.effective_date&#xA;&#x9;where f1.end_date&lt;getdate() and f1.end_date&lt;&gt;'1900-01-01 00:00:00.000'&#xA;   ) as t2&#xA;  on t1.position_code=t2.position_code and t1.position_name=t2.job_pos_title&#xA;  where t1.current_row_indicator='Y'&#xA;*/&#xA;--change to use below codes to update position status changed by Jerry 07/03/2017 &#xA;--from org structure tables&#xA;   update t1&#xA;  set t1.current_row_indicator='N', t1.row_expiration_date=GETDATE()&#xA;  from   conform.position_dim as t1&#xA;  inner join&#xA;  (    select distinct t1.hierarchy_code as position_Code , t2.hierarchy_descr as position_name&#xA;   from  extract.HRSYS_HIERARCH_ITM&#x9;  as t1&#xA;   inner join  &#x9;extract.HRSYS_HIERARCH_CTL as t2&#xA;   on t1. hierarchy_code =t2.hierarchy_code&#xA;   and  t1.hierarchy_type='POSITION' &#xA;   and t2.status&lt;&gt;'A'  &#xA;   &#xA;   ) as t2&#xA;  on t1.position_code=t2.position_code and t1.position_name=t2.position_name&#xA;  where t1.current_row_indicator='Y'&#xA;&#xA;&#xA;&#xA;&#xA;--added by JS at 28/03/2017&#xA;/*&#xA;update t1&#xA; set t1.current_row_indicator='N' ,t1.row_effective_date=GETDATE(),t1.change_reason_code='U',t1.change_reason_description='Update'&#xA; from conform.position_dim&#x9;  as t1&#xA; inner join&#xA; (&#xA;  select   position_code,max(position_key) as position_key&#xA;  from conform.position_dim&#xA;  where current_row_indicator='Y'&#xA;  group by &#x9; position_code&#xA;  ) as t2&#xA;  on t1.position_code=t2.position_code&#xA;  and t1.position_key&lt;&gt;t2.position_key&#xA;  where t1.current_row_indicator='Y'&#xA;*/&#xA;&#xA;--update work location&#xA;   update d1&#xA;   set &#x9; d1.work_location=ff.WORK_LOCATION&#xA;   from  conform.position_dim as d1&#xA;   inner join&#xA;&#xA;  (&#xA;   select distinct t1.JOB_POS_TITLE  COLLATE DATABASE_DEFAULT as JOB_POS_TITLE,&#xA;                  t1.POSITION_CODE COLLATE DATABASE_DEFAULT as POSITION_CODE,&#xA;&#x9;&#x9;          left(t3.code_descr,50) AS WORK_LOCATION &#xA;  from extract.HRHMN_EMPL_JOB_POS as t1&#xA;  inner join &#xA;  (select  position_code,max(effective_date) as effectvie_date&#xA;  from &#x9;extract.HRHMN_EMPL_JOB_POS &#xA;  group by position_code) as f1 on t1.position_code=f1.position_code and t1.effective_date=f1.effectvie_date    &#xA;  left join extract.hrstc_code as t3 on t1.WORK_LOCATION=t3.code_id COLLATE DATABASE_DEFAULT  and t3.code_type='LOCATION'&#xA;  where len(t1.JOB_POS_TITLE)&lt;&gt;0&#xA;  and (end_date ='1900-01-01 00:00:00.000' or t1.end_date&gt;=getdate())&#xA;  )&#x9;  as ff&#xA; on  d1.current_row_indicator='Y' and ff.POSITION_CODE=d1.position_code and ff.JOB_POS_TITLE=d1.position_name and ff.WORK_LOCATION&lt;&gt;d1.work_location" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="insert into conform.position_dim  &#xA;  select distinct t1.JOB_POS_TITLE as POSITION_NAME,&#xA;                  t1.POSITION_CODE,&#xA;&#x9;&#x9;&#x9;&#x9;--  t1.POSITION_TYPE_IND,&#xA;&#x9;&#x9;&#x9;&#x9;  left(t2.code_descr,20) as CONTRACT_TYPE,&#xA;&#x9;&#x9;&#x9;&#x9;  t1.EMPL_COND_AWARD,&#xA;&#x9;&#x9;&#x9;&#x9;  t1.EMPL_COND_GRADE,&#xA;&#x9;&#x9;&#x9;&#x9;  t1.EMPL_COND_LEVEL,&#xA;&#x9;&#x9;&#x9;&#x9; -- t1.WORK_LOCATION,&#xA;&#x9;&#x9;&#x9;&#x9;  left(t3.code_descr,50) AS WORK_LOCATION ,&#xA;&#x9;&#x9;&#x9;&#x9;  'N',&#xA;&#x9;&#x9;&#x9;&#x9;  'NEW',getdate(),&#xA;&#x9;&#x9;&#x9;&#x9;  null,&#xA;&#x9;&#x9;&#x9;&#x9;  'Y',&#xA;                                                               TRADE_CODE,&#xA;&#x9;&#x9;&#x9;               null,&#xA;                                                              null&#xA;  from extract.HRHMN_EMPL_JOB_POS as t1&#xA;  left join extract.hrstc_code as t2 on t1.POSITION_TYPE_IND=t2.code_id COLLATE DATABASE_DEFAULT and t2.code_type='EMPLOYEE_TYPE' &#xA;  left join extract.hrstc_code as t3 on t1.WORK_LOCATION=t3.code_id COLLATE DATABASE_DEFAULT  and t3.code_type='WORK_LOCATION'&#xA;  inner join&#xA;  (&#xA;  select distinct t1.JOB_POS_TITLE  COLLATE DATABASE_DEFAULT as JOB_POS_TITLE,&#xA;                  t1.POSITION_CODE COLLATE DATABASE_DEFAULT as POSITION_CODE,&#xA;&#x9;&#x9;     &#x9;  t1.EMPL_COND_AWARD COLLATE DATABASE_DEFAULT as EMPL_COND_AWARD,&#xA;&#x9;&#x9;&#x9;&#x9;  t1.EMPL_COND_GRADE COLLATE DATABASE_DEFAULT as EMPL_COND_GRADE,&#xA;&#x9;&#x9;&#x9;&#x9;  t1.EMPL_COND_LEVEL COLLATE DATABASE_DEFAULT as EMPL_COND_LEVEL&#xA;  from extract.HRHMN_EMPL_JOB_POS as t1&#xA;  inner join &#xA;  (select  id_number,position_code,max(effective_date) as effectvie_date&#xA;  from &#x9;extract.HRHMN_EMPL_JOB_POS &#xA;  group by id_number,position_code) as f1 on t1.id_number =f1.id_number and t1.position_code=f1.position_code and t1.effective_date=f1.effectvie_date&#xA;  where len(t1.JOB_POS_TITLE)&lt;&gt;0&#xA;  and (end_date ='1900-01-01 00:00:00.000' or t1.end_date&gt;=getdate())&#xA;   and  t1.id_number not in (select id_number from [extract].[HRHMN_EMPLTERM_DTL]) -- exclude termiante employee&#xA;----added at 17/05/2017 by JS&#xA;  and t1.POSITION_CODE  not in (  select distinct t1.hierarchy_code&#xA;   from  extract.HRSYS_HIERARCH_ITM&#x9;  as t1&#xA;   inner join  &#x9;extract.HRSYS_HIERARCH_CTL as t2&#xA;   on t1. hierarchy_code =t2.hierarchy_code&#xA;   and  t1.hierarchy_type='POSITION' &#xA;   and t2.status&lt;&gt;'A'  )&#xA;  except&#xA;  select position_name,position_code, condition,grade,[level] &#xA;  from conform.position_dim&#xA;  where current_row_indicator='Y'&#xA;  ) as ttt&#xA;  on t1.JOB_POS_TITLE=ttt.JOB_POS_TITLE and t1.POSITION_CODE=ttt.POSITION_CODE and t1.EMPL_COND_AWARD=ttt.EMPL_COND_AWARD and t1.EMPL_COND_GRADE=ttt.EMPL_COND_GRADE and t1.EMPL_COND_LEVEL=ttt.EMPL_COND_LEVEL&#xA;where t1.end_date ='1900-01-01 00:00:00.000' or t1.end_date&gt;=getdate() &#xA;and t1.id_number not in (select id_number from [extract].[HRHMN_EMPLTERM_DTL])  -- exclude termiante employee&#xA;&#xA;&#xA;&#xA;-- codes for vacant positions&#xA;&#xA; insert into conform.position_dim &#xA;  select &#xA;  ff.vacant_position_name,&#xA;  ff.vacant_position_code,&#xA;  ff.empl_type_code,&#xA;  ff.condition,&#xA;  ff.max_grade,&#xA;  ff.max_grade,&#xA; left(fff.code_descr,50) AS WORK_LOCATION ,&#xA;  'N',&#xA;  'NEW',&#xA;  getdate(),&#xA;  null,&#xA;  'Y',&#xA;   ff.TRADE_CODE,&#xA;ff.empl_class,&#xA;null&#xA;  from &#xA;  (  select t1.hierarchy_code as vacant_position_code,t2.hierarchy_descr as vacant_position_name, t1.parent_node as manager_position,t3.empl_type_code,t3.empl_class,t3.work_location,t3.trade_code,t3.org_unit_code,t3.position_supervsr,&#xA;&#x9;t3.empl_cond_award as condition, t3.max_empl_cond_grade as max_grade,t3.max_empl_cond_level as max_level&#xA;from extract.HRSYS_HIERARCH_ITM as t1&#xA;inner join  extract.[HRSYS_HIERARCH_CTL] as t2  on t1.hierarchy_code=t2.hierarchy_code and t2.hierarchy_type='POSITION' and t2.status='A'&#xA;inner join extract.hrsys_hiereff_mst as t3 on t1.hierarchy_code=t3.hierarchy_code and t3.status='OPEN'&#xA;  where t1.hierarchy_type='POSITION'&#xA;  and t1.parent_type ='POSITION'&#xA;  and t1.hierarchy_code in &#xA;  (  select hierarchy_code from extract.[HRSYS_HIERARCH_CTL] where hierarchy_type='POSITION' and status='A'&#xA;  and hierarchy_code not in &#xA;  (select distinct position_code from extract.HRHMN_EMPL_JOB_POS)&#xA;  )) as ff&#xA; left join extract.hrstc_code as fff on ff.WORK_LOCATION=fff.code_id COLLATE DATABASE_DEFAULT  and fff.code_type='WORK_LOCATION'&#xA;inner join&#xA;(&#xA;&#xA; select t1.hierarchy_code as vacant_position_code,t2.hierarchy_descr as vacant_position_name,t3.trade_code, left(t4.code_descr,50) AS WORK_LOCATION&#xA;from extract.HRSYS_HIERARCH_ITM as t1&#xA;inner join  extract.[HRSYS_HIERARCH_CTL] as t2  on t1.hierarchy_code=t2.hierarchy_code and t2.hierarchy_type='POSITION' and t2.status='A'&#xA;inner join extract.hrsys_hiereff_mst as t3 on t1.hierarchy_code=t3.hierarchy_code and t3.status='OPEN'&#xA;left join extract.hrstc_code as t4 on t3.WORK_LOCATION=t4.code_id COLLATE DATABASE_DEFAULT  and t4.code_type='WORK_LOCATION'&#xA;  where t1.hierarchy_type='POSITION'&#xA;  and t1.parent_type ='POSITION'&#xA;  and t1.hierarchy_code in &#xA;  (  select hierarchy_code from extract.[HRSYS_HIERARCH_CTL] where hierarchy_type='POSITION' and status='A'&#xA;  and hierarchy_code not in &#xA;  (select distinct position_code from extract.HRHMN_EMPL_JOB_POS)&#xA;  )&#xA; except&#xA; select position_code,position_name,trade_code,work_location&#xA;  from conform.position_dim&#xA;  where current_row_indicator='Y'    &#xA;) as tt&#xA;on ff.vacant_position_code=tt.vacant_position_code&#xA;and ff.vacant_position_name=tt.vacant_position_name&#xA;and ff.trade_code=tt.trade_code&#xA;and  left(fff.code_descr,50)=tt.WORK_LOCATION&#xA;&#xA;&#xA;&#xA;&#xA;/*----------------------------removed at 08/02/2017 by JS--------------------------------------------------------------------------------------&#xA;&#xA;  update t1&#xA;  set t1.contract_type=t2.empl_type_code,&#xA;      t1.position_class=t2.EMPL_CLASS&#xA;  from [conform].[position_dim] as t1&#xA;  inner join [extract].[hrsys_hiereff_mst]  as t2 on t1.position_code=t2.hierarchy_code and t2.hierarchy_type ='POSITION'&#xA;&#xA;----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/&#xA;&#xA;--------------------------------------------added at 08/02/2017 by JS get employee type inforamtion from employee job details --------------------------&#xA;  update d1&#xA;  set d1.contract_type=d2.empl_type_code,&#xA;      d1.position_class=d2.empl_class&#xA;  from [conform].[position_dim] as d1&#xA;inner join&#xA;(&#xA;select tt1.id_number,tt1.effective_date,tt1.position_code,tt1.job_pos_title,tt1.end_date,tt2.empl_type_code,tt2.empl_class,tt2.end_date as end_date2&#xA;from extract.hrhmn_empl_job_pos as tt1&#xA;inner join&#xA;(&#xA;select t1.id_number,t1.job_dtl_title,t1.empl_type_code,t1.empl_class,t1.effective_date,t1.end_date&#xA;from  extract.hrhmn_empl_job_ctl as t1&#xA;inner join&#xA;(&#xA;select id_number,max(effective_date) as max_eff_date&#xA;from  extract.hrhmn_empl_job_ctl&#xA;where (end_date ='9999-12-31 00:00:00.000' or end_date&gt;=getdate() )&#xA;group by  id_number&#xA;) as t2&#xA;on t1.id_number = t2.id_number &#xA;and t1.effective_date = t2.max_eff_date&#xA;) as tt2&#xA;on tt1.id_number =tt2.id_number &#xA;and tt1.job_pos_title= tt2.job_dtl_title&#xA;and tt1.effective_date = tt2.effective_date&#xA;where (tt1.end_date ='1900-01-01 00:00:00.000' or tt1.end_date&gt;=getdate() )&#xA;) as d2&#xA;on d1.position_code =d2.position_code &#xA;where d1.current_row_indicator='Y'&#xA;and d2.id_number not in (select id_number from [extract].[HRHMN_EMPLTERM_DTL])&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA; update t1&#xA;  set t1.contract_type=t2.code_descr&#xA;  from [conform].[position_dim] as t1&#xA;  inner join [extract].[hrstc_code] as t2 on t1.contract_type=t2.code_id and t2.code_type='EMPLOYEE_TYPE';&#xA;&#xA;  update t1&#xA;  set t1.position_class=left(t2.code_descr,10)&#xA;  from [conform].[position_dim] as t1&#xA;  inner join [extract].[hrstc_code] as t2 on t1.position_class=t2.code_id and t2.code_type='EMPL_CLASS';&#xA;&#xA;&#xA; update t1&#xA;  set t1.ts_fmt_name=t2.TS_FMT_NAME&#xA;  from  [conform].[position_dim] as t1&#xA;  inner join  extract.HRHMN_EMPL_JOB_POS as t2&#xA;  on  t1.position_name=t2.JOB_POS_TITLE COLLATE DATABASE_DEFAULT&#xA;   and t1.POSITION_CODE=t2.POSITION_CODE COLLATE DATABASE_DEFAULT &#xA;   and t1.condition=t2.EMPL_COND_AWARD  COLLATE DATABASE_DEFAULT &#xA;   and t1.grade=t2.EMPL_COND_GRADE COLLATE DATABASE_DEFAULT&#xA;    and t1.level=t2.EMPL_COND_LEVEL COLLATE DATABASE_DEFAULT&#xA;&#x9;and t1.trade_code=t2.TRADE_CODE COLLATE DATABASE_DEFAULT&#xA;&#x9;and t1.current_row_indicator='Y' ;&#xA;&#xA;&#xA;--update expired positon added at 08/02/2017 by JS&#xA;/*&#xA;  update t1&#xA;  set t1.current_row_indicator='N', t1.row_expiration_date=t2.end_date&#xA;  from   conform.position_dim as t1&#xA;  inner join&#xA;  (  select f1.* from  extract.HRHMN_EMPL_JOB_POS as f1&#xA;     inner join (select position_code,max(effective_date) as effective_date&#xA;&#x9; &#x9;&#x9;&#x9;  from  extract.HRHMN_EMPL_JOB_POS&#xA;&#x9;&#x9;&#x9;&#x9;  group by &#x9;position_code)&#x9;as &#x9; f2&#x9; on f1.position_code=f2.position_code and f1.effective_date=f2.effective_date&#xA;&#x9;where f1.end_date&lt;getdate() and f1.end_date&lt;&gt;'1900-01-01 00:00:00.000'&#xA;   ) as t2&#xA;  on t1.position_code=t2.position_code and t1.position_name=t2.job_pos_title&#xA;  where t1.current_row_indicator='Y'&#xA;*/&#xA;--change to use below codes to update position status changed by Jerry 07/03/2017 &#xA;--from org structure tables&#xA;   update t1&#xA;  set t1.current_row_indicator='N', t1.row_expiration_date=GETDATE()&#xA;  from   conform.position_dim as t1&#xA;  inner join&#xA;  (    select distinct t1.hierarchy_code as position_Code , t2.hierarchy_descr as position_name&#xA;   from  extract.HRSYS_HIERARCH_ITM&#x9;  as t1&#xA;   inner join  &#x9;extract.HRSYS_HIERARCH_CTL as t2&#xA;   on t1. hierarchy_code =t2.hierarchy_code&#xA;   and  t1.hierarchy_type='POSITION' &#xA;   and t2.status&lt;&gt;'A'  &#xA;   &#xA;   ) as t2&#xA;  on t1.position_code=t2.position_code and t1.position_name=t2.position_name&#xA;  where t1.current_row_indicator='Y'&#xA;&#xA;&#xA;&#xA;&#xA;--added by JS at 28/03/2017&#xA;/*&#xA;update t1&#xA; set t1.current_row_indicator='N' ,t1.row_effective_date=GETDATE(),t1.change_reason_code='U',t1.change_reason_description='Update'&#xA; from conform.position_dim&#x9;  as t1&#xA; inner join&#xA; (&#xA;  select   position_code,max(position_key) as position_key&#xA;  from conform.position_dim&#xA;  where current_row_indicator='Y'&#xA;  group by &#x9; position_code&#xA;  ) as t2&#xA;  on t1.position_code=t2.position_code&#xA;  and t1.position_key&lt;&gt;t2.position_key&#xA;  where t1.current_row_indicator='Y'&#xA;*/&#xA;&#xA;--update work location&#xA;   update d1&#xA;   set &#x9; d1.work_location=ff.WORK_LOCATION&#xA;   from  conform.position_dim as d1&#xA;   inner join&#xA;&#xA;  (&#xA;   select distinct t1.JOB_POS_TITLE  COLLATE DATABASE_DEFAULT as JOB_POS_TITLE,&#xA;                  t1.POSITION_CODE COLLATE DATABASE_DEFAULT as POSITION_CODE,&#xA;&#x9;&#x9;          left(t3.code_descr,50) AS WORK_LOCATION &#xA;  from extract.HRHMN_EMPL_JOB_POS as t1&#xA;  inner join &#xA;  (select  position_code,max(effective_date) as effectvie_date&#xA;  from &#x9;extract.HRHMN_EMPL_JOB_POS &#xA;  group by position_code) as f1 on t1.position_code=f1.position_code and t1.effective_date=f1.effectvie_date    &#xA;  left join extract.hrstc_code as t3 on t1.WORK_LOCATION=t3.code_id COLLATE DATABASE_DEFAULT  and t3.code_type='WORK_LOCATION'&#xA;  where len(t1.JOB_POS_TITLE)&lt;&gt;0&#xA;  and (end_date ='1900-01-01 00:00:00.000' or t1.end_date&gt;=getdate())&#xA;  )&#x9;  as ff&#xA; on  d1.current_row_indicator='Y' and ff.POSITION_CODE=d1.position_code and ff.JOB_POS_TITLE=d1.position_name and ff.WORK_LOCATION&lt;&gt;d1.work_location" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -19559,7 +19559,7 @@ where SERVICE_STREAM_CODE =?
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="128" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="128" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="290,44"
           Id="Package\Sequence Container - DIM TABLES\Sequence Container - ACCOUNT_DIM\EST - Write Job Finish info"
@@ -19577,7 +19577,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="190.25,59">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,48"
               Start="0,0"
               End="0,40.5">
@@ -19599,7 +19599,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="190.25,151">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,75"
               Start="0,0"
               End="0,67.5">
@@ -19644,7 +19644,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="37.3333333333333,37">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="-7.5,58">
@@ -19678,7 +19678,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="182.333333333333,117">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,32.75"
               Start="0,0"
               End="0,25.25">
@@ -19700,7 +19700,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="182.333333333333,193.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,32.25"
               Start="0,0"
               End="0,24.75">
@@ -19749,7 +19749,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="178.1,58">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="112.5,24.3333333333333"
               Start="0,0"
               End="105,24.3333333333333">
@@ -19777,7 +19777,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="290.6,93.6666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-112.5,24.0833333333333"
               Start="0,0"
               End="-112.5,16.5833333333333">
@@ -19805,7 +19805,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="322.6,139.25">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-17,58.75"
               Start="0,0"
               End="-9.5,58.75">
@@ -19839,7 +19839,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="33.6,198">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,53.5"
               Start="0,0"
               End="-7.5,53.5">
@@ -19896,7 +19896,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="192.520833333333,59">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,28.75"
               Start="0,0"
               End="0,21.25">
@@ -19918,7 +19918,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="32.0208333333332,109.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,57.5"
               Start="0,0"
               End="-7.5,57.5">
@@ -19952,7 +19952,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="32.0208333333332,179.25">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54.75"
               Start="0,0"
               End="-7.5,54.75">
@@ -20005,7 +20005,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="181.833333333333,59">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="-50.5,31"
               Start="0,0"
               End="-50.5,23.5">
@@ -20039,7 +20039,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="131.333333333333,132">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="50.5,67"
               Start="0,0"
               End="50.5,59.5">
@@ -20096,7 +20096,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="37.3333333333333,37">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="-7.5,58">
@@ -20130,7 +20130,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="182.333333333333,117">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,32.75"
               Start="0,0"
               End="0,25.25">
@@ -20152,7 +20152,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="182.333333333333,193.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,32.25"
               Start="0,0"
               End="0,24.75">
@@ -20197,7 +20197,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="30,36.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,58.5"
               Start="0,0"
               End="-7.5,58.5">
@@ -20231,7 +20231,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="183.5,116.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,23.5"
               Start="0,0"
               End="0,16">
@@ -20253,7 +20253,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="30,161.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,63.25"
               Start="0,0"
               End="-7.5,63.25">
@@ -20314,7 +20314,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="32.75,38.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,53.5"
               Start="0,0"
               End="-7.5,53.5">
@@ -20348,7 +20348,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="32.75,105">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,52.5"
               Start="0,0"
               End="-7.5,52.5">
@@ -20382,7 +20382,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="32.75,230.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,63.5"
               Start="0,0"
               End="-7.5,63.5">
@@ -20416,7 +20416,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="182.25,181">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26"
               Start="0,0"
               End="0,18.5">
@@ -20461,7 +20461,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="178.5,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,28.25"
               Start="0,0"
               End="0,20.75">
@@ -20483,7 +20483,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="31.5,106.25">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,52.0833333333333"
               Start="0,0"
               End="-7.5,52.0833333333333">
@@ -20517,7 +20517,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="31.5,169.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,44.8333333333333"
               Start="0,0"
               End="-7.5,44.8333333333333">
@@ -20574,7 +20574,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="198.4375,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,30.75"
               Start="0,0"
               End="0,23.25">
@@ -20596,7 +20596,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="198.4375,129.75">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,26.5"
               Start="0,0"
               End="0,19">
@@ -20618,7 +20618,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="29.9375,177.25">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,55.75"
               Start="0,0"
               End="-7.5,55.75">
@@ -20695,7 +20695,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="64.875,52">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54.3333333333333"
               Start="0,0"
               End="-7.5,54.3333333333333">
@@ -20731,7 +20731,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="64.875,117.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,49.6666666666667"
               Start="0,0"
               End="-7.5,49.6666666666667">
@@ -20767,7 +20767,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="64.875,178.666666666667">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,54.3333333333333"
               Start="0,0"
               End="-7.5,54.3333333333333">
@@ -20803,7 +20803,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="172.875,254">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,34"
               Start="0,0"
               End="0,26.5">
@@ -20827,7 +20827,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="64.875,309">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,58"
               Start="0,0"
               End="-7.5,58">
@@ -20863,7 +20863,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="172.875,388">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,25"
               Start="0,0"
               End="0,17.5">
@@ -20887,7 +20887,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="172.875,455">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,45"
               Start="0,0"
               End="0,37.5">
@@ -20911,7 +20911,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="172.875,542">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -20942,7 +20942,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="304,375.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -20966,7 +20966,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="304,851.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -20990,7 +20990,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="304,1243.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -21014,7 +21014,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="304,1655.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -21038,7 +21038,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="304,2059.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -21062,7 +21062,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="304,2456.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -21086,7 +21086,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="304,2884.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -21110,7 +21110,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="304,3298.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -21134,7 +21134,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="304.000000000001,3726.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
@@ -21158,7 +21158,7 @@ where SERVICE_STREAM_CODE =?
           TopLeft="304.000000000001,4154.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
-              StartConnector="{x:Null}"
+              StartConnector="{assembly:Null}"
               EndConnector="0,60"
               Start="0,0"
               End="0,52.5">
