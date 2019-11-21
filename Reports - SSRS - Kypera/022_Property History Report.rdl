@@ -122,10 +122,24 @@ and p.Block in (@Block)
           <QueryParameter Name="@Complete_Date_To">
             <Value>=Parameters!Complete_Date_To.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@Type">
+            <Value>=Parameters!Type.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Channel">
+            <Value>=Parameters!Channel.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Department">
+            <Value>=Parameters!Department.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Theme">
+            <Value>=Parameters!Theme.Value</Value>
+          </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT a.*,t.Salutation,t.CurrentOccupancy,p.Name,t.HousingOfficer,t.FinanceOfficer
+        <CommandText>SELECT a.*,t.Salutation,t.CurrentOccupancy,p.Name,t.HousingOfficer,t.FinanceOfficer,u.FullName as FollowUpUserName,u2.FullName as CompletionUserName
 FROM report.Action_fact a INNER JOIN report.Property_Dim p on p.ID=a.PropertyID
 LEFT JOIN report.Tenant_Dim t on a.TenantID = t.Occupancy
+LEFT JOIN report.User_Dim u on a.FollowUpUser = u.[User]
+LEFT JOIN report.User_Dim u2 on a.CompletionUser = u2.[User]													
 where
 a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
 and p.District in (@District)
@@ -138,7 +152,11 @@ and (
 		((a.CompletionDate &gt;= @Complete_Date_From) or (@Complete_Date_From is null))
 		and ((a.CompletionDate &lt;= @Complete_Date_To) or (@Complete_Date_To is null))
 
-	)</CommandText>
+	)
+and ((a.Type in (@Type)) or (@Type is null))
+and ((a.Channel in (@Channel)) or (@Channel is null))
+and ((a.Department in (@Department)) or (@Department is null))
+and ((a.Theme in (@Theme)) or (@Theme is null))					order by a.RelatesTo</CommandText>
       </Query>
       <Fields>
         <Field Name="DateEntered">
@@ -225,6 +243,10 @@ and (
           <DataField>RelatesTo</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="HistoryTable">
+          <DataField>HistoryTable</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="Salutation">
           <DataField>Salutation</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -243,6 +265,88 @@ and (
         </Field>
         <Field Name="FinanceOfficer">
           <DataField>FinanceOfficer</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FollowUpUserName">
+          <DataField>FollowUpUserName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CompletionUserName">
+          <DataField>CompletionUserName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Type">
+      <Query>
+        <DataSourceName>KyperaReplica</DataSourceName>
+        <CommandText>SELECT DISTINCT a.[type]
+FROM report.Action_fact a INNER JOIN report.Property_Dim p on p.ID=a.PropertyID
+LEFT JOIN report.Tenant_Dim t on a.TenantID = t.Occupancy
+LEFT JOIN report.User_Dim u on a.FollowUpUser = u.[User]
+LEFT JOIN report.User_Dim u2 on a.CompletionUser = u2.[User]
+where
+a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
+union
+select null;</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="type">
+          <DataField>type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Channel">
+      <Query>
+        <DataSourceName>KyperaReplica</DataSourceName>
+        <CommandText>SELECT DISTINCT a.[Channel]
+FROM report.Action_fact a INNER JOIN report.Property_Dim p on p.ID=a.PropertyID
+LEFT JOIN report.Tenant_Dim t on a.TenantID = t.Occupancy
+LEFT JOIN report.User_Dim u on a.FollowUpUser = u.[User]
+LEFT JOIN report.User_Dim u2 on a.CompletionUser = u2.[User]
+where
+a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Channel">
+          <DataField>Channel</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Department">
+      <Query>
+        <DataSourceName>KyperaReplica</DataSourceName>
+        <CommandText>SELECT DISTINCT a.[Department]
+FROM report.Action_fact a INNER JOIN report.Property_Dim p on p.ID=a.PropertyID
+LEFT JOIN report.Tenant_Dim t on a.TenantID = t.Occupancy
+LEFT JOIN report.User_Dim u on a.FollowUpUser = u.[User]
+LEFT JOIN report.User_Dim u2 on a.CompletionUser = u2.[User]
+where
+a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Department">
+          <DataField>Department</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Theme">
+      <Query>
+        <DataSourceName>KyperaReplica</DataSourceName>
+        <CommandText>SELECT DISTINCT a.[Theme]
+FROM report.Action_fact a INNER JOIN report.Property_Dim p on p.ID=a.PropertyID
+LEFT JOIN report.Tenant_Dim t on a.TenantID = t.Occupancy
+LEFT JOIN report.User_Dim u on a.FollowUpUser = u.[User]
+LEFT JOIN report.User_Dim u2 on a.CompletionUser = u2.[User]
+where
+a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Theme">
+          <DataField>Theme</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -1725,7 +1829,7 @@ and (
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!SelfCompleted.Value</Value>
+                                  <Value>=IIf(Fields!SelfCompleted.Value = 1, "Yes", IIf(Fields!SelfCompleted.Value = 0, "No", "Unknown"))</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1760,7 +1864,7 @@ and (
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ActionRequired.Value</Value>
+                                  <Value>=IIf(Fields!ActionRequired.Value = 1, "Yes", IIf(Fields!ActionRequired.Value = 0, "No", "Unknown"))</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1788,14 +1892,14 @@ and (
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="FollowUpUser">
+                        <Textbox Name="FollowUpUserName">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!FollowUpUser.Value</Value>
+                                  <Value>=Fields!FollowUpUserName.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1806,7 +1910,7 @@ and (
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>FollowUpUser</rd:DefaultName>
+                          <rd:DefaultName>FollowUpUserName</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1928,14 +2032,14 @@ and (
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="CompletionUser">
+                        <Textbox Name="CompletionUserName">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!CompletionUser.Value</Value>
+                                  <Value>=Fields!CompletionUserName.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1946,7 +2050,7 @@ and (
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>CompletionUser</rd:DefaultName>
+                          <rd:DefaultName>CompletionUserName</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1959,6 +2063,7 @@ and (
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -3401,11 +3506,59 @@ and (
       <Nullable>true</Nullable>
       <Prompt>Complete Date To</Prompt>
     </ReportParameter>
+    <ReportParameter Name="Type">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Type</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Type</DataSetName>
+          <ValueField>type</ValueField>
+          <LabelField>type</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="Channel">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Channel</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Channel</DataSetName>
+          <ValueField>Channel</ValueField>
+          <LabelField>Channel</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="Department">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Department</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Department</DataSetName>
+          <ValueField>Department</ValueField>
+          <LabelField>Department</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="Theme">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Theme</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Theme</DataSetName>
+          <ValueField>Theme</ValueField>
+          <LabelField>Theme</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>3</NumberOfColumns>
-      <NumberOfRows>4</NumberOfRows>
+      <NumberOfRows>6</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -3446,6 +3599,26 @@ and (
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>3</RowIndex>
           <ParameterName>Complete_Date_To</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>4</RowIndex>
+          <ParameterName>Type</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>4</RowIndex>
+          <ParameterName>Channel</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>5</RowIndex>
+          <ParameterName>Department</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>5</RowIndex>
+          <ParameterName>Theme</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
