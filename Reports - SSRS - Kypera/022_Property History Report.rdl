@@ -134,6 +134,9 @@ and p.Block in (@Block)
           <QueryParameter Name="@Theme">
             <Value>=Parameters!Theme.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@Module">
+            <Value>=Parameters!Module.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT a.*,t.Salutation,t.CurrentOccupancy,p.Name,t.HousingOfficer,t.FinanceOfficer,u.FullName as FollowUpUserName,u2.FullName as CompletionUserName
 FROM report.Action_fact a INNER JOIN report.Property_Dim p on p.ID=a.PropertyID
@@ -153,10 +156,12 @@ and (
 		and ((a.CompletionDate &lt;= @Complete_Date_To) or (@Complete_Date_To is null))
 
 	)
-and ((a.Type in (@Type)) or (@Type is null))
-and ((a.Channel in (@Channel)) or (@Channel is null))
-and ((a.Department in (@Department)) or (@Department is null))
-and ((a.Theme in (@Theme)) or (@Theme is null))					order by a.RelatesTo</CommandText>
+and ((a.Type in (@Type)) )
+and ((a.Channel in (@Channel)) )
+and ((a.Department in (@Department)) )
+and ((a.Theme in (@Theme)))	
+and a.RelatesTo in (@Module)				
+order by a.RelatesTo</CommandText>
       </Query>
       <Fields>
         <Field Name="DateEntered">
@@ -351,6 +356,24 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="Module">
+      <Query>
+        <DataSourceName>KyperaReplica</DataSourceName>
+        <CommandText>SELECT DISTINCT a.RelatesTo
+FROM report.Action_fact a INNER JOIN report.Property_Dim p on p.ID=a.PropertyID
+LEFT JOIN report.Tenant_Dim t on a.TenantID = t.Occupancy
+LEFT JOIN report.User_Dim u on a.FollowUpUser = u.[User]
+LEFT JOIN report.User_Dim u2 on a.CompletionUser = u2.[User]
+where
+a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="RelatesTo">
+          <DataField>RelatesTo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -378,7 +401,7 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
                   <Width>7.93039cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.45836cm</Width>
+                  <Width>3.90815cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.5cm</Width>
@@ -411,7 +434,7 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
                   <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.53188cm</Width>
+                  <Width>4.19334cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>6.38937cm</Width>
@@ -1549,9 +1572,10 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!DateEntered.Value</Value>
+                                  <Value>=Format(Fields!DateEntered.Value, "dd/MM/yyyy hh:mm:ss tt")</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>g</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1864,7 +1888,7 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=IIf(Fields!ActionRequired.Value = 1, "Yes", IIf(Fields!ActionRequired.Value = 0, "No", "Unknown"))</Value>
+                                  <Value>=IIf(Fields!ActionRequired.Value , "Yes", "No")</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1934,9 +1958,10 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ActionDueBy.Value</Value>
+                                  <Value>=Format(Fields!ActionDueBy.Value, "dd/MM/yyyy hh:mm:ss tt")</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
+                                    <Format>g</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2004,7 +2029,7 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!CompletionDate.Value</Value>
+                                  <Value>=Format(Fields!CompletionDate.Value, "dd/MM/yyyy hh:mm:ss tt")</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -2063,7 +2088,6 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -3067,7 +3091,7 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
             <Top>0.12761cm</Top>
             <Left>0.44662cm</Left>
             <Height>1.8cm</Height>
-            <Width>85.77228cm</Width>
+            <Width>86.88353cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3508,7 +3532,6 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
     </ReportParameter>
     <ReportParameter Name="Type">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
       <Prompt>Type</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -3517,10 +3540,10 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
           <LabelField>type</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="Channel">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
       <Prompt>Channel</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -3529,10 +3552,10 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
           <LabelField>Channel</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="Department">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
       <Prompt>Department</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -3541,10 +3564,10 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
           <LabelField>Department</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="Theme">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
       <Prompt>Theme</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -3553,12 +3576,25 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
           <LabelField>Theme</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Module">
+      <DataType>String</DataType>
+      <Prompt>Module</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Module</DataSetName>
+          <ValueField>RelatesTo</ValueField>
+          <LabelField>RelatesTo</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>3</NumberOfColumns>
-      <NumberOfRows>6</NumberOfRows>
+      <NumberOfRows>7</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -3619,6 +3655,11 @@ a.RelatesTo in ('Void','Unit','Repair Order','Repair Call','Repairs Inspection')
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>5</RowIndex>
           <ParameterName>Theme</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>6</RowIndex>
+          <ParameterName>Module</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>

@@ -109,20 +109,35 @@ and p.Block in (@Block)</CommandText>
           <QueryParameter Name="@Program">
             <Value>=Parameters!Program.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@InvoiceDateFrom">
+            <Value>=Parameters!InvoiceDateFrom.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@InvoiceDateTo">
+            <Value>=Parameters!InvoiceDateTo.Value</Value>
+          </QueryParameter>
         </QueryParameters>
-        <CommandText>select gf.*,pd.Flat,pd.[Number],pd.Street,pd.Town,pd.Postcode,pd.GroupHouseholdID,pd.MarketRent,pd.HabitableRooms,pd.GovernmentArea,pd.ATOLocation,pd.ATOPropertyType
+        <CommandText>select gf.*
+,pd.Flat,pd.[Number],pd.Street,pd.Town,pd.Postcode,pd.GroupHouseholdID,pd.MarketRent,pd.HabitableRooms,pd.GovernmentArea,pd.ATOLocation,pd.ATOPropertyType
+
 from report.GSTFreeReport_Fact gf
 left join report.Property_Dim pd on gf.PropertyID = pd.ID
 where
  pd.District in (@District)
 and pd.Scheme in (@Scheme)
 and pd.Block in (@Block)
-and pd.program in (@Program)</CommandText>
+and pd.program in (@Program)
+and ((gf.InvoiceCreatedOn &gt;= @InvoiceDateFrom) or (@InvoiceDateFrom is null))
+and ((gf.InvoiceCreatedOn &lt;= @InvoiceDateTo) or (@InvoiceDateTo is null))
+order by gf.PropertyID</CommandText>
       </Query>
       <Fields>
         <Field Name="GSTFreeReport_Key">
           <DataField>GSTFreeReport_Key</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Repairs_WorksOrderID">
+          <DataField>Repairs_WorksOrderID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TenancyID">
           <DataField>TenancyID</DataField>
@@ -130,10 +145,6 @@ and pd.program in (@Program)</CommandText>
         </Field>
         <Field Name="PropertyID">
           <DataField>PropertyID</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Repairs_WorksOrderID">
-          <DataField>Repairs_WorksOrderID</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="WeeklyRentCharge">
@@ -144,21 +155,13 @@ and pd.program in (@Program)</CommandText>
           <DataField>TenantRentChargeAboveATORent</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="CostGSTInc">
-          <DataField>CostGSTInc</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="CostGSTExc">
-          <DataField>CostGSTExc</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="GST">
-          <DataField>GST</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
         <Field Name="ATOFreeRentAmount">
           <DataField>ATOFreeRentAmount</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="InvoiceCreatedOn">
+          <DataField>InvoiceCreatedOn</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Flat">
           <DataField>Flat</DataField>
@@ -203,6 +206,18 @@ and pd.program in (@Program)</CommandText>
         <Field Name="ATOPropertyType">
           <DataField>ATOPropertyType</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CostGSTInc">
+          <DataField>CostGSTInc</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="CostGSTExc">
+          <DataField>CostGSTExc</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="GST">
+          <DataField>GST</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -2908,6 +2923,16 @@ and pd.program in (@Program)</CommandText>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="InvoiceDateFrom">
+      <DataType>DateTime</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Invoice Date From</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="InvoiceDateTo">
+      <DataType>DateTime</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Invoice Date To</Prompt>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -2933,6 +2958,16 @@ and pd.program in (@Program)</CommandText>
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>Program</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>InvoiceDateFrom</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>InvoiceDateTo</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
