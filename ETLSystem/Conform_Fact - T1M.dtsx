@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_Fact - T1M"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="696"
-  DTS:VersionGUID="{1703C6CF-E95F-410D-8368-DA96B1543F97}">
+  DTS:VersionBuild="718"
+  DTS:VersionGUID="{5587E915-B5ED-48AC-924D-61494ECBA15F}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -102,7 +102,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/11/2019 9:35:01 AM</DTS:VariableValue>
+        DTS:DataType="7">12/12/2019 11:34:01 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -149,7 +149,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/11/2019 9:35:01 AM</DTS:VariableValue>
+        DTS:DataType="7">12/12/2019 11:34:01 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -160,7 +160,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">12/11/2019 9:35:01 AM</DTS:VariableValue>
+        DTS:DataType="7">12/12/2019 11:34:01 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -1210,8 +1210,112 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
-                  SQLTask:SqlStatementSource="&#xA;--Current year , month, and day&#xA;declare @t_year int = &#x9;year(getdate());&#xA;declare @t_month int = &#x9;month(getdate());&#xA;declare @t_day int = &#x9;day(getdate());&#xA;-- month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select month_key from conform.month_dim d where d.year = @t_year&#xA;&#x9;and d.month_number = @t_month&#xA;);&#xA;&#xA;--the first day of new financial year&#xA;--insert all year data&#xA;&#xA;if (@t_day = 1)&#xA;begin&#xA; if (@t_month = 7 )&#xA; begin&#xA;&#xA; DELETE conform.labour_turnover_report_fact where month_date_key&gt;=@month_key_t&#xA;&#xA; insert into conform.labour_turnover_report_fact (month_date_key,last_year_monthly)&#xA; ( &#xA;  select month_date_key+12 as month_date_key,monthly from conform.labour_turnover_report_fact f &#xA;  where f.month_date_key&gt;=(@month_key_t -12)&#xA;  and f.month_date_key&lt;@month_key_t&#xA; )&#xA; end&#xA;end&#xA;&#xA;&#xA;--update current year's data&#xA;update ltrf &#xA;set ltrf.total = (&#xA;    select sum(ltf.total) as total from conform.labour_turnover_fact ltf&#xA;    where ltf.service_stream_key = 1 and ltf.month_date_key = @month_key_t&#xA;),&#xA;    ltrf.lost = (&#xA;    select sum(ltf.total_lost) as lost from conform.labour_turnover_fact ltf&#xA;    where ltf.service_stream_key = 1 and ltf.month_date_key = @month_key_t        &#xA;    )&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;--update monthly data&#xA;update ltrf  &#xA;set ltrf.monthly = COALESCE(convert(decimal(10,2),ltrf.lost) / convert(decimal(10,2),ltrf.total),0)&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;&#xA; --update year average data &#xA;update ltrf&#xA;set &#xA; ltrf.yearly = (select sum(monthly) from conform.labour_turnover_report_fact f3 where f3.month_date_key &gt;(@month_key_t-12) and f3.month_date_key&lt;=@month_key_t)&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="&#xA;--Current year , month, and day&#xA;declare @t_year int = &#x9;year(getdate());&#xA;declare @t_month int = &#x9;month(getdate());&#xA;declare @t_day int = &#x9;day(getdate());&#xA;-- month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select month_key from conform.month_dim d where d.year = @t_year&#xA;&#x9;and d.month_number = @t_month&#xA;);&#xA;&#xA;--the first day of new financial year&#xA;--insert all year data&#xA;&#xA;if (@t_day = 1)&#xA;begin&#xA; if (@t_month = 7 )&#xA; begin&#xA;&#xA; DELETE conform.labour_turnover_report_fact where month_date_key&gt;=@month_key_t&#xA;&#xA; insert into conform.labour_turnover_report_fact (month_date_key,last_year_monthly)&#xA; ( &#xA;  select month_date_key+12 as month_date_key,monthly from conform.labour_turnover_report_fact f &#xA;  where f.month_date_key&gt;=(@month_key_t -12)&#xA;  and f.month_date_key&lt;@month_key_t&#xA; )&#xA; end&#xA;end&#xA;&#xA;--If the first day of month then update last month's data &#xA;if (@t_day = 1)&#xA;begin&#xA; set @month_key_t = @month_key_t - 1&#xA;end&#xA;--update current month's data&#xA;update ltrf &#xA;set ltrf.total = (&#xA;    select sum(ltf.total) as total from conform.labour_turnover_fact ltf&#xA;    where ltf.service_stream_key = 1 and ltf.month_date_key = @month_key_t&#xA;),&#xA;    ltrf.lost = (&#xA;    select sum(ltf.total_lost) as lost from conform.labour_turnover_fact ltf&#xA;    where ltf.service_stream_key = 1 and ltf.month_date_key = @month_key_t        &#xA;    )&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;--update monthly data&#xA;update ltrf  &#xA;set ltrf.monthly = COALESCE(convert(decimal(10,2),ltrf.lost) / convert(decimal(10,2),ltrf.total),0)&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;&#xA; --update year average data &#xA;update ltrf&#xA;set &#xA; ltrf.yearly = (select sum(monthly) from conform.labour_turnover_report_fact f3 where f3.month_date_key &gt;(@month_key_t-12) and f3.month_date_key&lt;=@month_key_t)&#xA;from conform.labour_turnover_report_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container"
+              DTS:CreationName="STOCK:SEQUENCE"
+              DTS:Description="Sequence Container"
+              DTS:DTSID="{293019AD-DAA5-440E-A911-E28C5C27DDD8}"
+              DTS:ExecutableType="STOCK:SEQUENCE"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Sequence Container">
+              <DTS:Variables />
+              <DTS:Executables>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\EMPLOYEE_TERMINATION_FACT_2"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{2481c670-ff33-4c29-8aae-18086845a841}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="EMPLOYEE_TERMINATION_FACT_2"
+                  DTS:ThreadHint="0">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{65D62F5E-E939-44FD-988B-66BB05AD99B7}"
+                      SQLTask:SqlStatementSource="TRUNCATE TABLE conform.[EMPLOYEE_TERMINATION_FACT_2];&#xA;&#xA;&#xA;--get all termination data&#xA;insert into conform.employee_termination_fact_2&#xA;select &#xA;t1.TERM_REASON,&#xA;'Y',&#xA;d1.employee_key,&#xA;d2.date_key,&#xA;d1.organisation_key,&#xA;d1.portfolio_key,&#xA;d1.service_stream_key,&#xA;d1.program_key,&#xA;d1.position_key,&#xA;0,&#xA;0,&#xA;0,&#xA;0,&#xA;0,&#xA;0,&#xA;'9999999' as commencement_date ,&#xA;t2.code_descr,&#xA;null,&#xA;t1.term_code&#xA;FROM [extract].[HRHMN_EMPLTERM_DTL] as t1&#x9;&#xA;inner join conform.employee_temp  as d1 on t1.id_number =d1.id_number and d1.primary_position_flag='P'&#xA;inner join conform.date_dim as d2 on t1.TERM_DATE=d2.full_date&#xA;inner join extract.hrstc_code as t2 on t2.code_type='TERM_TYPE' and t2.code_id&#x9;= t1.term_type&#xA;where d1.employee_key is not null&#xA;and t1.term_date&lt;=getdate()&#xA;----and t1.term_date   in (select full_date from conform.date_dim   where convert(date,full_date) = convert(date, getdate()-1));&#xA;&#xA; &#xA;  &#xA;  --update commencement_date_key change to use HRHMN_EMPL_JOB_CTL instead of HRHMN_EMPLTERM_DTL table, because the wrong date found in the val_date2 column of the later table.&#xA;  --by FW&#xA;update f1&#xA;set f1.commencement_date_key=isnull(tt.commencement_date_key,9999999)&#xA;  from conform.employee_termination_fact_2 as f1&#xA;  inner join&#xA;  (  &#xA;&#x9;  select distinct t2.id_number,d.employee_key, t2.date_hired as commencement_date,d2.date_key as commencement_date_key from [extract].[HRHMN_EMPL_JOB_CTL] as t2&#xA;&#x9;  inner join conform.employee_dim d on t2.id_number = d.id_number&#xA;&#x9;  inner join conform.DATE_DIM d2 on t2.date_hired=d2.full_date&#xA;   &#xA;  ) as tt&#xA;  on f1.employee_key = tt.employee_key&#xA;&#xA;--update no position&#xA;update t1&#xA;set t1.position_key = t2.position_key&#xA;from conform.employee_termination_fact_2 as t1&#xA;inner join conform.employee_temp  as d1 on t1.employee_key = d1.employee_key &#xA;inner join &#xA;(SELECT  max([position_key]) as position_key&#xA;      ,[position_code]&#xA;  FROM [DWHB_NEW].[conform].[POSITION_DIM]&#xA;group by position_code) as t2 on t2.position_code = d1.position_code&#xA;inner join conform.POSITION_DIM d2 on d2.position_key = t1.position_key and d2.position_name =  'No Position'&#xA;&#xA;update [conform].[employee_termination_fact_2]&#xA;set permanent_ft_count=0,permanent_pt_count=0,contract_ft_count=0,contract_pt_count=0,casual_count=0,total_count=0;&#xA;&#xA;  --[permanent_ft_count]&#xA;update t1 &#xA;set t1.permanent_ft_count=1&#xA;from [conform].[employee_termination_fact_2] as t1&#xA;inner join conform.position_dim as t2 &#xA;on t1.position_key=t2.position_key&#xA;where t2.contract_type='Permanent'&#xA;and t2.position_class like '%Full Time%'&#xA;&#xA;&#xA;--[permanent_pt_count]&#xA;update t1 &#xA;set t1.permanent_pt_count=1&#xA;from [conform].[employee_termination_fact_2] as t1&#xA;inner join conform.position_dim as t2 &#xA;on t1.position_key=t2.position_key&#xA;where t2.contract_type='Permanent'&#xA;and t2.position_class not like '%Full Time%'&#xA;&#xA;&#xA;--[contract_ft_count]&#xA;update t1 &#xA;set t1.contract_ft_count=1&#xA;from [conform].[employee_termination_fact_2] as t1&#xA;inner join conform.position_dim as t2 &#xA;on t1.position_key=t2.position_key&#xA;where t2.contract_type in ('Fixed Term Contract','Contractor')&#xA;and t2.position_class like '%Full Time%'&#xA;&#xA;&#xA;&#xA;--[contract_pt_count]&#xA;update t1 &#xA;set t1.contract_pt_count=1&#xA;from [conform].[employee_termination_fact_2] as t1&#xA;inner join conform.position_dim as t2 &#xA;on t1.position_key=t2.position_key&#xA;where t2.contract_type in ('Fixed Term Contract','Contractor')&#xA;and t2.position_class not like '%Full Time%'&#xA;&#xA;&#xA;&#xA;--casual_count&#xA;update t1 &#xA;set t1.casual_count=1&#xA;from [conform].[employee_termination_fact_2] as t1&#xA;inner join conform.position_dim as t2 &#xA;on t1.position_key=t2.position_key&#xA;where t2.contract_type not in ('Fixed Term Contract','Contractor','Permanent')&#xA;&#xA;&#xA;&#xA;update conform.employee_termination_fact_2&#xA;set casual_count=1&#xA;where permanent_ft_count=0 and permanent_pt_count=0 and contract_ft_count=0 and contract_pt_count=0 and casual_count=0&#xA;&#xA;&#xA;&#xA;--other -&gt;0&#xA;&#xA;update [conform].[employee_termination_fact_2]&#xA;set permanent_ft_count=0&#xA;where permanent_ft_count is null;&#xA;&#xA;update [conform].[employee_termination_fact_2]&#xA;set permanent_pt_count=0&#xA;where permanent_pt_count is null;&#xA;&#xA;update [conform].[employee_termination_fact_2]&#xA;set contract_ft_count=0&#xA;where contract_ft_count is null;&#xA;&#xA;update [conform].[employee_termination_fact_2]&#xA;set contract_pt_count=0&#xA;where contract_pt_count is null;&#xA;&#xA;update [conform].[employee_termination_fact_2]&#xA;set casual_count=0&#xA;where casual_count is null;&#xA;&#xA;--update total_count&#xA;update [conform].[employee_termination_fact_2]&#xA;set total_count =permanent_ft_count+permanent_pt_count+contract_ft_count+contract_pt_count+casual_count;&#xA;&#xA;&#xA;--update date of birth&#xA;update t1&#xA;set t1.date_of_birth = t2.date_of_birth&#xA;from conform.employee_termination_fact_2 as t1&#xA;inner join conform.employee_dim as t2 on t1.employee_key = t2.employee_key&#xA;&#xA;&#xA;&#xA;&#xA;--update term_code basing of T1 standard_codes&#xA;update conform.employee_termination_fact_2&#xA;set term_code  = case term_code &#xA;                 when 'A' then&#x9;'Abandonment of Employment'&#xA;when 'AJ' then&#x9;'Another Job'&#xA;when 'BE' then&#x9;'Becoming an Employee (volunteer or student placement)'&#xA;when 'C' then&#x9;'Contract End'&#xA;when 'CWNA' then&#x9;'Casual No Longer Required'&#xA;when 'D' then&#x9;'Deceased'&#xA;when 'ECSP' then&#x9;'Early Completion of Student Placement'&#xA;when 'F' then&#x9;'Family responsibilities'&#xA;when 'H' then&#x9;'Ill health'&#xA;when 'HR' then&#x9;'Dismissal - HR'&#xA;when 'HW' then&#x9;'Hours of work - insufficient or too many'&#xA;when 'I' then&#x9;'No Reason Given'&#xA;when 'J' then&#x9;'Job dissatisfaction'&#xA;when 'L' then&#x9;'Relocation or Travel'&#xA;when 'LE' then&#x9;'Leaving for Employment (volunteer or student placement)'&#xA;when 'M&#x9;' then&#x9;'Money/ benefits'&#xA;when 'MCU' then&#x9;'Mandatory check unsatisfactory'&#xA;when 'O' then&#x9;'Retirement'&#xA;when 'PNCS' then&#x9;'Probation not completed satisfactorily'&#xA;when 'PR' then&#x9;'Personal Reasons'&#xA;when 'R' then&#x9;'Redundancy'&#xA;when 'RESIGN' then&#x9;'Resignation'&#xA;when 'S' then&#x9;'Study'&#xA;when 'SCSP' then&#x9;'Successful Completion of Student Placement'&#xA;when 'T' then&#x9;'Termination/ Dismissal'&#xA;when 'UTP' then&#x9;'Unsuited to Position'&#xA;when 'WC' then&#x9;'WorkCover Related'&#xA;else term_code&#xA;end;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  </DTS:ObjectData>
+                </DTS:Executable>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\Get data for yesterday LABOUR_TURNOVER_FACT_2"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{b00326d0-6294-47c7-8377-e6dc646e9c67}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:FailPackageOnFailure="True"
+                  DTS:FailParentOnFailure="True"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="Get data for yesterday LABOUR_TURNOVER_FACT_2"
+                  DTS:ThreadHint="0">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{65D62F5E-E939-44FD-988B-66BB05AD99B7}"
+                      SQLTask:SqlStatementSource="truncate table conform.labour_turnover_fact_2;&#xA;-- insert service stream part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact_2&#xA; select &#xA;t1.month_date_key,&#xA;--no portfolio&#xA;(select top 1 portfolio_key from conform.portfolio_dim d where d.portfolio_code = '99999'),&#xA;t1.service_stream_key,0,0,0,0,0,0, 0,0,0,0,0,0, 0,0,0,0,0,0,0,0&#xA;from &#xA; (select t0.month_date_key, d.service_stream_key from &#xA;   ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact_2 as f1 &#xA;    left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;    left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;    where d3.month_key is not null) as t0&#xA;  cross join conform.service_stream_dim d &#xA;where d.current_row_indicator = 'Y' and d.service_stream_code !=99999) as t1&#xA;&#xA;&#xA; -- insert portfolio part and update data&#xA;INSERT INTO CONFORM.labour_turnover_fact_2&#xA; select &#xA;t1.month_date_key,&#xA;portfolio_key,&#xA;--no service_stream&#xA;(select  top 1 service_stream_key from conform.service_stream_dim d where d.service_stream_code = '99999'),&#xA;0,0,0,0,0,0,  0,0,0,0,0,0, 0,0,0,0,0,0,0,0&#xA;from &#xA; (select t0.month_date_key, d.portfolio_key from &#xA;   ( select distinct d3.month_key as month_date_key from conform.employee_termination_fact_2 as f1 &#xA;    left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;    left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;    where d3.month_key is not null) as t0&#xA;  cross join conform.portfolio_dim d &#xA;where d.current_row_indicator = 'Y' and d.portfolio_code !=99999) as t1;&#xA;&#xA;&#xA;&#xA;&#xA;--update service stream part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA; ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA; ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA; ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA; ltt.[casual_lost] =t1.casual_count,&#xA; ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact_2 ltt inner join &#xA;   (select &#xA;     d3.month_key as month_date_key,&#xA;     f1.service_stream_key,&#xA;     sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;     sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;     sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;     from conform.employee_termination_fact_2 as f1 &#xA;     left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;     left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;     where d3.month_key is not null&#xA;     group by  d3.month_key,f1.service_stream_key&#xA;    ) as t1&#xA;    on ltt.service_stream_key = t1.service_stream_key&#xA;    and ltt.month_date_key = t1.month_date_key&#xA;    and ltt.portfolio_key = --no portfolio&#xA;(select top 1 portfolio_key from conform.portfolio_dim d where d.portfolio_code = '99999')&#xA;    &#xA;--select * from CONFORM.labour_turnover_fact_2&#xA;&#xA;--update portfolio part&#xA;--terminationg part&#xA;update ltt&#xA;set ltt.[permanent_ft_lost] =t1.permanent_ft_count,&#xA; ltt.[permanent_pt_lost] =t1.permanent_pt_count,&#xA; ltt.[contract_ft_lost] =t1.contract_ft_count,&#xA; ltt.[contract_pt_lost] =t1.contract_pt_count,&#xA; ltt.[casual_lost] =t1.casual_count,&#xA; ltt.[total_lost] =t1.total_count&#xA;from&#xA;CONFORM.labour_turnover_fact_2 ltt inner join &#xA;   (select &#xA;     d3.month_key as month_date_key,&#xA;     f1.portfolio_key,&#xA;     sum(case when permanent_ft_count=1 then 1 else 0 end) as  permanent_ft_count,&#xA;     sum(case when permanent_pt_count=1 then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when contract_ft_count=1 then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when contract_pt_count=1 then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when casual_count=1 then 1 else 0 end) as  casual_count,&#xA;     sum(case when (total_count-casual_count)=1 then 1 else 0 end) as  total_count&#xA;     from conform.employee_termination_fact_2 as f1 &#xA;     left join conform.date_dim as d2 on d2.date_key=f1.termination_date_key&#xA;     left join conform.month_dim as d3 on d2.month_no=d3.month_number and d2.year=d3.year&#xA;     where d3.month_key is not null&#xA;     --and f1.service_stream_key=1&#xA;     group by  d3.month_key,f1.portfolio_key&#xA;    ) as t1&#xA;    on ltt.portfolio_key = t1.portfolio_key&#xA;    and ltt.month_date_key = t1.month_date_key&#xA;    and ltt.service_stream_key = --no service_stream&#xA;(select  top 1 service_stream_key from conform.service_stream_dim d where d.service_stream_code = '99999')&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;declare @t_month int =  (select min(month_date_key) from CONFORM.labour_turnover_fact_2 );&#xA;&#xA;--month's key&#xA;declare @month_key_t int = &#xA;(&#xA; select month_key from conform.month_dim d where d.year = year(getdate())&#xA; and d.month_number = month(getdate())&#xA;);&#xA;&#xA;&#xA;declare @t_date_key int;&#xA;&#xA;while @t_month &lt;= @month_key_t&#xA;begin &#xA;&#xA; set  @t_date_key =  &#xA;   (select d.date_key from &#xA;   conform.date_dim d inner join conform.month_dim m &#xA;   on d.year=m.year and d.month_no = m.month_number and d.day_of_month =1&#xA;   and m.month_key = @t_month);&#xA; --update service stream part&#xA; --all employee part&#xA; update ltt&#xA; set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;  ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;  ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;  ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;  ltt.[casual_total] =t2.casual_count,&#xA;  ltt.[total] =t2.total_count&#xA; from&#xA; CONFORM.labour_turnover_fact_2 ltt inner join &#xA;      (&#xA;     select &#xA;     t2.service_stream_key,&#xA;     sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;     sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;     sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;     sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;     sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;     sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;     from conform.all_employees_report_fact t2&#xA;     where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;     and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;     group by service_stream_key&#xA;    ) as t2&#xA;     on ltt.service_stream_key = t2.service_stream_key&#xA;     and ltt.month_date_key = @t_month&#xA;     and ltt.portfolio_key = --no portfolio&#xA;(select top 1 portfolio_key from conform.portfolio_dim d where d.portfolio_code = '99999');&#xA;&#xA; --update portfolio part&#xA; --all employee part&#xA; update ltt&#xA; set ltt.[permanent_ft_total] =t2.permanent_ft_count,&#xA;  ltt.[permanent_pt_total] =t2.permanent_pt_count,&#xA;  ltt.[contract_ft_total] =t2.contract_ft_count,&#xA;  ltt.[contract_pt_total] =t2.contract_pt_count,&#xA;  ltt.[casual_total] =t2.casual_count,&#xA;  ltt.[total] =t2.total_count&#xA; from&#xA; CONFORM.labour_turnover_fact_2 ltt inner join &#xA;      (&#xA;      select &#xA;      t2.portfolio_key,&#xA;      sum ( case when  t2.employee_type='Permanent' and t2.employee_class like '%Full Time%' then 1 else 0 end ) as permanent_ft_count,&#xA;      sum(case when  t2.employee_type='Permanent' and t2.employee_class not like '%Full Time%'  then 1 else 0 end) as  permanent_pt_count,&#xA;      sum(case when  t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee') and t2.employee_class like '%Full Time%' then 1 else 0 end) as  contract_ft_count,&#xA;      sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee')and t2.employee_class not like '%Full Time%' then 1 else 0 end) as  contract_pt_count,&#xA;      sum(case when t2.employee_type not in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  casual_count,&#xA;      sum(case when t2.employee_type in ('Fixed Term Contract','Fixed Term','Trainee','Permanent') then 1 else 0 end) as  total_count&#xA;&#xA;      from conform.all_employees_report_fact t2&#xA;      where (t2.commencement_date_key &lt;=  @t_date_key or t2.commencement_date_key = 9999999 )&#xA;      and (t2.terminate_date_key&gt;= @t_date_key or t2.terminate_date_key = 9999999)&#xA;      --and t2.service_stream_key = 1&#xA;      group by portfolio_key&#xA;      ) as t2&#xA;     on ltt.portfolio_key = t2.portfolio_key&#xA;     and ltt.month_date_key = @t_month&#xA;     and ltt.service_stream_key = --no service_stream&#xA;(select  top 1 service_stream_key from conform.service_stream_dim d where d.service_stream_code = '99999');     &#xA; set @t_month = @t_month +1;    &#xA;end;&#xA;--select * from CONFORM.labour_turnover_fact_2&#xA;    &#xA;&#xA;     &#xA;--select * from CONFORM.labour_turnover_fact_2     &#xA;--update report part   &#xA;update ltt&#xA;set &#xA;   permanent_ft_turnover = case when ltt.permanent_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_ft_lost)/convert(decimal(10,2),ltt.permanent_ft_total) end,&#xA;   &#xA;   permanent_pt_turnover = case when ltt.permanent_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.permanent_pt_lost)/convert(decimal(10,2),ltt.permanent_pt_total) end,&#xA;   &#xA;   contract_ft_turnover = case when ltt.contract_ft_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_ft_lost)/convert(decimal(10,2),ltt.contract_ft_total) end,&#xA;   &#xA;   contract_pt_turnover = case when ltt.contract_pt_total=0 then 0.0000 else  convert(decimal(10,2),ltt.contract_pt_lost)/convert(decimal(10,2),ltt.contract_pt_total) end,&#xA;   &#xA;   casual_turnover = case when ltt.casual_total=0 then 0.0000 else  convert(decimal(10,2),ltt.casual_lost)/convert(decimal(10,2),ltt.casual_total) end,&#xA;   &#xA;   total_turnover = case when ltt.total=0 then 0.0000 else  convert(decimal(10,2),ltt.total_lost)/convert(decimal(10,2),ltt.total) end&#xA;&#xA;from CONFORM.labour_turnover_fact_2 ltt&#xA; select * from CONFORM.labour_turnover_fact_2 ltt&#xA;--update [last_year_monthly] which equals to month key minus 12&#xA;&#xA;--select nlf.month_date_key ,nlf.total_turnover,nlf.portfolio_key,nlf.service_stream_key,f.total_turnover as old_turnover,f.old_month_key,f.n_m_d&#xA;update nlf&#xA;set nlf.[last_year_monthly]= f.total_turnover&#xA;from CONFORM.labour_turnover_fact_2 nlf&#xA;inner join&#xA;(select (f.month_date_key + 12) as old_month_key,f.month_date_key as n_m_d ,f.total_turnover,f.portfolio_key,f.service_stream_key&#xA;from CONFORM.labour_turnover_fact_2 f) as f&#xA;on nlf.month_date_key = f.old_month_key&#xA;and nlf.portfolio_key = f.portfolio_key&#xA;and nlf.service_stream_key = f.service_stream_key&#xA;--update yearly turnover which is the sum of last 12 months turnover&#xA;&#xA;declare @month_key_min int = &#xA;(&#xA; select min(month_date_key) +12 from CONFORM.labour_turnover_fact_2&#xA;);&#xA;&#xA;declare @month_key_max int = &#xA;(&#xA; select max(month_date_key) from CONFORM.labour_turnover_fact_2&#xA;);&#xA;&#xA;while (@month_key_min &lt;= @month_key_max)&#xA;begin&#xA; update nlf&#xA; set &#xA;  nlf.[yearly] = f.total_turnover&#xA; from CONFORM.labour_turnover_fact_2 nlf&#xA; inner join &#xA; (select f.portfolio_key,f.service_stream_key,sum(total_turnover) as total_turnover &#xA; from CONFORM.labour_turnover_fact_2 f &#xA; where f.month_date_key &gt;(@month_key_min-12) and f.month_date_key&lt;=@month_key_min group by f.portfolio_key,f.service_stream_key) as f&#xA; on nlf.service_stream_key = f.service_stream_key&#xA; and nlf.portfolio_key = f.portfolio_key&#xA; and nlf.month_date_key = @month_key_min;&#xA;&#xA; set @month_key_min = @month_key_min + 1;&#xA;end;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  </DTS:ObjectData>
+                </DTS:Executable>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\INCREMENTAL portfolio"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{46e5b211-ae2f-4557-9e4c-b19c42cf15d8}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="INCREMENTAL portfolio"
+                  DTS:ThreadHint="0">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                      SQLTask:SqlStatementSource="&#xA;--Current year , month, and day&#xA;declare @t_year int = &#x9;year(getdate());&#xA;declare @t_month int = &#x9;month(getdate());&#xA;declare @t_day int = &#x9;day(getdate());&#xA;&#xA;-- month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select month_key from conform.month_dim d where d.year = @t_year&#xA;&#x9;and d.month_number = @t_month&#xA;);&#xA;&#xA;--the first day of new financial year&#xA;--insert all year data&#xA;&#xA;if (@t_day = 1)&#xA;begin&#xA; if (@t_month = 7 )&#xA; begin&#xA;&#xA; DELETE conform.labour_turnover_report_portfolio_fact where month_date_key&gt;=@month_key_t&#xA;&#xA; insert into conform.labour_turnover_report_portfolio_fact (month_date_key,portfolio_key,last_year_monthly)&#xA; ( &#xA; --portfolio key change will affect this step&#xA;  select month_date_key+12 as month_date_key,portfolio_key,monthly from conform.labour_turnover_report_portfolio_fact f &#xA;  where f.month_date_key&gt;=(@month_key_t -12)&#xA;  and f.month_date_key&lt;@month_key_t&#xA; )&#xA; end&#xA;end&#xA;&#xA;--If the first day of month then update last month's data &#xA;if (@t_day = 1)&#xA;begin&#xA; set @month_key_t = @month_key_t - 1&#xA;end&#xA;--update current month's data&#xA;update ltrf &#xA;set ltrf.total = (&#xA;    select sum(ltf.total) as total from conform.labour_turnover_fact_2 ltf&#xA;    where ltf.service_stream_key = 1 and ltf.month_date_key = @month_key_t &#xA;),&#xA;    ltrf.lost = (&#xA;    select sum(ltf.total_lost) as lost from conform.labour_turnover_fact_2 ltf&#xA;    where ltf.month_date_key = @month_key_t and ltf.portfolio_key = ltrf.portfolio_key        &#xA;    )&#xA;from conform.labour_turnover_report_portfolio_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;--update monthly data&#xA;update ltrf  &#xA;set ltrf.monthly = COALESCE(convert(decimal(10,2),ltrf.lost) / convert(decimal(10,2),ltrf.total),0)&#xA;from conform.labour_turnover_report_portfolio_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;&#xA; --update yearly data &#xA;update ltrf&#xA;set &#xA; ltrf.yearly = (&#xA; &#x9;&#x9;&#x9;&#x9;&#x9;select sum(monthly) &#xA; &#x9;&#x9;&#x9;&#x9;&#x9;from conform.labour_turnover_report_portfolio_fact f3 &#xA; &#x9;&#x9;&#x9;&#x9;&#x9;where f3.month_date_key &gt;(@month_key_t-12) and f3.month_date_key&lt;=@month_key_t&#xA; &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;and f3.portfolio_key = ltrf.portfolio_key&#xA; &#x9;&#x9;&#x9;&#x9;)&#xA;from conform.labour_turnover_report_portfolio_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  </DTS:ObjectData>
+                </DTS:Executable>
+                <DTS:Executable
+                  DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\INCREMENTAL service steam"
+                  DTS:CreationName="Microsoft.ExecuteSQLTask"
+                  DTS:Description="Execute SQL Task"
+                  DTS:DTSID="{0a0ef39e-e311-4732-af4a-a18bf08c4ac7}"
+                  DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+                  DTS:LocaleID="-1"
+                  DTS:ObjectName="INCREMENTAL service steam"
+                  DTS:ThreadHint="0">
+                  <DTS:Variables />
+                  <DTS:ObjectData>
+                    <SQLTask:SqlTaskData
+                      SQLTask:Connection="{884DD7ED-B60E-4FFA-B22D-DD9B8BED933A}"
+                      SQLTask:SqlStatementSource="&#xA;--Current year , month, and day&#xA;declare @t_year int = &#x9;year(getdate());&#xA;declare @t_month int = &#x9;month(getdate());&#xA;declare @t_day int = &#x9;day(getdate());&#xA;&#xA;-- month's key&#xA;declare @month_key_t int = &#xA;(&#xA;&#x9;select month_key from conform.month_dim d where d.year = @t_year&#xA;&#x9;and d.month_number = @t_month&#xA;);&#xA;&#xA;--the first day of new financial year&#xA;--insert all year data&#xA;&#xA;if (@t_day = 1)&#xA;begin&#xA; if (@t_month = 7 )&#xA; begin&#xA;&#xA; DELETE conform.labour_turnover_report_service_stream_fact where month_date_key&gt;=@month_key_t&#xA;&#xA; insert into conform.labour_turnover_report_service_stream_fact (month_date_key,service_stream_key,last_year_monthly)&#xA; ( &#xA; --service stream key change will affect this step&#xA;  select month_date_key+12 as month_date_key,service_stream_key,monthly from conform.labour_turnover_report_service_stream_fact f &#xA;  where f.month_date_key&gt;=(@month_key_t -12)&#xA;  and f.month_date_key&lt;@month_key_t&#xA; )&#xA; end&#xA;end&#xA;&#xA;--If the first day of month then update last month's data &#xA;if (@t_day = 1)&#xA;begin&#xA; set @month_key_t = @month_key_t - 1&#xA;end&#xA;--update current month's data&#xA;update ltrf &#xA;set ltrf.total = (&#xA;    select sum(ltf.total) as total from conform.labour_turnover_fact_2 ltf&#xA;    where ltf.service_stream_key = 1 and ltf.month_date_key = @month_key_t &#xA;),&#xA;    ltrf.lost = (&#xA;    select sum(ltf.total_lost) as lost from conform.labour_turnover_fact_2 ltf&#xA;    where ltf.month_date_key = @month_key_t and ltf.service_stream_key = ltrf.service_stream_key        &#xA;    )&#xA;from conform.labour_turnover_report_service_stream_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;--update monthly data&#xA;update ltrf  &#xA;set ltrf.monthly = COALESCE(convert(decimal(10,2),ltrf.lost) / convert(decimal(10,2),ltrf.total),0)&#xA;from conform.labour_turnover_report_service_stream_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t&#xA;&#xA;&#xA; --update yearly data &#xA;update ltrf&#xA;set &#xA; ltrf.yearly = (&#xA; &#x9;&#x9;&#x9;&#x9;&#x9;select sum(monthly) &#xA; &#x9;&#x9;&#x9;&#x9;&#x9;from conform.labour_turnover_report_service_stream_fact f3 &#xA; &#x9;&#x9;&#x9;&#x9;&#x9;where f3.month_date_key &gt;(@month_key_t-12) and f3.month_date_key&lt;=@month_key_t&#xA; &#x9;&#x9;&#x9;&#x9;&#x9;&#x9;and f3.service_stream_key = ltrf.service_stream_key&#x9;&#xA; &#x9;&#x9;&#x9;&#x9;)&#xA;from conform.labour_turnover_report_service_stream_fact ltrf&#xA;where ltrf.month_date_key = @month_key_t;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  </DTS:ObjectData>
+                </DTS:Executable>
+              </DTS:Executables>
+              <DTS:PrecedenceConstraints>
+                <DTS:PrecedenceConstraint
+                  DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container.PrecedenceConstraints[Constraint 2]"
+                  DTS:CreationName=""
+                  DTS:DTSID="{626AF51F-44B8-40FE-98E4-7714477F367F}"
+                  DTS:From="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\EMPLOYEE_TERMINATION_FACT_2"
+                  DTS:LogicalAnd="True"
+                  DTS:ObjectName="Constraint 2"
+                  DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\Get data for yesterday LABOUR_TURNOVER_FACT_2" />
+                <DTS:PrecedenceConstraint
+                  DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container.PrecedenceConstraints[Constraint 3]"
+                  DTS:CreationName=""
+                  DTS:DTSID="{CBC4BB13-C0E4-412D-9721-3C33B4E89F30}"
+                  DTS:From="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\Get data for yesterday LABOUR_TURNOVER_FACT_2"
+                  DTS:LogicalAnd="True"
+                  DTS:ObjectName="Constraint 3"
+                  DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\INCREMENTAL portfolio" />
+                <DTS:PrecedenceConstraint
+                  DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container.PrecedenceConstraints[Constraint 4]"
+                  DTS:CreationName=""
+                  DTS:DTSID="{020BE291-E91D-4134-846D-9826BFB2DEDE}"
+                  DTS:From="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\INCREMENTAL portfolio"
+                  DTS:LogicalAnd="True"
+                  DTS:ObjectName="Constraint 4"
+                  DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\INCREMENTAL service steam" />
+              </DTS:PrecedenceConstraints>
             </DTS:Executable>
           </DTS:Executables>
           <DTS:PrecedenceConstraints>
@@ -1224,10 +1328,18 @@
               DTS:ObjectName="Constraint"
               DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\insert current data" />
             <DTS:PrecedenceConstraint
+              DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_report_fact.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{0D49B077-D434-41D8-B723-9B7CBF7CC9A2}"
+              DTS:From="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\insert current data"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container" />
+            <DTS:PrecedenceConstraint
               DTS:refId="Package\Sequence Container - Fact Tables\labour_turnover_report_fact.PrecedenceConstraints[Constraint 2]"
               DTS:CreationName=""
-              DTS:DTSID="{8400C410-C7AE-4283-A10C-94E8C13F2B19}"
-              DTS:From="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\insert current data"
+              DTS:DTSID="{72605979-7C79-4F69-B697-964A769EDB7C}"
+              DTS:From="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container"
               DTS:LogicalAnd="True"
               DTS:ObjectName="Constraint 2"
               DTS:To="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\EST - Write Job Finish info" />
@@ -12216,6 +12328,8 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           DTS:Description="Sequence Container"
           DTS:DTSID="{AA1EDEB5-C727-478A-860C-A58A3C057127}"
           DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:FailPackageOnFailure="True"
+          DTS:FailParentOnFailure="True"
           DTS:LocaleID="-1"
           DTS:ObjectName="SD2 - LABOUR_TURNOVER_FACT --ReRun">
           <DTS:Variables />
@@ -12233,7 +12347,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{65D62F5E-E939-44FD-988B-66BB05AD99B7}"
-                  SQLTask:SqlStatementSource="truncate table conform.labour_turnover_fact" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="truncate table conform.labour_turnover_fact;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
             <DTS:Executable
@@ -12307,7 +12421,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             <DTS:PrecedenceConstraint
               DTS:refId="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 2]"
               DTS:CreationName=""
-              DTS:DTSID="{E912061E-82D6-43A6-ABFE-651C10EABEF9}"
+              DTS:DTSID="{2552B6F2-869C-47DD-A493-0EA2FDD2A5C1}"
               DTS:From="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Get data for yesterday"
               DTS:LogicalAnd="True"
               DTS:ObjectName="Constraint 2"
@@ -13332,7 +13446,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,599"
           Size="345,676"
           Id="Package\Sequence Container - Fact Tables\all_employees_report_fact &amp; history"
-          TopLeft="13.0000000000013,9740.5" />
+          TopLeft="28,9740.5" />
         <NodeLayout
           Size="189,42"
           Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact\EST - Write Job Finish info"
@@ -13421,7 +13535,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="364,462"
           Size="364,539"
           Id="Package\Sequence Container - Fact Tables\employee_base50_constracted_part_time_hours_fact"
-          TopLeft="3.34126984127093,13112.3888888889" />
+          TopLeft="18.3412698412696,13112.3888888889" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact\EST - Write Job Finish info"
@@ -13484,7 +13598,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,358"
           Size="345,435"
           Id="Package\Sequence Container - Fact Tables\employee_contracted_hours_report_fact"
-          TopLeft="13.0000000000016,12340.5" />
+          TopLeft="28.0000000000003,12340.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\employee_last_paid_date_fact\Delete data for Yesterday"
@@ -13585,7 +13699,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\employee_last_paid_date_fact"
-          TopLeft="13.0000000000011,8464.5" />
+          TopLeft="27.9999999999998,8464.5" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact\EST - Write Job Finish info"
@@ -13645,10 +13759,10 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         <ContainerLayout
           HeaderHeight="77"
           IsExpanded="True"
-          PanelSize="345,360"
-          Size="345,437"
+          PanelSize="345,338"
+          Size="345,415"
           Id="Package\Sequence Container - Fact Tables\employee_payment_summary_fact"
-          TopLeft="13.0000000000014,11348.5" />
+          TopLeft="28.0000000000001,11370.5" />
         <NodeLayout
           Size="261,42"
           Id="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact\employee_profile_withTERMEmpl_fact"
@@ -13659,7 +13773,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,141"
           Size="345,218"
           Id="Package\Sequence Container - Fact Tables\employee_profile_withTERMEmpl_fact"
-          TopLeft="5.50000000000094,12835.5" />
+          TopLeft="20.4999999999996,12835.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact\Delete data for Yesterday"
@@ -13760,33 +13874,156 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_program_fact"
-          TopLeft="27.841269841271,14370.5" />
+          TopLeft="42.8412698412697,14370.5" />
         <NodeLayout
-          Size="206,42"
+          Size="204,42"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\EST - Write Job Finish info"
-          TopLeft="47.0587121212121,229.090909090908" />
+          TopLeft="46.0587121212121,449.090909090908" />
         <NodeLayout
-          Size="201,42"
+          Size="199,42"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\EST - Write Job Start info"
           TopLeft="45.9375,15" />
         <NodeLayout
-          Size="168,42"
+          Size="166,42"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\insert current data"
-          TopLeft="66.6041666666666,132.757575757578" />
+          TopLeft="63.6041666666666,89.7575757575778" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact.PrecedenceConstraints[Constraint]"
-          TopLeft="148.520833333333,57">
+          TopLeft="146.020833333333,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,75.757575757578"
+              EndConnector="0,32.7575757575778"
               Start="0,0"
-              End="0,68.257575757578">
+              End="0,25.2575757575778">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,68.257575757578" />
+                    End="0,25.2575757575778" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="247,42"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\EMPLOYEE_TERMINATION_FACT_2"
+          TopLeft="18,5.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container.PrecedenceConstraints[Constraint 2]"
+          TopLeft="141.5,47.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,48"
+              Start="0,0"
+              End="0,40.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,40.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="268,42"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\Get data for yesterday LABOUR_TURNOVER_FACT_2"
+          TopLeft="7.5,95.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container.PrecedenceConstraints[Constraint 3]"
+          TopLeft="138.75,137.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,26"
+              Start="0,0"
+              End="0,18.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\INCREMENTAL portfolio"
+          TopLeft="53,163.5" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container.PrecedenceConstraints[Constraint 4]"
+          TopLeft="134.75,205.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45.0909090909081"
+              Start="0,0"
+              End="0,37.5909090909081">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.5909090909081" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container\INCREMENTAL service steam"
+          TopLeft="50.5,250.590909090908" />
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="278,355"
+          Size="278,398"
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact\Sequence Container"
+          TopLeft="270,87" />
+        <EdgeLayout
+          Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact.PrecedenceConstraints[Constraint 1]"
+          TopLeft="229.604166666667,110.757575757578">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="40.3958333333334,110.242424242422"
+              Start="0,0"
+              End="32.8958333333334,110.242424242422">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="20.140452952953,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="20.140452952953,0"
+                    Point2="24.140452952953,0"
+                    Point3="24.140452952953,4" />
+                  <mssgle:LineSegment
+                    End="24.140452952953,106.242424242422" />
+                  <mssgle:CubicBezierSegment
+                    Point1="24.140452952953,106.242424242422"
+                    Point2="24.140452952953,110.242424242422"
+                    Point3="28.140452952953,110.242424242422" />
+                  <mssgle:LineSegment
+                    End="32.8958333333334,110.242424242422" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -13797,18 +14034,24 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact.PrecedenceConstraints[Constraint 2]"
-          TopLeft="150.331439393939,174.757575757578">
+          TopLeft="270,351">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,54.33333333333"
+              EndConnector="-121.941287878788,98.0909090909081"
               Start="0,0"
-              End="0,46.83333333333">
+              End="-121.941287878788,90.5909090909081">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,46.83333333333" />
+                    End="-117.941287878788,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-117.941287878788,0"
+                    Point2="-121.941287878788,0"
+                    Point3="-121.941287878788,4" />
+                  <mssgle:LineSegment
+                    End="-121.941287878788,90.5909090909081" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -13820,10 +14063,10 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         <ContainerLayout
           HeaderHeight="77"
           IsExpanded="True"
-          PanelSize="345,326"
-          Size="345,403"
+          PanelSize="592,555"
+          Size="592,632"
           Id="Package\Sequence Container - Fact Tables\labour_turnover_report_fact"
-          TopLeft="13.0000000000014,10885.5" />
+          TopLeft="29.0000000000001,10764.5" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\non_primary_position_fact\EST - Write Job Finish info"
@@ -13886,7 +14129,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,358"
           Size="345,435"
           Id="Package\Sequence Container - Fact Tables\non_primary_position_fact"
-          TopLeft="13.0000000000015,11845.5" />
+          TopLeft="28.0000000000002,11845.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\personalleave_usage_report_fact\EST - Write Job Finish info"
@@ -13949,7 +14192,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\personalleave_usage_report_fact"
-          TopLeft="13.0000000000011,8873.5" />
+          TopLeft="27.9999999999998,8873.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\position_estabelishment_report_fact\Delete data for Yesterday"
@@ -14038,7 +14281,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,355"
           Size="345,398"
           Id="Package\Sequence Container - Fact Tables\position_estabelishment_report_fact"
-          TopLeft="13.0000000000012,9282.5" />
+          TopLeft="27.9999999999999,9282.5" />
         <NodeLayout
           Size="245,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT\delete all records"
@@ -14369,7 +14612,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="346,790"
           Size="346,833"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_POSITION_FACT"
-          TopLeft="12.5000000000001,456.5" />
+          TopLeft="27.4999999999988,456.5" />
         <NodeLayout
           Size="206,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT\delete all records"
@@ -14570,7 +14813,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="347,347"
           Size="347,390"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_RECRUITMENT_FACT"
-          TopLeft="12.0000000000002,1349.5" />
+          TopLeft="26.9999999999989,1349.5" />
         <NodeLayout
           Size="222,42"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_TERMINATION_FACT\DFT - INSERT NEW RECORDS"
@@ -14721,7 +14964,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="347,348"
           Size="347,391"
           Id="Package\Sequence Container - Fact Tables\SD1 - EMPLOYEE_TERMINATION_FACT"
-          TopLeft="12.0000000000001,5.5" />
+          TopLeft="26.9999999999988,5.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_ACCREDITATION_FACT\Delete data for Yesterday"
@@ -14834,7 +15077,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,301"
           Size="345,344"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_ACCREDITATION_FACT"
-          TopLeft="13.0000000000004,2937.5" />
+          TopLeft="27.9999999999991,2937.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_CONTRACT_FACT\Delete data for Yesterday"
@@ -14935,7 +15178,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_CONTRACT_FACT"
-          TopLeft="13.0000000000005,4159.5" />
+          TopLeft="27.9999999999992,4159.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_ACCRUED_FACT\Delete data for Yesterday"
@@ -15036,7 +15279,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_ACCRUED_FACT"
-          TopLeft="13.0000000000005,3341.5" />
+          TopLeft="27.9999999999992,3341.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_ACCURED_FACT\Delete data for Yesterday"
@@ -15137,7 +15380,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_ACCURED_FACT"
-          TopLeft="13.0000000000009,6951.5" />
+          TopLeft="27.9999999999996,6951.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_BOOKED_FACT\Delete data for Yesterday"
@@ -15238,7 +15481,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,270"
           Size="345,313"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_BOOKED_FACT"
-          TopLeft="13.0000000000003,2155.5" />
+          TopLeft="27.999999999999,2155.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_BOOKED_txn_FACT\Delete data for Yesterday"
@@ -15339,7 +15582,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_BOOKED_txn_FACT"
-          TopLeft="13.0000000000008,6133.5" />
+          TopLeft="27.9999999999995,6133.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_TAKEN_FACT\EST - Write Job Finish info"
@@ -15440,7 +15683,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_LEAVE_TAKEN_FACT"
-          TopLeft="13.0000000000003,2528.5" />
+          TopLeft="27.999999999999,2528.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_payment_fact\Delete data for Yesterday"
@@ -15541,7 +15784,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_payment_fact"
-          TopLeft="13.0000000000007,5724.5" />
+          TopLeft="27.9999999999994,5724.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_PROFILE_FACT\Delete data for Yesterday"
@@ -15642,7 +15885,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_PROFILE_FACT"
-          TopLeft="13.0000000000005,3750.5" />
+          TopLeft="27.9999999999992,3750.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_renumeration_fact\Delete data for Yesterday"
@@ -15743,7 +15986,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,269"
           Size="345,312"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_renumeration_fact"
-          TopLeft="13.0000000000007,4943.5" />
+          TopLeft="27.9999999999994,4943.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_timesheet_fact\Delete data for Yesterday"
@@ -15844,7 +16087,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - employee_timesheet_fact"
-          TopLeft="13.0000000000007,5315.5" />
+          TopLeft="27.9999999999994,5315.5" />
         <NodeLayout
           Size="233,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_WORKING_HOURS_FACT\Delete data for Yesterday -5 days"
@@ -15933,7 +16176,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="360,343"
           Size="360,386"
           Id="Package\Sequence Container - Fact Tables\SD2 - EMPLOYEE_WORKING_HOURS_FACT"
-          TopLeft="5.50000000000094,7360.5" />
+          TopLeft="20.4999999999996,7360.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT\Delete data for Yesterday"
@@ -16034,7 +16277,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,272"
           Size="345,315"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT"
-          TopLeft="13.0000000000006,4568.5" />
+          TopLeft="27.9999999999993,4568.5" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Delete data for Yesterday"
@@ -16042,7 +16285,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Finish info"
-          TopLeft="41.1875,209" />
+          TopLeft="42.1875,192" />
         <NodeLayout
           Size="201,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\EST - Write Job Start info"
@@ -16050,7 +16293,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         <NodeLayout
           Size="187,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun\Get data for yesterday"
-          TopLeft="41.1875,141" />
+          TopLeft="40.1875,131" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint]"
           TopLeft="41.1875,36">
@@ -16087,18 +16330,30 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 1]"
-          TopLeft="138.1875,111">
+          TopLeft="242.1875,90">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,30"
+              EndConnector="-15,62"
               Start="0,0"
-              End="0,22.5">
+              End="-7.5,62">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,22.5" />
+                    End="18.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="18.5,0"
+                    Point2="22.5,0"
+                    Point3="22.5,4" />
+                  <mssgle:LineSegment
+                    End="22.5,58" />
+                  <mssgle:CubicBezierSegment
+                    Point1="22.5,58"
+                    Point2="22.5,62"
+                    Point3="18.5,62" />
+                  <mssgle:LineSegment
+                    End="-7.5,62" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -16109,18 +16364,30 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun.PrecedenceConstraints[Constraint 2]"
-          TopLeft="138.1875,183">
+          TopLeft="40.1875,152">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,26"
+              EndConnector="2,61"
               Start="0,0"
-              End="0,18.5">
+              End="-5.5,61">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,18.5" />
+                    End="-18.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-18.5,0"
+                    Point2="-22.5,0"
+                    Point3="-22.5,4" />
+                  <mssgle:LineSegment
+                    End="-22.5,57" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-22.5,57"
+                    Point2="-22.5,61"
+                    Point3="-18.5,61" />
+                  <mssgle:LineSegment
+                    End="-5.5,61" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -16132,10 +16399,10 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="345,306"
-          Size="345,349"
+          PanelSize="365,251"
+          Size="365,294"
           Id="Package\Sequence Container - Fact Tables\SD2 - LABOUR_TURNOVER_FACT --ReRun"
-          TopLeft="13.0000000000013,10476.5" />
+          TopLeft="29,10440.5" />
         <NodeLayout
           Size="233,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - TIMESHEET_VALICATION_FACT\Delete data"
@@ -16224,7 +16491,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="360,298"
           Size="360,341"
           Id="Package\Sequence Container - Fact Tables\SD2 - TIMESHEET_VALICATION_FACT"
-          TopLeft="5.50000000000099,7806.5" />
+          TopLeft="20.4999999999997,7806.5" />
         <NodeLayout
           Size="199,42"
           Id="Package\Sequence Container - Fact Tables\SD2 - WORK_PATTERN_FACT\Delete data for Yesterday"
@@ -16325,7 +16592,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="345,306"
           Size="345,349"
           Id="Package\Sequence Container - Fact Tables\SD2 - WORK_PATTERN_FACT"
-          TopLeft="13.0000000000009,6542.5" />
+          TopLeft="27.9999999999996,6542.5" />
         <NodeLayout
           Size="139,42"
           Id="Package\Sequence Container - Fact Tables\UserAccessControl\Delete data"
@@ -16414,7 +16681,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="365,462"
           Size="365,539"
           Id="Package\Sequence Container - Fact Tables\UserAccessControl"
-          TopLeft="2.34126984127101,13770.5" />
+          TopLeft="17.3412698412697,13770.5" />
         <NodeLayout
           Size="233,42"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process\Get new data"
@@ -16425,10 +16692,10 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="360,154"
           Size="360,197"
           Id="Package\Sequence Container - Fact Tables\WORK Pattern for Payroll Process"
-          TopLeft="5.50000000000105,8207.5" />
+          TopLeft="20.4999999999997,8207.5" />
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint]"
-          TopLeft="185.5,1289.5">
+          TopLeft="200.499999999999,1289.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16452,7 +16719,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 1]"
-          TopLeft="185.5,1739.5">
+          TopLeft="200.499999999999,1739.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16474,7 +16741,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 10]"
-          TopLeft="185.500000000001,4883.5">
+          TopLeft="200.5,4883.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16498,7 +16765,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 11]"
-          TopLeft="185.500000000001,5255.5">
+          TopLeft="200.5,5255.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16522,7 +16789,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 12]"
-          TopLeft="185.500000000001,5664.5">
+          TopLeft="200.5,5664.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16546,7 +16813,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 13]"
-          TopLeft="185.500000000001,6073.5">
+          TopLeft="200.5,6073.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16570,7 +16837,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 14]"
-          TopLeft="185.500000000001,6482.5">
+          TopLeft="200.5,6482.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16594,7 +16861,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 15]"
-          TopLeft="185.500000000001,6891.5">
+          TopLeft="200.5,6891.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16618,7 +16885,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 16]"
-          TopLeft="185.500000000001,7300.5">
+          TopLeft="200.5,7300.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16642,7 +16909,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 17]"
-          TopLeft="185.500000000001,7746.5">
+          TopLeft="200.5,7746.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16666,7 +16933,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 18]"
-          TopLeft="185.500000000001,8147.5">
+          TopLeft="200.5,8147.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16690,7 +16957,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 19]"
-          TopLeft="185.500000000001,8404.5">
+          TopLeft="200.5,8404.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16714,7 +16981,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 20]"
-          TopLeft="185.500000000001,8813.5">
+          TopLeft="200.5,8813.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16738,7 +17005,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 21]"
-          TopLeft="185.500000000001,9222.5">
+          TopLeft="200.5,9222.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16762,7 +17029,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 22]"
-          TopLeft="185.500000000001,9680.5">
+          TopLeft="200.5,9680.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16786,18 +17053,30 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 23]"
-          TopLeft="185.500000000001,10825.5">
+          TopLeft="211.5,10734.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,60"
+              EndConnector="113.5,30"
               Start="0,0"
-              End="0,52.5">
+              End="113.5,22.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,52.5" />
+                    End="0,11" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,11"
+                    Point2="0,15"
+                    Point3="4,15" />
+                  <mssgle:LineSegment
+                    End="109.5,15" />
+                  <mssgle:CubicBezierSegment
+                    Point1="109.5,15"
+                    Point2="113.5,15"
+                    Point3="113.5,19" />
+                  <mssgle:LineSegment
+                    End="113.5,22.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -16808,31 +17087,37 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 24]"
-          TopLeft="185.500000000001,11288.5">
+          TopLeft="325,11396.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,60"
+              EndConnector="48,181.5"
               Start="0,0"
-              End="0,52.5">
+              End="40.5,181.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,52.5" />
+                    End="0,177.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,177.5"
+                    Point2="0,181.5"
+                    Point3="4,181.5" />
+                  <mssgle:LineSegment
+                    End="40.5,181.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
+              BoundingBox="-3.054453125,186.5,50.60890625,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 25]"
-          TopLeft="185.500000000001,11785.5">
+          TopLeft="200.5,11785.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16856,18 +17141,30 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 26]"
-          TopLeft="185.500000000001,10416.5">
+          TopLeft="200.5,10416.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,60"
+              EndConnector="11,24"
               Start="0,0"
-              End="0,52.5">
+              End="11,16.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,52.5" />
+                    End="0,8" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,8"
+                    Point2="0,12"
+                    Point3="4,12" />
+                  <mssgle:LineSegment
+                    End="7,12" />
+                  <mssgle:CubicBezierSegment
+                    Point1="7,12"
+                    Point2="11,12"
+                    Point3="11,16" />
+                  <mssgle:LineSegment
+                    End="11,16.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -16878,7 +17175,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 27]"
-          TopLeft="185.500000000002,12280.5">
+          TopLeft="200.500000000001,12280.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16900,7 +17197,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 28]"
-          TopLeft="181.750000000001,12775.5">
+          TopLeft="196.75,12775.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16924,7 +17221,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 29]"
-          TopLeft="181.670634920636,13053.5">
+          TopLeft="196.670634920635,13053.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16946,7 +17243,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 3]"
-          TopLeft="185.5,3690.5">
+          TopLeft="200.499999999999,3690.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16970,7 +17267,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 30]"
-          TopLeft="185.091269841271,13651.3888888889">
+          TopLeft="200.09126984127,13651.3888888889">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -16992,7 +17289,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 31]"
-          TopLeft="184.841269841271,14309.5">
+          TopLeft="199.84126984127,14309.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -17026,7 +17323,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 4]"
-          TopLeft="185.5,2468.5">
+          TopLeft="200.499999999999,2468.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -17050,7 +17347,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 5]"
-          TopLeft="185.5,2877.5">
+          TopLeft="200.499999999999,2877.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -17074,7 +17371,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 6]"
-          TopLeft="185.5,3281.5">
+          TopLeft="200.499999999999,3281.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -17098,7 +17395,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 7]"
-          TopLeft="185.5,396.5">
+          TopLeft="200.499999999999,396.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -17122,7 +17419,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 8]"
-          TopLeft="185.500000000001,4099.5">
+          TopLeft="200.5,4099.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -17146,7 +17443,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - Fact Tables.PrecedenceConstraints[Constraint 9]"
-          TopLeft="185.500000000001,4508.5">
+          TopLeft="200.5,4508.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -17174,7 +17471,7 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
           PanelSize="795,14775"
           Size="795,14818"
           Id="Package\Sequence Container - Fact Tables"
-          TopLeft="171.833333333333,1.99999999999818" />
+          TopLeft="177.833333333333,1.99999999999818" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
@@ -17358,7 +17655,9 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -17547,7 +17846,9 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -17581,7 +17882,9 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -17615,7 +17918,9 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -17649,7 +17954,9 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -17671,7 +17978,9 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -17765,7 +18074,9 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -17799,7 +18110,9 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -17904,7 +18217,9 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
@@ -18057,7 +18372,9 @@ FROM [extract].[HRHMN_EMPLTERM_DTL]</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
