@@ -28,7 +28,7 @@ Please change priority number in insert job control statement
 DECLARE @ENV varchar(10) = 'Prod';
 
 DECLARE @MART VARCHAR(20) = 'Hris';
-DECLARE @t_table varchar(max)= 'labour_turnover_program_fact';
+DECLARE @t_table varchar(max)= 'labour_turnover_report_service_stream_fact';
 
 --Step1: Insert into Table_Dim.
 DECLARE @t_server varchar(max);
