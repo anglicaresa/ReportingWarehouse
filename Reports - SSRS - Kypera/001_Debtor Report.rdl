@@ -56,6 +56,15 @@ Anglicare.dbo.PropertyStructure_Unit as f on a.Unit = f.ID</CommandText>
           <QueryParameter Name="@Program">
             <Value>=Parameters!Program.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@CurrentTenant">
+            <Value>=Parameters!CurrentTenant.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Scheme">
+            <Value>=Parameters!Scheme.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Block">
+            <Value>=Parameters!Block.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>use anglicare;
 
@@ -105,53 +114,55 @@ SELECT
   sum(isnull(ot_bond.ChargeCfwd,0)) as BondBalance,
 
   su.FullName AS HousingOfficer
+	,a.CurrentOccupancy
+
 
 FROM
---use test database and have to add Anglicare.
-Anglicare.dbo.Occupancies_Occupancy AS a
+--use test database and have to add 
+dbo.Occupancies_Occupancy AS a
 
 -- Property info at Block Unit Level
-INNER JOIN Anglicare.dbo.PropertyStructure_BlockUnit AS b
+INNER JOIN dbo.PropertyStructure_BlockUnit AS b
   ON a.Unit = b.Unit
-  AND a.CurrentOccupancy = '1'
+  --AND a.CurrentOccupancy = '1'
   AND a.Company = '1'
 
 --Block Level
-INNER JOIN Anglicare.dbo.PropertyStructure_Block AS c
+INNER JOIN dbo.PropertyStructure_Block AS c
   ON b.block = c.Code
 
 --District Level
-INNER JOIN Anglicare.dbo.PropertyStructure_District AS e
+INNER JOIN dbo.PropertyStructure_District AS e
   ON c.District = e.Code
 
 --Scheme Level
-INNER JOIN Anglicare.dbo.PropertyStructure_scheme AS d
+INNER JOIN dbo.PropertyStructure_scheme AS d
   ON c.Scheme = d.Code
 
 --Property Unit Level
-INNER JOIN Anglicare.dbo.PropertyStructure_Unit AS f
+INNER JOIN dbo.PropertyStructure_Unit AS f
   ON a.Unit = f.ID
 
 --For Last Payment Date
-LEFT JOIN Anglicare.dbo.Occupancies_TransactionHeaders_LastPaymentDate AS g
+LEFT JOIN dbo.Occupancies_TransactionHeaders_LastPaymentDate AS g
   ON a.id = g.Occupancy
 
 --For Lease End Date
-LEFT JOIN Anglicare.dbo.Lease_Information AS h
+LEFT JOIN dbo.Lease_Information AS h
   ON a.id = h.objectreference
 
 --For Fortnightly Rent charge
-LEFT JOIN Anglicare.dbo.Occupancies_Charges AS i
+LEFT JOIN dbo.Occupancies_Charges AS i
   ON a.id = i.occupancy
   AND i.charge = 1
 
 --For rent balance, other charges balance, total, arrears
-LEFT JOIN Anglicare.dbo.Occupancies_RentCalculation_Arrears_EffectiveBalances AS j
+LEFT JOIN dbo.Occupancies_RentCalculation_Arrears_EffectiveBalances AS j
   ON a.id = j.occupancy
   
---LEFT JOIN Anglicare.dbo.Occupancies_Transactions ot ON a.Company = ot.Company AND a.id = ot.Occupancy AND ot.Header = (
+--LEFT JOIN dbo.Occupancies_Transactions ot ON a.Company = ot.Company AND a.id = ot.Occupancy AND ot.Header = (
 --	SELECT TOP 1 ID
---	FROM Anglicare.dbo.Occupancies_TransactionHeaders
+--	FROM dbo.Occupancies_TransactionHeaders
 --	WHERE Company = a.Company AND Occupancy = a.id
 --	ORDER BY TimeStamp DESC
 --)
@@ -161,9 +172,9 @@ LEFT JOIN Anglicare.dbo.Occupancies_RentCalculation_Arrears_EffectiveBalances AS
 LEFT JOIN
 (
 select ot1.*
-from Anglicare.dbo.Occupancies_Transactions as ot1
+from dbo.Occupancies_Transactions as ot1
 inner join 
-(select occupancy,max(orderno) as orderno from Anglicare.dbo.Occupancies_Transactions where Description='Sundry' group by occupancy)
+(select occupancy,max(orderno) as orderno from dbo.Occupancies_Transactions where Description='Sundry' group by occupancy)
 as ot2
 on ot1.occupancy=ot2.Occupancy and ot1.OrderNo=ot2.orderno
 ) as ot_sun on a.Company = ot_sun.Company AND a.id = ot_sun.Occupancy
@@ -172,9 +183,9 @@ on ot1.occupancy=ot2.Occupancy and ot1.OrderNo=ot2.orderno
 LEFT JOIN
 (
 select ot1.*
-from Anglicare.dbo.Occupancies_Transactions as ot1
+from dbo.Occupancies_Transactions as ot1
 inner join 
-(select occupancy,max(orderno) as orderno from Anglicare.dbo.Occupancies_Transactions where Description='Utilities' group by occupancy)
+(select occupancy,max(orderno) as orderno from dbo.Occupancies_Transactions where Description='Utilities' group by occupancy)
 as ot2
 on ot1.occupancy=ot2.Occupancy and ot1.OrderNo=ot2.orderno
 ) as ot_uti on a.Company = ot_uti.Company AND a.id = ot_uti.Occupancy
@@ -183,9 +194,9 @@ on ot1.occupancy=ot2.Occupancy and ot1.OrderNo=ot2.orderno
 LEFT JOIN
 (
 select ot1.*
-from Anglicare.dbo.Occupancies_Transactions as ot1
+from dbo.Occupancies_Transactions as ot1
 inner join 
-(select occupancy,max(orderno) as orderno from Anglicare.dbo.Occupancies_Transactions where Description='Tenant Damage' group by occupancy)
+(select occupancy,max(orderno) as orderno from dbo.Occupancies_Transactions where Description='Tenant Damage' group by occupancy)
 as ot2
 on ot1.occupancy=ot2.Occupancy and ot1.OrderNo=ot2.orderno
 ) as ot_td on a.Company = ot_td.Company AND a.id = ot_td.Occupancy
@@ -194,24 +205,26 @@ on ot1.occupancy=ot2.Occupancy and ot1.OrderNo=ot2.orderno
 LEFT JOIN
 (
 select ot1.*
-from Anglicare.dbo.Occupancies_Transactions as ot1
+from dbo.Occupancies_Transactions as ot1
 inner join 
-(select occupancy,max(orderno) as orderno from Anglicare.dbo.Occupancies_Transactions where Description='Bond' group by occupancy)
+(select occupancy,max(orderno) as orderno from dbo.Occupancies_Transactions where Description='Bond' group by occupancy)
 as ot2
 on ot1.occupancy=ot2.Occupancy and ot1.OrderNo=ot2.orderno
 ) as ot_bond on a.Company = ot_bond.Company AND a.id = ot_bond.Occupancy
 --------------------------------------------------------------------------------------------------------------------------------------
 --For Tenants Surname
-LEFT JOIN Anglicare.dbo.Occupancies_People_Surnames AS l
+LEFT JOIN dbo.Occupancies_People_Surnames AS l
   ON a.id = l.occupancy
 
 
 --For Housing Officer
-LEFT JOIN Anglicare.dbo.Security_User AS su ON su.[User] = f.HousingOfficer
+LEFT JOIN dbo.Security_User AS su ON su.[User] = f.HousingOfficer
 
 WHERE e.Code IN (@Entity)
 AND d.Name IN (@Program)
-
+AND a.CurrentOccupancy IN (@CurrentTenant)
+AND d.Name IN (@Scheme)
+AND b.Block IN (@Block)
 GROUP BY
   a.id,
   a.Salutation,
@@ -235,7 +248,9 @@ GROUP BY
   j.ActualTotalBalance,
   j.EffectiveTotalDaysInArrears,
 
-  su.FullName
+  su.FullName,
+  a.CurrentOccupancy
+
 
 ORDER BY e.code, f.NominalDepartment, f.NominalCostCentre, a.id</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
@@ -345,6 +360,10 @@ ORDER BY e.code, f.NominalDepartment, f.NominalCostCentre, a.id</CommandText>
           <DataField>HousingOfficer</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="CurrentOccupancy">
+          <DataField>CurrentOccupancy</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="Program">
@@ -384,6 +403,119 @@ where e.code in (@Entity)</CommandText>
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="Scheme">
+      <Query>
+        <DataSourceName>Kypera_Test</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@Entity">
+            <Value>=Parameters!Entity.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>select 
+distinct dd.Name as Scheme
+from dbo.PropertyStructure_Unit as a
+  left join dbo.HomeTeam_LookupValues as b on a.PropertyType=b.id and b.lookup =31
+  left join dbo.HomeTeam_LookupValues as c on a.PropertyStyle=c.id and c.lookup =113
+  left join dbo.HomeTeam_LookupValues as n
+	  on a.PropertySource = n.id and n.lookup ='116' and n.deleted =0
+  left join 
+	(select a.landlord ,a.occupancy, b.id as occupancyid,b.unit as propertyid ,
+		c.name as LandlordName,
+		c.address,
+		c.ContactForename as ContactFirstName,
+		c.ContactSurname as ContacLastName,
+		c.TelephoneNumber as PhoneNumber,
+		c.MobileNumber as MobileNumber,
+		c.EmailAddress as EmailAddress,
+		c.CreatedOn as CreateDate,
+		c.notes as Notes,
+		ISNULL(i.Amount,0) as FortnightlyRentCharge
+
+		from dbo.Leasehold_Agreement as a 
+			left join dbo.Occupancies_Occupancy as b on a.Occupancy =b.id 
+			left join dbo.leasehold_landlord as c on c.id =a.Landlord
+			left Join dbo.Occupancies_Charges as i on a.Occupancy = i.occupancy and i.charge = 1
+		) as mm on a.id =mm.propertyid
+left join 
+    dbo.PropertyStructure_BlockUnit as bb on a.ID = bb.Unit 
+	--Block Level
+	left join 
+	dbo.PropertyStructure_Block as cc on bb.block = cc.Code
+	--District Level
+	left join
+	dbo.PropertyStructure_District as ee on cc.District = ee.Code
+	--Scheme Level
+	left join 
+	dbo.PropertyStructure_scheme as dd on cc.Scheme = dd.Code
+where a.issold ='0' and a.isDemolished ='0' 
+and ee.code in (@Entity)</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Scheme">
+          <DataField>Scheme</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Block">
+      <Query>
+        <DataSourceName>Kypera_Test</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@Entity">
+            <Value>=Parameters!Entity.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Scheme">
+            <Value>=Parameters!Scheme.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>select 
+distinct bb.Block
+from dbo.PropertyStructure_Unit as a
+  left join dbo.HomeTeam_LookupValues as b on a.PropertyType=b.id and b.lookup =31
+  left join dbo.HomeTeam_LookupValues as c on a.PropertyStyle=c.id and c.lookup =113
+  left join dbo.HomeTeam_LookupValues as n
+	  on a.PropertySource = n.id and n.lookup ='116' and n.deleted =0
+  left join 
+	(select a.landlord ,a.occupancy, b.id as occupancyid,b.unit as propertyid ,
+		c.name as LandlordName,
+		c.address,
+		c.ContactForename as ContactFirstName,
+		c.ContactSurname as ContacLastName,
+		c.TelephoneNumber as PhoneNumber,
+		c.MobileNumber as MobileNumber,
+		c.EmailAddress as EmailAddress,
+		c.CreatedOn as CreateDate,
+		c.notes as Notes,
+		ISNULL(i.Amount,0) as FortnightlyRentCharge
+
+		from dbo.Leasehold_Agreement as a 
+			left join dbo.Occupancies_Occupancy as b on a.Occupancy =b.id 
+			left join dbo.leasehold_landlord as c on c.id =a.Landlord
+			left Join dbo.Occupancies_Charges as i on a.Occupancy = i.occupancy and i.charge = 1
+		) as mm on a.id =mm.propertyid
+
+	left join 
+    dbo.PropertyStructure_BlockUnit as bb on a.ID = bb.Unit 
+	--Block Level
+	left join 
+	dbo.PropertyStructure_Block as cc on bb.block = cc.Code
+	--District Level
+	left join
+	dbo.PropertyStructure_District as ee on cc.District = ee.Code
+	--Scheme Level
+	left join 
+	dbo.PropertyStructure_scheme as dd on cc.Scheme = dd.Code
+where a.issold ='0' and a.isDemolished ='0' 
+and ee.code in (@Entity)
+and dd.Name in (@Scheme)</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Block">
+          <DataField>Block</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
@@ -392,6 +524,12 @@ where e.code in (@Entity)</CommandText>
           <Tablix Name="Tablix2">
             <TablixBody>
               <TablixColumns>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
                 <TablixColumn>
                   <Width>2.5cm</Width>
                 </TablixColumn>
@@ -433,6 +571,9 @@ where e.code in (@Entity)</CommandText>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>3.875cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.5cm</Width>
@@ -656,6 +797,80 @@ where e.code in (@Entity)</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox72</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox10">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Scheme</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox10</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox7">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Block</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox7</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1077,6 +1292,43 @@ where e.code in (@Entity)</CommandText>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Current Occupancy</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox2</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -1278,6 +1530,76 @@ where e.code in (@Entity)</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>HousingOfficer1</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Scheme">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Scheme.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Scheme</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Block">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Block.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Block</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1696,6 +2018,41 @@ where e.code in (@Entity)</CommandText>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="CurrentOccupancy">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=IIF(Fields!CurrentOccupancy.Value = true, "Yes","No")</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>CurrentOccupancy</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -1897,6 +2254,76 @@ where e.code in (@Entity)</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox74</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox13">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox13</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox9">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox9</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -2296,12 +2723,50 @@ where e.code in (@Entity)</CommandText>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox6">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox6</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -2338,7 +2803,7 @@ where e.code in (@Entity)</CommandText>
             <Top>0.55493cm</Top>
             <Left>0.44662cm</Left>
             <Height>1.8cm</Height>
-            <Width>46.69706cm</Width>
+            <Width>54.19706cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2349,7 +2814,7 @@ where e.code in (@Entity)</CommandText>
         <Height>4.94792in</Height>
         <Style />
       </Body>
-      <Width>18.75035in</Width>
+      <Width>21.51326in</Width>
       <Page>
         <PageHeader>
           <Height>1.39981cm</Height>
@@ -2733,11 +3198,52 @@ where e.code in (@Entity)</CommandText>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="Scheme">
+      <DataType>String</DataType>
+      <Prompt>Scheme</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Scheme</DataSetName>
+          <ValueField>Scheme</ValueField>
+          <LabelField>Scheme</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Block">
+      <DataType>String</DataType>
+      <Prompt>Block</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Block</DataSetName>
+          <ValueField>Block</ValueField>
+          <LabelField>Block</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="CurrentTenant">
+      <DataType>String</DataType>
+      <Prompt>CurrentTenant</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>true</Value>
+            <Label>Yes</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>false</Value>
+            <Label>No</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
-      <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>1</NumberOfRows>
+      <NumberOfColumns>3</NumberOfColumns>
+      <NumberOfRows>2</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -2748,6 +3254,21 @@ where e.code in (@Entity)</CommandText>
           <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>Program</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>CurrentTenant</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Scheme</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Block</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
