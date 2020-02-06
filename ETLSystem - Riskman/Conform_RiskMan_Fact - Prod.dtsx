@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_RiskMan_Fact - Prod"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="678"
-  DTS:VersionGUID="{C9AE778A-0EE8-428A-A40A-72FCEEA67FB8}">
+  DTS:VersionBuild="679"
+  DTS:VersionGUID="{FCAFFA7D-5C7A-4F65-9649-970875F0BCA2}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -92,7 +92,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/29/2020 11:48:41 AM</DTS:VariableValue>
+        DTS:DataType="7">2/7/2020 8:48:40 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -139,7 +139,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/29/2020 11:48:41 AM</DTS:VariableValue>
+        DTS:DataType="7">2/7/2020 8:48:40 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -150,7 +150,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">1/29/2020 11:48:41 AM</DTS:VariableValue>
+        DTS:DataType="7">2/7/2020 8:48:40 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -1037,7 +1037,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{ABF0B8AA-626A-4E12-B1A3-D4CDDCF59D62}"
-                  SQLTask:SqlStatementSource="------------------------------------------------RLS-------------------------------------------------------------------------------------------------------------------------------------------------&#xA;--added by JS at 28.11.2019&#xA;&#xA;update  conform_riskman.incident_fact&#xA;set rls_progam =&#xA;            case [incident_involved]&#xA;            when 'Customer' then cust_service&#xA;             --when  'Employee/Volunteer' then &#xA;             --when  'Agency Staff' then [Main_Program_of_Employment]&#xA;             -- when  'Contractor' then [Main_Program_of_Employment]&#xA;             when 'Service' then service_service&#xA;             else     'No Service Indicated'&#xA;end &#xA;--update rls_service join with management.rls_riskman_programs&#xA;&#xA;update t1&#xA;set t1.rls_service = t2.[Service_Stream],&#xA;    t1.rls_portfolio= t2.[Portfolio]&#xA;from conform_riskman.incident_fact as t1&#xA;inner join [az-sqlbi01].appdev.riskman.rls_riskman_programs as t2&#xA;on t1.rls_progam= t2.[ServicesPrograms]&#xA;&#xA;--- update roles&#xA;DECLARE @role varchar(255);&#xA;DECLARE @sqls varchar(max);&#xA;DECLARE @tsql varchar(max);&#xA;update conform_riskman.incident_fact&#xA;set rls_role =NULL;&#xA;&#xA;DECLARE c_sqls CURSOR FOR SELECT [Role],[SQL_Conversion] from [az-sqlbi01].appdev.riskman.rls_riskman_SQLs where [ALL_Flag] is null and [Role] is not null ORDER BY [Role] asc;&#xA;open c_sqls;&#xA; FETCH NEXT FROM c_sqls INTO @role,@sqls;&#xA;&#xA;&#xA;  WHILE @@FETCH_STATUS =0&#xA;  BEGIN&#xA;&#xA;&#x9;set @tsql ='update conform_riskman.incident_fact '+     &#x9;'set rls_role= case   when rls_role is NULL then '+''''+ @role+''''+' else rls_role+'+''''+','+''''+'+'+''''+@role+''''+' end '&#xA;&#x9;        +'where ('+@sqls+');';&#xA;   execute( @tsql);&#xA;&#xA;FETCH NEXT FROM c_sqls   INTO  @role,@sqls;&#xA;  END &#xA;  CLOSE c_sqls ;&#xA;  DEALLOCATE c_sqls;&#xA;----------------------------------process multiple roles--------------------------------------------&#xA; --1 comma&#xA;&#xA; update conform_riskman.incident_fact&#xA; set rls_role1 = left(rls_role,CHARINDEX(',',rls_role)-1),&#xA;     rls_role2 = right(rls_role,len(rls_role) -CHARINDEX(',',rls_role))&#xA; where (len(rls_role) - len(replace(rls_role,',',''))) / LEN(',') &gt;0&#xA;&#xA; --2 commas&#xA;  update conform_riskman.incident_fact&#xA; set rls_role2 = left(rls_role2,CHARINDEX(',',rls_role2)-1),&#xA;     rls_role3 = right(rls_role2,len(rls_role2) -CHARINDEX(',',rls_role2))&#xA; where (len(rls_role2) - len(replace(rls_role2,',',''))) / LEN(',') &gt;0&#xA;&#xA; --3 commas&#xA;&#xA;   update conform_riskman.incident_fact&#xA; set rls_role3 = left(rls_role3,CHARINDEX(',',rls_role3)-1),&#xA;     rls_role4 = right(rls_role3,len(rls_role3) -CHARINDEX(',',rls_role3))&#xA; where (len(rls_role3) - len(replace(rls_role3,',',''))) / LEN(',') &gt;0&#xA;&#xA;  --4 commas&#xA;     update conform_riskman.incident_fact  set rls_role4 = left(rls_role4,CHARINDEX(',',rls_role4)-1), rls_role5 = right(rls_role4,len(rls_role4) -CHARINDEX(',',rls_role4))&#xA; where (len(rls_role4) - len(replace(rls_role4,',',''))) / LEN(',') &gt;0&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="------------------------------------------------RLS-------------------------------------------------------------------------------------------------------------------------------------------------&#xA;--added by JS at 28.11.2019&#xA;&#xA;&#xA;update  conform_riskman.incident_fact&#xA;set rls_progam =&#xA;            case [incident_involved]&#xA;            when 'Customer' then cust_service&#xA;             when  'Employee/Volunteer' then employee_site&#xA;             when  'Agency Staff' then employee_site&#xA;             when  'Contractor' then employee_site&#xA;             when 'Service' then service_service&#xA;             else     'No Service Indicated'&#xA;end &#xA;--update rls_service join with management.rls_riskman_programs&#xA;&#xA;update t1&#xA;set t1.rls_service = t2.[Service_Stream],&#xA;    t1.rls_portfolio= t2.[Portfolio]&#xA;from conform_riskman.incident_fact as t1&#xA;inner join [az-sqlbi01].appdev.riskman.rls_riskman_programs as t2&#xA;on t1.rls_progam= t2.[ServicesPrograms]&#xA;&#xA;--- update roles&#xA;DECLARE @role varchar(255);&#xA;DECLARE @sqls varchar(max);&#xA;DECLARE @tsql varchar(max);&#xA;update conform_riskman.incident_fact&#xA;set rls_role =NULL;&#xA;&#xA;DECLARE c_sqls CURSOR FOR SELECT [Role],[SQL_Conversion] from [az-sqlbi01].appdev.riskman.rls_riskman_SQLs where [ALL_Flag] is null and [Role] is not null ORDER BY [Role] asc;&#xA;open c_sqls;&#xA; FETCH NEXT FROM c_sqls INTO @role,@sqls;&#xA;&#xA;&#xA;  WHILE @@FETCH_STATUS =0&#xA;  BEGIN&#xA;&#xA;&#x9;set @tsql ='update conform_riskman.incident_fact '+     &#x9;'set rls_role= case   when rls_role is NULL then '+''''+ @role+''''+' else rls_role+'+''''+','+''''+'+'+''''+@role+''''+' end '&#xA;&#x9;        +'where ('+@sqls+');';&#xA;   execute( @tsql);&#xA;&#xA;FETCH NEXT FROM c_sqls   INTO  @role,@sqls;&#xA;  END &#xA;  CLOSE c_sqls ;&#xA;  DEALLOCATE c_sqls;&#xA;----------------------------------process multiple roles--------------------------------------------&#xA; --1 comma&#xA;&#xA; update conform_riskman.incident_fact&#xA; set rls_role1 = left(rls_role,CHARINDEX(',',rls_role)-1),&#xA;     rls_role2 = right(rls_role,len(rls_role) -CHARINDEX(',',rls_role))&#xA; where (len(rls_role) - len(replace(rls_role,',',''))) / LEN(',') &gt;0&#xA;&#xA; --2 commas&#xA;  update conform_riskman.incident_fact&#xA; set rls_role2 = left(rls_role2,CHARINDEX(',',rls_role2)-1),&#xA;     rls_role3 = right(rls_role2,len(rls_role2) -CHARINDEX(',',rls_role2))&#xA; where (len(rls_role2) - len(replace(rls_role2,',',''))) / LEN(',') &gt;0&#xA;&#xA; --3 commas&#xA;&#xA;   update conform_riskman.incident_fact&#xA; set rls_role3 = left(rls_role3,CHARINDEX(',',rls_role3)-1),&#xA;     rls_role4 = right(rls_role3,len(rls_role3) -CHARINDEX(',',rls_role3))&#xA; where (len(rls_role3) - len(replace(rls_role3,',',''))) / LEN(',') &gt;0&#xA;&#xA;  --4 commas&#xA;     update conform_riskman.incident_fact  set rls_role4 = left(rls_role4,CHARINDEX(',',rls_role4)-1), rls_role5 = right(rls_role4,len(rls_role4) -CHARINDEX(',',rls_role4))&#xA; where (len(rls_role4) - len(replace(rls_role4,',',''))) / LEN(',') &gt;0&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
