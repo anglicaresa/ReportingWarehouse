@@ -1,0 +1,333 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="2/10/2020 12:08:07 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="W10PC0SHE8A"
+  DTS:CreatorName="ANGLICARE-SA\frank.wang"
+  DTS:DTSID="{C9DD4DA0-9A4F-42D9-8878-58F36EC178EA}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.1300.371"
+  DTS:LocaleID="3081"
+  DTS:ObjectName="Conform_Fact"
+  DTS:PackageType="5"
+  DTS:VersionBuild="11"
+  DTS:VersionGUID="{2BC167F3-78D4-4BBE-9FA0-B458C0E98641}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[az-sqlbi01.DWHB_NEW]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{9C081394-D2D2-4E73-8582-17F15F42281D}"
+      DTS:ObjectName="az-sqlbi01.DWHB_NEW">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=az-sqlbi01;Initial Catalog=DWHB_NEW;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\pay_period_summary_dollars"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{C415289F-9179-4DAC-AC8E-6B0C6D9D4091}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:FailParentOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="pay_period_summary_dollars"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9C081394-D2D2-4E73-8582-17F15F42281D}"
+          SQLTask:SqlStatementSource="-----------------------start of pay_period_summary_dollars-------------------------&#xA;DECLARE @Pay_End_Key int;&#xA;&#xA;SET @Pay_End_Key = &#x9;(&#xA;&#x9;&#x9;select MAX(epf.pay_period_date_key) as pay_period_end_date_key &#xA;&#x9;&#x9;from conform.EMPLOYEE_PAYMENT_FACT epf &#xA;&#x9;&#x9;left join conform.DATE_DIM dd on epf.pay_period_date_key = dd.date_key &#xA;&#x9;&#x9;where dd.pay_period_end = 'Yes'&#xA;&#x9;)&#xA;&#x9;&#xA;DELETE FROM conform_rac.pay_period_summary_dollars  where [Pay Period End Date Key] =@Pay_End_Key&#xA;&#xA;SELECT  @Pay_End_Key as [Pay Period End Date Key],[Pay Type],[Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park]&#xA;,ISNULL([Brompton],0)+ISNULL([Elizabeth East],0)+ISNULL([Elizabeth East - Dutton Court],0)+ISNULL([Grange],0)+ISNULL([Trott Park],0)+ISNULL([Westbourne Park],0) as [Total]&#xA;INTO #Summary&#xA;FROM &#xA;(&#xA;&#x9;--records same as the report&#xA;&#x9;SELECT  ptd.pay_component_description as [Pay Type],epf.pay_item_amount,pd.program_name &#xA;&#x9;FROM conform.EMPLOYEE_PAYMENT_FACT epf &#xA;&#x9;LEFT JOIN conform.DATE_DIM dd on epf.pay_period_date_key =dd.date_key &#xA;&#x9;LEFT JOIN conform.PROGRAM_DIM pd on epf.program_key = pd.program_key &#xA;&#x9;LEFT JOIN conform.PORTFOLIO_DIM fd on epf.portfolio_key = fd.portfolio_key &#xA;&#x9;LEFT JOIN conform.POSITION_DIM posd on epf.position_key = posd.position_key &#xA;&#x9;LEFT JOIN conform.PAYMENT_TYPE_DIM ptd on epf.pay_component_ref = ptd.pay_component_ref &#xA;&#x9;WHERE dd.pay_period_end ='Yes'&#xA;&#x9;and pd.program_name IN &#xA;&#x9;(&#xA;&#x9;'Brompton',&#xA;&#x9;'Elizabeth East',&#xA;&#x9;'Elizabeth East - Dutton Court',&#xA;&#x9;'Grange',&#xA;&#x9;'Trott Park',&#xA;&#x9;'Westbourne Park'&#xA;&#x9;)&#xA;&#x9;and fd.portfolio_name = 'Aged Care Services'&#xA;&#x9;and posd.position_name not like '%General Manager%'&#xA;&#x9;and posd.position_name not like '%Head of%'&#xA;&#x9;and epf.pay_period_date_key =@Pay_End_Key&#xA;&#x9;and epf.document_type ='P'&#xA;&#x9;and epf.payment='P'&#xA;&#x9;and ptd.current_row_indicator= 'Y'&#xA;) as s &#xA;PIVOT &#xA;(&#xA;SUM(s.pay_item_amount)&#xA;FOR s.program_name IN&#xA;([Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park])&#xA;) AS pvt&#xA;&#xA;&#xA;--SELECT * from #Summary order by [Pay Type]&#xA;--UNION &#xA;--(SELECT 'Total',SUM([Brompton]),SUM([Elizabeth East]),SUM([Elizabeth East - Dutton Court]),SUM([Grange]),SUM([Trott Park]),SUM([Westbourne Park]),SUM([Total]) FROM #Summary)&#xA;&#xA;--INSERT INTO #Summary &#xA;--SELECT 'Total',SUM([Brompton]),SUM([Elizabeth East]),SUM([Elizabeth East - Dutton Court]),SUM([Grange]),SUM([Trott Park]),SUM([Westbourne Park]),SUM([Total]) FROM #Summary&#xA;--&#xA;--SELECT * from #Summary &#xA;&#xA;insert into conform_rac.pay_period_summary_dollars&#xA;SELECT [Pay Period End Date Key],[Pay Type],[Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park],[Total]&#xA;from #Summary&#xA;&#xA;&#xA;DROP TABLE #Summary&#xA;-----------------------end of pay_period_summary_dollars-------------------------" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\pay_period_summary_dollars_role_type"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{166BCBF0-7614-49C8-BB7C-1C43D92A9E6A}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:FailParentOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="pay_period_summary_dollars_role_type"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9C081394-D2D2-4E73-8582-17F15F42281D}"
+          SQLTask:SqlStatementSource="------------------------START OF--pay_period_summary_dollars_role_type----------------------&#xA;DECLARE @Pay_End_Key int;&#xA;&#xA;SET @Pay_End_Key = &#x9;(&#xA;&#x9;&#x9;select MAX(epf.pay_period_date_key) as pay_period_end_date_key &#xA;&#x9;&#x9;from conform.EMPLOYEE_PAYMENT_FACT epf &#xA;&#x9;&#x9;left join conform.DATE_DIM dd on epf.pay_period_date_key = dd.date_key &#xA;&#x9;&#x9;where dd.pay_period_end = 'Yes'&#xA;&#x9;)&#xA;&#x9;&#xA;DELETE FROM conform_rac.pay_period_summary_dollars_role_type  where [Pay Period End Date Key] =@Pay_End_Key&#xA;&#xA;SELECT  @Pay_End_Key as [Pay Period End Date Key],[Role Type],[Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park]&#xA;,ISNULL([Brompton],0)+ISNULL([Elizabeth East],0)+ISNULL([Elizabeth East - Dutton Court],0)+ISNULL([Grange],0)+ISNULL([Trott Park],0)+ISNULL([Westbourne Park],0) as [Total]&#xA;INTO #Summary&#xA;FROM &#xA;(&#xA;&#x9;--records same as the report&#xA;&#x9;SELECT  posd.position_name as [Role Type],epf.pay_item_amount,pd.program_name &#xA;&#x9;FROM conform.EMPLOYEE_PAYMENT_FACT epf &#xA;&#x9;LEFT JOIN conform.DATE_DIM dd on epf.pay_period_date_key =dd.date_key &#xA;&#x9;LEFT JOIN conform.PROGRAM_DIM pd on epf.program_key = pd.program_key &#xA;&#x9;LEFT JOIN conform.PORTFOLIO_DIM fd on epf.portfolio_key = fd.portfolio_key &#xA;&#x9;LEFT JOIN conform.POSITION_DIM posd on epf.position_key = posd.position_key &#xA;&#x9;LEFT JOIN conform.PAYMENT_TYPE_DIM ptd on epf.pay_component_ref = ptd.pay_component_ref &#xA;&#x9;WHERE dd.pay_period_end ='Yes'&#xA;&#x9;and pd.program_name IN &#xA;&#x9;(&#xA;&#x9;'Brompton',&#xA;&#x9;'Elizabeth East',&#xA;&#x9;'Elizabeth East - Dutton Court',&#xA;&#x9;'Grange',&#xA;&#x9;'Trott Park',&#xA;&#x9;'Westbourne Park'&#xA;&#x9;)&#xA;&#x9;and fd.portfolio_name = 'Aged Care Services'&#xA;&#x9;and posd.position_name not like '%General Manager%'&#xA;&#x9;and posd.position_name not like '%Head of%'&#xA;&#x9;and epf.pay_period_date_key = @Pay_End_Key&#xA;&#x9;and epf.document_type ='P'&#xA;&#x9;and epf.payment='P'&#xA;&#x9;and ptd.current_row_indicator= 'Y'&#xA;&#x9;and ptd.pay_component_description NOT in ('Mandatory Training - Paid')&#xA;) as s &#xA;PIVOT &#xA;(&#xA;SUM(s.pay_item_amount)&#xA;FOR s.program_name IN&#xA;([Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park])&#xA;) AS pvt&#xA;&#xA;&#xA;--SELECT * from #Summary order by [Role Type]&#xA;--DROP TABLE #Summary&#xA;--UNION &#xA;--(SELECT 'Total',SUM([Brompton]),SUM([Elizabeth East]),SUM([Elizabeth East - Dutton Court]),SUM([Grange]),SUM([Trott Park]),SUM([Westbourne Park]),SUM([Total]) FROM #Summary)&#xA;&#xA;--INSERT INTO #Summary &#xA;--SELECT 'Total',SUM([Brompton]),SUM([Elizabeth East]),SUM([Elizabeth East - Dutton Court]),SUM([Grange]),SUM([Trott Park]),SUM([Westbourne Park]),SUM([Total]) FROM #Summary&#xA;--&#xA;--SELECT * from #Summary &#xA;&#xA;insert into conform_rac.pay_period_summary_dollars_role_type&#xA;SELECT [Pay Period End Date Key],[Role Type],[Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park],[Total]&#xA;from #Summary&#xA;&#xA;&#xA;DROP TABLE #Summary&#xA;------------------------END OF--pay_period_summary_dollars_role_type----------------------" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\pay_period_summary_dollars_role_type_report"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{32B6ECD2-60C3-4A50-9E51-1CD9D04511D6}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:FailParentOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="pay_period_summary_dollars_role_type_report"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9C081394-D2D2-4E73-8582-17F15F42281D}"
+          SQLTask:SqlStatementSource="------------------------START OF--pay_period_summary_dollars_role_type_report----------------------&#xA;--Get the latest pay period end date&#xA;DECLARE @Pay_End_Key int;&#xA;SET @Pay_End_Key = &#x9;(&#xA;&#x9;&#x9;select MAX(epf.pay_period_date_key) as pay_period_end_date_key &#xA;&#x9;&#x9;from conform.EMPLOYEE_PAYMENT_FACT epf &#xA;&#x9;&#x9;left join conform.DATE_DIM dd on epf.pay_period_date_key = dd.date_key &#xA;&#x9;&#x9;where dd.pay_period_end = 'Yes'&#xA;&#x9;)&#xA;--Clear data that calculated before&#xA;DELETE FROM conform_rac.pay_period_summary_dollars_role_type_report  where [Pay Period End Date Key] =@Pay_End_Key&#xA;--Insert new data&#xA;--Section2&#xA;INSERT INTO conform_rac.pay_period_summary_dollars_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;(&#xA;&#x9;select @Pay_End_Key,rbmc.Section2&#xA;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;,rbmc.Section2_Order&#xA;&#x9;from management.RAC_BenchMark_Config rbmc &#xA;&#x9;left join conform_rac.pay_period_summary_dollars_role_type d on rbmc.Original_Role_Type = d.[Role Type] &#xA;&#x9;where rbmc.Section2  is not null &#xA;&#x9;and LTRIM(RTRIM(rbmc.Section2))  is not null &#xA;&#x9;and d.[Pay Period End Date Key] = @Pay_End_Key&#xA;&#x9;group by rbmc.Section2,rbmc.Section2_Order &#xA;&#x9;--order by rbmc.Section2_Order &#xA;)&#xA;--Section2 Total&#xA;DECLARE @OrderForTotal int = ISNULL( (SELECT MAX(DisplayOrder)+1 from conform_rac.pay_period_summary_dollars_role_type_report WHERE [Pay Period End Date Key] = @Pay_End_Key),0)&#x9;&#xA;&#xA;INSERT INTO conform_rac.pay_period_summary_dollars_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;( &#xA;&#x9;SELECT @Pay_End_Key&#xA;&#x9;&#x9;, 'Total Care $''s'&#xA;&#x9;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;&#x9;,@OrderForTotal&#xA;&#x9;&#x9;from management.RAC_BenchMark_Config rbmc &#xA;&#x9;&#x9;left join conform_rac.pay_period_summary_dollars_role_type d on rbmc.Original_Role_Type = d.[Role Type] &#xA;&#x9;&#x9;where rbmc.Section2  is not null &#xA;&#x9;&#x9;and LTRIM(RTRIM(rbmc.Section2))  is not null &#xA;&#x9;&#x9;and d.[Pay Period End Date Key] = @Pay_End_Key&#xA;)&#xA;&#x9;&#xA;--Section3&#xA;INSERT INTO conform_rac.pay_period_summary_dollars_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;(&#xA;&#x9;select @Pay_End_Key,rbmc.Section3&#xA;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;,rbmc.Section3_Order + @OrderForTotal&#xA;&#x9;from management.RAC_BenchMark_Config rbmc &#xA;&#x9;left join conform_rac.pay_period_summary_dollars_role_type d on rbmc.Original_Role_Type = d.[Role Type] &#xA;&#x9;where rbmc.Section3  is not null &#xA;&#x9;and LTRIM(RTRIM(rbmc.Section3))  is not null &#xA;&#x9;and d.[Pay Period End Date Key] = @Pay_End_Key&#xA;&#x9;and rbmc.Note &lt;&gt; 'Pay Type'&#xA;&#x9;group by rbmc.Section3,rbmc.Section3_Order &#xA;--&#x9;order by rbmc.Section3_Order &#xA;)&#xA;--Section3 Quality and Education come from Pay Component Type&#xA;--Mandatory Training - Paid only for now&#xA;INSERT INTO conform_rac.pay_period_summary_dollars_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;(&#xA;&#x9;select @Pay_End_Key,rbmc.Section3&#xA;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;,rbmc.Section3_Order + @OrderForTotal&#xA;&#x9;from management.RAC_BenchMark_Config rbmc &#xA;&#x9;left join conform_rac.pay_period_summary_dollars d on rbmc.Original_Role_Type = d.[Pay Type] &#xA;&#x9;where rbmc.Section3  is not null &#xA;&#x9;and LTRIM(RTRIM(rbmc.Section3))  is not null &#xA;&#x9;and d.[Pay Period End Date Key] = @Pay_End_Key&#xA;&#x9;and rbmc.Note = 'Pay Type'&#xA;&#x9;group by rbmc.Section3,rbmc.Section3_Order &#xA;&#x9;--order by rbmc.Section3_Order &#xA;)&#xA;--Section3 Total&#xA;SET @OrderForTotal  = ISNULL( (SELECT MAX(DisplayOrder)+1 from conform_rac.pay_period_summary_dollars_role_type_report WHERE [Pay Period End Date Key] = @Pay_End_Key),0)&#x9;&#xA;&#xA;INSERT INTO conform_rac.pay_period_summary_dollars_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;( &#xA;&#x9;select&#xA;&#x9;@Pay_End_Key&#xA;&#x9;,'Total Other $''s'&#xA;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;,@OrderForTotal&#xA;&#x9;from conform_rac.pay_period_summary_dollars_role_type_report d &#xA;&#x9;where d.[Role Type] in (&#xA;&#x9;&#x9;select rbmc.Section3 from management.RAC_BenchMark_Config rbmc where rbmc.Section3 is not null &#x9;&#x9;&#xA;&#x9;&#x9;and LTRIM(RTRIM(rbmc.Section3))  is not null &#xA;&#x9;&#x9;)&#xA;&#x9;and d.[Pay Period End Date Key] = @Pay_End_Key&#xA;)&#xA;--Total Staff Hours&#xA;SET @OrderForTotal  = ISNULL( (SELECT MAX(DisplayOrder)+1 from conform_rac.pay_period_summary_dollars_role_type_report WHERE [Pay Period End Date Key] = @Pay_End_Key),0)&#x9;&#xA;INSERT INTO conform_rac.pay_period_summary_dollars_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;( &#xA;&#x9;select&#xA;&#x9;@Pay_End_Key&#xA;&#x9;,'Total Staff $''s'&#xA;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;,@OrderForTotal&#xA;&#x9;from conform_rac.pay_period_summary_dollars_role_type_report d &#xA;&#x9;where d.[Pay Period End Date Key] = @Pay_End_Key&#xA;&#x9;and d.[Role Type] in ('Total Care $''s','Total Other $''s')&#xA;)" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\pay_period_summary_unit"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{D01E061C-106B-4C68-A965-2640DE0D4E04}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:FailParentOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="pay_period_summary_unit"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9C081394-D2D2-4E73-8582-17F15F42281D}"
+          SQLTask:SqlStatementSource="-----------------------start of pay_period_summary_unit-------------------------&#xA;DECLARE @Pay_End_Key int;&#xA;&#xA;SET @Pay_End_Key = &#x9;(&#xA;&#x9;&#x9;select MAX(epf.pay_period_date_key) as pay_period_end_date_key &#xA;&#x9;&#x9;from conform.EMPLOYEE_PAYMENT_FACT epf &#xA;&#x9;&#x9;left join conform.DATE_DIM dd on epf.pay_period_date_key = dd.date_key &#xA;&#x9;&#x9;where dd.pay_period_end = 'Yes'&#xA;&#x9;)&#xA;&#x9;&#xA;&#x9;&#xA;DELETE FROM conform_rac.pay_period_summary_unit where [Pay Period End Date Key] =@Pay_End_Key&#xA;&#xA;&#xA;SELECT  @Pay_End_Key as [Pay Period End Date Key],[Pay Type],[Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park]&#xA;,ISNULL([Brompton],0)+ISNULL([Elizabeth East],0)+ISNULL([Elizabeth East - Dutton Court],0)+ISNULL([Grange],0)+ISNULL([Trott Park],0)+ISNULL([Westbourne Park],0) as [Total]&#xA;INTO #Summary&#xA;FROM &#xA;(&#xA;&#x9;--records same as the report&#xA;&#x9;SELECT  ptd.pay_component_description as [Pay Type],epf.number_units,pd.program_name &#xA;&#x9;FROM conform.EMPLOYEE_PAYMENT_FACT epf &#xA;&#x9;LEFT JOIN conform.DATE_DIM dd on epf.pay_period_date_key =dd.date_key &#xA;&#x9;LEFT JOIN conform.PROGRAM_DIM pd on epf.program_key = pd.program_key &#xA;&#x9;LEFT JOIN conform.PORTFOLIO_DIM fd on epf.portfolio_key = fd.portfolio_key &#xA;&#x9;LEFT JOIN conform.POSITION_DIM posd on epf.position_key = posd.position_key &#xA;&#x9;LEFT JOIN conform.PAYMENT_TYPE_DIM ptd on epf.pay_component_ref = ptd.pay_component_ref &#xA;&#x9;WHERE dd.pay_period_end ='Yes'&#xA;&#x9;and pd.program_name IN &#xA;&#x9;(&#xA;&#x9;'Brompton',&#xA;&#x9;'Elizabeth East',&#xA;&#x9;'Elizabeth East - Dutton Court',&#xA;&#x9;'Grange',&#xA;&#x9;'Trott Park',&#xA;&#x9;'Westbourne Park'&#xA;&#x9;)&#xA;&#x9;and fd.portfolio_name = 'Aged Care Services'&#xA;&#x9;and posd.position_name not like '%General Manager%'&#xA;&#x9;and posd.position_name not like '%Head of%'&#xA;&#x9;and epf.pay_period_date_key = @Pay_End_Key&#xA;&#x9;and epf.document_type ='P'&#xA;&#x9;and epf.payment='P'&#xA;&#x9;and ptd.current_row_indicator= 'Y'&#xA;) as s &#xA;PIVOT &#xA;(&#xA;SUM(s.number_units)&#xA;FOR s.program_name IN&#xA;([Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park])&#xA;) AS pvt&#xA;&#xA;&#xA;--SELECT * from #Summary order by [Pay Type]&#xA;--UNION &#xA;--(SELECT 'Total',SUM([Brompton]),SUM([Elizabeth East]),SUM([Elizabeth East - Dutton Court]),SUM([Grange]),SUM([Trott Park]),SUM([Westbourne Park]),SUM([Total]) FROM #Summary)&#xA;&#xA;--INSERT INTO #Summary &#xA;--SELECT 'Total',SUM([Brompton]),SUM([Elizabeth East]),SUM([Elizabeth East - Dutton Court]),SUM([Grange]),SUM([Trott Park]),SUM([Westbourne Park]),SUM([Total]) FROM #Summary&#xA;--&#xA;--SELECT * from #Summary &#xA;--DROP TABLE #Summary&#xA;&#xA;insert into conform_rac.pay_period_summary_unit&#xA;SELECT [Pay Period End Date Key],[Pay Type],Brompton,[Elizabeth East],[Elizabeth East - Dutton Court],Grange,[Trott Park],[Westbourne Park],Total&#xA;from #Summary&#xA;&#xA;DROP TABLE #Summary&#xA;-----------------------end of pay_period_summary_unit-------------------------" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\pay_period_summary_unit_role_type"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{1EB0C9D5-9DE7-437C-9C93-864DC1B6D453}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:FailParentOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="pay_period_summary_unit_role_type"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9C081394-D2D2-4E73-8582-17F15F42281D}"
+          SQLTask:SqlStatementSource="-----------------------pay_period_summary_unit_role_type-------------------------&#xA;DECLARE @Pay_End_Key int;&#xA;&#xA;SET @Pay_End_Key = &#x9;(&#xA;&#x9;&#x9;select MAX(epf.pay_period_date_key) as pay_period_end_date_key &#xA;&#x9;&#x9;from conform.EMPLOYEE_PAYMENT_FACT epf &#xA;&#x9;&#x9;left join conform.DATE_DIM dd on epf.pay_period_date_key = dd.date_key &#xA;&#x9;&#x9;where dd.pay_period_end = 'Yes'&#xA;&#x9;)&#xA;&#x9;&#xA;DELETE FROM conform_rac.pay_period_summary_unit_role_type  where [Pay Period End Date Key] =@Pay_End_Key&#xA;&#xA;SELECT  @Pay_End_Key as [Pay Period End Date Key],[Role Type],[Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park]&#xA;,ISNULL([Brompton],0)+ISNULL([Elizabeth East],0)+ISNULL([Elizabeth East - Dutton Court],0)+ISNULL([Grange],0)+ISNULL([Trott Park],0)+ISNULL([Westbourne Park],0) as [Total]&#xA;INTO #Summary&#xA;FROM &#xA;(&#xA;&#x9;--records same as the report&#xA;&#x9;SELECT  posd.position_name as [Role Type],epf.number_units,pd.program_name &#xA;&#x9;FROM conform.EMPLOYEE_PAYMENT_FACT epf &#xA;&#x9;LEFT JOIN conform.DATE_DIM dd on epf.pay_period_date_key =dd.date_key &#xA;&#x9;LEFT JOIN conform.PROGRAM_DIM pd on epf.program_key = pd.program_key &#xA;&#x9;LEFT JOIN conform.PORTFOLIO_DIM fd on epf.portfolio_key = fd.portfolio_key &#xA;&#x9;LEFT JOIN conform.POSITION_DIM posd on epf.position_key = posd.position_key &#xA;&#x9;LEFT JOIN conform.PAYMENT_TYPE_DIM ptd on epf.pay_component_ref = ptd.pay_component_ref &#xA;&#x9;WHERE dd.pay_period_end ='Yes'&#xA;&#x9;and pd.program_name IN &#xA;&#x9;(&#xA;&#x9;'Brompton',&#xA;&#x9;'Elizabeth East',&#xA;&#x9;'Elizabeth East - Dutton Court',&#xA;&#x9;'Grange',&#xA;&#x9;'Trott Park',&#xA;&#x9;'Westbourne Park'&#xA;&#x9;)&#xA;&#x9;and fd.portfolio_name = 'Aged Care Services'&#xA;&#x9;and posd.position_name not like '%General Manager%'&#xA;&#x9;and posd.position_name not like '%Head of%'&#xA;&#x9;and epf.pay_period_date_key = @Pay_End_Key&#xA;&#x9;and epf.document_type ='P'&#xA;&#x9;and epf.payment='P'&#xA;&#x9;and ptd.current_row_indicator= 'Y'&#xA;&#x9;and ptd.pay_component_description NOT in ('Mandatory Training - Paid')&#xA;&#x9;and ptd.pay_component_description in ('Additional Hours Worked','Mandatory Training - Paid','Meeting Attendance - Paid','Normal Pay','Overtime 1.5','Overtime 2.0','Overtime 2.5')&#xA;) as s &#xA;PIVOT &#xA;(&#xA;SUM(s.number_units)&#xA;FOR s.program_name IN&#xA;([Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park])&#xA;) AS pvt&#xA;&#xA;&#xA;SELECT * from #Summary order by [Role Type]&#xA;--DROP TABLE #Summary&#xA;--UNION &#xA;--(SELECT 'Total',SUM([Brompton]),SUM([Elizabeth East]),SUM([Elizabeth East - Dutton Court]),SUM([Grange]),SUM([Trott Park]),SUM([Westbourne Park]),SUM([Total]) FROM #Summary)&#xA;&#xA;--INSERT INTO #Summary &#xA;--SELECT 'Total',SUM([Brompton]),SUM([Elizabeth East]),SUM([Elizabeth East - Dutton Court]),SUM([Grange]),SUM([Trott Park]),SUM([Westbourne Park]),SUM([Total]) FROM #Summary&#xA;--&#xA;--SELECT * from #Summary &#xA;&#xA;&#xA;insert into conform_rac.pay_period_summary_unit_role_type&#xA;SELECT [Pay Period End Date Key],[Role Type],[Brompton],[Elizabeth East],[Elizabeth East - Dutton Court],[Grange],[Trott Park],[Westbourne Park],[Total]&#xA;from #Summary&#xA;&#xA;DROP TABLE #Summary&#xA;------------------------------------------------" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\pay_period_summary_unit_role_type_report"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{895AA061-8FEB-4944-94CD-D97381D19541}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:FailParentOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="pay_period_summary_unit_role_type_report"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{9C081394-D2D2-4E73-8582-17F15F42281D}"
+          SQLTask:SqlStatementSource="------------------------START OF--pay_period_summary_unit_role_type_report----------------------&#xA;--Get the latest pay period end date&#xA;DECLARE @Pay_End_Key int;&#xA;SET @Pay_End_Key = &#x9;(&#xA;&#x9;&#x9;select MAX(epf.pay_period_date_key) as pay_period_end_date_key &#xA;&#x9;&#x9;from conform.EMPLOYEE_PAYMENT_FACT epf &#xA;&#x9;&#x9;left join conform.DATE_DIM dd on epf.pay_period_date_key = dd.date_key &#xA;&#x9;&#x9;where dd.pay_period_end = 'Yes'&#xA;&#x9;)&#xA;&#x9;&#xA;&#xA;--Clear data that calculated before&#xA;DELETE FROM conform_rac.pay_period_summary_unit_role_type_report  where [Pay Period End Date Key] =@Pay_End_Key&#xA;--Insert new data&#xA;--Section2&#xA;INSERT INTO conform_rac.pay_period_summary_unit_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;(&#xA;&#x9;select @Pay_End_Key,rbmc.Section2&#xA;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;,rbmc.Section2_Order&#xA;&#x9;from management.RAC_BenchMark_Config rbmc &#xA;&#x9;left join conform_rac.pay_period_summary_unit_role_type d on rbmc.Original_Role_Type = d.[Role Type] &#xA;&#x9;where rbmc.Section2  is not null &#xA;&#x9;and LTRIM(RTRIM(rbmc.Section2))  is not null &#xA;&#x9;and d.[Pay Period End Date Key] = @Pay_End_Key&#xA;&#x9;group by rbmc.Section2,rbmc.Section2_Order &#xA;&#x9;--order by rbmc.Section2_Order &#xA;)&#xA;--Section2 Total&#xA;DECLARE @OrderForTotal int = ISNULL( (SELECT MAX(DisplayOrder)+1 from conform_rac.pay_period_summary_unit_role_type_report WHERE [Pay Period End Date Key] = @Pay_End_Key),0)&#x9;&#xA;&#xA;INSERT INTO conform_rac.pay_period_summary_unit_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;( &#xA;&#x9;SELECT @Pay_End_Key&#xA;&#x9;&#x9;, 'Total Care Hours'&#xA;&#x9;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;&#x9;,@OrderForTotal&#xA;&#x9;&#x9;from management.RAC_BenchMark_Config rbmc &#xA;&#x9;&#x9;left join conform_rac.pay_period_summary_unit_role_type d on rbmc.Original_Role_Type = d.[Role Type] &#xA;&#x9;&#x9;where rbmc.Section2  is not null &#xA;&#x9;&#x9;and LTRIM(RTRIM(rbmc.Section2))  is not null &#xA;&#x9;&#x9;and d.[Pay Period End Date Key] = @Pay_End_Key&#xA;)&#xA;&#x9;&#xA;--Section3&#xA;INSERT INTO conform_rac.pay_period_summary_unit_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;(&#xA;&#x9;select @Pay_End_Key,rbmc.Section3&#xA;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;,rbmc.Section3_Order + @OrderForTotal&#xA;&#x9;from management.RAC_BenchMark_Config rbmc &#xA;&#x9;left join conform_rac.pay_period_summary_unit_role_type d on rbmc.Original_Role_Type = d.[Role Type] &#xA;&#x9;where rbmc.Section3  is not null &#xA;&#x9;and LTRIM(RTRIM(rbmc.Section3))  is not null &#xA;&#x9;and d.[Pay Period End Date Key] = @Pay_End_Key&#xA;&#x9;and rbmc.Note &lt;&gt; 'Pay Type'&#xA;&#x9;group by rbmc.Section3,rbmc.Section3_Order &#xA;--&#x9;order by rbmc.Section3_Order &#xA;)&#xA;--Section3 Quality and Education come from Pay Component Type&#xA;--Mandatory Training - Paid only for now&#xA;INSERT INTO conform_rac.pay_period_summary_unit_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;(&#xA;&#x9;select @Pay_End_Key,rbmc.Section3&#xA;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;,rbmc.Section3_Order + @OrderForTotal&#xA;&#x9;from management.RAC_BenchMark_Config rbmc &#xA;&#x9;left join conform_rac.pay_period_summary_dollars d on rbmc.Original_Role_Type = d.[Pay Type] &#xA;&#x9;where rbmc.Section3  is not null &#xA;&#x9;and LTRIM(RTRIM(rbmc.Section3))  is not null &#xA;&#x9;and d.[Pay Period End Date Key] = @Pay_End_Key&#xA;&#x9;and rbmc.Note = 'Pay Type'&#xA;&#x9;group by rbmc.Section3,rbmc.Section3_Order &#xA;&#x9;--order by rbmc.Section3_Order &#xA;)&#xA;--Section3 Total&#xA;SET @OrderForTotal  = ISNULL( (SELECT MAX(DisplayOrder)+1 from conform_rac.pay_period_summary_unit_role_type_report WHERE [Pay Period End Date Key] = @Pay_End_Key),0)&#x9;&#xA;&#xA;INSERT INTO conform_rac.pay_period_summary_unit_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;( &#xA;&#x9;select&#xA;&#x9;@Pay_End_Key&#xA;&#x9;,'Total Other Hours'&#xA;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;,@OrderForTotal&#xA;&#x9;from conform_rac.pay_period_summary_unit_role_type_report d &#xA;&#x9;where d.[Role Type] in (&#xA;&#x9;&#x9;select rbmc.Section3 from management.RAC_BenchMark_Config rbmc where rbmc.Section3 is not null &#x9;&#x9;&#xA;&#x9;&#x9;and LTRIM(RTRIM(rbmc.Section3))  is not null &#xA;&#x9;&#x9;)&#xA;&#x9;and d.[Pay Period End Date Key] = @Pay_End_Key&#xA;)&#xA;--Total Staff Hours&#xA;SET @OrderForTotal  = ISNULL( (SELECT MAX(DisplayOrder)+1 from conform_rac.pay_period_summary_unit_role_type_report WHERE [Pay Period End Date Key] = @Pay_End_Key),0)&#x9;&#xA;INSERT INTO conform_rac.pay_period_summary_unit_role_type_report&#xA;([Pay Period End Date Key], [Role Type], Brompton, [Elizabeth East], [Elizabeth East - Dutton Court], Grange, [Trott Park], [Westbourne Park], Total, DisplayOrder)&#xA;( &#xA;&#x9;select&#xA;&#x9;@Pay_End_Key&#xA;&#x9;,'Total Staff Hours'&#xA;&#x9;,SUM(d.Brompton) as [Brompton]&#xA;&#x9;,SUM(d.[Elizabeth East]) as [Elizabeth East]&#xA;&#x9;,SUM(d.[Elizabeth East - Dutton Court]) as [Elizabeth East - Dutton Court]&#xA;&#x9;,SUM(d.Grange) as [Grange]&#xA;&#x9;,SUM(d.[Trott Park]) as [Trott Park]&#xA;&#x9;,SUM(d.[Westbourne Park]) as [Westbourne Park]&#xA;&#x9;,SUM(d.Total) as [Total]&#xA;&#x9;,@OrderForTotal&#xA;&#x9;from conform_rac.pay_period_summary_unit_role_type_report d &#xA;&#x9;where d.[Pay Period End Date Key] = @Pay_End_Key&#xA;&#x9;and d.[Role Type] in ('Total Care Hours','Total Other Hours')&#xA;)&#xA;-----------------------------------------------------------" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{81A1D61C-25AD-459A-B6BD-B5B93AA38691}"
+      DTS:From="Package\pay_period_summary_unit"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\pay_period_summary_dollars" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{3A874DF0-04D3-4082-A34A-BED54EBD6187}"
+      DTS:From="Package\pay_period_summary_dollars"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\pay_period_summary_unit_role_type" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{AC25495A-3BC2-4968-BDD0-FBC970ED69D4}"
+      DTS:From="Package\pay_period_summary_unit_role_type"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\pay_period_summary_dollars_role_type" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{51033886-12E8-4986-95A6-0D2917F55825}"
+      DTS:From="Package\pay_period_summary_dollars_role_type"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\pay_period_summary_unit_role_type_report" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{744EFE30-EF77-4BE7-BD4C-88AE62C4E917}"
+      DTS:From="Package\pay_period_summary_unit_role_type_report"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\pay_period_summary_dollars_role_type_report" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="204,42"
+          Id="Package\pay_period_summary_unit"
+          TopLeft="236,98" />
+        <NodeLayout
+          Size="217,42"
+          Id="Package\pay_period_summary_dollars"
+          TopLeft="237,188" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="341.75,140">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,48"
+              Start="0,0"
+              End="0,40.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,40.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="254,42"
+          Id="Package\pay_period_summary_unit_role_type"
+          TopLeft="220,303" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="346.25,230">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,73"
+              Start="0,0"
+              End="0,65.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,65.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="327,42"
+          Id="Package\pay_period_summary_dollars_role_type"
+          TopLeft="184,417" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="347.25,345">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,72"
+              Start="0,0"
+              End="0,64.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,64.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="301,42"
+          Id="Package\pay_period_summary_dollars_role_type_report"
+          TopLeft="196,665" />
+        <NodeLayout
+          Size="288,42"
+          Id="Package\pay_period_summary_unit_role_type_report"
+          TopLeft="204,532" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="347.75,459">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,73"
+              Start="0,0"
+              End="0,65.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,65.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="347.25,574">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,91"
+              Start="0,0"
+              End="0,83.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,83.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
