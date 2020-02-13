@@ -3,11 +3,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="KH">
-      <ConnectionProperties>
-        <DataProvider>SQL</DataProvider>
-        <ConnectString>Data Source=appsql-3;Initial Catalog=Anglicare</ConnectString>
-        <IntegratedSecurity>true</IntegratedSecurity>
-      </ConnectionProperties>
+      <DataSourceReference>KH_test</DataSourceReference>
       <rd:SecurityType>Integrated</rd:SecurityType>
       <rd:DataSourceID>76efc458-cfc6-4958-82bd-ddcd99f1104a</rd:DataSourceID>
     </DataSource>
@@ -58,7 +54,8 @@
   udfv47.[Value] AS [C01Date],  CAST(udfv48.[Value] AS money) AS [C01Amount],  udfv49.[Value] AS [C01Claimed],
   udfv50.[Value] AS [C02Date],  CAST(udfv51.[Value] AS money) AS [C02Amount],  udfv52.[Value] AS [C02Claimed],
   udfv53.[Value] AS [C03Date],  CAST(udfv54.[Value] AS money) AS [C03Amount],  udfv55.[Value] AS [C03Claimed],
-  udfv56.[Value] AS [F04BHGDate],CAST(udfv58.[Value] AS money) AS [F04BHGAmount], udfv57.[Value] AS [F04BHGClaimed]
+  udfv56.[Value] AS [F04BHGDate],CAST(udfv58.[Value] AS money) AS [F04BHGAmount], udfv57.[Value] AS [F04BHGClaimed],
+   udfv56.[Value] AS [F04 (2) BHGDate],CAST(udfv58.[Value] AS money) AS [F04 (2) BHGAmount], udfv57.[Value] AS [F04 (2) BHGClaimed]
 FROM [dbo].[Case_Management_Case] AS cmc
 -- HSP ID
   LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv1 ON udfv1.[ObjectReference] = cmc.[ID] AND udfv1.[Company] = cmc.[Company] AND udfv1.[UserDefinedField] = 233
@@ -208,11 +205,11 @@ FROM [dbo].[Case_Management_Case] AS cmc
   LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv55 ON udfv55.[ObjectReference] = cmc.[ID] AND udfv55.[Company] = cmc.[Company] AND udfv55.[UserDefinedField] = 281
 -- Arrival Flight Confirmed
   LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS afc ON afc.[ObjectReference] = cmc.[ID] AND afc.[Company] = cmc.[Company] AND afc.[UserDefinedField] = 235
--- F04 BHG Date
+-- F04 (2) BHG Date
  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv56 ON udfv56.[ObjectReference] = cmc.[ID] AND udfv56.[Company] = cmc.[Company] AND udfv56.[UserDefinedField] = 381
--- F04 BHG Claimed
+-- F04 (2) BHG Claimed
  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv57 ON udfv57.[ObjectReference] = cmc.[ID] AND udfv57.[Company] = cmc.[Company] AND udfv57.[UserDefinedField] = 383
--- F04 BHG $ Amount
+-- F04 (2) BHG $ Amount
  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv58 ON udfv58.[ObjectReference] = cmc.[ID] AND udfv58.[Company] = cmc.[Company] AND udfv58.[UserDefinedField] = 382
 
 
@@ -487,6 +484,18 @@ WHERE cmc.[Company] = 1 AND udfv1.[Value] IS NOT NULL
         </Field>
         <Field Name="F04BHGClaimed">
           <DataField>F04BHGClaimed</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="F04__2__BHGDate">
+          <DataField>F04 (2) BHGDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="F04__2__BHGAmount">
+          <DataField>F04 (2) BHGAmount</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="F04__2__BHGClaimed">
+          <DataField>F04 (2) BHGClaimed</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -1699,6 +1708,15 @@ GROUP BY udfv2.[Name]</CommandText>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>3.87811cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>3.10854cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>3.37313cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>5.67728cm</Width>
@@ -3246,6 +3264,105 @@ GROUP BY udfv2.[Name]</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox181</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox97">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>F04 (2) BHGDate</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox97</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox27">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>F04 (2) BHGAmount</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox27</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox7">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>F04 (2) BHGClaimed</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox7</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -5105,6 +5222,7 @@ GROUP BY udfv2.[Name]</CommandText>
                                   <Style>
                                     <FontSize>8pt</FontSize>
                                     <Format>'$'0.00;('$'0.00)</Format>
+                                    <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -5145,6 +5263,104 @@ GROUP BY udfv2.[Name]</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>F04AClaimed</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="F04__2__BHGDate">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!F04__2__BHGDate.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>F04__2__BHGDate</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="F04__2__BHGAmount">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!F04__2__BHGAmount.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
+                                    <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>F04__2__BHGAmount</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="F04__2__BHGClaimed">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!F04__2__BHGClaimed.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>F04__2__BHGClaimed</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -7028,6 +7244,102 @@ GROUP BY udfv2.[Name]</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="Textbox115">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox115</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox121">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox121</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox25">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox25</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="Textbox198">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -7474,6 +7786,9 @@ GROUP BY udfv2.[Name]</CommandText>
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -7492,7 +7807,7 @@ GROUP BY udfv2.[Name]</CommandText>
             <DataSetName>Data</DataSetName>
             <Top>0.93257cm</Top>
             <Height>1.72063cm</Height>
-            <Width>253.53519cm</Width>
+            <Width>262.51686cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -10848,7 +11163,7 @@ GROUP BY udfv2.[Name]</CommandText>
         <Height>3.5887in</Height>
         <Style />
       </Body>
-      <Width>99.817in</Width>
+      <Width>103.35309in</Width>
       <Page>
         <PageHeader>
           <Height>3.64154cm</Height>

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="Kypera_Test">
-      <DataSourceReference>KH_test</DataSourceReference>
+      <DataSourceReference>/DataSources/Kypera</DataSourceReference>
       <rd:SecurityType>Integrated</rd:SecurityType>
       <rd:DataSourceID>76efc458-cfc6-4958-82bd-ddcd99f1104a</rd:DataSourceID>
     </DataSource>
@@ -30,9 +30,6 @@
           </QueryParameter>
           <QueryParameter Name="@UpdateComponent">
             <Value>=Parameters!UpdateComponent.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Component">
-            <Value>=Parameters!Component.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT
@@ -71,7 +68,7 @@ FROM
   LEFT JOIN [Anglicare].[dbo].[PropertyStructure_HeaderComponent] PSHC ON PSHC.[ID] = RWOC.[HeaderComponent] AND PSHC.[AreaID] = RWOC.[AreaID] AND PSHC.[WorkArea] = RWOC.[WorkArea] AND PSHC.[Company] = RWOC.[Company]
   LEFT JOIN [Anglicare].[dbo].[PropertyStructure_Component] PSC ON PSC.[ID] = RWOC.[Component] AND PSC.[AreaID] = RWOC.[AreaID] AND PSC.[WorkArea] = RWOC.[WorkArea] AND PSC.[Company] = RWOC.[Company]
   LEFT JOIN [Anglicare].[dbo].[Contractors_Contractor] CC ON CC.[ID] = RWO.[Contractor] AND CC.[Company] = RWO.[Company]
-  LEFT JOIN [dbo].[PropertyStructure_ComponentType] CT ON CT.[ID] = PSC.[ComponentType] AND CT.[Company] = PSC.[Company]
+
 WHERE
   PSB.[District] IN (@District)
   AND PSS.[Name] IN (@Scheme)
@@ -81,7 +78,7 @@ WHERE
     WHEN (RWOC.[ComponentAction] IS NOT NULL AND RWOC.[ComponentAction] &lt; 4) THEN 'Yes' -- ComponentAction 4 = None
     ELSE 'No'
   END) IN (@UpdateComponent)
-  AND (CT.[Name] IS NULL OR CT.[Name] IN (@Component))
+
 ORDER BY
   RWO.[AreaID]</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
@@ -461,49 +458,6 @@ GROUP BY
         <Field Name="Sum">
           <DataField>Sum</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Component">
-      <Query>
-        <DataSourceName>Kypera_Test</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@District">
-            <Value>=Parameters!District.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Scheme">
-            <Value>=Parameters!Scheme.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Block">
-            <Value>=Parameters!Block.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>SELECT DISTINCT ComponentType.[Name]  as Component
-FROM [dbo].[PropertyStructure_ComponentType] ComponentType 
- LEFT JOIN [dbo].[PropertyStructure_Component] PSC ON 
- ComponentType.[ID] = PSC.[ComponentType] 
- 
- 	left join 
-    dbo.PropertyStructure_BlockUnit as bb on PSC.AreaID = bb.Unit 
-	--Block Level
-	left join 
-	dbo.PropertyStructure_Block as cc on bb.block = cc.Code
-	--District Level
-	left join
-	dbo.PropertyStructure_District as ee on cc.District = ee.Code
-	--Scheme Level
-	left join 
-	dbo.PropertyStructure_scheme as dd on cc.Scheme = dd.Code
-where ee.Code in (@District)
-and dd.Name in (@Scheme)
-and bb.Block in (@Block)
-and ComponentType.[Company] = 1
-AND PSC.Company = 1</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Component">
-          <DataField>Component</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -4011,63 +3965,7 @@ AND PSC.Company = 1</CommandText>
       <DataType>DateTime</DataType>
       <Prompt>To Date</Prompt>
     </ReportParameter>
-    <ReportParameter Name="Component">
-      <DataType>String</DataType>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>Component</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Component</DataSetName>
-          <ValueField>Component</ValueField>
-          <LabelField>Component</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
   </ReportParameters>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>4</NumberOfRows>
-      <CellDefinitions>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>District</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>0</RowIndex>
-          <ParameterName>Scheme</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>Block</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>UpdateComponent</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>FromDate</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>ToDate</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>Component</ParameterName>
-        </CellDefinition>
-      </CellDefinitions>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <EmbeddedImages>
     <EmbeddedImage Name="AnglicareSA1">
       <MIMEType>image/png</MIMEType>
