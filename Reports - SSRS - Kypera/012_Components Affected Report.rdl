@@ -44,33 +44,36 @@
   RWO.[Town] AS [Town/Suburb],
   PSS.[Name] AS [Scheme],
   PSBU.[Block] AS [Block],
-  (SELECT LookupValues.[Name] FROM [Anglicare].[dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = PSU.[PropertySubType] AND LookupValues.[Company] = PSU.[Company] AND LookupValues.[Lookup] =  112) AS [Program],
+  (SELECT LookupValues.[Name] FROM [dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = PSU.[PropertySubType] AND LookupValues.[Company] = PSU.[Company] AND LookupValues.[Lookup] =  112) AS [Program],
   RP.[Name] AS [Priority],
-  (SELECT LookupValues.[Name] FROM [Anglicare].[dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWO.[Classification] AND LookupValues.[Company] = RWO.[Company] AND LookupValues.[Lookup] =  25) AS [Repair Type],
-  (SELECT ComponentType.[Name] FROM [Anglicare].[dbo].[PropertyStructure_ComponentType] ComponentType WHERE ComponentType.[ID] = PSHC.[ComponentType] AND ComponentType.[Company] = PSHC.[Company]) AS [Component Type],
-  (SELECT ComponentType.[Name] FROM [Anglicare].[dbo].[PropertyStructure_ComponentType] ComponentType WHERE ComponentType.[ID] = PSC.[ComponentType] AND ComponentType.[Company] = PSC.[Company]) AS [Component],
+  (SELECT LookupValues.[Name] FROM [dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWO.[Classification] AND LookupValues.[Company] = RWO.[Company] AND LookupValues.[Lookup] =  25) AS [Repair Type],
+  (SELECT ComponentType.[Name] FROM [dbo].[PropertyStructure_ComponentType] ComponentType WHERE ComponentType.[ID] = PSHC.[ComponentType] AND ComponentType.[Company] = PSHC.[Company]) AS [Component Type],
+  (SELECT ComponentType.[Name] FROM [dbo].[PropertyStructure_ComponentType] ComponentType WHERE ComponentType.[ID] = PSC.[ComponentType] AND ComponentType.[Company] = PSC.[Company]) AS [Component],
   (CASE
     WHEN (RWOC.[ComponentAction] IS NOT NULL AND RWOC.[ComponentAction] &lt; 4) THEN 'Yes' -- ComponentAction 4 = None
     ELSE 'No'
   END) AS [Update Component],
-  (SELECT LookupValues.[Name] FROM [Anglicare].[dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWOC.[ComponentAction] AND LookupValues.[Company] = RWOC.[Company] AND LookupValues.[Lookup] =  644) AS [Component Action],
+  (SELECT LookupValues.[Name] FROM [dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWOC.[ComponentAction] AND LookupValues.[Company] = RWOC.[Company] AND LookupValues.[Lookup] =  644) AS [Component Action],
   RWO.[ActualCost] AS [Actual Cost],
   RWO.[Complete] AS [Complete],
   CC.[Name] AS [Contractor],
-  (SELECT LookupValues.[Name] FROM [Anglicare].[dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWO.[Trade] AND LookupValues.[Company] = RWO.[Company] AND LookupValues.[Lookup] =  24) AS [Trade],
-  (SELECT LookupValues.[Name] FROM [Anglicare].[dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWO.[Classification2] AND LookupValues.[Company] = RWO.[Company] AND LookupValues.[Lookup] =  26) AS [Repair Code]
-
+  (SELECT LookupValues.[Name] FROM [dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWO.[Trade] AND LookupValues.[Company] = RWO.[Company] AND LookupValues.[Lookup] =  24) AS [Trade],
+  (SELECT LookupValues.[Name] FROM [dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWO.[Classification2] AND LookupValues.[Company] = RWO.[Company] AND LookupValues.[Lookup] =  26) AS [Repair Code],
+	PSC.ReplacementYear,
+	(SELECT LookupValues.[Name] FROM [dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWO.[Classification3] AND LookupValues.[Company] = RWO.[Company] AND LookupValues.[Lookup] =  27) AS [Analysis],
+	RWO.EstimatedCost,
+	(SELECT i.CreatedOn FROM dbo.Invoice i inner join dbo.Repairs_WorksOrder_InvoicesJoin j on j.Invoice = i.ID where j.WorksOrder = RWO.ID) AS [Invoice logged date]
 FROM
-  [Anglicare].[dbo].[Repairs_WorksOrder] RWO
-  LEFT JOIN [Anglicare].[dbo].[PropertyStructure_Unit] PSU ON PSU.[ID] = RWO.[AreaID] AND PSU.[Company] = RWO.[Company]
-  LEFT JOIN [Anglicare].[dbo].[PropertyStructure_BlockUnit] PSBU ON PSBU.[Unit] = PSU.[ID] AND PSBU.[Company] = PSU.[Company]
-  LEFT JOIN [Anglicare].[dbo].[PropertyStructure_Block] PSB ON PSB.[Code] = PSBU.[Block] AND PSB.[Company] = PSBU.[Company]
+  [dbo].[Repairs_WorksOrder] RWO
+  LEFT JOIN [dbo].[PropertyStructure_Unit] PSU ON PSU.[ID] = RWO.[AreaID] AND PSU.[Company] = RWO.[Company]
+  LEFT JOIN [dbo].[PropertyStructure_BlockUnit] PSBU ON PSBU.[Unit] = PSU.[ID] AND PSBU.[Company] = PSU.[Company]
+  LEFT JOIN [dbo].[PropertyStructure_Block] PSB ON PSB.[Code] = PSBU.[Block] AND PSB.[Company] = PSBU.[Company]
   LEFT JOIN [PropertyStructure_scheme] PSS ON PSS.[Code] = PSB.[Scheme] AND PSS.[Company] = PSB.[Company]
-  LEFT JOIN [Anglicare].[dbo].[Repairs_Priorities] RP ON RP.[ID] = RWO.[Priority] AND RP.[Company] = RWO.[Company]
-  LEFT JOIN [Anglicare].[dbo].[Repairs_WorksOrder_Components] RWOC ON RWOC.[WorksOrder] = RWO.[ID] AND RWOC.[Company] = RWO.[Company] AND RWOC.[Deleted] = 0
-  LEFT JOIN [Anglicare].[dbo].[PropertyStructure_HeaderComponent] PSHC ON PSHC.[ID] = RWOC.[HeaderComponent] AND PSHC.[AreaID] = RWOC.[AreaID] AND PSHC.[WorkArea] = RWOC.[WorkArea] AND PSHC.[Company] = RWOC.[Company]
-  LEFT JOIN [Anglicare].[dbo].[PropertyStructure_Component] PSC ON PSC.[ID] = RWOC.[Component] AND PSC.[AreaID] = RWOC.[AreaID] AND PSC.[WorkArea] = RWOC.[WorkArea] AND PSC.[Company] = RWOC.[Company]
-  LEFT JOIN [Anglicare].[dbo].[Contractors_Contractor] CC ON CC.[ID] = RWO.[Contractor] AND CC.[Company] = RWO.[Company]
+  LEFT JOIN [dbo].[Repairs_Priorities] RP ON RP.[ID] = RWO.[Priority] AND RP.[Company] = RWO.[Company]
+  LEFT JOIN [dbo].[Repairs_WorksOrder_Components] RWOC ON RWOC.[WorksOrder] = RWO.[ID] AND RWOC.[Company] = RWO.[Company] AND RWOC.[Deleted] = 0
+  LEFT JOIN [dbo].[PropertyStructure_HeaderComponent] PSHC ON PSHC.[ID] = RWOC.[HeaderComponent] AND PSHC.[AreaID] = RWOC.[AreaID] AND PSHC.[WorkArea] = RWOC.[WorkArea] AND PSHC.[Company] = RWOC.[Company]
+  LEFT JOIN [dbo].[PropertyStructure_Component] PSC ON PSC.[ID] = RWOC.[Component] AND PSC.[AreaID] = RWOC.[AreaID] AND PSC.[WorkArea] = RWOC.[WorkArea] AND PSC.[Company] = RWOC.[Company]
+  LEFT JOIN [dbo].[Contractors_Contractor] CC ON CC.[ID] = RWO.[Contractor] AND CC.[Company] = RWO.[Company]
   LEFT JOIN [dbo].[PropertyStructure_ComponentType] CT ON CT.[ID] = PSC.[ComponentType] AND CT.[Company] = PSC.[Company]
 WHERE
   PSB.[District] IN (@District)
@@ -166,6 +169,22 @@ ORDER BY
         <Field Name="Repair_Code">
           <DataField>Repair Code</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReplacementYear">
+          <DataField>ReplacementYear</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Analysis">
+          <DataField>Analysis</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="EstimatedCost">
+          <DataField>EstimatedCost</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Invoice_logged_date">
+          <DataField>Invoice logged date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -568,6 +587,18 @@ AND PSC.Company = 1</CommandText>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>5.78083cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.5cm</Width>
@@ -1280,6 +1311,154 @@ AND PSC.Company = 1</CommandText>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox13">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Replacement Year</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox13</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox27">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Analysis</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox27</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox21">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Estimated Cost</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox21</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox30">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Invoice logged date</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>White</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox30</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>CornflowerBlue</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -1938,6 +2117,149 @@ AND PSC.Company = 1</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Repair_Code</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="ReplacementYear">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!ReplacementYear.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>ReplacementYear</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Analysis">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Analysis.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Analysis</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="EstimatedCost">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!EstimatedCost.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>'$'0.00;('$'0.00)</Format>
+                                    <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>EstimatedCost</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Invoice_logged_date">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Invoice_logged_date.Value</Value>
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                    <Format>d</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Invoice_logged_date</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -2622,12 +2944,156 @@ AND PSC.Company = 1</CommandText>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox19">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox19</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox29">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox29</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox25">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox25</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox32">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>9pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox32</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <BackgroundColor>=iif(RowNumber(nothing) mod 2 =0,"LightGrey","White")</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -2760,7 +3226,7 @@ AND PSC.Company = 1</CommandText>
             <Top>0.55493cm</Top>
             <Left>0.44662cm</Left>
             <Height>1.8cm</Height>
-            <Width>72.57914cm</Width>
+            <Width>82.57914cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3590,7 +4056,7 @@ AND PSC.Company = 1</CommandText>
         <Height>4.94792in</Height>
         <Style />
       </Body>
-      <Width>28.98455in</Width>
+      <Width>32.68731in</Width>
       <Page>
         <PageHeader>
           <Height>1.39981cm</Height>
