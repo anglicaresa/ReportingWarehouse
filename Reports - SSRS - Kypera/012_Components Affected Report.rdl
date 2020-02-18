@@ -62,7 +62,7 @@
 	PSC.ReplacementYear,
 	(SELECT LookupValues.[Name] FROM [dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWO.[Classification3] AND LookupValues.[Company] = RWO.[Company] AND LookupValues.[Lookup] =  27) AS [Analysis],
 	RWO.EstimatedCost,
-	(SELECT i.CreatedOn FROM dbo.Invoice i inner join dbo.Repairs_WorksOrder_InvoicesJoin j on j.Invoice = i.ID where j.WorksOrder = RWO.ID) AS [Invoice logged date]
+	(SELECT MIN(i.CreatedOn) FROM dbo.Invoice i inner join dbo.Repairs_WorksOrder_InvoicesJoin j on j.Invoice = i.ID where j.WorksOrder = RWO.ID) AS [Invoice logged date]
 FROM
   [dbo].[Repairs_WorksOrder] RWO
   LEFT JOIN [dbo].[PropertyStructure_Unit] PSU ON PSU.[ID] = RWO.[AreaID] AND PSU.[Company] = RWO.[Company]
