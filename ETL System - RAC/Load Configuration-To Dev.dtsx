@@ -1,0 +1,1363 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="2/10/2020 11:31:27 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="W10PC0SHE8A"
+  DTS:CreatorName="ANGLICARE-SA\frank.wang"
+  DTS:DTSID="{8684154C-D246-43C2-A8F9-177F29F70DDA}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.1300.371"
+  DTS:LocaleID="3081"
+  DTS:ObjectName="Load Configuration-To Dev"
+  DTS:PackageType="5"
+  DTS:VersionBuild="19"
+  DTS:VersionGUID="{A4E83884-42DD-4E3C-8A61-031354F02736}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Benchmark parsing]"
+      DTS:CreationName="EXCEL"
+      DTS:DTSID="{E492CE05-B073-4D8E-BFB7-1C3B01292280}"
+      DTS:ObjectName="Benchmark parsing">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\fstorage4\ASAIntegration\RAC\Benchmark parsing.xlsx;Extended Properties=&quot;Excel 12.0 XML;HDR=YES&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Configuration]"
+      DTS:CreationName="EXCEL"
+      DTS:DTSID="{EA171407-6AD4-41E2-8112-3E32A2B70C79}"
+      DTS:ObjectName="Configuration">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Provider=Microsoft.ACE.OLEDB.12.0;Data Source=\\fstorage4\ASAIntegration\RAC\Configuration.xlsx;Extended Properties=&quot;EXCEL 12.0 XML;HDR=YES&quot;;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[devsql-1\whouse.DWHB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{9C27304E-A601-4537-9A0F-02118E2B475D}"
+      DTS:ObjectName="devsql-1\whouse.DWHB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[devsql-1\whouse.DWHF]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{1F2A8EC2-95E5-4DF1-B54D-B79103547644}"
+      DTS:ObjectName="devsql-1\whouse.DWHF">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=devsql-1\whouse;Initial Catalog=DWHF;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Load Benchmark"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{076A9D60-4A66-4512-9648-B1EE4128F40C}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load Benchmark">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Load Benchmark\Data Flow Task"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{5EE571D9-1233-42D5-94C2-8404434DBBF6}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Data Flow Task"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Load Benchmark\Data Flow Task\Excel Source"
+                  componentClassID="Microsoft.ExcelSource"
+                  contactInfo="Excel Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                  description="Excel Source"
+                  name="Excel Source"
+                  usesDispositions="true"
+                  version="1">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">Destination$</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">0</property>
+                    <property
+                      dataType="System.String"
+                      description="The mapping from parameters in the SQL command to variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Benchmark\Data Flow Task\Excel Source.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[Benchmark parsing]"
+                      connectionManagerRefId="Package.ConnectionManagers[Benchmark parsing]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output]"
+                      name="Excel Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Site]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Site]"
+                          length="255"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Site]"
+                          name="Site"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[DisplayDate]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[DisplayDate]"
+                          length="255"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[DisplayDate]"
+                          name="DisplayDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Actual]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Actual]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Actual]"
+                          name="Actual"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Budget]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Budget]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Budget]"
+                          name="Budget"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Bchmark]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Bchmark]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Bchmark]"
+                          name="Bchmark"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[SA Avg]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[SA Avg]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[SA Avg]"
+                          name="SA Avg"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Nat Avg]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Nat Avg]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Nat Avg]"
+                          name="Nat Avg"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Top Qtr]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Top Qtr]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Top Qtr]"
+                          name="Top Qtr"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Benchmark_report_key]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Benchmark_report_key]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Benchmark_report_key]"
+                          name="Benchmark_report_key"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[DisplayOrder]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[DisplayOrder]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[DisplayOrder]"
+                          name="DisplayOrder"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Site]"
+                          dataType="wstr"
+                          length="255"
+                          name="Site" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[DisplayDate]"
+                          dataType="wstr"
+                          length="255"
+                          name="DisplayDate" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Actual]"
+                          dataType="r8"
+                          name="Actual" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Budget]"
+                          dataType="r8"
+                          name="Budget" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Bchmark]"
+                          dataType="r8"
+                          name="Bchmark" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[SA Avg]"
+                          dataType="r8"
+                          name="SA Avg" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Nat Avg]"
+                          dataType="r8"
+                          name="Nat Avg" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Top Qtr]"
+                          dataType="r8"
+                          name="Top Qtr" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[Benchmark_report_key]"
+                          dataType="r8"
+                          name="Benchmark_report_key" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].ExternalColumns[DisplayOrder]"
+                          dataType="r8"
+                          name="DisplayOrder" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output]"
+                      isErrorOut="true"
+                      name="Excel Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Benchmark_report_key]"
+                          dataType="r8"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Benchmark_report_key]"
+                          name="Benchmark_report_key" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Site]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Site]"
+                          name="Site" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[DisplayDate]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[DisplayDate]"
+                          name="DisplayDate" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[DisplayOrder]"
+                          dataType="r8"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[DisplayOrder]"
+                          name="DisplayOrder" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Actual]"
+                          dataType="r8"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Actual]"
+                          name="Actual" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Budget]"
+                          dataType="r8"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Budget]"
+                          name="Budget" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Bchmark]"
+                          dataType="r8"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Bchmark]"
+                          name="Bchmark" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[SA Avg]"
+                          dataType="r8"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[SA Avg]"
+                          name="SA Avg" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Nat Avg]"
+                          dataType="r8"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Nat Avg]"
+                          name="Nat Avg" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Top Qtr]"
+                          dataType="r8"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[Top Qtr]"
+                          name="Top Qtr" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="OLE DB Destination"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[rac].[Benchmark_report]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[devsql-1\whouse.DWHF]"
+                      connectionManagerRefId="Package.ConnectionManagers[devsql-1\whouse.DWHF]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[DisplayDate]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="DisplayDate"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DisplayDate]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[DisplayDate]" />
+                        <inputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Actual]"
+                          cachedDataType="r8"
+                          cachedName="Actual"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Actual]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Actual]" />
+                        <inputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Budget]"
+                          cachedDataType="r8"
+                          cachedName="Budget"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Budget]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Budget]" />
+                        <inputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Bchmark]"
+                          cachedDataType="r8"
+                          cachedName="Bchmark"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Bchmark]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Bchmark]" />
+                        <inputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[SA Avg]"
+                          cachedDataType="r8"
+                          cachedName="SA Avg"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[SA Avg]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[SA Avg]" />
+                        <inputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Nat Avg]"
+                          cachedDataType="r8"
+                          cachedName="Nat Avg"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Nat Avg]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Nat Avg]" />
+                        <inputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Top Qtr]"
+                          cachedDataType="r8"
+                          cachedName="Top Qtr"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Top Qtr]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Top Qtr]" />
+                        <inputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Benchmark_report_key]"
+                          cachedDataType="r8"
+                          cachedName="Benchmark_report_key"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Benchmark_report_key]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Benchmark_report_key]" />
+                        <inputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Site]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Site"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Site]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[Site]" />
+                        <inputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[DisplayOrder]"
+                          cachedDataType="r8"
+                          cachedName="DisplayOrder"
+                          externalMetadataColumnId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DisplayOrder]"
+                          lineageId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output].Columns[DisplayOrder]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Benchmark_report_key]"
+                          dataType="i4"
+                          name="Benchmark_report_key" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DisplayDate]"
+                          dataType="wstr"
+                          length="50"
+                          name="DisplayDate" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Actual]"
+                          dataType="numeric"
+                          name="Actual"
+                          precision="38"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Budget]"
+                          dataType="numeric"
+                          name="Budget"
+                          precision="38"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Bchmark]"
+                          dataType="numeric"
+                          name="Bchmark"
+                          precision="38"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[SA Avg]"
+                          dataType="numeric"
+                          name="SA Avg"
+                          precision="38"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Nat Avg]"
+                          dataType="numeric"
+                          name="Nat Avg"
+                          precision="38"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Top Qtr]"
+                          dataType="numeric"
+                          name="Top Qtr"
+                          precision="38"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Site]"
+                          dataType="wstr"
+                          length="100"
+                          name="Site" />
+                        <externalMetadataColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[DisplayOrder]"
+                          dataType="i4"
+                          name="DisplayOrder" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Load Benchmark\Data Flow Task.Paths[Excel Source Output]"
+                  endId="Package\Load Benchmark\Data Flow Task\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Excel Source Output"
+                  startId="Package\Load Benchmark\Data Flow Task\Excel Source.Outputs[Excel Source Output]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Benchmark\Execute SQL Task"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{6E30F2E2-90F3-4975-BB9E-E7DB1AD5E66E}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Execute SQL Task"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{1F2A8EC2-95E5-4DF1-B54D-B79103547644}"
+              SQLTask:SqlStatementSource="truncate table dwhf.rac.[Benchmark_report];" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Benchmark.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{AA317787-6D35-4658-A302-94239975EDE6}"
+          DTS:From="Package\Load Benchmark\Execute SQL Task"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Load Benchmark\Data Flow Task" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load Configuration"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{8FC76E71-1C26-4525-AEDA-4DEC09493023}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load Configuration">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Load Configuration\Load Configuration"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{29078B40-A750-412D-B255-877E9F96A998}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load Configuration"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Load Configuration\Load Configuration\Excel Source"
+                  componentClassID="Microsoft.ExcelSource"
+                  contactInfo="Excel Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                  description="Excel Source"
+                  name="Excel Source"
+                  usesDispositions="true"
+                  version="1">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">ConfigurationForSummary$</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">0</property>
+                    <property
+                      dataType="System.String"
+                      description="The mapping from parameters in the SQL command to variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Configuration\Load Configuration\Excel Source.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[Configuration]"
+                      connectionManagerRefId="Package.ConnectionManagers[Configuration]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output]"
+                      name="Excel Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Original_Role_Type]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Original_Role_Type]"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Original_Role_Type]"
+                          name="Original_Role_Type"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section1]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section1]"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section1]"
+                          name="Section1"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section1_Order]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section1_Order]"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section1_Order]"
+                          name="Section1_Order"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section2]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section2]"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section2]"
+                          name="Section2"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section2_Order]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section2_Order]"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section2_Order]"
+                          name="Section2_Order"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section3]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section3]"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section3]"
+                          name="Section3"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section3_Order]"
+                          dataType="r8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section3_Order]"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section3_Order]"
+                          name="Section3_Order"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Note]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Note]"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Note]"
+                          name="Note"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Original_Role_Type]"
+                          dataType="wstr"
+                          length="255"
+                          name="Original_Role_Type" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section1]"
+                          dataType="wstr"
+                          length="255"
+                          name="Section1" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section1_Order]"
+                          dataType="wstr"
+                          length="255"
+                          name="Section1_Order" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section2]"
+                          dataType="wstr"
+                          length="255"
+                          name="Section2" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section2_Order]"
+                          dataType="r8"
+                          name="Section2_Order" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section3]"
+                          dataType="wstr"
+                          length="255"
+                          name="Section3" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Section3_Order]"
+                          dataType="r8"
+                          name="Section3_Order" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].ExternalColumns[Note]"
+                          dataType="wstr"
+                          length="255"
+                          name="Note" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output]"
+                      isErrorOut="true"
+                      name="Excel Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Original_Role_Type]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Original_Role_Type]"
+                          name="Original_Role_Type" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section1]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section1]"
+                          name="Section1" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section1_Order]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section1_Order]"
+                          name="Section1_Order" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section2]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section2]"
+                          name="Section2" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section2_Order]"
+                          dataType="r8"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section2_Order]"
+                          name="Section2_Order" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section3]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section3]"
+                          name="Section3" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section3_Order]"
+                          dataType="r8"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Section3_Order]"
+                          name="Section3_Order" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Note]"
+                          dataType="wstr"
+                          length="255"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[Note]"
+                          name="Note" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Configuration\Load Configuration\OLE DB Destination"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="OLE DB Destination"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[management].[RAC_BenchMark_Config]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">0</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[devsql-1\whouse.DWHB]"
+                      connectionManagerRefId="Package.ConnectionManagers[devsql-1\whouse.DWHB]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Original_Role_Type]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Original_Role_Type"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Original_Role_Type]"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Original_Role_Type]" />
+                        <inputColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Section1]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Section1"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section1]"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section1]" />
+                        <inputColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Section1_Order]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Section1_Order"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section1_Order]"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section1_Order]" />
+                        <inputColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Section2]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Section2"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section2]"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section2]" />
+                        <inputColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Section2_Order]"
+                          cachedDataType="r8"
+                          cachedName="Section2_Order"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section2_Order]"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section2_Order]" />
+                        <inputColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Section3]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Section3"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section3]"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section3]" />
+                        <inputColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Section3_Order]"
+                          cachedDataType="r8"
+                          cachedName="Section3_Order"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section3_Order]"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Section3_Order]" />
+                        <inputColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Note]"
+                          cachedDataType="wstr"
+                          cachedLength="255"
+                          cachedName="Note"
+                          externalMetadataColumnId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Note]"
+                          lineageId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output].Columns[Note]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[RAC_BenchMark_Config_Key]"
+                          dataType="i4"
+                          name="RAC_BenchMark_Config_Key" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Original_Role_Type]"
+                          codePage="1252"
+                          dataType="str"
+                          length="300"
+                          name="Original_Role_Type" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section1]"
+                          codePage="1252"
+                          dataType="str"
+                          length="300"
+                          name="Section1" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section1_Order]"
+                          dataType="i4"
+                          name="Section1_Order" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section2]"
+                          codePage="1252"
+                          dataType="str"
+                          length="300"
+                          name="Section2" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section2_Order]"
+                          dataType="i4"
+                          name="Section2_Order" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section3]"
+                          codePage="1252"
+                          dataType="str"
+                          length="300"
+                          name="Section3" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Section3_Order]"
+                          dataType="i4"
+                          name="Section3_Order" />
+                        <externalMetadataColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Note]"
+                          codePage="1252"
+                          dataType="str"
+                          length="500"
+                          name="Note" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Configuration\Load Configuration\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Configuration\Load Configuration\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Configuration\Load Configuration\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Load Configuration\Load Configuration.Paths[Excel Source Output]"
+                  endId="Package\Load Configuration\Load Configuration\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Excel Source Output"
+                  startId="Package\Load Configuration\Load Configuration\Excel Source.Outputs[Excel Source Output]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Configuration\Remove Empty Original Role Type"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{21975a3b-df59-4ae1-9267-40aea99c200f}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Remove Empty Original Role Type"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{9C27304E-A601-4537-9A0F-02118E2B475D}"
+              SQLTask:SqlStatementSource="delete from [management].[RAC_BenchMark_Config] where Original_Role_Type is null" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Configuration.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{E1CE3CF6-2046-4F70-8FF0-BB3C5202FCC3}"
+          DTS:From="Package\Load Configuration\Load Configuration"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Load Configuration\Remove Empty Original Role Type" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="168,42"
+          Id="Package\Load Configuration\Load Configuration"
+          TopLeft="81.5,9" />
+        <EdgeLayout
+          Id="Package\Load Configuration.PrecedenceConstraints[Constraint]"
+          TopLeft="166,51">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,61"
+              Start="0,0"
+              End="0,53.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,53.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="240,42"
+          Id="Package\Load Configuration\Remove Empty Original Role Type"
+          TopLeft="46.5,112" />
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="368,210"
+          Size="368,253"
+          Id="Package\Load Configuration"
+          TopLeft="224,40" />
+        <NodeLayout
+          Size="151,42"
+          Id="Package\Load Benchmark\Data Flow Task"
+          TopLeft="99,116" />
+        <NodeLayout
+          Size="163,42"
+          Id="Package\Load Benchmark\Execute SQL Task"
+          TopLeft="129,36" />
+        <EdgeLayout
+          Id="Package\Load Benchmark.PrecedenceConstraints[Constraint]"
+          TopLeft="210.5,78">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-36,38"
+              Start="0,0"
+              End="-36,30.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,15"
+                    Point2="0,19"
+                    Point3="-4,19" />
+                  <mssgle:LineSegment
+                    End="-32,19" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-32,19"
+                    Point2="-36,19"
+                    Point3="-36,23" />
+                  <mssgle:LineSegment
+                    End="-36,30.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="362,213"
+          Size="362,256"
+          Id="Package\Load Benchmark"
+          TopLeft="236,403" />
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Load Configuration\Load Configuration">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="171,42"
+          Id="Package\Load Configuration\Load Configuration\OLE DB Destination"
+          TopLeft="181,338" />
+        <NodeLayout
+          Size="139,42"
+          Id="Package\Load Configuration\Load Configuration\Excel Source"
+          TopLeft="224,187" />
+        <EdgeLayout
+          Id="Package\Load Configuration\Load Configuration.Paths[Excel Source Output]"
+          TopLeft="293.5,229">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-27,109"
+              Start="0,0"
+              End="-27,101.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,50.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,50.5"
+                    Point2="0,54.5"
+                    Point3="-4,54.5" />
+                  <mssgle:LineSegment
+                    End="-23,54.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-23,54.5"
+                    Point2="-27,54.5"
+                    Point3="-27,58.5" />
+                  <mssgle:LineSegment
+                    End="-27,101.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Configuration\Load Configuration\Excel Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Configuration\Load Configuration\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Load Benchmark\Data Flow Task">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="139,42"
+          Id="Package\Load Benchmark\Data Flow Task\Excel Source"
+          TopLeft="273,220" />
+        <NodeLayout
+          Size="171,42"
+          Id="Package\Load Benchmark\Data Flow Task\OLE DB Destination"
+          TopLeft="263,390" />
+        <EdgeLayout
+          Id="Package\Load Benchmark\Data Flow Task.Paths[Excel Source Output]"
+          TopLeft="345.5,262">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,128"
+              Start="0,0"
+              End="0,120.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,120.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Benchmark\Data Flow Task\Excel Source">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Benchmark\Data Flow Task\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
