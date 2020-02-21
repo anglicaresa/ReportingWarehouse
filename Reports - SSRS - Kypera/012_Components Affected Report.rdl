@@ -34,6 +34,9 @@
           <QueryParameter Name="@Component">
             <Value>=Parameters!Component.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@Status">
+            <Value>=Parameters!Status.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT
   RWO.[ID] AS [Reference],
@@ -63,8 +66,13 @@
 	(SELECT LookupValues.[Name] FROM [dbo].[HomeTeam_LookupValues] LookupValues WHERE LookupValues.[ID] = RWO.[Classification3] AND LookupValues.[Company] = RWO.[Company] AND LookupValues.[Lookup] =  27) AS [Analysis],
 	RWO.EstimatedCost,
 	(SELECT MIN(i.CreatedOn) FROM dbo.Invoice i inner join dbo.Repairs_WorksOrder_InvoicesJoin j on j.Invoice = i.ID where j.WorksOrder = RWO.ID) AS [Invoice logged date]
+	,dbo.HomeTeam_Status.Name as Status
 FROM
   [dbo].[Repairs_WorksOrder] RWO
+  LEFT JOIN dbo.HomeTeam_Status
+          ON dbo.HomeTeam_Status.Company =RWO.Company
+          AND dbo.HomeTeam_Status.ID = RWO.STATUS
+          AND dbo.HomeTeam_Status.HomeTeamModule = 10
   LEFT JOIN [dbo].[PropertyStructure_Unit] PSU ON PSU.[ID] = RWO.[AreaID] AND PSU.[Company] = RWO.[Company]
   LEFT JOIN [dbo].[PropertyStructure_BlockUnit] PSBU ON PSBU.[Unit] = PSU.[ID] AND PSBU.[Company] = PSU.[Company]
   LEFT JOIN [dbo].[PropertyStructure_Block] PSB ON PSB.[Code] = PSBU.[Block] AND PSB.[Company] = PSBU.[Company]
@@ -85,6 +93,7 @@ WHERE
     ELSE 'No'
   END) IN (@UpdateComponent)
   AND (CT.[Name] IS NULL OR CT.[Name] IN (@Component))
+  AND (dbo.HomeTeam_Status.Name IN (@Status))
 ORDER BY
   RWO.[AreaID]</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
@@ -185,6 +194,10 @@ ORDER BY
         <Field Name="Invoice_logged_date">
           <DataField>Invoice logged date</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Status">
+          <DataField>Status</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -522,6 +535,24 @@ AND PSC.Company = 1</CommandText>
       <Fields>
         <Field Name="Component">
           <DataField>Component</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Status">
+      <Query>
+        <DataSourceName>Kypera_Test</DataSourceName>
+        <CommandText>SELECT distinct dbo.HomeTeam_Status.Name 
+FROM
+  [dbo].[Repairs_WorksOrder] RWO
+  LEFT JOIN dbo.HomeTeam_Status
+          ON dbo.HomeTeam_Status.Company =RWO.Company
+          AND dbo.HomeTeam_Status.ID = RWO.STATUS
+          AND dbo.HomeTeam_Status.HomeTeamModule = 10</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Name">
+          <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -2250,7 +2281,7 @@ AND PSC.Company = 1</CommandText>
                                   <Value>=Fields!Invoice_logged_date.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
-                                    <Format>d</Format>
+                                    <Format>d/MM/yyyy</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2323,7 +2354,7 @@ AND PSC.Company = 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Flat.Value</Value>
+                                  <Value />
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -2358,7 +2389,7 @@ AND PSC.Company = 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Number.Value</Value>
+                                  <Value />
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -2393,7 +2424,7 @@ AND PSC.Company = 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Street.Value</Value>
+                                  <Value />
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -2428,7 +2459,7 @@ AND PSC.Company = 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Town_Suburb.Value</Value>
+                                  <Value />
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -2463,7 +2494,7 @@ AND PSC.Company = 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Scheme.Value</Value>
+                                  <Value />
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -2498,7 +2529,7 @@ AND PSC.Company = 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Block.Value</Value>
+                                  <Value />
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -2533,7 +2564,7 @@ AND PSC.Company = 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Program.Value</Value>
+                                  <Value />
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -4490,6 +4521,19 @@ AND PSC.Company = 1</CommandText>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
+    <ReportParameter Name="Status">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Status</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Status</DataSetName>
+          <ValueField>Name</ValueField>
+          <LabelField>Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
@@ -4530,6 +4574,11 @@ AND PSC.Company = 1</CommandText>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>3</RowIndex>
           <ParameterName>Component</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>3</RowIndex>
+          <ParameterName>Status</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
