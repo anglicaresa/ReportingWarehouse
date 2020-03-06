@@ -54,7 +54,7 @@
   udfv47.[Value] AS [C01Date],  CAST(udfv48.[Value] AS money) AS [C01Amount],  udfv49.[Value] AS [C01Claimed],
   udfv50.[Value] AS [C02Date],  CAST(udfv51.[Value] AS money) AS [C02Amount],  udfv52.[Value] AS [C02Claimed],
   udfv53.[Value] AS [C03Date],  CAST(udfv54.[Value] AS money) AS [C03Amount],  udfv55.[Value] AS [C03Claimed],
-  udfv56.[Value] AS [F04BHGDate],CAST(udfv58.[Value] AS money) AS [F04BHGAmount], udfv57.[Value] AS [F04BHGClaimed],
+  udfv41.[Value] AS [F04BHGDate],CAST(udfv42.[Value] AS money) AS [F04BHGAmount], udfv43.[Value] AS [F04BHGClaimed],
    udfv56.[Value] AS [F04 (2) BHGDate],CAST(udfv58.[Value] AS money) AS [F04 (2) BHGAmount], udfv57.[Value] AS [F04 (2) BHGClaimed]
 FROM [dbo].[Case_Management_Case] AS cmc
 -- HSP ID
@@ -173,12 +173,7 @@ FROM [dbo].[Case_Management_Case] AS cmc
   LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv39 ON udfv39.[ObjectReference] = cmc.[ID] AND udfv39.[Company] = cmc.[Company] AND udfv39.[UserDefinedField] = 292
 -- F03 Renew/Extend Lease2 Claimed
   LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv40 ON udfv40.[ObjectReference] = cmc.[ID] AND udfv40.[Company] = cmc.[Company] AND udfv40.[UserDefinedField] = 293
--- F04 BHG Date
-  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv41 ON udfv41.[ObjectReference] = cmc.[ID] AND udfv41.[Company] = cmc.[Company] AND udfv41.[UserDefinedField] = 294
--- F04 BHG $ Amount
-  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv42 ON udfv42.[ObjectReference] = cmc.[ID] AND udfv42.[Company] = cmc.[Company] AND udfv42.[UserDefinedField] = 295
--- F04 BHG Claimed
-  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv43 ON udfv43.[ObjectReference] = cmc.[ID] AND udfv43.[Company] = cmc.[Company] AND udfv43.[UserDefinedField] = 296
+
 -- F04A BHG Admin Date
   LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv44 ON udfv44.[ObjectReference] = cmc.[ID] AND udfv44.[Company] = cmc.[Company] AND udfv44.[UserDefinedField] = 297
 -- F04A BHG Admin $ Amount
@@ -212,6 +207,12 @@ FROM [dbo].[Case_Management_Case] AS cmc
 -- F04 (2) BHG $ Amount
  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv58 ON udfv58.[ObjectReference] = cmc.[ID] AND udfv58.[Company] = cmc.[Company] AND udfv58.[UserDefinedField] = 382
 
+ -- F04 BHG Date
+  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv41 ON udfv41.[ObjectReference] = cmc.[ID] AND udfv41.[Company] = cmc.[Company] AND udfv41.[UserDefinedField] = 294
+-- F04 BHG $ Amount
+  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv42 ON udfv42.[ObjectReference] = cmc.[ID] AND udfv42.[Company] = cmc.[Company] AND udfv42.[UserDefinedField] = 295
+-- F04 BHG Claimed
+  LEFT JOIN [dbo].[Case_Management_Case_UserDefinedFields_Values] AS udfv43 ON udfv43.[ObjectReference] = cmc.[ID] AND udfv43.[Company] = cmc.[Company] AND udfv43.[UserDefinedField] = 296
 
 
 WHERE cmc.[Company] = 1 AND udfv1.[Value] IS NOT NULL
@@ -238,6 +239,7 @@ WHERE cmc.[Company] = 1 AND udfv1.[Value] IS NOT NULL
     OR ((@ClaimsFromDate IS NULL OR convert(DATETIME, udfv55.[Value], 103) &gt;= @ClaimsFromDate) AND (@ClaimsToDate IS NULL OR convert(DATETIME, udfv55.[Value], 103) &lt;= @ClaimsToDate))
     OR ((@ClaimsFromDate IS NULL OR convert(DATETIME, udfv56.[Value], 103) &gt;= @ClaimsFromDate) AND (@ClaimsToDate IS NULL OR convert(DATETIME, udfv56.[Value], 103) &lt;= @ClaimsToDate))
     OR ((@ClaimsFromDate IS NULL OR convert(DATETIME, udfv57.[Value], 103) &gt;= @ClaimsFromDate) AND (@ClaimsToDate IS NULL OR convert(DATETIME, udfv57.[Value], 103) &lt;= @ClaimsToDate))
+    
   )</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
