@@ -3,10 +3,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="KH_test">
-      <ConnectionProperties>
-        <DataProvider>SQL</DataProvider>
-        <ConnectString>Data Source=appsql-4\prod;Initial Catalog=Anglicare</ConnectString>
-      </ConnectionProperties>
+      <DataSourceReference>KH_test</DataSourceReference>
       <rd:SecurityType>Integrated</rd:SecurityType>
       <rd:DataSourceID>76efc458-cfc6-4958-82bd-ddcd99f1104a</rd:DataSourceID>
     </DataSource>
@@ -110,7 +107,8 @@ ISNULL(OCRL3.[Amount], 0) as [Amount_of_Additional_Levies],
 	--New Added: 
 	ISNULL(ooudpaa.Value, 0) as [Payment Arrangement amount],
 	cra.CalculatedCRAEntitlement,
-	psu.RentOfficer
+	psu.RentOfficer,
+	puudfv.Value AS [Previous Market Rent]
 FROM
     Occupancies_Occupancy oo
     INNER JOIN Occupancies_People op ON oo.Company = op.Company AND oo.id = op.Occupancy AND oo.CurrentOccupancy = 1 AND oo.[Type] &lt;&gt; 99 AND oo.Company = 1
@@ -165,6 +163,9 @@ LEFT JOIN
 	) as tt on t.Occupancy = tt.Occupancy and t.ReviewDate = tt.ReviewDate
 	group by t.Occupancy
 ) as cra on oo.id = cra.Occupancy
+	--Added by Eric Wang 20/08/2020 for [Previous Market Rent]
+	LEFT JOIN [PropertyStructure_Unit_UserDefinedFields_Values] puudfv ON oo.Company = puudfv.Company AND oo.unit = puudfv.ObjectReference 
+	AND puudfv.UserDefinedField = 511 --Previous Market Rent
 
 
 WHERE
@@ -333,6 +334,10 @@ ORDER BY
         <Field Name="CalculatedCRAEntitlement">
           <DataField>CalculatedCRAEntitlement</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Previous_Market_Rent">
+          <DataField>Previous Market Rent</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -563,7 +568,7 @@ and dd.Name in (@Scheme)</CommandText>
                   <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.29917cm</Width>
+                  <Width>3.63771cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>4.93417cm</Width>
@@ -1361,14 +1366,14 @@ and dd.Name in (@Scheme)</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox38">
+                        <Textbox Name="Textbox106">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Last Main Rent Increase</Value>
+                                  <Value>Previous Market Rent</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                     <FontWeight>Bold</FontWeight>
@@ -1381,7 +1386,7 @@ and dd.Name in (@Scheme)</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox38</rd:DefaultName>
+                          <rd:DefaultName>Textbox106</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -3551,17 +3556,16 @@ and dd.Name in (@Scheme)</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="LastMainRentIncrease">
+                        <Textbox Name="Previous_Market_Rent">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!LastMainRentIncrease.Value</Value>
+                                  <Value>=Fields!Previous_Market_Rent.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
-                                    <Format>d/MM/yyyy</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3570,7 +3574,7 @@ and dd.Name in (@Scheme)</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>LastMainRentIncrease</rd:DefaultName>
+                          <rd:DefaultName>Previous_Market_Rent</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -5112,7 +5116,7 @@ and dd.Name in (@Scheme)</CommandText>
             <Top>0.55493cm</Top>
             <Left>0.49565cm</Left>
             <Height>1.2cm</Height>
-            <Width>174.00348cm</Width>
+            <Width>173.34202cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
