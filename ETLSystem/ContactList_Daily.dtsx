@@ -12,8 +12,8 @@
   DTS:ObjectName="ContactList_Daily"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="17"
-  DTS:VersionGUID="{62C790B7-F276-408C-A107-175DE6CA1D2B}">
+  DTS:VersionBuild="18"
+  DTS:VersionGUID="{B2A9F294-785E-4466-9AD7-961EB97EF1B0}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -443,7 +443,23 @@
                   dataType="System.String"
                   description="The SQL command to be executed."
                   name="SqlCommand"
-                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">select DISTINCT 
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91">with cte(Person_ID,Communication_Point_Type_Code,Creation_Date,Communication_Point_Number) as
+(
+	SELECT t.* FROM 
+	(SELECT pcpt.Person_ID ,pcpt .Communication_Point_Type_Code, (pcp.Creation_Date),pcpt.Communication_Point_Number 
+	FROM 
+	Person_Communication_Point pcp inner join Person_Comm_Point_Type pcpt on pcp.Person_ID = pcpt .Person_ID and pcp .Communication_Point_Number =pcpt .Communication_Point_Number 
+	) as t
+	INNER JOIN (
+	
+		SELECT pcpt.Person_ID ,pcpt .Communication_Point_Type_Code, MAX(pcp.Creation_Date) as Creation_Date
+		FROM 
+		Person_Communication_Point pcp inner join Person_Comm_Point_Type pcpt on pcp.Person_ID = pcpt .Person_ID and pcp .Communication_Point_Number =pcpt .Communication_Point_Number 
+		GROUP BY pcpt.Person_ID ,pcpt .Communication_Point_Type_Code 
+	) as tt
+	on  t.Person_ID = tt .Person_ID and t.Communication_Point_Type_Code =tt.Communication_Point_Type_Code and t.Creation_Date= tt.Creation_Date
+)
+select DISTINCT 
 sd.Client_ID,
 p.Preferred_Name,p.Given_Names,p.Last_Name,p.Salutation,
 landline.Communication_Point_Number as landline,
@@ -456,14 +472,16 @@ fp.Description as program
 from Service_Delivery sd
 left join Person p on sd.Client_ID = p.Person_ID 
 left join Client c on sd.Client_ID = c.Client_ID 
-left join Person_Comm_Point_Type as landline on p.Person_ID = landline.Person_ID and landline.Communication_Point_Type_Code = 1
-left join Person_Comm_Point_Type as mobile on p.Person_ID = mobile.Person_ID and mobile.Communication_Point_Type_Code = 3
-left join Person_Comm_Point_Type as email on p.Person_ID = email.Person_ID and email.Communication_Point_Type_Code = 5
+left join cte as landline on p.Person_ID = landline.Person_ID and landline.Communication_Point_Type_Code = 1
+left join cte as mobile on p.Person_ID = mobile.Person_ID and mobile.Communication_Point_Type_Code = 3
+left join cte as email on p.Person_ID = email.Person_ID and email.Communication_Point_Type_Code = 5
 left join Funding_Program fp on sd.Funding_Prog_Code = fp.Funding_Prog_Code 
 --left join Service_Provision sp on sd.Service_Type_Code = sp.Service_Type_Code 
 --left join Centre c2 on c.Centre_ID = c2.Centre_ID 
 --left join Organisation o2 on c.Centre_ID =sd.Organisation_ID 
-where (sd.To_Date &gt; getdate() or sd.To_Date is null)</property>
+where (sd.To_Date &gt; getdate() or sd.To_Date is null)
+
+--and o2.Organisation_Name is not null</property>
                 <property
                   dataType="System.String"
                   description="The variable that contains the SQL command to be executed."
