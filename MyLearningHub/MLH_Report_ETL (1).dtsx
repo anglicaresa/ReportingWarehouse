@@ -11,8 +11,8 @@
   DTS:LocaleID="3081"
   DTS:ObjectName="MLH_Report_ETL"
   DTS:PackageType="5"
-  DTS:VersionBuild="74"
-  DTS:VersionGUID="{7E32A295-CAB6-4B4C-B44D-E748F7D85750}">
+  DTS:VersionBuild="77"
+  DTS:VersionGUID="{47D161A2-36F7-4E6F-8506-DDD880726EEC}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -558,6 +558,22 @@
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\Generate conform fact tables in DWHB\conform_mlh mlh_grouppath_exception_fact"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{8A44CF44-0B0D-42E8-8978-9E40637DCBE1}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="conform_mlh mlh_grouppath_exception_fact"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{BE53396F-3A9E-4CB7-863E-D9DE556F8ABC}"
+              SQLTask:SqlStatementSource="-- insert into dwhb conform table&#xA;insert into [DWHB].[conform_mlh].[mlh_grouppath_exception_fact]&#xA;-- use ID and Name that have different Group Paths (compared against path name length)&#xA;select t1.[External ID]&#xA;--, t1.[Group Path]&#xA;, t1.[First Name]&#xA;, t1.[Last Name]&#xA;, t1.[Username]&#xA;, t1.[Account ID]&#xA;, t1.groupPathLength_max&#xA;, t2.groupPathLength_min&#xA;from&#xA;(&#xA;select [External ID]&#xA;--, [Group Path]&#xA;, [First Name]&#xA;, [Last Name]&#xA;, [Username]&#xA;, [Account ID]&#xA;, max(len([Group Path])) as groupPathLength_max&#xA;from [DWHB].[extract_mlh].[online] &#xA;--where [External ID] like 2372&#xA;group by [External ID]&#xA;, [First Name]&#xA;, [Last Name]&#xA;, [Username]&#xA;, [Account ID]&#xA;--order by [External ID] asc&#xA;) t1&#xA;inner join&#xA;&#x9;(&#xA;&#x9;select [External ID]&#xA;&#x9;, [First Name]&#xA;&#x9;, [Last Name]&#xA;&#x9;, min(len([Group Path])) as groupPathLength_min&#xA;&#x9;from [DWHB].[extract_mlh].[online]&#xA;&#x9;--where [External ID] like 2311&#xA;&#x9;group by [External ID]&#xA;&#x9;, [First Name]&#xA;&#x9;, [Last Name]&#xA;&#x9;) t2&#xA;on t1.[external id] = t2.[external id] &#xA;and t1.[First Name] = t2.[First Name]&#xA;and t1.[Last Name] = t2.[Last Name]&#xA;and t1.groupPathLength_max &lt;&gt; t2.groupPathLength_min&#xA;where t1.[External ID] not like ''&#xA;order by t1.[External ID]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\Generate conform fact tables in DWHB\conform_mlh mlh_online_fact"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
@@ -608,6 +624,14 @@
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 1"
           DTS:To="Package\Generate conform fact tables in DWHB\conform_mlh mlh_online_volunteer_email" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Generate conform fact tables in DWHB.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{B411F72B-5362-45A5-ABDB-DBE85E2C7F66}"
+          DTS:From="Package\Generate conform fact tables in DWHB\conform_mlh mlh_online_volunteer_email"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\Generate conform fact tables in DWHB\conform_mlh mlh_grouppath_exception_fact" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
     <DTS:Executable
@@ -3153,17 +3177,17 @@
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\truncate and copy DWHB tables to DWHF"
+      DTS:refId="Package\truncate and copy from DWHB tables to DWHF"
       DTS:CreationName="STOCK:SEQUENCE"
       DTS:Description="Sequence Container"
       DTS:DTSID="{6EAE1642-9274-4BB9-ABC0-6B58F242732D}"
       DTS:ExecutableType="STOCK:SEQUENCE"
       DTS:LocaleID="-1"
-      DTS:ObjectName="truncate and copy DWHB tables to DWHF">
+      DTS:ObjectName="truncate and copy from DWHB tables to DWHF">
       <DTS:Variables />
       <DTS:Executables>
         <DTS:Executable
-          DTS:refId="Package\truncate and copy DWHB tables to DWHF\to dwhf_mlh_mlh_course_online_fact"
+          DTS:refId="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_course_online_fact"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
           DTS:DTSID="{3F7C4873-71DD-41F5-92FF-67E04FAB38AF}"
@@ -3179,7 +3203,7 @@
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
-          DTS:refId="Package\truncate and copy DWHB tables to DWHF\to dwhf_mlh_mlh_course_pastorfuture_fact"
+          DTS:refId="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_course_pastorfuture_fact"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
           DTS:DTSID="{7DD44E6D-4888-4D86-83D3-8E64C721E942}"
@@ -3195,7 +3219,23 @@
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
-          DTS:refId="Package\truncate and copy DWHB tables to DWHF\to dwhf_mlh_online_volunteer_email"
+          DTS:refId="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_grouppath_exception_fact"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{FCF9FDDE-B922-4693-8D03-14CCB9037F22}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="to dwhf_mlh_mlh_grouppath_exception_fact"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{BE53396F-3A9E-4CB7-863E-D9DE556F8ABC}"
+              SQLTask:SqlStatementSource="-- copy from dwhb conform table to dwhf fact table&#xA;truncate table [dwhf].[mlh].[mlh_grouppath_exception_fact]&#xA;&#xA;insert into [dwhf].[mlh].[mlh_grouppath_exception_fact]&#xA;select * from [DWHB].[conform_mlh].[mlh_grouppath_exception_fact]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_online_volunteer_email"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
           DTS:DTSID="{A5FBE4CF-8161-4052-8C5E-EF98A090B132}"
@@ -3213,38 +3253,46 @@
       </DTS:Executables>
       <DTS:PrecedenceConstraints>
         <DTS:PrecedenceConstraint
-          DTS:refId="Package\truncate and copy DWHB tables to DWHF.PrecedenceConstraints[Constraint]"
+          DTS:refId="Package\truncate and copy from DWHB tables to DWHF.PrecedenceConstraints[Constraint]"
           DTS:CreationName=""
           DTS:DTSID="{46D4ACE2-919B-4D7B-B319-695C32E9554A}"
-          DTS:From="Package\truncate and copy DWHB tables to DWHF\to dwhf_mlh_mlh_course_pastorfuture_fact"
+          DTS:From="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_course_pastorfuture_fact"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint"
-          DTS:To="Package\truncate and copy DWHB tables to DWHF\to dwhf_mlh_mlh_course_online_fact" />
+          DTS:To="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_course_online_fact" />
         <DTS:PrecedenceConstraint
-          DTS:refId="Package\truncate and copy DWHB tables to DWHF.PrecedenceConstraints[Constraint 1]"
+          DTS:refId="Package\truncate and copy from DWHB tables to DWHF.PrecedenceConstraints[Constraint 1]"
           DTS:CreationName=""
           DTS:DTSID="{9A117346-B049-4DDB-AA5F-8D85D10E371C}"
-          DTS:From="Package\truncate and copy DWHB tables to DWHF\to dwhf_mlh_mlh_course_online_fact"
+          DTS:From="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_course_online_fact"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 1"
-          DTS:To="Package\truncate and copy DWHB tables to DWHF\to dwhf_mlh_online_volunteer_email" />
+          DTS:To="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_online_volunteer_email" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\truncate and copy from DWHB tables to DWHF.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{A0967541-3BCC-4B31-B278-113A46A64BF7}"
+          DTS:From="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_online_volunteer_email"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_grouppath_exception_fact" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\truncate tables"
+      DTS:refId="Package\truncate Top 6 tables"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Execute SQL Task"
       DTS:DTSID="{08C06027-5165-47B2-AC74-7476AFDDD6FD}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="truncate tables"
+      DTS:ObjectName="truncate Top 6 tables"
       DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
       DTS:ThreadHint="0">
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{BE53396F-3A9E-4CB7-863E-D9DE556F8ABC}"
-          SQLTask:SqlStatementSource="truncate table extract_mlh.classroom;&#xA;truncate table conform_mlh.mlh_course_pastorfuture_fact;&#xA;truncate table conform_mlh.mlh_course_online_fact&#xA;&#xA;---later need to remove&#xA;truncate table extract_mlh.online" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="truncate table extract_mlh.classroom;&#xA;truncate table conform_mlh.mlh_course_pastorfuture_fact;&#xA;truncate table conform_mlh.mlh_course_online_fact&#xA;&#xA;---later need to remove&#xA;truncate table extract_mlh.online&#xA;&#xA;&#xA;truncate table dwhb.conform_mlh.mlh_online_volunteer_email&#xA;&#xA;truncate table&#xA;dwhb.conform_mlh.mlh_grouppath_exception_fact" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
   </DTS:Executables>
@@ -3261,7 +3309,7 @@
       DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
       DTS:CreationName=""
       DTS:DTSID="{BCFA9669-EEAB-48BC-A8F1-81A560D5AE93}"
-      DTS:From="Package\truncate tables"
+      DTS:From="Package\truncate Top 6 tables"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 1"
       DTS:To="Package\load csv from downloadfiles folder to DWHB tables" />
@@ -3272,7 +3320,7 @@
       DTS:From="Package\Generate conform fact tables in DWHB"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 2"
-      DTS:To="Package\truncate and copy DWHB tables to DWHF" />
+      DTS:To="Package\truncate and copy from DWHB tables to DWHF" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -3342,11 +3390,37 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <NodeLayout
+          Size="290,42"
+          Id="Package\Generate conform fact tables in DWHB\conform_mlh mlh_grouppath_exception_fact"
+          TopLeft="48,298" />
+        <EdgeLayout
+          Id="Package\Generate conform fact tables in DWHB.PrecedenceConstraints[Constraint 2]"
+          TopLeft="192,258">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40"
+              Start="0,0"
+              End="0,32.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="389,311"
-          Size="389,354"
+          PanelSize="406,393"
+          Size="406,436"
           Id="Package\Generate conform fact tables in DWHB"
           TopLeft="259,378" />
         <NodeLayout
@@ -3387,12 +3461,12 @@
           Id="Package\load csv from downloadfiles folder to DWHB tables"
           TopLeft="285,103" />
         <NodeLayout
-          Size="173,42"
-          Id="Package\truncate tables"
+          Size="180,42"
+          Id="Package\truncate Top 6 tables"
           TopLeft="370,10" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="454.5,335">
+          TopLeft="458.75,335">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -3414,7 +3488,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="456,52">
+          TopLeft="457.75,52">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -3436,14 +3510,14 @@
         </EdgeLayout>
         <NodeLayout
           Size="285,42"
-          Id="Package\truncate and copy DWHB tables to DWHF\to dwhf_mlh_mlh_course_pastorfuture_fact"
+          Id="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_course_pastorfuture_fact"
           TopLeft="65,15" />
         <NodeLayout
           Size="255,42"
-          Id="Package\truncate and copy DWHB tables to DWHF\to dwhf_mlh_mlh_course_online_fact"
+          Id="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_course_online_fact"
           TopLeft="81,96" />
         <EdgeLayout
-          Id="Package\truncate and copy DWHB tables to DWHF.PrecedenceConstraints[Constraint]"
+          Id="Package\truncate and copy from DWHB tables to DWHF.PrecedenceConstraints[Constraint]"
           TopLeft="208,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
@@ -3466,10 +3540,10 @@
         </EdgeLayout>
         <NodeLayout
           Size="253,42"
-          Id="Package\truncate and copy DWHB tables to DWHF\to dwhf_mlh_online_volunteer_email"
+          Id="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_online_volunteer_email"
           TopLeft="80,194" />
         <EdgeLayout
-          Id="Package\truncate and copy DWHB tables to DWHF.PrecedenceConstraints[Constraint 1]"
+          Id="Package\truncate and copy from DWHB tables to DWHF.PrecedenceConstraints[Constraint 1]"
           TopLeft="207.5,138">
           <EdgeLayout.Curve>
             <mssgle:Curve
@@ -3490,27 +3564,65 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="43"
-          IsExpanded="True"
-          PanelSize="415,287"
-          Size="415,330"
-          Id="Package\truncate and copy DWHB tables to DWHF"
-          TopLeft="250,786" />
+        <NodeLayout
+          Size="290,42"
+          Id="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_grouppath_exception_fact"
+          TopLeft="67,273" />
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="455.5,732">
+          Id="Package\truncate and copy from DWHB tables to DWHF.PrecedenceConstraints[Constraint 2]"
+          TopLeft="209.25,236">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,54"
+              EndConnector="0,37"
               Start="0,0"
-              End="0,46.5">
+              End="0,29.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,46.5" />
+                    End="0,29.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="415,370"
+          Size="415,413"
+          Id="Package\truncate and copy from DWHB tables to DWHF"
+          TopLeft="241,929" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="462,814">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-13.5,115"
+              Start="0,0"
+              End="-13.5,107.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,53.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,53.5"
+                    Point2="0,57.5"
+                    Point3="-4,57.5" />
+                  <mssgle:LineSegment
+                    End="-9.5,57.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-9.5,57.5"
+                    Point2="-13.5,57.5"
+                    Point3="-13.5,61.5" />
+                  <mssgle:LineSegment
+                    End="-13.5,107.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
