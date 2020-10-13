@@ -7,13 +7,13 @@
   DTS:CreatorName="ANGLICARE-SA\jshen"
   DTS:DTSID="{2B825CBA-932C-4FDD-95DA-836890EFCCA6}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="14.0.3002.107"
+  DTS:LastModifiedProductVersion="15.0.1300.371"
   DTS:LocaleID="3081"
   DTS:ObjectName="Conform_RiskMan_Dim - T1M"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="439"
-  DTS:VersionGUID="{16D7C2A2-9A19-4C16-AE0E-30C9F52120F5}">
+  DTS:VersionBuild="443"
+  DTS:VersionGUID="{463DEE5A-4E18-4795-925C-757643C3BA31}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -137,7 +137,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">5/15/2019 9:55:44 AM</DTS:VariableValue>
+        DTS:DataType="7">10/13/2020 10:37:53 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -148,7 +148,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">5/15/2019 9:55:44 AM</DTS:VariableValue>
+        DTS:DataType="7">10/13/2020 10:37:53 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -413,17 +413,17 @@
           </DTS:PrecedenceConstraints>
         </DTS:Executable>
         <DTS:Executable
-          DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue"
+          DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim"
           DTS:CreationName="STOCK:SEQUENCE"
           DTS:Description="Sequence Container"
           DTS:DTSID="{8A05E065-9DED-42E1-9615-62627B0D9ECB}"
           DTS:ExecutableType="STOCK:SEQUENCE"
           DTS:LocaleID="-1"
-          DTS:ObjectName="Incident_Type_Dim -- think about EXCEPT issue">
+          DTS:ObjectName="Incident_Type_Dim">
           <DTS:Variables />
           <DTS:Executables>
             <DTS:Executable
-              DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue\EST - Write Job Finish Information"
+              DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim\EST - Write Job Finish Information"
               DTS:CreationName="Microsoft.ExecuteSQLTask"
               DTS:Description="Execute SQL Task"
               DTS:DTSID="{61184742-227B-42AD-98C6-EF7A0EEF496A}"
@@ -440,7 +440,7 @@
               </DTS:ObjectData>
             </DTS:Executable>
             <DTS:Executable
-              DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue\EST - Write Job Start Information"
+              DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim\EST - Write Job Start Information"
               DTS:CreationName="Microsoft.ExecuteSQLTask"
               DTS:Description="Execute SQL Task"
               DTS:DTSID="{332E518A-9F2D-4344-964B-B13EEA3A6D74}"
@@ -457,7 +457,7 @@
               </DTS:ObjectData>
             </DTS:Executable>
             <DTS:Executable
-              DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue\Populate New Data"
+              DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim\Populate New Data"
               DTS:CreationName="Microsoft.ExecuteSQLTask"
               DTS:Description="Execute SQL Task"
               DTS:DTSID="{63D24FEF-F2CD-446F-8143-5FF520A325E1}"
@@ -469,27 +469,27 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{D03EA467-9059-4B71-988F-0520ABD08B00}"
-                  SQLTask:SqlStatementSource=" ---create new ones&#xA;insert into conform_riskman.incident_type_dim&#xA;select &#xA;      distinct &#xA;       left(d1.Supergroup,50)&#xA;      ,left(d1.IncidentClass,50)&#xA;      ,left(d1.Definitions,50)&#xA;      ,'N'&#xA;      ,'NEW'&#xA;      ,GETDATE()&#xA;      ,NULL&#xA;      ,'Y'&#xA;&#xA;from  extract_riskman.IncidentClassificationsIFR as d1&#xA;/*&#xA;inner join&#xA;  (select left(Supergroup,50) as super_group ,left(IncidentClass,50) as incident_class,left(Definitions,50)&#x9;as definitions&#xA;   from extract_riskman.IncidentClassificationsIFR &#xA;   except&#xA;   select  super_group,incident_class,definitions&#xA;   from conform_riskman.incident_type_dim   where current_row_indicator='Y' &#xA;   ) as t1  &#xA;   on   left(d1.Supergroup,50) =t1.super_group&#xA;       and left(d1.IncidentClass,50) =t1.incident_class&#xA;       and left(d1.Definitions,50)&#x9;=t1.definitions&#xA;*/&#xA;&#xA;&#xA;--update expired ones&#xA;--update expired ones&#xA;update d1&#xA;set  d1.current_row_indicator='N',&#xA;     d1.row_expiration_date=getdate(),&#xA;  d1.change_reason_code='U',&#xA;  d1.change_reason_description='Update'&#xA;from  conform_riskman.incident_type_dim as d1&#xA;where left(d1.super_group,50) not in (select left(Supergroup,50) from   extract_riskman.IncidentClassificationsIFR)&#xA;and d1.super_group&lt;&gt;'No Incident Type'&#xA;&#xA;&#xA;&#xA;--check NO Incident Type &#xA;if( (select count(*) from conform_riskman.incident_type_dim  where current_row_indicator='Y' and super_group='No Incident Type' ) =0 )&#xA;begin&#xA;&#x9;   insert into  conform_riskman.incident_type_dim &#xA;&#x9;   values&#xA;&#x9;   ('No Incident Type','No Incident Type','No Incident Type','N','NEW',getdate(),null,'Y')&#xA;end&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource=" ---create new ones, if not in dim table&#xA;insert into conform_riskman.incident_type_dim&#xA;select &#xA;      distinct &#xA;       left(d1.Supergroup,50)&#xA;      ,left(d1.IncidentClass,50)&#xA;      ,left(d1.Definitions,50)&#xA;      ,'N'&#xA;      ,'NEW'&#xA;      ,GETDATE()&#xA;      ,NULL&#xA;      ,'Y'&#xA;&#xA;from  extract_riskman.IncidentClassificationsIFR as d1&#xA;&#xA;inner join&#xA;  (select left(Supergroup,50) as super_group ,left(IncidentClass,50) as incident_class,left(Definitions,50)&#x9;as definitions&#xA;   from extract_riskman.IncidentClassificationsIFR &#xA;   except&#xA;   select  super_group,incident_class,definitions&#xA;   from conform_riskman.incident_type_dim   where current_row_indicator='Y' &#xA;   ) as t1  &#xA;   on   left(d1.Supergroup,50) =t1.super_group&#xA;       and left(d1.IncidentClass,50) =t1.incident_class&#xA;       and left(d1.Definitions,50)&#x9;=t1.definitions&#xA;&#xA;&#xA;&#xA;--update expired ones, if not in IncidentClassificationsIFR table&#xA;update d1&#xA;set  d1.current_row_indicator='N',&#xA;     d1.row_expiration_date=getdate(),&#xA;  d1.change_reason_code='U',&#xA;  d1.change_reason_description='Update'&#xA;from  conform_riskman.incident_type_dim as d1&#xA;&#xA;inner join&#xA;  (   &#xA;   select  super_group,incident_class,definitions&#xA;   from conform_riskman.incident_type_dim   where current_row_indicator='Y' and super_group&lt;&gt;'No Incident Type'&#xA;   except&#xA;   select left(Supergroup,50) as super_group ,left(IncidentClass,50) as incident_class,left(Definitions,50)&#x9;as definitions&#xA;   from extract_riskman.IncidentClassificationsIFR &#xA;   ) as t1  &#xA;   on   d1.super_group       =t1.super_group&#xA;       and d1.incident_class =t1.incident_class&#xA;       and d1.definitions&#x9; =t1.definitions&#xA;&#xA;&#xA;&#xA;--check NO Incident Type &#xA;if( (select count(*) from conform_riskman.incident_type_dim  where current_row_indicator='Y' and super_group='No Incident Type' ) =0 )&#xA;begin&#xA;&#x9;   insert into  conform_riskman.incident_type_dim &#xA;&#x9;   values&#xA;&#x9;   ('No Incident Type','No Incident Type','No Incident Type','N','NEW',getdate(),null,'Y')&#xA;end&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
           <DTS:PrecedenceConstraints>
             <DTS:PrecedenceConstraint
-              DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue.PrecedenceConstraints[Constraint]"
+              DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim.PrecedenceConstraints[Constraint]"
               DTS:CreationName=""
-              DTS:DTSID="{7D102A03-9714-4393-A265-214F4EB28424}"
-              DTS:From="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue\EST - Write Job Start Information"
+              DTS:DTSID="{4C5C0B1E-27B4-4F63-8AF7-F995B32D9595}"
+              DTS:From="Package\Sequence Container - DIM TABLES\Incident_Type_Dim\EST - Write Job Start Information"
               DTS:LogicalAnd="True"
               DTS:ObjectName="Constraint"
-              DTS:To="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue\Populate New Data" />
+              DTS:To="Package\Sequence Container - DIM TABLES\Incident_Type_Dim\Populate New Data" />
             <DTS:PrecedenceConstraint
-              DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue.PrecedenceConstraints[Constraint 2]"
+              DTS:refId="Package\Sequence Container - DIM TABLES\Incident_Type_Dim.PrecedenceConstraints[Constraint 2]"
               DTS:CreationName=""
               DTS:DTSID="{A8822C67-4FC9-4E8D-9767-55DD90BA9091}"
-              DTS:From="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue\Populate New Data"
+              DTS:From="Package\Sequence Container - DIM TABLES\Incident_Type_Dim\Populate New Data"
               DTS:LogicalAnd="True"
               DTS:ObjectName="Constraint 2"
-              DTS:To="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue\EST - Write Job Finish Information" />
+              DTS:To="Package\Sequence Container - DIM TABLES\Incident_Type_Dim\EST - Write Job Finish Information" />
           </DTS:PrecedenceConstraints>
         </DTS:Executable>
         <DTS:Executable
@@ -928,13 +928,13 @@
           DTS:From="Package\Sequence Container - DIM TABLES\Program_Dim"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 3"
-          DTS:To="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue"
+          DTS:To="Package\Sequence Container - DIM TABLES\Incident_Type_Dim"
           DTS:Value="2" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 4]"
           DTS:CreationName=""
           DTS:DTSID="{D0011001-A9AD-42EE-B57C-15B1948DB96F}"
-          DTS:From="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue"
+          DTS:From="Package\Sequence Container - DIM TABLES\Incident_Type_Dim"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 4"
           DTS:To="Package\Sequence Container - DIM TABLES\Action_Dim"
@@ -1062,10 +1062,10 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="378,278"
-          Size="378,321"
+          PanelSize="378,264"
+          Size="378,307"
           Id="Package\Sequence Container - DIM TABLES\Action_Dim"
-          TopLeft="6.50000000000028,1910.5" />
+          TopLeft="27.0000000000001,1968.5" />
         <NodeLayout
           Size="299,47"
           Id="Package\Sequence Container - DIM TABLES\Date_Dim -- Just run onece!\EST - Write Job Finish Information"
@@ -1128,7 +1128,7 @@
           PanelSize="378,278"
           Size="378,321"
           Id="Package\Sequence Container - DIM TABLES\Date_Dim -- Just run onece!"
-          TopLeft="6.50000000000006,5.5" />
+          TopLeft="27.9999999999998,5.5" />
         <NodeLayout
           Size="299,47"
           Id="Package\Sequence Container - DIM TABLES\Employee_Dim -- How many fileds need to be populated??\EST - Write Job Finish Information"
@@ -1191,33 +1191,33 @@
           PanelSize="380,278"
           Size="380,321"
           Id="Package\Sequence Container - DIM TABLES\Employee_Dim -- How many fileds need to be populated??"
-          TopLeft="5.50000000000031,2291.5" />
+          TopLeft="27.0000000000001,2291.5" />
         <NodeLayout
           Size="299,47"
-          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue\EST - Write Job Finish Information"
-          TopLeft="32.75,176.5" />
+          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim\EST - Write Job Finish Information"
+          TopLeft="31.75,219.5" />
         <NodeLayout
           Size="301,42"
-          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue\EST - Write Job Start Information"
+          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim\EST - Write Job Start Information"
           TopLeft="32.75,15" />
         <NodeLayout
-          Size="299,47"
-          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue\Populate New Data"
-          TopLeft="35.75,102" />
+          Size="169,42"
+          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim\Populate New Data"
+          TopLeft="91.75,119" />
         <EdgeLayout
-          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue.PrecedenceConstraints[Constraint]"
-          TopLeft="184.25,57">
+          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim.PrecedenceConstraints[Constraint 2]"
+          TopLeft="178.75,161">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,45"
+              EndConnector="0,58.5"
               Start="0,0"
-              End="0,37.5">
+              End="0,51">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,37.5" />
+                    End="0,51" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1227,19 +1227,19 @@
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
-          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue.PrecedenceConstraints[Constraint 2]"
-          TopLeft="183.75,149">
+          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim.PrecedenceConstraints[Constraint]"
+          TopLeft="179.75,57">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,27.5"
+              EndConnector="0,62"
               Start="0,0"
-              End="0,20">
+              End="0,54.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,20" />
+                    End="0,54.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1251,10 +1251,10 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="378,278"
-          Size="378,321"
-          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim -- think about EXCEPT issue"
-          TopLeft="6.50000000000023,1529.5" />
+          PanelSize="378,353"
+          Size="378,396"
+          Id="Package\Sequence Container - DIM TABLES\Incident_Type_Dim"
+          TopLeft="28,1529.5" />
         <NodeLayout
           Size="299,47"
           Id="Package\Sequence Container - DIM TABLES\Person_Dim\EST - Write Job Finish Information"
@@ -1317,7 +1317,7 @@
           PanelSize="378,278"
           Size="378,321"
           Id="Package\Sequence Container - DIM TABLES\Person_Dim"
-          TopLeft="6.50000000000037,2672.5" />
+          TopLeft="28.0000000000001,2672.5" />
         <NodeLayout
           Size="299,47"
           Id="Package\Sequence Container - DIM TABLES\Portfolio-DIM\EST - Write Job Finish Information"
@@ -1380,7 +1380,7 @@
           PanelSize="378,278"
           Size="378,321"
           Id="Package\Sequence Container - DIM TABLES\Portfolio-DIM"
-          TopLeft="6.50000000000009,386.5" />
+          TopLeft="27.9999999999999,386.5" />
         <NodeLayout
           Size="299,47"
           Id="Package\Sequence Container - DIM TABLES\Program_Dim\EST - Write Job Finish Information"
@@ -1443,7 +1443,7 @@
           PanelSize="378,278"
           Size="378,321"
           Id="Package\Sequence Container - DIM TABLES\Program_Dim"
-          TopLeft="6.5000000000002,1148.5" />
+          TopLeft="28,1148.5" />
         <NodeLayout
           Size="299,47"
           Id="Package\Sequence Container - DIM TABLES\Service_Stream_Dim\EST - Write Job Finish Information"
@@ -1506,7 +1506,7 @@
           PanelSize="378,278"
           Size="378,321"
           Id="Package\Sequence Container - DIM TABLES\Service_Stream_Dim"
-          TopLeft="6.50000000000014,767.5" />
+          TopLeft="27.9999999999999,767.5" />
         <NodeLayout
           Size="299,47"
           Id="Package\Sequence Container - DIM TABLES\Wing_Dim\EST - Write Job Finish Information"
@@ -1569,10 +1569,10 @@
           PanelSize="378,278"
           Size="378,321"
           Id="Package\Sequence Container - DIM TABLES\Wing_Dim"
-          TopLeft="5.50000000000031,3053.5" />
+          TopLeft="27.0000000000001,3053.5" />
         <EdgeLayout
           Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint]"
-          TopLeft="195.5,326.5">
+          TopLeft="217,326.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -1596,7 +1596,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 1]"
-          TopLeft="195.5,707.5">
+          TopLeft="217,707.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -1620,7 +1620,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 2]"
-          TopLeft="195.5,1088.5">
+          TopLeft="217,1088.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -1644,7 +1644,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 3]"
-          TopLeft="195.5,1469.5">
+          TopLeft="217,1469.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -1668,55 +1668,67 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 4]"
-          TopLeft="195.5,1850.5">
+          TopLeft="216.5,1925.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,60"
+              EndConnector="0,43"
               Start="0,0"
-              End="0,52.5">
+              End="0,35.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,52.5" />
+                    End="0,35.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
+              BoundingBox="-25.304453125,11.9453125,50.60890625,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 5]"
-          TopLeft="195.5,2231.5">
+          TopLeft="27.0000000000001,2122">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,60"
+              EndConnector="2.8421709430404E-14,330"
               Start="0,0"
-              End="0,52.5">
+              End="-7.49999999999997,330">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,52.5" />
+                    End="-18.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-18.5,0"
+                    Point2="-22.5,0"
+                    Point3="-22.5,4" />
+                  <mssgle:LineSegment
+                    End="-22.5,326" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-22.5,326"
+                    Point2="-22.5,330"
+                    Point3="-18.5,330" />
+                  <mssgle:LineSegment
+                    End="-7.49999999999997,330" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-25.304453125,20.4453125,50.60890625,11.609375"
+              BoundingBox="-47.804453125,-17.609375,50.60890625,11.609375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 6]"
-          TopLeft="195.5,2612.5">
+          TopLeft="217,2612.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -1740,7 +1752,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Sequence Container - DIM TABLES.PrecedenceConstraints[Constraint 7]"
-          TopLeft="195,2993.5">
+          TopLeft="216.5,2993.5">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -1763,10 +1775,10 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="391,3430"
-          Size="391,3472"
+          PanelSize="434,3430"
+          Size="434,3473"
           Id="Package\Sequence Container - DIM TABLES"
-          TopLeft="15,15.75" />
+          TopLeft="42,15.75" />
       </GraphLayout>
     </LayoutInfo>
   </Package>
