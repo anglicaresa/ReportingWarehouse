@@ -1,0 +1,263 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/3/2020 11:35:01 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="W10PC0SHE86"
+  DTS:CreatorName="ANGLICARE-SA\Eric.Wang"
+  DTS:DTSID="{99C02FBF-0F6F-4C06-BBA3-E9A3E7E2A76A}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.2000.121"
+  DTS:LocaleID="3081"
+  DTS:ObjectName="MLH_GroupRoles_ETL"
+  DTS:PackageType="5"
+  DTS:VersionBuild="10"
+  DTS:VersionGUID="{127D7EAA-865C-4041-B9BD-C2F19527D527}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[az-sqlbi01.DWHB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{25BD7922-853A-4B5A-83A6-8A9CF58986C6}"
+      DTS:ObjectName="az-sqlbi01.DWHB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=az-sqlbi01;Initial Catalog=DWHB;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\truncate and update DWHB conform"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{4EFC97AA-7FBA-4606-8C8E-2411307C2E25}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="truncate and update DWHB conform">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\truncate and update DWHB conform\truncate and update conform mlh grouproles employee"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{CEAC689E-049C-4C43-8412-78896196B73C}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="truncate and update conform mlh grouproles employee"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{25BD7922-853A-4B5A-83A6-8A9CF58986C6}"
+              SQLTask:SqlStatementSource="truncate table DWHB.conform_mlh.grouproles_employee;&#xA;&#xA;insert into DWHB.conform_mlh.grouproles_employee&#xA;(EmployeeId,[User Name],[Group Path],[Role Name])&#xA;select * from dwhb.extract_mlh.grouproles g &#xA;where g.[Role Name] ='user'&#xA;and g.[Group Path] like '%org structure%';&#xA;&#xA;&#xA;&#xA;&#xA;update conform_mlh.grouproles_employee&#xA;set [Portfolio Name] = REPLACE([Group Path],'AnglicareSA.1 - EMPLOYEES.Org Structure.','');&#xA;&#xA;&#xA;&#xA;&#xA;update conform_mlh.grouproles_employee&#xA;set [Portfolio Name] = LEFT([Portfolio Name], charindex('.',[Portfolio Name])-1),&#xA;[Service Stream Name] = RIGHT([Portfolio Name], LEN([Portfolio Name]) - charindex('.',[Portfolio Name]));&#xA;&#xA;&#xA;&#xA;&#xA;update conform_mlh.grouproles_employee&#xA;set [Service Stream Name] = LEFT([Service Stream Name], charindex('.',[Service Stream Name])-1),&#xA;[Program Name] = RIGHT([Service Stream Name], LEN([Service Stream Name]) - charindex('.',[Service Stream Name])) &#xA;where charindex('.',[Service Stream Name]) &lt;&gt; 0&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\truncate and update DWHB conform\truncate and update conform mlh grouproles volunteer"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{30A6E83E-163E-48FB-B12C-2A9FFC60C5E6}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="truncate and update conform mlh grouproles volunteer"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{25BD7922-853A-4B5A-83A6-8A9CF58986C6}"
+              SQLTask:SqlStatementSource="truncate table DWHB.conform_mlh.grouproles_volunteer;&#xA;&#xA;&#xA;&#xA;&#xA;insert into DWHB.conform_mlh.grouproles_volunteer &#xA;(EmployeeId,[User Name],[Group Path],[Role Name])&#xA;select * from dwhb.extract_mlh.grouproles g &#xA;where g.[Role Name] ='user'&#xA;and g.[Group Path] like 'AnglicareSA.2 - VOLUNTEERS.%';&#xA;&#xA;&#xA;&#xA;&#xA;update conform_mlh.grouproles_volunteer&#xA;set [Volunteer Area-L1] = REPLACE([Group Path],'AnglicareSA.2 - VOLUNTEERS.','');&#xA;&#xA;&#xA;&#xA;&#xA;update conform_mlh.grouproles_volunteer&#xA;set [Volunteer Area-L1] = LEFT([Volunteer Area-L1], charindex('.',[Volunteer Area-L1])-1),&#xA;[Volunteer Area-L2] = RIGHT([Volunteer Area-L1], LEN([Volunteer Area-L1]) - charindex('.',[Volunteer Area-L1]));&#xA;&#xA;&#xA;&#xA;&#xA;update conform_mlh.grouproles_volunteer&#xA;set [Volunteer Area-L2] = LEFT([Volunteer Area-L2], charindex('.',[Volunteer Area-L2])-1),&#xA;[Volunteer Area-L3] = RIGHT([Volunteer Area-L2], LEN([Volunteer Area-L2]) - charindex('.',[Volunteer Area-L2]))&#xA;where charindex('.',[Volunteer Area-L2]) &lt;&gt; 0&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\truncate and update DWHB conform.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{1B8AD2DB-A688-4BDB-B68A-6EFED000CBEE}"
+          DTS:From="Package\truncate and update DWHB conform\truncate and update conform mlh grouproles employee"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\truncate and update DWHB conform\truncate and update conform mlh grouproles volunteer" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\truncate and update DWHF"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{55FE747F-A43C-42C1-8590-F0637925ADCF}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="truncate and update DWHF">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\truncate and update DWHF\truncate and upate dwhf mlh grouproles employee"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{C53FEA50-FBC6-4C00-81B5-54CE3B331FB5}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="truncate and upate dwhf mlh grouproles employee"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{25BD7922-853A-4B5A-83A6-8A9CF58986C6}"
+              SQLTask:SqlStatementSource="truncate table [DWHF].mlh.[grouproles_employee];&#xA;&#xA;  insert into [DWHF].mlh.[grouproles_employee]&#xA;select * from [DWHB].[conform_mlh].[grouproles_employee]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\truncate and update DWHF\truncate and update dwhf mlh grouproles volunteer"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{1407061C-F37F-4510-BE66-F3216FF64A0D}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="truncate and update dwhf mlh grouproles volunteer"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{25BD7922-853A-4B5A-83A6-8A9CF58986C6}"
+              SQLTask:SqlStatementSource="truncate table [DWHF].mlh.[grouproles_volunteer];&#xA;&#xA;  insert into [DWHF].mlh.[grouproles_volunteer]&#xA;select * from [DWHB].[conform_mlh].[grouproles_volunteer]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\truncate and update DWHF.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{BD761596-E1D0-4E3B-94FD-06B8F63647D8}"
+          DTS:From="Package\truncate and update DWHF\truncate and upate dwhf mlh grouproles employee"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\truncate and update DWHF\truncate and update dwhf mlh grouproles volunteer" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{1AC80781-75B1-487D-9FC9-6DA798F932A2}"
+      DTS:From="Package\truncate and update DWHB conform"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\truncate and update DWHF" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="339,42"
+          Id="Package\truncate and update DWHB conform\truncate and update conform mlh grouproles employee"
+          TopLeft="44,44" />
+        <NodeLayout
+          Size="338,42"
+          Id="Package\truncate and update DWHB conform\truncate and update conform mlh grouproles volunteer"
+          TopLeft="46,150" />
+        <EdgeLayout
+          Id="Package\truncate and update DWHB conform.PrecedenceConstraints[Constraint]"
+          TopLeft="214.25,86">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,64"
+              Start="0,0"
+              End="0,56.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,56.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="421,248"
+          Size="421,291"
+          Id="Package\truncate and update DWHB conform"
+          TopLeft="99.5,44.5" />
+        <NodeLayout
+          Size="318,42"
+          Id="Package\truncate and update DWHF\truncate and upate dwhf mlh grouproles employee"
+          TopLeft="55,30" />
+        <NodeLayout
+          Size="322,42"
+          Id="Package\truncate and update DWHF\truncate and update dwhf mlh grouproles volunteer"
+          TopLeft="46,117" />
+        <EdgeLayout
+          Id="Package\truncate and update DWHF.PrecedenceConstraints[Constraint]"
+          TopLeft="210.5,72">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45"
+              Start="0,0"
+              End="0,37.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="427,233"
+          Size="427,276"
+          Id="Package\truncate and update DWHF"
+          TopLeft="659,58" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="520.5,193">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="138.5,0"
+              Start="0,0"
+              End="131,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="131,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
