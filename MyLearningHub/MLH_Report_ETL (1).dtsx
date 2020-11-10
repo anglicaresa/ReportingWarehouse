@@ -11,8 +11,8 @@
   DTS:LocaleID="3081"
   DTS:ObjectName="MLH_Report_ETL"
   DTS:PackageType="5"
-  DTS:VersionBuild="125"
-  DTS:VersionGUID="{7223B866-2204-4AC1-8FE7-ADA1F2D527CA}">
+  DTS:VersionBuild="131"
+  DTS:VersionGUID="{D005EB24-CEB9-4B8A-8097-0AEDAF14FB79}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -48,7 +48,7 @@
               DTS:DataType="129"
               DTS:TextQualified="True"
               DTS:ObjectName="Column 0"
-              DTS:DTSID="{0F365C48-4ABF-4612-B725-DF9E340EDB93}"
+              DTS:DTSID="{3C77BE63-C26B-4681-8530-9917566F9C28}"
               DTS:CreationName="" />
           </DTS:FlatFileColumns>
         </DTS:ConnectionManager>
@@ -792,7 +792,6 @@
       DTS:refId="Package\consolidated file loading"
       DTS:CreationName="STOCK:SEQUENCE"
       DTS:Description="Sequence Container"
-      DTS:Disabled="True"
       DTS:DTSID="{3B8956F2-6DFC-4C80-B977-2E1C1844F06D}"
       DTS:ExecutableType="STOCK:SEQUENCE"
       DTS:LocaleID="-1"
@@ -2152,6 +2151,22 @@
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\consolidated file loading\remove @#@ at the end of row"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{f8df3fce-1086-4373-a5ee-34e7134b9d6b}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="remove @#@ at the end of row"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{BE53396F-3A9E-4CB7-863E-D9DE556F8ABC}"
+              SQLTask:SqlStatementSource="    update [extract_mlh].[consolidated]&#xA;  set [Training Points]  = REPLACE([Training Points] ,'@#@','');" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\consolidated file loading\truncate consolidated"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
@@ -2178,6 +2193,14 @@
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint"
           DTS:To="Package\consolidated file loading\load consolidate file" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\consolidated file loading.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{F1198855-5F1C-4A4A-BD70-01DD894CBACE}"
+          DTS:From="Package\consolidated file loading\re load"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\consolidated file loading\remove @#@ at the end of row" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\consolidated file loading.PrecedenceConstraints[Constraint 4]"
           DTS:CreationName=""
@@ -5354,7 +5377,7 @@
         <NodeLayout
           Size="109,42"
           Id="Package\consolidated file loading\export"
-          TopLeft="36,221" />
+          TopLeft="74,218" />
         <NodeLayout
           Size="172,42"
           Id="Package\consolidated file loading\load consolidate file"
@@ -5362,37 +5385,25 @@
         <NodeLayout
           Size="112,42"
           Id="Package\consolidated file loading\re load"
-          TopLeft="35,288" />
+          TopLeft="68,288" />
         <NodeLayout
-          Size="150,42"
+          Size="180,42"
           Id="Package\consolidated file loading\truncate consolidated"
           TopLeft="19,8" />
         <EdgeLayout
           Id="Package\consolidated file loading.PrecedenceConstraints[Constraint]"
-          TopLeft="94,50">
+          TopLeft="111.272727272727,50">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="19.5454545454545,27.1818181818182"
+              EndConnector="0,27.1818181818182"
               Start="0,0"
-              End="19.5454545454545,19.6818181818182">
+              End="0,19.6818181818182">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,9.59090909090908" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,9.59090909090908"
-                    Point2="0,13.5909090909091"
-                    Point3="4,13.5909090909091" />
-                  <mssgle:LineSegment
-                    End="15.5454545454545,13.5909090909091" />
-                  <mssgle:CubicBezierSegment
-                    Point1="15.5454545454545,13.5909090909091"
-                    Point2="19.5454545454545,13.5909090909091"
-                    Point3="19.5454545454545,17.5909090909091" />
-                  <mssgle:LineSegment
-                    End="19.5454545454545,19.6818181818182" />
+                    End="0,19.6818181818182" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5429,26 +5440,26 @@
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-25,32"
+              EndConnector="13,29"
               Start="0,0"
-              End="-25,24.5">
+              End="13,21.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,12" />
+                    End="0,10.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,12"
-                    Point2="0,16"
-                    Point3="-4,16" />
+                    Point1="0,10.5"
+                    Point2="0,14.5"
+                    Point3="4,14.5" />
                   <mssgle:LineSegment
-                    End="-21,16" />
+                    End="9,14.5" />
                   <mssgle:CubicBezierSegment
-                    Point1="-21,16"
-                    Point2="-25,16"
-                    Point3="-25,20" />
+                    Point1="9,14.5"
+                    Point2="13,14.5"
+                    Point3="13,18.5" />
                   <mssgle:LineSegment
-                    End="-25,24.5" />
+                    End="13,21.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5459,18 +5470,56 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\consolidated file loading.PrecedenceConstraints[Constraint 6]"
-          TopLeft="90.75,263">
+          TopLeft="126.25,260">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,25"
+              EndConnector="0,28"
               Start="0,0"
-              End="0,17.5">
+              End="0,20.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,17.5" />
+                    End="0,20.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="230,42"
+          Id="Package\consolidated file loading\remove @#@ at the end of row"
+          TopLeft="53,363" />
+        <EdgeLayout
+          Id="Package\consolidated file loading.PrecedenceConstraints[Constraint 1]"
+          TopLeft="124,330">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="44,33"
+              Start="0,0"
+              End="44,25.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,12.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,12.5"
+                    Point2="0,16.5"
+                    Point3="4,16.5" />
+                  <mssgle:LineSegment
+                    End="40,16.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="40,16.5"
+                    Point2="44,16.5"
+                    Point3="44,20.5" />
+                  <mssgle:LineSegment
+                    End="44,25.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5482,10 +5531,10 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="212,385"
-          Size="212,428"
+          PanelSize="295,460"
+          Size="295,503"
           Id="Package\consolidated file loading"
-          TopLeft="718,13.4242424242424" />
+          TopLeft="606,10.4242424242424" />
         <NodeLayout
           Size="301,42"
           Id="Package\Generate conform fact tables in DWHB\conform_mlh mlh_classroom_pastorfuture_fact"
@@ -5574,7 +5623,7 @@
           PanelSize="467,425"
           Size="467,468"
           Id="Package\Generate conform fact tables in DWHB"
-          TopLeft="512.055555555556,1015.09090909091" />
+          TopLeft="512.055555555556,1092.09090909091" />
         <NodeLayout
           Size="255,42"
           Id="Package\truncate and copy from DWHB tables to DWHF\to dwhf_mlh_mlh_course_online_fact"
@@ -5663,7 +5712,7 @@
           PanelSize="415,370"
           Size="415,413"
           Id="Package\truncate and copy from DWHB tables to DWHF"
-          TopLeft="548.111111111111,1576.20202020202" />
+          TopLeft="548.111111111111,1653.20202020202" />
         <NodeLayout
           Size="166,42"
           Id="Package\truncate and load csv from downloadfiles folder to DWHB tables\load classroom file"
@@ -5772,10 +5821,10 @@
           PanelSize="757,469"
           Size="757,512"
           Id="Package\truncate and load csv from downloadfiles folder to DWHB tables"
-          TopLeft="383,473.424242424242" />
+          TopLeft="383,550.424242424242" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="761.5,985.424242424242">
+          TopLeft="761.5,1062.42424242424">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -5809,30 +5858,30 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="824,441.424242424242">
+          TopLeft="753.5,513.424242424242">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-62.5000000000002,32.0000000000001"
+              EndConnector="8,36.9999999999997"
               Start="0,0"
-              End="-62.5000000000002,24.5000000000001">
+              End="8,29.4999999999997">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,12.0000000000001" />
+                    End="0,14.4999999999998" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,12.0000000000001"
-                    Point2="0,16.0000000000001"
-                    Point3="-4,16.0000000000001" />
+                    Point1="0,14.4999999999998"
+                    Point2="0,18.4999999999998"
+                    Point3="4,18.4999999999998" />
                   <mssgle:LineSegment
-                    End="-58.5000000000002,16.0000000000001" />
+                    End="4,18.4999999999998" />
                   <mssgle:CubicBezierSegment
-                    Point1="-58.5000000000002,16.0000000000001"
-                    Point2="-62.5000000000002,16.0000000000001"
-                    Point3="-62.5000000000002,20.0000000000001" />
+                    Point1="4,18.4999999999998"
+                    Point2="8,18.4999999999998"
+                    Point3="8,22.4999999999998" />
                   <mssgle:LineSegment
-                    End="-62.5000000000002,24.5000000000001" />
+                    End="8,29.4999999999997" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5843,7 +5892,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="745.555555555556,1483.09090909091">
+          TopLeft="745.555555555556,1560.09090909091">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -5882,7 +5931,7 @@
     design-time-name="Package\consolidated file loading\export">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="150,42"
           Id="Package\consolidated file loading\export\OLE DB Source"
@@ -5910,7 +5959,9 @@
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -5981,13 +6032,13 @@
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="151,42"
-          Id="Package\consolidated file loading\re load\Flat File Source"
-          TopLeft="685,333" />
-        <NodeLayout
           Size="171,42"
           Id="Package\consolidated file loading\re load\OLE DB Destination"
           TopLeft="722,462" />
+        <NodeLayout
+          Size="151,42"
+          Id="Package\consolidated file loading\re load\Flat File Source"
+          TopLeft="685,333" />
         <EdgeLayout
           Id="Package\consolidated file loading\re load.Paths[Flat File Source Output]"
           TopLeft="760.5,375">
