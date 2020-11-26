@@ -200,6 +200,8 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
   END) as  [Asset Used as Security]
   --Security for
   ,hud8.[Value] as [Security for]  
+  --update 26/11/2020: add field [Nominial Cost Center into SSRS report], requested by Darren
+  ,psu.NominalCostCentre as [Nominal Cost Centre]
   
 FROM [dbo].[PropertyStructure_Unit] AS psu
   LEFT JOIN [dbo].[PropertyStructure_Unit_Status] AS psus ON psus.[ID] = psu.[CurrentStatus] AND psus.[Company] = psu.[Company]
@@ -460,6 +462,10 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
           <DataField>Security for</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="Nominal_Cost_Centre">
+          <DataField>Nominal Cost Centre</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="Program">
@@ -628,6 +634,9 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                 </TablixColumn>
                 <TablixColumn>
                   <Width>3.74354cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.5cm</Width>
@@ -2023,6 +2032,39 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox36">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Nominal Cost Centre</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox36</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -2122,7 +2164,6 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -3379,6 +3420,38 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Security_for</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Nominal_Cost_Centre">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!Nominal_Cost_Centre.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Nominal_Cost_Centre</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -4754,6 +4827,38 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox59">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox59</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -6107,12 +6212,45 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox63">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox63</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -6177,7 +6315,7 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
             <Top>0.66799cm</Top>
             <Left>0.06135cm</Left>
             <Height>2.32063cm</Height>
-            <Width>126.65637cm</Width>
+            <Width>129.15637cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -6189,7 +6327,7 @@ WHERE psu.[isSold] = 0 AND psu.[isDemolished] = 0 AND psu.[isRelinquished] = 0 A
         <Height>4.82292in</Height>
         <Style />
       </Body>
-      <Width>49.88887in</Width>
+      <Width>50.87312in</Width>
       <Page>
         <PageHeader>
           <Height>3.64154cm</Height>
