@@ -11,8 +11,8 @@
   DTS:LocaleID="3081"
   DTS:ObjectName="Conform_DWHF_MLH_ETL"
   DTS:PackageType="5"
-  DTS:VersionBuild="16"
-  DTS:VersionGUID="{1B72368C-2AA5-4338-9C66-3C7F17F3A583}">
+  DTS:VersionBuild="19"
+  DTS:VersionGUID="{3288599F-6316-40CA-A98F-DFE7FD4937D1}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -116,7 +116,7 @@
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
               SQLTask:Connection="{25BD7922-853A-4B5A-83A6-8A9CF58986C6}"
-              SQLTask:SqlStatementSource="truncate table [dwhb].conform_mlh.refresher_report;&#xA;&#xA;&#xA;insert into [DWHB].[conform_mlh].[refresher_report]&#xA;  select cast(GETDATE() as date) as [Report Run Date]&#xA;  , c.Username&#xA;  , c.[External Employee ID]&#xA;  , u.[First Name], u.[Last Name], u.[State] as [Position Title]&#xA;  , c.[Student Session Status]&#xA;  , c.[Training Type]&#xA;  , c.[Training Title]&#xA;  , c.[Training ID]&#xA;  , convert(date, c.[Started Date], 103) as [Started Date]&#xA;  , convert(date, c.[Completed Date], 103) as [Latest Completed Date]&#xA;  , convert(date, c.[Refresher Date], 103) as [Refresher Date]&#xA;  , case when convert(date, c.[Refresher Date], 103) &gt; getdate() then 'Compliant' else 'Not Compliant' end as [Compliance]&#xA;  , u.[Direct Manager Name]&#xA;  from extract_mlh.consolidated c&#xA;&#x9;left join extract_mlh.[user] u on c.Username = u.Username&#xA;&#x9;join (&#xA;&#x9;&#x9;select username, [Training ID], max (convert(date, [Completed Date], 103) ) as MaxDate&#xA;&#x9;&#x9;from extract_mlh.consolidated&#xA;&#x9;&#x9;where [Student Session Status] in ('Attended', 'Completed') and [Refresher Date] not like '' &#xA;&#x9;&#x9;and [External Employee ID] not like ''&#xA;&#x9;&#x9;group by Username, [Training ID]&#xA;&#x9;&#x9;) m&#xA;&#x9;&#x9;on c.Username = m.Username and convert(date, c.[Completed Date], 103) = m.MaxDate and c.[Training ID] = m.[Training ID]&#xA;&#x9;--where c.[Refresher Date] not like '' and c.[Student Session Status] in ('Attended', 'Completed')&#xA;&#x9;order by c.[External Employee ID];&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              SQLTask:SqlStatementSource="truncate table [dwhb].conform_mlh.refresher_report;&#xA;&#xA;&#xA;insert into [DWHB].[conform_mlh].[refresher_report]&#xA;  select cast(GETDATE() as date) as [Report Run Date]&#xA;  , c.[Username]&#xA;  --, g.[User Name] as [userfromGREmp]&#xA;  , c.[External Employee ID]&#xA;  , u.[First Name], u.[Last Name], u.[State] as [Position Title]&#xA;  , c.[Student Session Status]&#xA;  , c.[Training Type]&#xA;  , c.[Training Title]&#xA;  , c.[Training ID]&#xA;  , convert(date, c.[Started Date], 103) as [Started Date]&#xA;  , convert(date, c.[Completed Date], 103) as [Latest Completed Date]&#xA;  , convert(date, c.[Refresher Date], 103) as [Refresher Date]&#xA;  , case when convert(date, c.[Refresher Date], 103) &gt; getdate() and convert(date, c.[Refresher Date], 103) &gt; convert(date, c.[Completed Date], 103)  then 'Compliant' else 'Not Compliant' end as [Compliance]&#xA;  , u.[Direct Manager Name]&#xA;  , g.[Portfolio Name], g.[Service Stream Name], g.[Program Name]&#xA;  , u.[Account Status]&#xA;  from [DWHB].[extract_mlh].[consolidated] c&#xA;&#x9;left join [DWHB].[extract_mlh].[user] u on c.[Username] = u.[Username]&#xA;&#x9;join [DWHB].[conform_mlh].[grouproles_employee] g on c.[Username] = g.[User Name]&#xA;&#x9;join (&#xA;&#x9;&#x9;select [Username], [Training ID], max (convert(date, [Completed Date], 103) ) as [MaxDate]&#xA;&#x9;&#x9;from extract_mlh.consolidated&#xA;&#x9;&#x9;where [Student Session Status] in ('Attended', 'Completed') &#xA;&#x9;&#x9;&#x9;and [Refresher Date] not like ''&#xA;&#x9;&#x9;&#x9;and [External Employee ID] not like '' &#xA;&#x9;&#x9;&#x9;and [External Employee ID] not like 'Admin%'&#xA;&#x9;&#x9;&#x9;and [External Employee ID] not like '%@%'&#xA;&#x9;&#x9;group by [Username], [Training ID]&#xA;&#x9;&#x9;) m&#xA;&#x9;&#x9;on c.[Username] = m.[Username] and convert(date, c.[Completed Date], 103) = m.[MaxDate] and c.[Training ID] = m.[Training ID]&#xA;&#x9;where u.[Account Status] like 'enabled'&#xA;&#x9;order by c.[External Employee ID];" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
@@ -369,6 +369,10 @@
           Id="Package\truncate and update DWHB conform\truncate and update conform mlh grouproles volunteer"
           TopLeft="46,150" />
         <NodeLayout
+          Size="315,42"
+          Id="Package\truncate and update DWHB conform\truncate and update conform mlh refresher report"
+          TopLeft="59,508" />
+        <NodeLayout
           Size="261,42"
           Id="Package\truncate and update DWHB conform\truncate and update conform mlh user"
           TopLeft="86,328" />
@@ -460,10 +464,6 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="315,42"
-          Id="Package\truncate and update DWHB conform\truncate and update conform mlh refresher report"
-          TopLeft="59,508" />
         <EdgeLayout
           Id="Package\truncate and update DWHB conform.PrecedenceConstraints[Constraint 4]"
           TopLeft="214.75,459">
@@ -513,6 +513,10 @@
           Size="322,42"
           Id="Package\truncate and update DWHF\truncate and update dwhf mlh grouproles volunteer"
           TopLeft="46,117" />
+        <NodeLayout
+          Size="299,42"
+          Id="Package\truncate and update DWHF\truncate and update dwhf mlh refresher report"
+          TopLeft="61,430" />
         <EdgeLayout
           Id="Package\truncate and update DWHF.PrecedenceConstraints[Constraint]"
           TopLeft="210.5,72">
@@ -601,10 +605,6 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="299,42"
-          Id="Package\truncate and update DWHF\truncate and update dwhf mlh refresher report"
-          TopLeft="61,430" />
         <EdgeLayout
           Id="Package\truncate and update DWHF.PrecedenceConstraints[Constraint 4]"
           TopLeft="211.5,401">
