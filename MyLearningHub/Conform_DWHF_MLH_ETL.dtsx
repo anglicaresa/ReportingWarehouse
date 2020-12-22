@@ -11,8 +11,8 @@
   DTS:LocaleID="3081"
   DTS:ObjectName="Conform_DWHF_MLH_ETL"
   DTS:PackageType="5"
-  DTS:VersionBuild="14"
-  DTS:VersionGUID="{135C55E7-EE12-4E3B-835B-2A1F546728A0}">
+  DTS:VersionBuild="19"
+  DTS:VersionGUID="{3288599F-6316-40CA-A98F-DFE7FD4937D1}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -104,6 +104,22 @@
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\truncate and update DWHB conform\truncate and update conform mlh refresher report"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{6A988715-157B-45D0-9C55-934C370BF7E1}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="truncate and update conform mlh refresher report"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{25BD7922-853A-4B5A-83A6-8A9CF58986C6}"
+              SQLTask:SqlStatementSource="truncate table [dwhb].conform_mlh.refresher_report;&#xA;&#xA;&#xA;insert into [DWHB].[conform_mlh].[refresher_report]&#xA;  select cast(GETDATE() as date) as [Report Run Date]&#xA;  , c.[Username]&#xA;  --, g.[User Name] as [userfromGREmp]&#xA;  , c.[External Employee ID]&#xA;  , u.[First Name], u.[Last Name], u.[State] as [Position Title]&#xA;  , c.[Student Session Status]&#xA;  , c.[Training Type]&#xA;  , c.[Training Title]&#xA;  , c.[Training ID]&#xA;  , convert(date, c.[Started Date], 103) as [Started Date]&#xA;  , convert(date, c.[Completed Date], 103) as [Latest Completed Date]&#xA;  , convert(date, c.[Refresher Date], 103) as [Refresher Date]&#xA;  , case when convert(date, c.[Refresher Date], 103) &gt; getdate() and convert(date, c.[Refresher Date], 103) &gt; convert(date, c.[Completed Date], 103)  then 'Compliant' else 'Not Compliant' end as [Compliance]&#xA;  , u.[Direct Manager Name]&#xA;  , g.[Portfolio Name], g.[Service Stream Name], g.[Program Name]&#xA;  , u.[Account Status]&#xA;  from [DWHB].[extract_mlh].[consolidated] c&#xA;&#x9;left join [DWHB].[extract_mlh].[user] u on c.[Username] = u.[Username]&#xA;&#x9;join [DWHB].[conform_mlh].[grouproles_employee] g on c.[Username] = g.[User Name]&#xA;&#x9;join (&#xA;&#x9;&#x9;select [Username], [Training ID], max (convert(date, [Completed Date], 103) ) as [MaxDate]&#xA;&#x9;&#x9;from extract_mlh.consolidated&#xA;&#x9;&#x9;where [Student Session Status] in ('Attended', 'Completed') &#xA;&#x9;&#x9;&#x9;and [Refresher Date] not like ''&#xA;&#x9;&#x9;&#x9;and [External Employee ID] not like '' &#xA;&#x9;&#x9;&#x9;and [External Employee ID] not like 'Admin%'&#xA;&#x9;&#x9;&#x9;and [External Employee ID] not like '%@%'&#xA;&#x9;&#x9;group by [Username], [Training ID]&#xA;&#x9;&#x9;) m&#xA;&#x9;&#x9;on c.[Username] = m.[Username] and convert(date, c.[Completed Date], 103) = m.[MaxDate] and c.[Training ID] = m.[Training ID]&#xA;&#x9;where u.[Account Status] like 'enabled'&#xA;&#x9;order by c.[External Employee ID];" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\truncate and update DWHB conform\truncate and update conform mlh user"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
@@ -153,6 +169,14 @@
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 3"
           DTS:To="Package\truncate and update DWHB conform\truncate and update conform mlh classroomcourse" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\truncate and update DWHB conform.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{9FC9511B-0B06-481A-8E09-DC348237DB71}"
+          DTS:From="Package\truncate and update DWHB conform\truncate and update conform mlh classroomcourse"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\truncate and update DWHB conform\truncate and update conform mlh refresher report" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
     <DTS:Executable
@@ -245,6 +269,22 @@
               SQLTask:SqlStatementSource="truncate table [DWHF].mlh.[grouproles_volunteer];&#xA;&#xA;  insert into [DWHF].mlh.[grouproles_volunteer]&#xA;select * from [DWHB].[conform_mlh].[grouproles_volunteer]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\truncate and update DWHF\truncate and update dwhf mlh refresher report"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{359B6411-51F2-46ED-B5B1-747C32490728}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="truncate and update dwhf mlh refresher report"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{25BD7922-853A-4B5A-83A6-8A9CF58986C6}"
+              SQLTask:SqlStatementSource="truncate table [dwhf].[mlh].[refresher_report];&#xA;&#xA;&#xA;insert into [DWHF].[mlh].[refresher_report]&#xA;  select * from [DWHB].[conform_mlh].[refresher_report];" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
       </DTS:Executables>
       <DTS:PrecedenceConstraints>
         <DTS:PrecedenceConstraint
@@ -279,6 +319,14 @@
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 3"
           DTS:To="Package\truncate and update DWHF\truncate and upate dwhf mlh classroomcourse" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\truncate and update DWHF.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{E8711694-2E0B-427A-AE34-E23CAB7E77C5}"
+          DTS:From="Package\truncate and update DWHF\truncate and upate dwhf mlh classroomcourse"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\truncate and update DWHF\truncate and update dwhf mlh refresher report" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
   </DTS:Executables>
@@ -305,6 +353,10 @@
       <GraphLayout
         Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
+          Size="318,42"
+          Id="Package\truncate and update DWHB conform\truncate and update conform mlh classroomcourse"
+          TopLeft="54,417" />
+        <NodeLayout
           Size="299,42"
           Id="Package\truncate and update DWHB conform\truncate and update conform mlh consolidated"
           TopLeft="70,240" />
@@ -316,6 +368,10 @@
           Size="338,42"
           Id="Package\truncate and update DWHB conform\truncate and update conform mlh grouproles volunteer"
           TopLeft="46,150" />
+        <NodeLayout
+          Size="315,42"
+          Id="Package\truncate and update DWHB conform\truncate and update conform mlh refresher report"
+          TopLeft="59,508" />
         <NodeLayout
           Size="261,42"
           Id="Package\truncate and update DWHB conform\truncate and update conform mlh user"
@@ -386,10 +442,6 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="318,42"
-          Id="Package\truncate and update DWHB conform\truncate and update conform mlh classroomcourse"
-          TopLeft="54,417" />
         <EdgeLayout
           Id="Package\truncate and update DWHB conform.PrecedenceConstraints[Constraint 3]"
           TopLeft="214.75,370">
@@ -412,13 +464,39 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <EdgeLayout
+          Id="Package\truncate and update DWHB conform.PrecedenceConstraints[Constraint 4]"
+          TopLeft="214.75,459">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,49"
+              Start="0,0"
+              End="0,41.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,41.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="416,527"
-          Size="416,570"
+          PanelSize="431,601"
+          Size="431,644"
           Id="Package\truncate and update DWHB conform"
           TopLeft="99.5,44.5" />
+        <NodeLayout
+          Size="297,42"
+          Id="Package\truncate and update DWHF\truncate and upate dwhf mlh classroomcourse"
+          TopLeft="64,359" />
         <NodeLayout
           Size="278,42"
           Id="Package\truncate and update DWHF\truncate and upate dwhf mlh consolidated"
@@ -435,6 +513,10 @@
           Size="322,42"
           Id="Package\truncate and update DWHF\truncate and update dwhf mlh grouproles volunteer"
           TopLeft="46,117" />
+        <NodeLayout
+          Size="299,42"
+          Id="Package\truncate and update DWHF\truncate and update dwhf mlh refresher report"
+          TopLeft="61,430" />
         <EdgeLayout
           Id="Package\truncate and update DWHF.PrecedenceConstraints[Constraint]"
           TopLeft="210.5,72">
@@ -501,10 +583,6 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="297,42"
-          Id="Package\truncate and update DWHF\truncate and upate dwhf mlh classroomcourse"
-          TopLeft="64,359" />
         <EdgeLayout
           Id="Package\truncate and update DWHF.PrecedenceConstraints[Constraint 3]"
           TopLeft="215,323">
@@ -527,39 +605,49 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="43"
-          IsExpanded="True"
-          PanelSize="427,480"
-          Size="427,523"
-          Id="Package\truncate and update DWHF"
-          TopLeft="733,78" />
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="515.5,329.5">
+          Id="Package\truncate and update DWHF.PrecedenceConstraints[Constraint 4]"
+          TopLeft="211.5,401">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="217.5,10"
+              EndConnector="0,29"
               Start="0,0"
-              End="210,10">
+              End="0,21.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="104.75,0" />
-                  <mssgle:CubicBezierSegment
-                    Point1="104.75,0"
-                    Point2="108.75,0"
-                    Point3="108.75,4" />
+                    End="0,21.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="441,530"
+          Size="441,573"
+          Id="Package\truncate and update DWHF"
+          TopLeft="733,78" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="530.5,365.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="202.5,0"
+              Start="0,0"
+              End="195,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
                   <mssgle:LineSegment
-                    End="108.75,6" />
-                  <mssgle:CubicBezierSegment
-                    Point1="108.75,6"
-                    Point2="108.75,10"
-                    Point3="112.75,10" />
-                  <mssgle:LineSegment
-                    End="210,10" />
+                    End="195,0" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
