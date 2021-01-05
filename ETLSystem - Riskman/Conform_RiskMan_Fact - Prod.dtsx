@@ -12,8 +12,8 @@
   DTS:ObjectName="Conform_RiskMan_Fact - Prod"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="696"
-  DTS:VersionGUID="{76FD6FF7-C4D2-45AC-A1AD-69588CCE3EFB}">
+  DTS:VersionBuild="697"
+  DTS:VersionGUID="{DD270015-8072-4FBC-8C07-0C213D6ED09F}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -92,7 +92,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="etl_start_date">
       <DTS:VariableValue
-        DTS:DataType="7">10/27/2020 2:07:17 PM</DTS:VariableValue>
+        DTS:DataType="7">1/5/2021 11:19:01 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -139,7 +139,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_effective_date">
       <DTS:VariableValue
-        DTS:DataType="7">10/27/2020 2:07:17 PM</DTS:VariableValue>
+        DTS:DataType="7">1/5/2021 11:19:01 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -150,7 +150,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="row_expiration_date">
       <DTS:VariableValue
-        DTS:DataType="7">10/27/2020 2:07:17 PM</DTS:VariableValue>
+        DTS:DataType="7">1/5/2021 11:19:01 AM</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -1063,7 +1063,7 @@
               <DTS:ObjectData>
                 <SQLTask:SqlTaskData
                   SQLTask:Connection="{ABF0B8AA-626A-4E12-B1A3-D4CDDCF59D62}"
-                  SQLTask:SqlStatementSource="------------------------------------------------RLS-------------------------------------------------------------------------------------------------------------------------------------------------&#xA;--added by JS at 28.11.2019&#xA;&#xA;&#xA;update  conform_riskman.incident_fact&#xA;set rls_progam =&#xA;            case [incident_involved]&#xA;            when 'Customer' then cust_service&#xA;             when  'Employee/Volunteer' then employee_site&#xA;             when  'Agency Staff' then employee_site&#xA;             when  'Contractor' then employee_site&#xA;             when 'Service' then service_service&#xA;             else     'No Service Indicated'&#xA;end &#xA;--update rls_service join with management.rls_riskman_programs&#xA;&#xA;update t1&#xA;set t1.rls_service = t2.[Service_Stream],&#xA;    t1.rls_portfolio= t2.[Portfolio]&#xA;from conform_riskman.incident_fact as t1&#xA;inner join [az-sqlbi01].appdev.riskman.rls_riskman_programs as t2&#xA;on t1.rls_progam= t2.[ServicesPrograms]&#xA;&#xA;--- update roles&#xA;DECLARE @role varchar(255);&#xA;DECLARE @sqls varchar(max);&#xA;DECLARE @tsql varchar(max);&#xA;update conform_riskman.incident_fact&#xA;set rls_role =NULL;&#xA;&#xA;DECLARE c_sqls CURSOR FOR SELECT [Role],[SQL_Conversion] from [az-sqlbi01].appdev.riskman.rls_riskman_SQLs where [ALL_Flag] is null and [Role] is not null ORDER BY [Role] asc;&#xA;open c_sqls;&#xA; FETCH NEXT FROM c_sqls INTO @role,@sqls;&#xA;&#xA;&#xA;  WHILE @@FETCH_STATUS =0&#xA;  BEGIN&#xA;&#xA;&#x9;set @tsql ='update conform_riskman.incident_fact '+     &#x9;'set rls_role= case   when rls_role is NULL then '+''''+ @role+''''+' else rls_role+'+''''+','+''''+'+'+''''+@role+''''+' end '&#xA;&#x9;        +'where ('+@sqls+');';&#xA;   execute( @tsql);&#xA;&#xA;FETCH NEXT FROM c_sqls   INTO  @role,@sqls;&#xA;  END &#xA;  CLOSE c_sqls ;&#xA;  DEALLOCATE c_sqls;&#xA;----------------------------------process multiple roles--------------------------------------------&#xA; --1 comma&#xA;&#xA; update conform_riskman.incident_fact&#xA; set rls_role1 = left(rls_role,CHARINDEX(',',rls_role)-1),&#xA;     rls_role2 = right(rls_role,len(rls_role) -CHARINDEX(',',rls_role))&#xA; where (len(rls_role) - len(replace(rls_role,',',''))) / LEN(',') &gt;0&#xA;&#xA; --2 commas&#xA;  update conform_riskman.incident_fact&#xA; set rls_role2 = left(rls_role2,CHARINDEX(',',rls_role2)-1),&#xA;     rls_role3 = right(rls_role2,len(rls_role2) -CHARINDEX(',',rls_role2))&#xA; where (len(rls_role2) - len(replace(rls_role2,',',''))) / LEN(',') &gt;0&#xA;&#xA; --3 commas&#xA;&#xA;   update conform_riskman.incident_fact&#xA; set rls_role3 = left(rls_role3,CHARINDEX(',',rls_role3)-1),&#xA;     rls_role4 = right(rls_role3,len(rls_role3) -CHARINDEX(',',rls_role3))&#xA; where (len(rls_role3) - len(replace(rls_role3,',',''))) / LEN(',') &gt;0&#xA;&#xA;  --4 commas&#xA;     update conform_riskman.incident_fact  set rls_role4 = left(rls_role4,CHARINDEX(',',rls_role4)-1), rls_role5 = right(rls_role4,len(rls_role4) -CHARINDEX(',',rls_role4))&#xA; where (len(rls_role4) - len(replace(rls_role4,',',''))) / LEN(',') &gt;0&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+                  SQLTask:SqlStatementSource="------------------------------------------------RLS-------------------------------------------------------------------------------------------------------------------------------------------------&#xA;--added by JS at 28.11.2019&#xA;&#xA;&#xA;update  conform_riskman.incident_fact&#xA;set rls_progam =&#xA;            case [incident_involved]&#xA;            when 'Customer' then cust_service&#xA;             when  'Employee/Volunteer' then employee_site&#xA;             when  'Agency Staff' then employee_site&#xA;             when  'Contractor' then employee_site&#xA;             when 'Service' then service_service&#xA;&#x9;&#x9;&#x9; when 'Foster Carer' then cust_service&#xA;             else     'No Service Indicated'&#xA;end &#xA;--update rls_service join with management.rls_riskman_programs&#xA;&#xA;update t1&#xA;set t1.rls_service = t2.[Service_Stream],&#xA;    t1.rls_portfolio= t2.[Portfolio]&#xA;from conform_riskman.incident_fact as t1&#xA;inner join [az-sqlbi01].appdev.riskman.rls_riskman_programs as t2&#xA;on t1.rls_progam= t2.[ServicesPrograms]&#xA;&#xA;--- update roles&#xA;DECLARE @role varchar(255);&#xA;DECLARE @sqls varchar(max);&#xA;DECLARE @tsql varchar(max);&#xA;update conform_riskman.incident_fact&#xA;set rls_role =NULL;&#xA;&#xA;DECLARE c_sqls CURSOR FOR SELECT [Role],[SQL_Conversion] from [az-sqlbi01].appdev.riskman.rls_riskman_SQLs where [ALL_Flag] is null and [Role] is not null ORDER BY [Role] asc;&#xA;open c_sqls;&#xA; FETCH NEXT FROM c_sqls INTO @role,@sqls;&#xA;&#xA;&#xA;  WHILE @@FETCH_STATUS =0&#xA;  BEGIN&#xA;&#xA;&#x9;set @tsql ='update conform_riskman.incident_fact '+     &#x9;'set rls_role= case   when rls_role is NULL then '+''''+ @role+''''+' else rls_role+'+''''+','+''''+'+'+''''+@role+''''+' end '&#xA;&#x9;        +'where ('+@sqls+');';&#xA;   execute( @tsql);&#xA;&#xA;FETCH NEXT FROM c_sqls   INTO  @role,@sqls;&#xA;  END &#xA;  CLOSE c_sqls ;&#xA;  DEALLOCATE c_sqls;&#xA;----------------------------------process multiple roles--------------------------------------------&#xA; --1 comma&#xA;&#xA; update conform_riskman.incident_fact&#xA; set rls_role1 = left(rls_role,CHARINDEX(',',rls_role)-1),&#xA;     rls_role2 = right(rls_role,len(rls_role) -CHARINDEX(',',rls_role))&#xA; where (len(rls_role) - len(replace(rls_role,',',''))) / LEN(',') &gt;0&#xA;&#xA; --2 commas&#xA;  update conform_riskman.incident_fact&#xA; set rls_role2 = left(rls_role2,CHARINDEX(',',rls_role2)-1),&#xA;     rls_role3 = right(rls_role2,len(rls_role2) -CHARINDEX(',',rls_role2))&#xA; where (len(rls_role2) - len(replace(rls_role2,',',''))) / LEN(',') &gt;0&#xA;&#xA; --3 commas&#xA;&#xA;   update conform_riskman.incident_fact&#xA; set rls_role3 = left(rls_role3,CHARINDEX(',',rls_role3)-1),&#xA;     rls_role4 = right(rls_role3,len(rls_role3) -CHARINDEX(',',rls_role3))&#xA; where (len(rls_role3) - len(replace(rls_role3,',',''))) / LEN(',') &gt;0&#xA;&#xA;  --4 commas&#xA;     update conform_riskman.incident_fact  set rls_role4 = left(rls_role4,CHARINDEX(',',rls_role4)-1), rls_role5 = right(rls_role4,len(rls_role4) -CHARINDEX(',',rls_role4))&#xA; where (len(rls_role4) - len(replace(rls_role4,',',''))) / LEN(',') &gt;0&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
               </DTS:ObjectData>
             </DTS:Executable>
           </DTS:Executables>
@@ -2081,19 +2081,19 @@
       <GraphLayout
         Capacity="128" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact\Delete Existing Data"
           TopLeft="31.75,91" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact\EST - Write Job Finish info"
           TopLeft="32.75,256" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact\EST - Write Job Start info"
           TopLeft="30.75,15" />
         <NodeLayout
-          Size="269,42"
+          Size="268.8,41.6"
           Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact\Populate new data"
           TopLeft="29.75,156" />
         <EdgeLayout
@@ -2165,24 +2165,24 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="409,329"
-          Size="409,372"
+          PanelSize="408.8,328.8"
+          Size="408.8,372"
           Id="Package\Sequence Container - Fact Tables\ContributingFactors_fact"
           TopLeft="29,2165.5" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\INCIDENT_ACTION_FACT\Delete Existing Data"
           TopLeft="31.75,91" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\INCIDENT_ACTION_FACT\EST - Write Job Finish info"
           TopLeft="32.75,256" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\INCIDENT_ACTION_FACT\EST - Write Job Start info"
           TopLeft="30.75,15" />
         <NodeLayout
-          Size="269,42"
+          Size="268.8,41.6"
           Id="Package\Sequence Container - Fact Tables\INCIDENT_ACTION_FACT\Populate new data"
           TopLeft="29.75,156" />
         <EdgeLayout
@@ -2254,24 +2254,24 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="382,329"
-          Size="382,372"
+          PanelSize="382.4,328.8"
+          Size="382.4,372"
           Id="Package\Sequence Container - Fact Tables\INCIDENT_ACTION_FACT"
           TopLeft="42.5000000000001,1300.5" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\INCIDENT_TYPE_FACT\Delete Existing Data"
           TopLeft="31.75,91" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\INCIDENT_TYPE_FACT\EST - Write Job Finish info"
           TopLeft="32.75,256" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\INCIDENT_TYPE_FACT\EST - Write Job Start info"
           TopLeft="30.75,15" />
         <NodeLayout
-          Size="269,42"
+          Size="268.8,41.6"
           Id="Package\Sequence Container - Fact Tables\INCIDENT_TYPE_FACT\Populate new data"
           TopLeft="29.75,156" />
         <EdgeLayout
@@ -2343,28 +2343,28 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="382,329"
-          Size="382,372"
+          PanelSize="382.4,328.8"
+          Size="382.4,372"
           Id="Package\Sequence Container - Fact Tables\INCIDENT_TYPE_FACT"
           TopLeft="48.5,906.5" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - FEEDBACK_FACT\Delete Existing Data"
           TopLeft="33.4,91" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - FEEDBACK_FACT\EST - Write Job Finish info"
           TopLeft="33.4,299" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - FEEDBACK_FACT\EST - Write Job Start info"
           TopLeft="33.4,15" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - FEEDBACK_FACT\Populate new data"
           TopLeft="33.4,158" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - FEEDBACK_FACT\Update for RLS"
           TopLeft="33.4,229" />
         <EdgeLayout
@@ -2458,24 +2458,24 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="409,396"
-          Size="409,439"
+          PanelSize="408.8,396"
+          Size="408.8,439.2"
           Id="Package\Sequence Container - Fact Tables\SD1 - FEEDBACK_FACT"
           TopLeft="30,2596.5" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- keep all records and with bridge tables\Delete Existing Data"
           TopLeft="31.75,91" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- keep all records and with bridge tables\EST - Write Job Finish info"
           TopLeft="30.75,221" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- keep all records and with bridge tables\EST - Write Job Start info"
           TopLeft="30.75,15" />
         <NodeLayout
-          Size="269,42"
+          Size="268.8,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- keep all records and with bridge tables\Populate new data"
           TopLeft="29.75,156" />
         <EdgeLayout
@@ -2547,32 +2547,32 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="409,284"
-          Size="409,327"
+          PanelSize="408.8,284"
+          Size="408.8,327.2"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- keep all records and with bridge tables"
           TopLeft="28,5.5" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- Keep one record for one incident\Delete Existing Data"
           TopLeft="48,152" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- Keep one record for one incident\EST - Write Job Finish info"
           TopLeft="64,377" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- Keep one record for one incident\EST - Write Job Start info"
           TopLeft="52,83" />
         <NodeLayout
-          Size="167,42"
+          Size="167.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- Keep one record for one incident\Extract data from RiskMan database"
           TopLeft="97,14" />
         <NodeLayout
-          Size="167,42"
+          Size="167.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- Keep one record for one incident\Populate new data"
           TopLeft="98,220" />
         <NodeLayout
-          Size="150,42"
+          Size="150.4,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- Keep one record for one incident\Update for RLS"
           TopLeft="113,292" />
         <EdgeLayout
@@ -2700,20 +2700,20 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="431,424"
-          Size="431,468"
+          PanelSize="431.2,424.8"
+          Size="431.2,468"
           Id="Package\Sequence Container - Fact Tables\SD1 - INCIDENT_FACT -- Keep one record for one incident"
           TopLeft="35,410.5" />
         <NodeLayout
-          Size="269,42"
+          Size="268.8,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\Delete and Populate new data"
           TopLeft="31.75,127" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\EST - Write Job Finish info"
           TopLeft="32.75,256" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact\EST - Write Job Start info"
           TopLeft="36.75,35" />
         <EdgeLayout
@@ -2763,28 +2763,28 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="409,353"
-          Size="409,396"
+          PanelSize="408.8,352.8"
+          Size="408.8,396"
           Id="Package\Sequence Container - Fact Tables\SD1 - pressure_injury_fact"
           TopLeft="35,3183.5" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - Quality Fact and QIStaffImpActions_Fact\Delete Existing Data"
           TopLeft="31.75,91" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - Quality Fact and QIStaffImpActions_Fact\EST - Write Job Finish info"
           TopLeft="34.75,291" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - Quality Fact and QIStaffImpActions_Fact\EST - Write Job Start info"
           TopLeft="30.75,15" />
         <NodeLayout
-          Size="269,42"
+          Size="268.8,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - Quality Fact and QIStaffImpActions_Fact\Populate new data"
           TopLeft="29.75,158" />
         <NodeLayout
-          Size="252,42"
+          Size="252,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - Quality Fact and QIStaffImpActions_Fact\Update RLS data"
           TopLeft="36,226" />
         <EdgeLayout
@@ -2890,24 +2890,24 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="422,388"
-          Size="422,431"
+          PanelSize="422.4,388"
+          Size="422.4,431.2"
           Id="Package\Sequence Container - Fact Tables\SD1 - Quality Fact and QIStaffImpActions_Fact"
           TopLeft="29,4502" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\Delete Existing Data"
           TopLeft="31.75,91" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\EST - Write Job Finish info"
           TopLeft="32.75,256" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\EST - Write Job Start info"
           TopLeft="30.75,15" />
         <NodeLayout
-          Size="269,42"
+          Size="268.8,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact\Populate new data"
           TopLeft="29.75,158" />
         <EdgeLayout
@@ -2979,24 +2979,24 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="409,353"
-          Size="409,396"
+          PanelSize="408.8,352.8"
+          Size="408.8,396"
           Id="Package\Sequence Container - Fact Tables\SD1 - Restrictive_IFR_fact"
           TopLeft="28,4046" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\Delete Existing Data"
           TopLeft="31.75,91" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\EST - Write Job Finish info"
           TopLeft="32.75,256" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\EST - Write Job Start info"
           TopLeft="30.75,15" />
         <NodeLayout
-          Size="269,42"
+          Size="268.8,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT\Populate new data"
           TopLeft="29.75,158" />
         <EdgeLayout
@@ -3068,24 +3068,24 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="409,353"
-          Size="409,396"
+          PanelSize="408.8,352.8"
+          Size="408.8,396"
           Id="Package\Sequence Container - Fact Tables\SD1 - SKINTEAR_FACT"
           TopLeft="28,3590" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 INCIDENT_HISTORY_FACT\Delete Existing Data"
           TopLeft="31.75,91" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 INCIDENT_HISTORY_FACT\EST - Write Job Finish info"
           TopLeft="32.75,256" />
         <NodeLayout
-          Size="271,42"
+          Size="271.2,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 INCIDENT_HISTORY_FACT\EST - Write Job Start info"
           TopLeft="30.75,15" />
         <NodeLayout
-          Size="269,42"
+          Size="268.8,41.6"
           Id="Package\Sequence Container - Fact Tables\SD1 INCIDENT_HISTORY_FACT\Populate new data"
           TopLeft="29.75,156" />
         <EdgeLayout
@@ -3157,16 +3157,16 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="409,329"
-          Size="409,372"
+          PanelSize="408.8,328.8"
+          Size="408.8,372"
           Id="Package\Sequence Container - Fact Tables\SD1 INCIDENT_HISTORY_FACT"
           TopLeft="30.0000000000002,1733.5" />
         <NodeLayout
-          Size="382,42"
+          Size="382.4,41.6"
           Id="Package\Sequence Container - Fact Tables\update incident_location"
           TopLeft="50.4999999999999,340" />
         <NodeLayout
-          Size="217,42"
+          Size="216.8,41.6"
           Id="Package\Sequence Container - Fact Tables\update location in fact tables"
           TopLeft="85.5,3062" />
         <EdgeLayout
@@ -3486,8 +3486,8 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="478,4988"
-          Size="478,5031"
+          PanelSize="478.4,4988"
+          Size="478.4,5031.2"
           Id="Package\Sequence Container - Fact Tables"
           TopLeft="37.5,1" />
       </GraphLayout>
