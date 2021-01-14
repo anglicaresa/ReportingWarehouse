@@ -114,8 +114,8 @@ SELECT
   sum(isnull(ot_bond.ChargeCfwd,0)) as BondBalance,
 
   su.FullName AS HousingOfficer
-	,a.CurrentOccupancy
-
+	,a.CurrentOccupancy,
+  isnull(HomeTeam_LookupValues_PropertySubType.NAME, '') AS [Program] --Get Program (PropertySubType) 20210114
 
 FROM
 --use test database and have to add 
@@ -220,6 +220,11 @@ LEFT JOIN dbo.Occupancies_People_Surnames AS l
 --For Housing Officer
 LEFT JOIN dbo.Security_User AS su ON su.[User] = f.HousingOfficer
 
+--Get Program (PropertySubType)
+		    LEFT JOIN HomeTeam_LookupValues AS HomeTeam_LookupValues_PropertySubType ON f.Company = HomeTeam_LookupValues_PropertySubType.Company
+          AND f.PropertySubType = HomeTeam_LookupValues_PropertySubType.ID
+          AND HomeTeam_LookupValues_PropertySubType.LookUp = 112
+
 WHERE e.Code IN (@Entity)
 AND d.Name IN (@Program)
 AND a.CurrentOccupancy IN (@CurrentTenant)
@@ -249,7 +254,8 @@ GROUP BY
   j.EffectiveTotalDaysInArrears,
 
   su.FullName,
-  a.CurrentOccupancy
+  a.CurrentOccupancy,
+  HomeTeam_LookupValues_PropertySubType.[Name]
 
 
 ORDER BY e.code, f.NominalDepartment, f.NominalCostCentre, a.id</CommandText>
@@ -363,6 +369,10 @@ ORDER BY e.code, f.NominalDepartment, f.NominalCostCentre, a.id</CommandText>
         <Field Name="CurrentOccupancy">
           <DataField>CurrentOccupancy</DataField>
           <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Program">
+          <DataField>Program</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -549,7 +559,7 @@ and dd.Name in (@Scheme)</CommandText>
                   <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.12601cm</Width>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.5cm</Width>
@@ -887,7 +897,7 @@ and dd.Name in (@Scheme)</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox3">
+                        <Textbox Name="Textbox5">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -907,7 +917,7 @@ and dd.Name in (@Scheme)</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox3</rd:DefaultName>
+                          <rd:DefaultName>Textbox5</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1616,14 +1626,14 @@ and dd.Name in (@Scheme)</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Scheme1">
+                        <Textbox Name="Program">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Scheme.Value</Value>
+                                  <Value>=Fields!Program.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
                                   </Style>
@@ -1634,7 +1644,7 @@ and dd.Name in (@Scheme)</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Scheme1</rd:DefaultName>
+                          <rd:DefaultName>Program</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1993,7 +2003,7 @@ and dd.Name in (@Scheme)</CommandText>
                                   <Value>=Fields!Arrears.Value</Value>
                                   <Style>
                                     <FontSize>9pt</FontSize>
-                                    <Format>'$'0.00;('$'0.00)</Format>
+                                    <Format>0.00;(0.00)</Format>
                                     <rd:FormatSymbolCulture>en-AU</rd:FormatSymbolCulture>
                                   </Style>
                                 </TextRun>
@@ -2340,7 +2350,7 @@ and dd.Name in (@Scheme)</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox15">
+                        <Textbox Name="Textbox11">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -2358,7 +2368,7 @@ and dd.Name in (@Scheme)</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox15</rd:DefaultName>
+                          <rd:DefaultName>Textbox11</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -2803,7 +2813,7 @@ and dd.Name in (@Scheme)</CommandText>
             <Top>0.55493cm</Top>
             <Left>0.44662cm</Left>
             <Height>1.8cm</Height>
-            <Width>54.19706cm</Width>
+            <Width>53.57105cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2814,7 +2824,7 @@ and dd.Name in (@Scheme)</CommandText>
         <Height>4.94792in</Height>
         <Style />
       </Body>
-      <Width>21.51326in</Width>
+      <Width>22.49751in</Width>
       <Page>
         <PageHeader>
           <Height>1.39981cm</Height>
